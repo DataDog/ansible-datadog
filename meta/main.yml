@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Brian Akins
+  description: Install datadog agent
+  license: Apache2
+  min_ansible_version: 1.2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - lucid
+        - maverick
+        - natty
+        - oneiric
+        - precise
+        - quantal
+        - raring
+        - saucy
+        - trusty
+    - name: Debian
+      versions:
+        - squeeze
+        - wheezy
+  categories:
+    - monitoring
+dependencies: []
