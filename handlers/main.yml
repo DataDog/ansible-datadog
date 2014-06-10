@@ -1,0 +1,3 @@
+---
+- name: restart datadog-agent
+  service: name=datadog-agent state=restarted
