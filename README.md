@@ -24,7 +24,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: username.datadog, datadog_api_key: "mykey" }
+         - { role: bakins.datadog, datadog_api_key: "mykey" }
 
 License
 -------
