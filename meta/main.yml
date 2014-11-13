@@ -23,6 +23,7 @@ galaxy_info:
     - name: EL
       versions:
         - 6
+        - 5
   categories:
     - monitoring
 dependencies: []
