@@ -5,7 +5,11 @@
   yum: name=datadog-agent state=latest 
 
 - yum: name=python-psutil state=latest
-
+  when: ansible_distribution_major_version == "6"
+- yum: name=python26-psutil state=latest
+  when: ansible_distribution_major_version == "5"
+  ignore_errors: true
+  
 - template: src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
   notify: restart datadog
 
