@@ -8,5 +8,8 @@
 - template: src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
   notify: restart datadog
 
+- template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
+  notify: restart datadog
+
 - service: name=datadog-agent state=started
 
