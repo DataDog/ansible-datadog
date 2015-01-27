@@ -1,9 +1,11 @@
 Ansible Datadog Role
 ========
 
-Install and configure datadog agent. Currently only handles base agent.
+Install and configure datadog agent.
 
-May extend to handle some service monitoring in the future.
+Currently only supports:
+Base agent
+Process checks
 
 Requirements
 ------------
@@ -14,17 +16,35 @@ Role Variables
 --------------
 
 - `datadog_api_key` - your datadog API key
+- `datadog_process_checks` - Array of process checks and options
 
 Dependencies
 ------------
 None
 
-Example Playbook
+Example Playbooks
 -------------------------
+```
+- hosts: servers
+  roles:
+    - dustinbrown.datadog
+  vars:
+    datadog_api_key: "123456"
+    datadog_process_checks:
+      - name: ssh
+        search_string: ['ssh', 'sshd' ]
+      - name: syslog
+        search_string: ['rsyslog' ]
+        cpu_check_interval: '0.2'
+        exact_match: true
+        ignore_denied_access: true
+```
 
-    - hosts: servers
-      roles:
-         - { role: bakins.datadog, datadog_api_key: "mykey" }
+```
+- hosts: servers
+  roles:
+    - { role: dustinbrown.datadog, datadog_api_key: "mykey" }
+```
 
 License
 -------
@@ -35,3 +55,5 @@ Author Information
 ------------------
 
 brian@akins.org
+
+dustinjamesbrown@gmail.com --Forked from brian@akins.org
