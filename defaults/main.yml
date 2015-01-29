@@ -1,3 +1,6 @@
 ---
 datadog_api_key: "youshouldsetthis"
 
+# Comma seperated list of tags
+datadog_tags: ""
+
