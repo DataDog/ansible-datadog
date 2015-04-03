@@ -5,8 +5,6 @@
 
 - apt: name=datadog-agent state=latest
 
-- apt: name=python-psutil state=latest
-
 - template: src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
   notify: restart datadog
 
