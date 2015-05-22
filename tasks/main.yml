@@ -1,4 +1,14 @@
+---
 - include: debian.yml
   when: ansible_os_family == "Debian"
+
 - include: redhat.yml
   when: ansible_os_family == "RedHat"
+
+- name: Create a configuration file for each Datadog check
+  template:
+    src=checks.yaml.j2
+    dest=/etc/dd-agent/conf.d/{{ item }}.yaml
+  with_items: datadog_checks.keys()
+  notify:
+   - restart datadog
