@@ -15,10 +15,10 @@ Ubuntu
 Role Variables
 --------------
 
-- `datadog_api_key` - Your datadog API key
-- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
+- `datadog_api_key` - Your Datadog API key.
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
-- `datadog_process_checks` - Array of process checks and options
+- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
+- `datadog_process_checks` - Array of process checks and options.
 
 Dependencies
 ------------

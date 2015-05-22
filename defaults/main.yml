@@ -3,7 +3,10 @@ datadog_api_key: "youshouldsetthis"
 datadog_url: "https://app.datadoghq.com"
 datadog_use_mount: "no"
 
+datadog_checks:
+
 datadog_config:
   api_key: "{{ datadog_api_key }}"
   dd_url: "{{ datadog_url }}"
   use_mount: "{{ datadog_use_mount }}"
+
