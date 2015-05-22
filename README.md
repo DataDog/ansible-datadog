@@ -15,8 +15,10 @@ Ubuntu
 Role Variables
 --------------
 
-- `datadog_api_key` - your datadog API key
+- `datadog_api_key` - Your datadog API key
+- `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
 - `datadog_process_checks` - Array of process checks and options
+- `datadog_use_mount` - Use mount points instead of volumes to track disk and fs metrics
 
 Dependencies
 ------------
@@ -38,6 +40,26 @@ Example Playbooks
         cpu_check_interval: '0.2'
         exact_match: true
         ignore_denied_access: true
+    datadog_checks:
+      ssh_check:
+        init_config:
+        instances:
+          - host: localhost
+            port: 22
+            username: root
+            password: changeme
+            sftp_check: True
+            private_key_file:
+            add_missing_keys: True
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://example.com/nginx_status/
+            tags:
+              - instance:foo
+          - nginx_status_url: http://example2.com:1234/nginx_status/
+            tags:
+              - instance:bar
 ```
 
 ```
