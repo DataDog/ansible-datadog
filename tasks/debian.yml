@@ -9,7 +9,7 @@
   notify: restart datadog
 
 - template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
+  when: datadog_process_checks is defined
   notify: restart datadog
 
 - service: name=datadog-agent state=started
-
