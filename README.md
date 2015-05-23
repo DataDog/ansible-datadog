@@ -1,7 +1,7 @@
 Ansible Datadog Role
 ========
 
-Install and configure datadog agent.
+Install and configure Datadog agent.
 
 Currently only supports:
 Base agent
@@ -15,10 +15,10 @@ Ubuntu
 Role Variables
 --------------
 
-- `datadog_api_key` - Your datadog API key
+- `datadog_api_key` - Your Datadog API key.
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
-- `datadog_process_checks` - Array of process checks and options
-- `datadog_use_mount` - Use mount points instead of volumes to track disk and fs metrics
+- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
+- `datadog_process_checks` - Array of process checks and options.
 
 Dependencies
 ------------
@@ -32,6 +32,11 @@ Example Playbooks
     - dustinbrown.datadog
   vars:
     datadog_api_key: "123456"
+    datadog_config:
+      api_key: "{{ datadog_api_key }}"
+      dd_url: "{{ datadog_url }}"
+      use_mount: "{{ datadog_use_mount }}"
+      tags: "mytag0, mytag1"
     datadog_process_checks:
       - name: ssh
         search_string: ['ssh', 'sshd' ]
