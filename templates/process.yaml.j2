@@ -1,7 +1,6 @@
 init_config:
 
 instances:
-{% if datadog_process_checks is defined %}
 {% for process in datadog_process_checks %}
 - name: {{ process.name }}
   search_string: {{ process.search_string }}
@@ -16,4 +15,3 @@ instances:
   {% endif %}
 
 {% endfor %}
-{% endif %}
