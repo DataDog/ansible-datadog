@@ -9,7 +9,7 @@
   notify: restart datadog
 
 - template: src="{{ item }}".j2 dest="/etc/dd-agent/conf.d/{{ item }}"
-  with_items: {{ datadog_conf_d_files }}
+  with_items: "{{ datadog_conf_d_files }}"
   when: datadog_conf_d_files is defined
   notify: restart datadog
 
