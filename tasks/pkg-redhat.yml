@@ -1,0 +1,6 @@
+---
+- name: Copy repo file into place
+  copy: src=datadog.repo dest=/etc/yum.repos.d/datadog.repo owner=root group=root mode=0644
+
+- name: Install datadog-agent package
+  yum: name=datadog-agent state=latest
