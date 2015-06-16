@@ -16,12 +16,16 @@ galaxy_info:
         - raring
         - saucy
         - trusty
+        - utopic
+        - vivid
     - name: Debian
       versions:
         - squeeze
         - wheezy
+        - jessie
     - name: EL
       versions:
+        - 7
         - 6
         - 5
   categories:
