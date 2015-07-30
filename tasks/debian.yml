@@ -12,4 +12,8 @@
   when: datadog_process_checks is defined
   notify: restart datadog
 
-- service: name=datadog-agent state=started
+- service: name=datadog-agent state=started enabled=yes
+  when: datadog_enabled
+
+- service: name=datadog-agent state=stopped enabled=no
+  when: not datadog_enabled
