@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: 'Brian Akins & Dustin Brown'
-  description: Install datadog agent and enable process checks
+  description: Install Datadog agent and configure checks
   license: Apache2
   min_ansible_version: 1.2
   platforms:
