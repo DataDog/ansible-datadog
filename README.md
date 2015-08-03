@@ -1,16 +1,8 @@
 Ansible Datadog Role
 ========
 
-Install and configure Datadog agent.
+Install and configure Datadog base agent & checks.
 
-Currently only supports:
-Base agent
-Process checks
-
-Requirements
-------------
-
-Ubuntu
 
 Role Variables
 --------------
@@ -18,7 +10,8 @@ Role Variables
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
 - `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
-- `datadog_process_checks` - Array of process checks and options.
+- `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
+`datadog_checks` instead)
 
 Dependencies
 ------------
@@ -33,19 +26,19 @@ Example Playbooks
   vars:
     datadog_api_key: "123456"
     datadog_config:
-      api_key: "{{ datadog_api_key }}"
-      dd_url: "{{ datadog_url }}"
-      use_mount: "{{ datadog_use_mount }}"
       tags: "mytag0, mytag1"
-    datadog_process_checks:
-      - name: ssh
-        search_string: ['ssh', 'sshd' ]
-      - name: syslog
-        search_string: ['rsyslog' ]
-        cpu_check_interval: '0.2'
-        exact_match: true
-        ignore_denied_access: true
+      log_level: INFO
     datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: ssh
+            search_string: ['ssh', 'sshd' ]
+          - name: syslog
+            search_string: ['rsyslog' ]
+            cpu_check_interval: 0.2
+            exact_match: true
+            ignore_denied_access: true
       ssh_check:
         init_config:
         instances:
@@ -82,5 +75,4 @@ Author Information
 ------------------
 
 brian@akins.org
-
 dustinjamesbrown@gmail.com --Forked from brian@akins.org
