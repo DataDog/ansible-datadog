@@ -1,16 +1,8 @@
 Ansible Datadog Role
 ========
 
-Install and configure Datadog agent.
+Install and configure Datadog base agent & checks.
 
-Currently only supports:
-Base agent
-Process checks
-
-Requirements
-------------
-
-Ubuntu
 
 Role Variables
 --------------
@@ -34,10 +26,8 @@ Example Playbooks
   vars:
     datadog_api_key: "123456"
     datadog_config:
-      api_key: "{{ datadog_api_key }}"
-      dd_url: "{{ datadog_url }}"
-      use_mount: "{{ datadog_use_mount }}"
       tags: "mytag0, mytag1"
+      log_level: INFO
     datadog_checks:
       process:
         init_config:
@@ -85,5 +75,4 @@ Author Information
 ------------------
 
 brian@akins.org
-
 dustinjamesbrown@gmail.com --Forked from brian@akins.org
