@@ -22,7 +22,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - dustinbrown.datadog
+    - Datadog.datadog
   vars:
     datadog_api_key: "123456"
     datadog_config:
@@ -63,7 +63,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - { role: dustinbrown.datadog, datadog_api_key: "mykey" }
+    - { role: Datadog.datadog, datadog_api_key: "mykey" }
 ```
 
 License
@@ -76,3 +76,4 @@ Author Information
 
 brian@akins.org
 dustinjamesbrown@gmail.com --Forked from brian@akins.org
+Datadog <info@datadoghq.com> --Forked from dustinjamesbrown@gmail.com
