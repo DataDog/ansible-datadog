@@ -75,5 +75,7 @@ Author Information
 ------------------
 
 brian@akins.org
+
 dustinjamesbrown@gmail.com --Forked from brian@akins.org
+
 Datadog <info@datadoghq.com> --Forked from dustinjamesbrown@gmail.com
