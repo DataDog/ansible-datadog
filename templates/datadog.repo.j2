@@ -1,5 +1,6 @@
 [datadog]
 name = Datadog, Inc.
-baseurl = http://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/
+baseurl = https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/
 enabled=1
-gpgcheck=0
+gpgcheck=1
+gpgkey=https://yum.datadoghq.com/DATADOG_RPM_KEY.public
