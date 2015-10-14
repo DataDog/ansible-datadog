@@ -22,7 +22,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - Datadog.datadog
+    - { role: Datadog.datadog, sudo: yes }
   vars:
     datadog_api_key: "123456"
     datadog_config:
@@ -63,7 +63,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, datadog_api_key: "mykey" }
+    - { role: Datadog.datadog, sudo: yes, datadog_api_key: "mykey" }
 ```
 
 License
