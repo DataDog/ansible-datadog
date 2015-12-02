@@ -9,8 +9,8 @@
   template:
     src=datadog.conf.j2
     dest=/etc/dd-agent/datadog.conf
-    owner=dd-agent
-    group=dd-agent
+    owner={{ datadog_user }}
+    group={{ datadog_group }}
   notify: restart datadog-agent
 
 # DEPRECATED: Remove specific handling of the process check for next major release
@@ -31,8 +31,8 @@
   template:
     src=checks.yaml.j2
     dest=/etc/dd-agent/conf.d/{{ item }}.yaml
-    owner=dd-agent
-    group=dd-agent
+    owner={{ datadog_user }}
+    group={{ datadog_group }}
   with_items: datadog_checks.keys()
   notify:
    - restart datadog-agent
