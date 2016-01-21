@@ -5,4 +5,7 @@
 
 - apt_repository: repo='deb http://apt.datadoghq.com/ stable main' state=present update_cache=yes
 
-- apt: name=datadog-agent state=latest
+- apt: pkg={{item}} state=latest update_cache=yes install_recommends=no cache_valid_time=7200
+  with_items:
+    - python-psutil
+    - datadog-agent
