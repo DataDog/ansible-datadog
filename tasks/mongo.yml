@@ -1,0 +1,10 @@
+---
+- name: Create DataDog user in mongo admin DB
+  mongodb_user:
+    database: admin
+    login_host: {{ MONGO_HOST }}
+    login_port: {{ MONGO_PORT }}
+    login_password: {{ MONGO_ADMIN_PASSWORD }}
+    login_user: admin
+    name: datadog
+    password: {{ datadog_mongodb_password }}

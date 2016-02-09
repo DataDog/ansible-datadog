@@ -1,0 +1,10 @@
+---
+- name: Create DataDog user in MySQL
+  mysql_user:
+    host: "%"
+    login_host: {{ MYSQL_HOST }}
+    login_port: {{ MYSQL_PORT }}
+    login_user: {{ MYSQL_USER }}
+    login_password: {{ MYSQL_PASSWORD }}
+    name: datadog
+    password: {{ datadog_mysql_password }}
