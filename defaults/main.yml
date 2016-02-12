@@ -10,3 +10,8 @@ datadog_checks: {}
 # default user/group
 datadog_user: dd-agent
 datadog_group: root
+
+MONGO_HOST: localhost
+MONGO_PORT: 27017
+MYSQL_HOST: localhost
+MYSQL_PORT: 3306

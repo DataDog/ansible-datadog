@@ -36,3 +36,9 @@
   with_items: datadog_checks.keys()
   notify:
    - restart datadog-agent
+
+- include: mongo.yml
+  when: datadog_mongo is defined
+
+- include: mysql.yml
+  when: datadog_mysql is defined
