@@ -12,6 +12,8 @@ Role Variables
 - `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
 - `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
 `datadog_checks` instead)
+- `datadog_apt_repo` - Override default Datadog `apt` repository
+- `datadog_apt_key_url` - Url to Datadog `apt` key
 
 Dependencies
 ------------
