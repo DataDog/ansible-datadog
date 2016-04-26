@@ -3,6 +3,12 @@ Ansible Datadog Role
 
 Install and configure Datadog base agent & checks.
 
+Installation
+------------
+
+```
+ansible-galaxy install Datadog.datadog
+```
 
 Role Variables
 --------------
