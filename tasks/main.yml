@@ -33,6 +33,6 @@
     dest=/etc/dd-agent/conf.d/{{ item }}.yaml
     owner={{ datadog_user }}
     group={{ datadog_group }}
-  with_items: datadog_checks.keys()
+  with_items: '{{ datadog_checks.keys() }}'
   notify:
    - restart datadog-agent
