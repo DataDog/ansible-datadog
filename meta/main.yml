@@ -18,6 +18,7 @@ galaxy_info:
         - trusty
         - utopic
         - vivid
+        - xenial
     - name: Debian
       versions:
         - squeeze
