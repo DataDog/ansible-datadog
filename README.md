@@ -29,7 +29,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, sudo: yes }
+    - { role: Datadog.datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
   vars:
     datadog_api_key: "123456"
     datadog_config:
@@ -70,7 +70,7 @@ Example Playbooks
 ```
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, sudo: yes, datadog_api_key: "mykey" }
+    - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
 
 License
