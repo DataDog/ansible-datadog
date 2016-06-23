@@ -20,7 +20,7 @@ Role Variables
 - `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
 `datadog_checks` instead)
 - `datadog_apt_repo` - Override default Datadog `apt` repository
-- `datadog_apt_key_url` - Url to Datadog `apt` key
+- `datadog_apt_key_url` - Override default url to Datadog `apt` key
 
 Dependencies
 ------------
