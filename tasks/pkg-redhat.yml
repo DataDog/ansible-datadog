@@ -4,3 +4,15 @@
 
 - name: Install datadog-agent package
   yum: name=datadog-agent state=latest
+
+- name: Copy trace repo file into place
+  template: src=datadog-trace.repo.j2 dest=/etc/yum.repos.d/datadog-trace.repo owner=root group=root mode=0644
+  when: dd-trace is defined and dd-trace == True
+
+- name: Update yum cache
+  command: sudo yum makecache
+  when: dd-trace is defined and dd-trace == True
+
+- name: Install dd-trace package
+  yum: name=dd-trace-agent state=latest
+  when: dd-trace is defined and dd-trace == True

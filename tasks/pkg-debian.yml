@@ -10,3 +10,17 @@
 - apt_repository: repo='{{ datadog_apt_repo }}' state=present update_cache=yes
 
 - apt: name=datadog-agent state=latest
+
+- command: sudo sh -c "echo deb http://apt-trace.datad0g.com.s3.amazonaws.com/ stable main> /etc/apt/sources.list.d/datadog-trace.list"
+  when: dd-trace is defined and dd-trace == True
+
+- apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=382E94DE
+  when: dd-trace is defined and dd-trace == True
+
+- name: Run apt-get update
+  apt:
+    update_cache: yes
+    when: dd-trace is defined and dd-trace == True
+
+- apt: name=dd-trace-agent state=latest force=yes
+  when: dd-trace is defined and dd-trace == True
