@@ -15,4 +15,4 @@ datadog_group: root
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
 
 # default install datadog tracing agent
-dd-trace: True
+datadog-trace: False

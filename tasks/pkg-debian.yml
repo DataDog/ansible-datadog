@@ -15,12 +15,15 @@
   when: dd-trace is defined and dd-trace == True
 
 - apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=382E94DE
-  when: dd-trace is defined and dd-trace == True
+  when: datadog-trace is defined and datadog-trace == True
 
 - name: Run apt-get update
   apt:
     update_cache: yes
-    when: dd-trace is defined and dd-trace == True
+    when: datadog-trace is defined and datadog-trace == True
 
 - apt: name=dd-trace-agent state=latest force=yes
-  when: dd-trace is defined and dd-trace == True
+  when: datadog-trace is defined and datadog-trace == True
+
+- apt: name=dd-trace-agent state=absent force=yes
+  when: datadog-trace is defined and datadog-trace == False
