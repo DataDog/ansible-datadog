@@ -4,6 +4,8 @@ Ansible Datadog Role
 
 Install and configure Datadog base agent & checks.
 
+Supports most Debian and RHEL-based Linux distributions.
+
 Installation
 ------------
 
