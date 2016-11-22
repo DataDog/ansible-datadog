@@ -1,0 +1,21 @@
+---
+- include: pkg-windows.yml
+
+- name: Create main Windows Datadog agent configuration file
+  win_template:
+    src: datadog.conf.j2
+    dest: "{{ ansible_env.ProgramData }}\\Datadog\\datadog.conf"
+  notify: restart DatadogAgent
+
+- win_service: name=DatadogAgent state=started enabled=yes
+  when: datadog_enabled
+
+- win_service: name=DatadogAgent state=stopped enabled=no
+  when: not datadog_enabled
+
+- name: Create a configuration file for each windows Datadog check
+  template:
+    src: checks.yaml.j2
+    dest: "{{ ansible_env.ProgramData }}\\Datadog\\conf.d\\{{ item }}.yaml"
+  with_items: '{{ datadog_checks.keys() }}'
+  notify: restart DatadogAgent

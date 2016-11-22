@@ -3,3 +3,7 @@
 - name: restart datadog-agent
   action: service name=datadog-agent state=restarted
   when: datadog_enabled
+
+- name: restart DatadogAgent
+  action: win_service name=DatadogAgent state=restarted
+  when: datadog_enabled

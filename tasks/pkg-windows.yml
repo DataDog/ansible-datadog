@@ -1,0 +1,12 @@
+---
+- name: Download the DD installer
+  win_get_url:
+    url: "{{ datadog_msi_download_url }}"
+    dest: 'C:\\ddagent-cli-{{ datadog_msi_version }}.msi'
+    force: no
+
+- name: Install DD MSI
+  win_package:
+    path: 'C:\\ddagent-cli-{{ datadog_msi_version }}.msi'
+    product_id: "{{ datadog_msi_product_id }}"
+    state: present

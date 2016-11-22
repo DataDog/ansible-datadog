@@ -24,6 +24,12 @@ Role Variables
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_key_url` - Override default url to Datadog `apt` key
 
+Windows-specific variables (all mandatory):
+- `datadog_msi_download_url` - Download URL of the Agent MSI package (see (list of released MSIs)[https://s3.amazonaws.com/ddagent-windows-stable/installers.json]).
+- `datadog_msi_version` - Version of installed Agent (ex. `5.10.1`)
+- `datadog_msi_product_id` - Product ID of the version of the Agent that's installed
+(Key found under `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\` in the registry, for instance `{341AEBAA-5553-4EE1-9ED5-C2D0436EE43D}` for agent version `5.10.1`)
+
 Dependencies
 ------------
 None
@@ -76,6 +82,30 @@ Example Playbooks
   roles:
     - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
+
+Windows nodes:
+
+```
+- hosts: windows_servers
+  roles:
+    - { role: Datadog.datadog }
+  vars:
+    datadog_api_key: "80d4600a97bef845ae62b54dfdc88830"
+    datadog_msi_product_id: "{341AEBAA-5553-4EE1-9ED5-C2D0436EE43D}"
+    datadog_msi_download_url: http://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-5.10.1.msi
+    datadog_msi_version: '5.10.1'
+    datadog_checks:
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://example.com/nginx_status/
+            tags:
+              - instance:foo
+          - nginx_status_url: http://example2.com:1234/nginx_status/
+            tags:
+              - instance:bar
+```
+
 
 License
 -------
