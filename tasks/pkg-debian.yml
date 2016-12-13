@@ -1,5 +1,5 @@
 ---
-- apt: name=apt-transport-https state=latest
+- apt: name=apt-transport-https state=present
 
 - apt_key: id=C7A7DA52 keyserver=hkp://keyserver.ubuntu.com:80 state=present
   when: datadog_apt_key_url is not defined
