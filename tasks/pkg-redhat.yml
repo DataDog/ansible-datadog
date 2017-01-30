@@ -7,7 +7,7 @@
   notify: restart datadog-agent
 
 - name: Configure datadog-agent
-  template: src=datadog/datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
+  template: src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
   notify: restart datadog-agent
 
 - name: Update yum cache
