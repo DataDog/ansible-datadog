@@ -36,3 +36,13 @@
   with_items: '{{ datadog_checks.keys() }}'
   notify:
    - restart datadog-agent
+
+- name: Create a check agent for each Datadog check
+  copy:
+    src={{ item.src }}/{{ item.name }}
+    dest=/etc/dd-agent/checks.d/{{ item.name }}
+    owner={{ datadog_user }}
+    group={{ datadog_group }}
+  with_items: '{{ datadog_check_agents.keys() }}'
+  notify:
+   - restart datadog-agent
