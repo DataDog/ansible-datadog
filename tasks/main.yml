@@ -39,8 +39,8 @@
 
 - name: Create a check agent for each Datadog check
   copy:
-    src=/files/{{ item.name }}.py
-    dest=/etc/dd-agent/checks.d/{{ item.name }}.py
+    src={{ item }}.py
+    dest=/etc/dd-agent/checks.d/{{ item }}.py
     owner={{ datadog_user }}
     group={{ datadog_group }}
   with_items: '{{ datadog_check_agents }}'
