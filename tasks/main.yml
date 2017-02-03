@@ -50,7 +50,7 @@
 - name: Upgrade snakebite version
   pip:
     name: snakebite
-    version: {{ datadog_snakebite_version }}
+    version: "{{ datadog_snakebite_version }}"
     executable: /opt/datadog-agent/embedded/bin/pip
     state: present
   when: hadoop_server_monitoring is defined and hadoop_server_monitoring
