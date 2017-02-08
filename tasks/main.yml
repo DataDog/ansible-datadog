@@ -5,6 +5,9 @@
 - include: pkg-redhat.yml
   when: ansible_os_family == "RedHat"
 
+- include: pkg-suse.yml
+  when: ansible_os_family == "Suse"
+
 - name: Create main Datadog agent configuration file
   template:
     src: datadog.conf.j2
