@@ -18,7 +18,8 @@ Role Variables
 
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
-- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf`.
+- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf` ini that go under `[Main]`.
+- `datadog_config_ex` - extra ini sections to go in `/etc/dd-agent/datadog.conf`.
 - `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
 `datadog_checks` instead)
 - `datadog_apt_repo` - Override default Datadog `apt` repository
@@ -40,6 +41,11 @@ Example Playbooks
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+	extra_aggregators: version
     datadog_checks:
       process:
         init_config:

@@ -16,3 +16,10 @@
 {% if datadog_config -%}
   {{ datadog_config | to_nice_yaml }}
 {% endif %}
+
+{% if datadog_config_ex is defined -%}
+{% for key, value in datadog_config_ex.iteritems() %}
+[{{ key }}]
+{{ value | to_nice_yaml }}
+{% endfor %}
+{% endif %}
