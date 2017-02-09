@@ -3,4 +3,26 @@
   template: src=datadog.repo.j2 dest=/etc/yum.repos.d/datadog.repo owner=root group=root mode=0644
 
 - name: Install datadog-agent package
-  yum: name=datadog-agent state=latest
+  yum: name={{ datadog_agent_version }} state=present enablerepo=datadog
+  notify: restart datadog-agent
+
+- name: Configure datadog-agent
+  template: src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf
+  notify: restart datadog-agent
+
+- name: Update yum cache
+  command: sudo yum makecache
+  when: datadog-trace is defined and datadog-trace == True
+
+- name: Copy trace repo file into place
+  template: src=datadog-trace.repo.j2 dest=/etc/yum.repos.d/datadog-trace.repo owner=root group=root mode=0644
+  when: datadog-trace is defined and datadog-trace == True
+
+- name: Install datadog-trace agent
+  yum: name={{ datadog_trace_agent_version }} state=present
+  when: datadog-trace is defined and datadog-trace == True
+  notify: restart datadog-trace-agent
+
+- name: Uninstall dd-trace package
+  yum: name=dd-trace-agent state=absent
+  when: datadog-trace is defined and datadog-trace == False

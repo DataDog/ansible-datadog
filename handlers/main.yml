@@ -1,5 +1,6 @@
 ---
-
 - name: restart datadog-agent
-  action: service name=datadog-agent state=restarted
-  when: datadog_enabled
+  service: name=datadog-agent state=restarted
+
+- name: restart datadog-trace-agent
+  service: name=dd-trace-agent state=restarted
