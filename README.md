@@ -18,8 +18,8 @@ Role Variables
 
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
-- `datadog_config` - Settings to place in `/etc/dd-agent/datadog.conf` ini that go under `[Main]`.
-- `datadog_config_ex` - extra ini sections to go in `/etc/dd-agent/datadog.conf`.
+- `datadog_config` - Settings to place in the `/etc/dd-agent/datadog.conf` INI file that go under the `[Main]` section.
+- `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional).
 - `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
 `datadog_checks` instead)
 - `datadog_apt_repo` - Override default Datadog `apt` repository
