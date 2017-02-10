@@ -18,7 +18,7 @@ datadog_group: root
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
 
 # default install datadog tracing agent
-datadog-trace: False
+datadog_trace: False
 
 # temporary hardcoded datadog agents until tracing is fully integrated
 datadog_agent_version: datadog-agent-5.10.1-1

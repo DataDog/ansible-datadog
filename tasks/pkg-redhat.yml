@@ -12,17 +12,13 @@
 
 - name: Update yum cache
   command: sudo yum makecache
-  when: datadog-trace is defined and datadog-trace == True
+  when: datadog_trace
 
 - name: Copy trace repo file into place
   template: src=datadog-trace.repo.j2 dest=/etc/yum.repos.d/datadog-trace.repo owner=root group=root mode=0644
-  when: datadog-trace is defined and datadog-trace == True
+  when: datadog_trace
 
 - name: Install datadog-trace agent
-  yum: name={{ datadog_trace_agent_version }} state=present
-  when: datadog-trace is defined and datadog-trace == True
+  yum: name={{ datadog_trace_agent_version }} state=present enablerepo=datadog
+  when: datadog_trace
   notify: restart datadog-trace-agent
-
-- name: Uninstall dd-trace package
-  yum: name=dd-trace-agent state=absent
-  when: datadog-trace is defined and datadog-trace == False
