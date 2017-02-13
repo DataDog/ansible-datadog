@@ -56,6 +56,10 @@
   when: hadoop_server_monitoring is defined and hadoop_server_monitoring
   notify: restart datadog-agent
 
+- name: Install perl-DBD-MySQL
+  yum: state=present name=perl-DBD-MySQL
+  when: mysql_server_monitoring is defined and mysql_server_monitoring
+
 - mysql_db: name=datadog state=present
   when: data_server_monitoring is defined and data_server_monitoring
 
