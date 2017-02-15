@@ -18,8 +18,8 @@
 {% endif %}
 
 {% if datadog_config_ex is defined -%}
-{% for key, value in datadog_config_ex.iteritems() %}
-[{{ key }}]
-{{ value | to_nice_yaml }}
+{% for section, keyvals in datadog_config_ex.iteritems() %}
+[{{ section }}]
+{{ keyvals | to_nice_yaml }}
 {% endfor %}
 {% endif %}
