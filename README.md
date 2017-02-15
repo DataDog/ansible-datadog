@@ -41,6 +41,7 @@ Example Playbooks
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
+      apm_enabled: true
     datadog_config_ex:
       trace.config:
         env: dev
