@@ -1,6 +1,3 @@
 ---
 - name: restart datadog-agent
   service: name=datadog-agent state=restarted
-
-- name: restart datadog-trace-agent
-  service: name=dd-trace-agent state=restarted
