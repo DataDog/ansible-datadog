@@ -5,13 +5,7 @@ datadog_enabled: yes
 datadog_config: {}
 
 # default checks enabled
-datadog_checks:
-  ntp:
-    init_config:
-    instances:
-      - offset_threshold: 60
-        host: infra102.int.udemy.com
-        port: ntp
+datadog_checks: {}
 
 # default checks enabled
 datadog_check_agents: {}
