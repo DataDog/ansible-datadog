@@ -21,8 +21,6 @@
 - debug: 'msg="[DEPRECATION NOTICE] Using `datadog_process_checks` is deprecated, use `process` under `datadog_checks` instead"'
   when: datadog_process_checks is defined
 
-- service: name=dd-trace-agent state=removed
-
 - service: name=datadog-agent state=started enabled=yes
   when: datadog_enabled
 
