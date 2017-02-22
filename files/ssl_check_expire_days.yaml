@@ -3,3 +3,5 @@ init_config:
 instances:
   - site: lb101.udemy.com
   - site: lb102.udemy.com
+  - site: udemysupport.zendesk.com
+  - site: sso.udemy.com:9031
