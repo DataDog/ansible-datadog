@@ -24,6 +24,7 @@ Role Variables
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_key_url` - Override default url to Datadog `apt` key
 - `datadog_apt_key_url_new` - Override default url to the new Datadog `apt` key (in the near future the `apt` repo will have to be checked against this new key instead of the current key)
+- `datadog_yum_repo` - override the default yum repo
 
 Dependencies
 ------------
