@@ -13,3 +13,5 @@ datadog_group: root
 
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
+
+datadog_yum_repo: "https://yum.datadoghq.com/rpm/"
