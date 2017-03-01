@@ -46,7 +46,7 @@ Example Playbooks
       trace.config:
         env: dev
       trace.concentrator:
-	extra_aggregators: version
+        extra_aggregators: version
     datadog_checks:
       process:
         init_config:
