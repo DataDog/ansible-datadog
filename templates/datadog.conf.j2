@@ -16,3 +16,10 @@
 {% if datadog_config -%}
   {{ datadog_config | to_nice_yaml }}
 {% endif %}
+
+{% if datadog_config_ex is defined -%}
+{% for section, keyvals in datadog_config_ex.iteritems() %}
+[{{ section }}]
+{{ keyvals | to_nice_yaml }}
+{% endfor %}
+{% endif %}
