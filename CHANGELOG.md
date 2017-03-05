@@ -1,9 +1,9 @@
 CHANGELOG
 =========
-# 1.3.0 / 2017-2-27
+# 1.3.0 / Unreleased
 
 * [IMPROVEMENT] sha256sum is deprecated per [Ansible documentation](http://docs.ansible.com/ansible/get_url_module.html).  SHA1 is the only universal option across all versions, so it was chosen.
-* [FEATURE] Allow APT repo setting to be user defined.
+* [FEATURE] Allow yum repo setting to be user defined.
 
 # 1.2.0 / 2016-12-13
 
