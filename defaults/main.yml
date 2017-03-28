@@ -7,7 +7,7 @@ datadog_config: {}
 # default checks enabled
 datadog_checks: {}
 
-# default checks enabled
+# default check agents enabled
 datadog_check_agents: {}
 
 # default user/group
@@ -16,11 +16,3 @@ datadog_group: root
 
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
-
-datadog_mysql_host: localhost
-datadog_mysql_user: datadog
-datadog_mysql_password: ThisNeedsToBeChangedViaVault
-datadog_mysql_replication_enabled: True
-datadog_mysql_extra_status_enabled: True
-datadog_mysql_extra_innodb_enabled: True
-datadog_mysql_extra_performance_enabled: True
