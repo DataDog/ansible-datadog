@@ -15,4 +15,4 @@
 
 - apt_repository: repo='{{ datadog_apt_repo }}' state=present update_cache=yes
 
-- apt: name=datadog-agent state=latest
+- apt: name={{ datadog_agent_version }} state=present enablerepo=datadog
