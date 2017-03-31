@@ -7,6 +7,9 @@ datadog_config: {}
 # default checks enabled
 datadog_checks: {}
 
+# default check agents enabled
+datadog_check_agents: {}
+
 # default user/group
 datadog_user: dd-agent
 datadog_group: root
