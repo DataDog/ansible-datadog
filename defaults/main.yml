@@ -13,3 +13,10 @@ datadog_group: root
 
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
+
+# Pin agent to a version. Highly recommended.
+datadog_agent_version: ""
+
+# Set this to `yes` to allow agent downgrades on apt-based platforms.
+# Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
+datadog_agent_allow_downgrade: no
