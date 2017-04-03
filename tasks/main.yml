@@ -14,17 +14,20 @@
   notify: restart datadog-agent
 
 # DEPRECATED: Remove specific handling of the process check for next major release
-- template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
+- name: Add process check configuration
+  template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
   when: datadog_process_checks is defined
   notify: restart datadog
 
 - debug: 'msg="[DEPRECATION NOTICE] Using `datadog_process_checks` is deprecated, use `process` under `datadog_checks` instead"'
   when: datadog_process_checks is defined
 
-- service: name=datadog-agent state=started enabled=yes
+- name: Ensure service is running
+  service: name=datadog-agent state=started enabled=yes
   when: datadog_enabled
 
-- service: name=datadog-agent state=stopped enabled=no
+- name: Ensure service is not running
+  service: name=datadog-agent state=stopped enabled=no
   when: not datadog_enabled
 
 - name: Create a configuration file for each Datadog check
