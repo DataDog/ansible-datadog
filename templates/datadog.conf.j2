@@ -14,12 +14,12 @@
 
 {# These variables are free-style, passed through a hash -#}
 {% if datadog_config -%}
-  {{ datadog_config | to_nice_yaml }}
+  {{ datadog_config | to_yaml }}
 {% endif %}
 
 {% if datadog_config_ex is defined -%}
 {% for section, keyvals in datadog_config_ex.items() %}
 [{{ section }}]
-{{ keyvals | to_nice_yaml }}
+{{ keyvals | to_yaml }}
 {% endfor %}
 {% endif %}
