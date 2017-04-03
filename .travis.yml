@@ -6,4 +6,4 @@ install:
   - pip install ansible-lint
 
 script:
-  - ansible-lint $(find tests -name *yml) -x ANSIBLE0010
+  - ansible-lint -v $(find tests -name *yml) -x ANSIBLE0010
