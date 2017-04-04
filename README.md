@@ -18,7 +18,8 @@ Role Variables
 
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
-  Examples: `1:5.12.3-1` on apt-based platforms, `5.12.3-1` on yum-based platforms- `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
+  Examples: `1:5.12.3-1` on apt-based platforms, `5.12.3-1` on yum-based platforms
+- `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
 - `datadog_config` - Settings to place in the `/etc/dd-agent/datadog.conf` INI file that go under the `[Main]` section.
 - `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional).
 - `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
