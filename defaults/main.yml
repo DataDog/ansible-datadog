@@ -18,6 +18,9 @@ datadog_group: root
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
 
 datadog_agent_version: ""
+# Set this to `yes` to allow agent downgrades on apt-based platforms.
+# Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
+datadog_agent_allow_downgrade: no
 
 datadog_mysql_host: localhost
 datadog_mysql_user: datadog
