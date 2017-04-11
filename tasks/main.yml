@@ -22,11 +22,11 @@
 - debug: 'msg="[DEPRECATION NOTICE] Using `datadog_process_checks` is deprecated, use `process` under `datadog_checks` instead"'
   when: datadog_process_checks is defined
 
-- name: Ensure service is running
+- name: Ensure datadog-agent is running
   service: name=datadog-agent state=started enabled=yes
   when: datadog_enabled
 
-- name: Ensure service is not running
+- name: Ensure datadog-agent is not running
   service: name=datadog-agent state=stopped enabled=no
   when: not datadog_enabled
 
