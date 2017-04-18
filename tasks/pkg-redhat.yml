@@ -23,7 +23,7 @@
     enablerepo: datadog
   when: datadog_agent_version != ""
 
-- name Install latest datadog-agent package
+- name: Install latest datadog-agent package
   yum:
     name: datadog-agent
     state: latest
