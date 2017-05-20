@@ -13,6 +13,7 @@ datadog_group: root
 
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
+datadog_apt_key_url: "hkp://keyserver.ubuntu.com:80"
 
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
