@@ -1,9 +1,13 @@
 ---
 - include: pkg-debian.yml
   when: ansible_os_family == "Debian"
+  tags:
+    - 'datadog'
 
 - include: pkg-redhat.yml
   when: ansible_os_family == "RedHat"
+  tags:
+    - 'datadog'
 
 - name: Create main Datadog agent configuration file
   template:
@@ -12,23 +16,33 @@
     owner: '{{ datadog_user }}'
     group: '{{ datadog_group }}'
   notify: restart datadog-agent
+  tags:
+    - 'datadog'
 
 # DEPRECATED: Remove specific handling of the process check for next major release
 - name: Add process check configuration
   template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
   when: datadog_process_checks is defined
   notify: restart datadog
+  tags:
+    - 'datadog'
 
 - debug: 'msg="[DEPRECATION NOTICE] Using `datadog_process_checks` is deprecated, use `process` under `datadog_checks` instead"'
   when: datadog_process_checks is defined
+  tags:
+    - 'datadog'
 
 - name: Ensure datadog-agent is running
   service: name=datadog-agent state=started enabled=yes
   when: datadog_enabled
+  tags:
+    - 'datadog'
 
 - name: Ensure datadog-agent is not running
   service: name=datadog-agent state=stopped enabled=no
   when: not datadog_enabled
+  tags:
+    - 'datadog'
 
 - name: Create a configuration file for each Datadog check
   template:
@@ -39,3 +53,5 @@
   with_items: '{{ datadog_checks|list }}'
   notify:
    - restart datadog-agent
+  tags:
+    - 'datadog'
