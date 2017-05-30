@@ -1,6 +1,6 @@
 ---
 - name: Install apt-transport-https
-  apt: name=apt-transport-https state=present
+  apt: name=apt-transport-https state=present update_cache=yes
 
 - name: Install ubuntu apt-key server
   apt_key: id=A2923DFF56EDA6E76E55E492D3A80E30382E94DE keyserver=hkp://keyserver.ubuntu.com:80 state=present
