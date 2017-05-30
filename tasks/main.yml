@@ -17,7 +17,7 @@
 - name: Add process check configuration
   template: src=process.yaml.j2 dest=/etc/dd-agent/conf.d/process.yaml
   when: datadog_process_checks is defined
-  notify: restart datadog
+  notify: restart datadog-agent
 
 - debug: 'msg="[DEPRECATION NOTICE] Using `datadog_process_checks` is deprecated, use `process` under `datadog_checks` instead"'
   when: datadog_process_checks is defined
@@ -37,5 +37,4 @@
     owner: '{{ datadog_user }}'
     group: '{{ datadog_group }}'
   with_items: '{{ datadog_checks|list }}'
-  notify:
-   - restart datadog-agent
+  notify: restart datadog-agent
