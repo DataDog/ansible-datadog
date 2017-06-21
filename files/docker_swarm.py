@@ -1,5 +1,5 @@
 import socket
-import subprocess
+import docker
 
 from checks import AgentCheck
 
@@ -7,15 +7,19 @@ from checks import AgentCheck
 class DockerSwarm(AgentCheck):
 
     def check(self, instance):
+
         metric = "docker_swarm.running"
         host_name = socket.gethostbyname(socket.gethostname())
         tag = 'host:%s' % host_name
 
-        pipes = subprocess.Popen("sudo docker node ls",stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        std_out, std_err = pipes.communicate()
-        returncode = pipes.returncode
+        client = docker.from_env()
 
-        if returncode:
-            self.gauge(metric, returncode, tags=[tag])
-        else:
-            self.gauge(metric, -1, tags=[tag])
+        try:
+            manager_nodes = client.nodes(filters={'role': 'manager'})
+
+            if manager_nodes:
+                self.gauge(metric, 1, tags=[tag])
+            else:
+                self.gauge(metric, 0, tags=[tag])
+        except Exception:
+            self.gauge(metric, 0, tags=[tag])
