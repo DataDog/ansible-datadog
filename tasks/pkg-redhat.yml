@@ -16,11 +16,10 @@
     group: root
     mode: 0644
 
-- name: Install datadog-agent package
+- name: Install pinned datadog-agent package
   yum:
     name: datadog-agent-{{ datadog_agent_version }}
     state: present
-    enablerepo: datadog
   when: datadog_agent_version != ""
 
 - name: Install latest datadog-agent package
