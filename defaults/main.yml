@@ -7,6 +7,9 @@ datadog_config: {}
 # default checks enabled
 datadog_checks: {}
 
+# default check agents enabled
+datadog_check_agents: {}
+
 # default user/group
 datadog_user: dd-agent
 datadog_group: root
@@ -14,9 +17,15 @@ datadog_group: root
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
 
-# Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
-
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 datadog_agent_allow_downgrade: no
+
+datadog_mysql_host: localhost
+datadog_mysql_user: datadog
+datadog_mysql_password: ThisNeedsToBeChangedViaVault
+datadog_mysql_replication_enabled: True
+datadog_mysql_extra_status_enabled: True
+datadog_mysql_extra_innodb_enabled: True
+datadog_mysql_extra_performance_enabled: True

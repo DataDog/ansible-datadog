@@ -32,9 +32,39 @@
 
 - name: Create a configuration file for each Datadog check
   template:
-    src: checks.yaml.j2
-    dest: /etc/dd-agent/conf.d/{{ item }}.yaml
-    owner: '{{ datadog_user }}'
-    group: '{{ datadog_group }}'
-  with_items: '{{ datadog_checks|list }}'
+    src=checks.yaml.j2
+    dest=/etc/dd-agent/conf.d/{{ item }}.yaml
+    owner={{ datadog_user }}
+    group={{ datadog_group }}
+  with_items: '{{ datadog_checks.keys() }}'
+  notify:
+   - restart datadog-agent
+
+- name: Create a check agent for each Datadog check
+  copy:
+    src={{ item }}.py
+    dest=/etc/dd-agent/checks.d/{{ item }}.py
+    owner={{ datadog_user }}
+    group={{ datadog_group }}
+  with_items: '{{ datadog_check_agents }}'
+  notify:
+   - restart datadog-agent
+
+- name: Upgrade snakebite version
+  pip:
+    name: snakebite
+    version: "{{ datadog_snakebite_version }}"
+    executable: /opt/datadog-agent/embedded/bin/pip
+    state: present
+  when: hadoop_server_monitoring is defined and hadoop_server_monitoring
   notify: restart datadog-agent
+
+- name: Install perl-DBD-MySQL
+  yum: state=present name=perl-DBD-MySQL
+  when: mysql_server_monitoring is defined and mysql_server_monitoring
+
+- mysql_db: name=datadog state=present
+  when: data_server_monitoring is defined and data_server_monitoring
+
+- mysql_user: name=datadog password="{{ datadog_mysql_data_password }}" priv=datadog.*:ALL state=present
+  when: data_server_monitoring is defined and data_server_monitoring
