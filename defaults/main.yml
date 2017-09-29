@@ -25,3 +25,29 @@ datadog_agent_version: ""
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 datadog_agent_allow_downgrade: no
+
+########################################################################
+###            Beta-Agent6-only attributes, experimental             ###
+###   These attributes are not part of the stable API of the role    ###
+###   Subject to breaking changes between bugfix/minor versions      ###
+###                Only works on debianoids for now                  ###
+
+# Set to true to install an agent6 instead of agent5.
+#
+# To upgrade from agent5 to agent6, you need to:
+# * set 'datadog_agent6' to true, and
+# * either set 'datadog_agent_version' to an existing agent6 version
+#   (recommended) or leave it empty to always install the latest version.
+#
+# To downgrade from agent6 to agent5, you need to:
+# * 'datadog_set agent6' to false, and
+# * pin 'datadog_agent_version' to an existing agent5 version
+# * set 'datadog_agent_allow_downgrade' to yes
+datadog_agent6: no
+
+# beta APT repo where datadog-agent v6 packages are available
+datadog_agent6_apt_repo: "deb http://apt.datadoghq.com beta main"
+
+###           End of Beta-Agent6-only experimental attributes        ###
+########################################################################
+

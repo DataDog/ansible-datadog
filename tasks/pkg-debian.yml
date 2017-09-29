@@ -19,7 +19,16 @@
   when: datadog_apt_key_url is defined
 
 - name: Ensure Datadog repository is up-to-date
-  apt_repository: repo='{{ datadog_apt_repo }}' state=present update_cache=yes
+  apt_repository:
+    repo: "{{ datadog_apt_repo }}"
+    state: "{% if datadog_agent6 %}absent{% else %}present{% endif %}"
+    update_cache: yes
+
+- name: Ensure Datadog repository is up-to-date (beta)
+  apt_repository:
+    repo: "{{ datadog_agent6_apt_repo }}"
+    state: "{% if datadog_agent6 %}present{% else %}absent{% endif %}"
+    update_cache: yes
 
 - name: Ensure pinned version of Datadog agent is installed
   apt:
