@@ -69,10 +69,8 @@ class UwsgiCheck(AgentCheck):
 
     def _send_stats_workers(self, data):
         code_dir = data['cwd']
-        master_pid = data['pid']
         global_tags = [
             'code_dir:%s' % code_dir,
-            'master_pid:%s' % master_pid,
         ]
 
         self.gauge('listen_queue', data['listen_queue'], tags=global_tags)
@@ -80,7 +78,6 @@ class UwsgiCheck(AgentCheck):
 
         for worker in data['workers']:
             worker_tags = [
-                'pid:%s' % worker['pid'],
                 'worker_id:%s' % worker['id'],
             ]
             tags = worker_tags + global_tags
