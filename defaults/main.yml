@@ -14,6 +14,11 @@ datadog_group: root
 # default apt repo
 datadog_apt_repo: "deb http://apt.datadoghq.com/ stable main"
 
+# default yum repo and keys
+datadog_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/"
+datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
+datadog_yum_gpgkey_new: "http://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
+
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
 

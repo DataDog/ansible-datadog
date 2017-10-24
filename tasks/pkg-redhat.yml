@@ -1,7 +1,7 @@
 ---
 - name: Download new RPM key
   get_url:
-    url: "http://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
+    url: "{{ datadog_yum_gpgkey_new }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
     sha256sum: 694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085
 
