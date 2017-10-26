@@ -38,3 +38,12 @@
     group: '{{ datadog_group }}'
   with_items: '{{ datadog_checks|list }}'
   notify: restart datadog-agent
+
+- name: copy such custom configuration file to conf.d
+  copy:
+    src: "{{ custom_confd }}"
+    dest: /etc/dd-agent/conf.d
+    owner: '{{ datadog_user }}'
+    group: '{{ datadog_group }}'
+  when: custom_confd is defined
+  notify: restart datadog-agent

@@ -29,6 +29,7 @@ Role Variables
 - `datadog_apt_key_url` - Override default url to Datadog `apt` key
 - `datadog_apt_key_url_new` - Override default url to the new Datadog `apt` key (in the near future the `apt` repo will have to be checked against this new key instead of the current key)
 - `datadog_allow_agent_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
+- `custom_confd` - Put custom yaml files into conf.d (build a new directory in your repo with your yaml, and define custom_confd = your_custom_direcotry/)
 
 Dependencies
 ------------
