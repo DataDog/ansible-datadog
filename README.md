@@ -28,7 +28,27 @@ Role Variables
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_key_url` - Override default url to Datadog `apt` key
 - `datadog_apt_key_url_new` - Override default url to the new Datadog `apt` key (in the near future the `apt` repo will have to be checked against this new key instead of the current key)
-- `datadog_allow_agent_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
+- `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
+
+Agent 6 (beta)
+--------------
+
+To upgrade or install agent6, you need to:
+
+- set `datadog_agent6` to true
+- either set `datadog_agent_version` to an existing agent6 version
+  (recommended) or leave it empty to always install the latest version.
+
+To downgrade from agent6 to agent5, you need to:
+
+- set `datadog_agent6` to false
+- pin `datadog_agent_version` to an existing agent5 version
+- set `datadog_agent_allow_downgrade` to yes
+
+Variables:
+
+- `datadog_agent6` - install an agent6 instead of agent5 (default to `false`)
+- `datadog_agent6_apt_repo` - Override default Datadog `apt` repository for agent6
 
 Dependencies
 ------------
