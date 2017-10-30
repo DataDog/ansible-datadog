@@ -33,6 +33,10 @@ Role Variables
 Agent 6 (beta)
 --------------
 
+This role includes experimental support of the beta versions of Datadog Agent 6.0 on apt-based platforms.
+See below for usage. General information on the Datadog Agent 6 is available in the
+[datadog-agent](https://github.com/DataDog/datadog-agent/) repo.
+
 To upgrade or install agent6, you need to:
 
 - set `datadog_agent6` to true
@@ -56,7 +60,7 @@ None
 
 Example Playbooks
 -------------------------
-```
+```yml
 - hosts: servers
   roles:
     - { role: Datadog.datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
@@ -104,8 +108,29 @@ Example Playbooks
               - instance:bar
 ```
 
-```
+```yml
 - hosts: servers
+  roles:
+    - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+```
+
+Known Issues and Workarounds
+----------------------------
+
+On Debian Stretch, the `apt_key` module that the role uses requires an additional system dependency to work correctly.
+Unfortunately that dependency (`dirmngr`) is not provided by the module. To work around this, you can add the following
+to the playbooks that make use of the present role:
+
+```yml
+---
+- hosts: all
+  pre_tasks:
+    - name: Debian Stretch requires dirmngr package to be installed in order to use apt_key
+      become: yes  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+      apt:
+        name: dirmngr
+        state: present
+
   roles:
     - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
