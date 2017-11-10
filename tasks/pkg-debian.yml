@@ -35,10 +35,12 @@
     name: datadog-agent={{ datadog_agent_version }}
     state: present
     force: "{{ datadog_agent_allow_downgrade }}"
+    update_cache: yes
   when: datadog_agent_version != ""
 
 - name: Ensure Datadog agent is installed
   apt:
     name: datadog-agent
     state: latest
+    update_cache: yes
   when: datadog_agent_version == ""
