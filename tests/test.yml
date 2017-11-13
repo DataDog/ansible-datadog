@@ -1,4 +1,5 @@
 ---
 - hosts: localhost
   roles:
-  - { role: ansible-datadog, become: yes }
+    - role: ansible-datadog
+      become: yes
