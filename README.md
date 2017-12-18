@@ -71,7 +71,7 @@ Example Playbooks
       tags: "mytag0, mytag1"
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
-      log_enabled: true 
+      log_enabled: true   # log collection is available on agent 6
     datadog_config_ex:
       trace.config:
         env: dev
@@ -107,6 +107,7 @@ Example Playbooks
           - nginx_status_url: http://example2.com:1234/nginx_status/
             tags:
               - instance:bar
+        #Log collection is available on agent 6
         logs:
           - type: file
             path: /var/log/access.log
