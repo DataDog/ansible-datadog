@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 1.5.0 / 2018-01-05
+
+* [FEATURE] Add Agent6 (beta) support on RPM-based distros. See [#90][] (thanks [@brendanlong][])
+
 # 1.4.0 / 2017-10-30
 
 * [FEATURE] Allow specifying custom repo. See [#80][]
