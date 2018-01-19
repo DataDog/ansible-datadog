@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 1.6.0 / 2018-01-19
+
+* [IMPROVEMENT] Refresh apt cache every hour. See [#98][]
+
 # 1.5.0 / 2018-01-05
 
 * [FEATURE] Add Agent6 (beta) support on RPM-based distros. See [#90][] (thanks [@brendanlong][])
