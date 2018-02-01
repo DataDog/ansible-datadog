@@ -6,7 +6,7 @@
   when: ansible_os_family == "RedHat"
 
 - include: agent5.yml
-  when: not datadog_agent6
+  when: datadog_agent5
 
 - include: agent6.yml
-  when: datadog_agent6
+  when: not datadog_agent5

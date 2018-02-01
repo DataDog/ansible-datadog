@@ -16,17 +16,17 @@
     enabled: yes
     gpgcheck: yes
     gpgkey: "{{ datadog_yum_gpgkey }}"
-    state: "{% if datadog_agent6 %}absent{% else %}present{% endif %}"
+    state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
 
-- name: Install DataDog yum repo (beta)
+- name: Install DataDog yum repo (agent5)
   yum_repository:
     name: datadog-beta
     description: Datadog, Inc.
-    baseurl: "{{ datadog_agent6_yum_repo }}"
+    baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: yes
     gpgcheck: yes
     gpgkey: "{{ datadog_yum_gpgkey }}"
-    state: "{% if datadog_agent6 %}present{% else %}absent{% endif %}"
+    state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
 
 - name: Install pinned datadog-agent package
   yum:

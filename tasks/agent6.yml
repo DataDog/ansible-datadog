@@ -12,9 +12,6 @@
     group: '{{ datadog_group }}'
   notify: restart datadog-agent
 
-- debug: 'msg="Using deprecated `datadog_process_checks` is no longer supported in agent6, use `process` under `datadog_checks` instead"'
-  when: datadog_process_checks is defined
-
 - name: Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2

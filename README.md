@@ -3,7 +3,9 @@ Ansible Datadog Role
 [![Ansible Galaxy](http://img.shields.io/badge/galaxy-Datadog.datadog-660198.svg)](https://galaxy.ansible.com/Datadog/datadog/)
 [![Build Status](https://travis-ci.org/DataDog/ansible-datadog.svg?branch=master)](https://travis-ci.org/DataDog/ansible-datadog)
 
-Install and configure Datadog base agent & checks.
+Install and configure Datadog base agent & checks. Starting with version `2` of
+this role version 6 of the agent is installed by default (instead of version
+5).
 
 Supports most Debian and RHEL-based Linux distributions.
 
@@ -19,41 +21,37 @@ Role Variables
 
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
-  Examples: `1:5.12.3-1` on apt-based platforms, `5.12.3-1` on yum-based platforms
+  Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms
 - `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
 - `datadog_config` - Settings to place in the `/etc/dd-agent/datadog.conf` INI file that go under the `[Main]` section.
 - `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional).
-- `datadog_process_checks` - Array of process checks and options (DEPRECATED: use `process` under
-`datadog_checks` instead)
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
 - `datadog_apt_key_url` - Override default url to Datadog `apt` key
 - `datadog_apt_key_url_new` - Override default url to the new Datadog `apt` key (in the near future the `apt` repo will have to be checked against this new key instead of the current key)
 - `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
 
-Agent 6 (beta)
---------------
+Agent 5 (older version)
+-----------------------
 
-This role includes experimental support of the beta versions of Datadog Agent 6.0 on apt-based platforms.
-See below for usage. General information on the Datadog Agent 6 is available in the
-[datadog-agent](https://github.com/DataDog/datadog-agent/) repo.
+This role includes support for Datadog Agent version 5.
 
-To upgrade or install agent6, you need to:
+To install agent5, you need to:
 
-- set `datadog_agent6` to true
-- either set `datadog_agent_version` to an existing agent6 version
-  (recommended) or leave it empty to always install the latest version.
+- set `datadog_agent5` to true
+- either set `datadog_agent_version` to an existing agent5 version
+  (recommended) or leave it empty to always install the latest version (`5.*`).
 
 To downgrade from agent6 to agent5, you need to:
 
-- set `datadog_agent6` to false
+- set `datadog_agent5` to true
 - pin `datadog_agent_version` to an existing agent5 version
 - set `datadog_agent_allow_downgrade` to yes
 
 Variables:
 
-- `datadog_agent6` - install an agent6 instead of agent5 (default to `false`)
-- `datadog_agent6_apt_repo` - Override default Datadog `apt` repository for agent6
+- `datadog_agent5` - install an agent5 instead of agent5 (default to `false`)
+- `datadog_agent5_apt_repo` - Override default Datadog `apt` repository for agent5
 
 Dependencies
 ------------
@@ -67,7 +65,7 @@ Example Playbooks
     - { role: Datadog.datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
   vars:
     datadog_api_key: "123456"
-    datadog_agent_version: "1:5.12.3-1" # for apt-based platforms, use a `5.12.3-1` format on yum-based platforms
+    datadog_agent_version: "1:6.0.0-1" # for apt-based platforms, use a `6.0.0-1` format on yum-based platforms
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
@@ -115,13 +113,11 @@ Example Playbooks
             service: myapp
             source: nginx
             sourcecategory: http_web_access
-    
           - type: file
             path: /var/log/error.log
             service: nginx
             source: nginx
             sourcecategory: http_web_access
-         
 ```
 
 ```yml

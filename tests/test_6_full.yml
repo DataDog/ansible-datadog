@@ -2,7 +2,6 @@
   roles:
     - { role: ansible-datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
   vars:
-    datadog_agent6: true
     datadog_api_key: "123456"
     datadog_agent_allow_downgrade: true
     datadog_config:
