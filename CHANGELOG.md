@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.0.0 / Unreleased
+
+* [RELEASE] Make Agent6 the default version to install.
+
 # 1.6.0 / 2018-01-19
 
 * [IMPROVEMENT] Refresh apt cache every hour. See [#98][]
