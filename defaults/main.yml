@@ -12,13 +12,13 @@ datadog_user: dd-agent
 datadog_group: root
 
 # default apt repo
-datadog_apt_repo: "deb http://apt.datadoghq.com/ stable 6"
+datadog_apt_repo: "deb https://apt.datadoghq.com/ stable 6"
 datadog_apt_cache_valid_time: 3600
 
 # default yum repo and keys
 datadog_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}/"
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
-datadog_yum_gpgkey_new: "http://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
+datadog_yum_gpgkey_new: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
@@ -40,7 +40,7 @@ datadog_agent5: no
 # * set 'datadog_agent_allow_downgrade' to yes
 
 # repos where datadog-agent v5 packages are available
-datadog_agent5_apt_repo: "deb http://apt.datadoghq.com stable main"
+datadog_agent5_apt_repo: "deb https://apt.datadoghq.com stable main"
 datadog_agent5_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/"
 
 ###           End of Beta-Agent6-only experimental attributes        ###
