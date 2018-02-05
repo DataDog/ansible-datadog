@@ -15,7 +15,7 @@
 - name: Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
-    dest: "/etc/datadog-agent/conf.d/{{ item }}.yaml"
+    dest: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
     owner: '{{ datadog_user }}'
     group: '{{ datadog_group }}'
   with_items: '{{ datadog_checks|list }}'
