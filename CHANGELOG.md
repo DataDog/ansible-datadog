@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-# 2.0.0 / Unreleased
+# 2.0.1 / 2018-03-05
+
+* [BUGFIX] Remove failing import of expired APT key. See [#105][]
+
+# 2.0.0 / 2018-02-27
 
 * [RELEASE] Make Agent6 the default version to install.
 * [IMPROVEMENT] Defaulting to HTTPS for apt and yum repo.
@@ -59,6 +63,10 @@ Initial release, compatible with Ansible v1 & v2
 [#68]: https://github.com/DataDog/ansible-datadog/issues/68
 [#80]: https://github.com/DataDog/ansible-datadog/issues/80
 [#81]: https://github.com/DataDog/ansible-datadog/issues/81
+[#90]: https://github.com/DataDog/ansible-datadog/issues/90
+[#98]: https://github.com/DataDog/ansible-datadog/issues/98
+[#105]: https://github.com/DataDog/ansible-datadog/issues/105
+[@brendanlong]: https://github.com/brendanlong
 [@eplanet]: https://github.com/eplanet
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
