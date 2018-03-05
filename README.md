@@ -27,8 +27,7 @@ Role Variables
 - `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional).
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
-- `datadog_apt_key_url` - Override default url to Datadog `apt` key
-- `datadog_apt_key_url_new` - Override default url to the new Datadog `apt` key (in the near future the `apt` repo will have to be checked against this new key instead of the current key)
+- `datadog_apt_key_url_new` - Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role)
 - `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
 
 Agent 5 (older version)
