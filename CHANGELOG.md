@@ -5,6 +5,10 @@ CHANGELOG
 
 * [BUGFIX] Remove failing import of expired APT key. See [#105][]
 
+# 1.6.1 / 2018-03-05
+
+* [BUGFIX] Remove failing import of expired APT key. See [#105][]
+
 # 2.0.0 / 2018-02-27
 
 * [RELEASE] Make Agent6 the default version to install.
