@@ -5,7 +5,7 @@ This is an example setup, based on vagrant + virtualbox, that allows to easily r
 # Requirements
 
 - vagrant > 2.0.0
-- vitrualbox > 5.1.28
+- virtualbox > 5.1.28
 
 # Setup
 
