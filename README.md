@@ -49,7 +49,7 @@ To downgrade from agent6 to agent5, you need to:
 
 Variables:
 
-- `datadog_agent5` - install an agent5 instead of agent5 (default to `false`)
+- `datadog_agent5` - install agent5 instead of agent6 (default to `false`)
 - `datadog_agent5_apt_repo` - Override default Datadog `apt` repository for agent5
 
 Dependencies
