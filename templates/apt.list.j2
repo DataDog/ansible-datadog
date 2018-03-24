@@ -1,0 +1,5 @@
+{% if datadog_agent5 %}
+{{ datadog_agent5_apt_repo }}
+{% else %}
+{{ datadog_apt_repo }}
+{% endif %}
