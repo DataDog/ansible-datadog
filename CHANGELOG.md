@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.0.2 / 2018-03-27
+
+* [BUGFIX] Remove empty brackets from datadog.yaml when datadog_config is empty. See [#107][]
+
 # 2.0.1 / 2018-03-05
 
 * [BUGFIX] Remove failing import of expired APT key. See [#105][]
