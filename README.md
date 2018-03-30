@@ -69,7 +69,7 @@ Example Playbooks
       tags: "mytag0, mytag1"
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
-      log_enabled: true   # log collection is available on agent 6
+      logs_enabled: true  # log collection is available on agent 6
     datadog_config_ex:
       trace.config:
         env: dev
