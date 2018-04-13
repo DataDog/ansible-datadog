@@ -12,6 +12,14 @@
     group: '{{ datadog_group }}'
   notify: restart datadog-agent
 
+- name: Ensure configuration directories are present for each Datadog check
+  file:
+    dest: "/etc/datadog-agent/conf.d/{{ item }}.d"
+    state: directory
+    owner: '{{ datadog_user }}'
+    group: '{{ datadog_group }}'
+  with_items: '{{ datadog_checks|list }}'
+
 - name: Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
