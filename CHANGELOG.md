@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.0.3 / 2018-04-13
+
+* [BUGFIX] Removing legacy http apt repos pre-dating usage of HTTPS. See [#116][]
+
 # 2.0.2 / 2018-03-27
 
 * [BUGFIX] Remove empty brackets from datadog.yaml when datadog_config is empty. See [#107][]
