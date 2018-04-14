@@ -21,5 +21,6 @@
     dest: /etc/dd-agent/conf.d/{{ item }}.yaml
     owner: '{{ datadog_user }}'
     group: '{{ datadog_group }}'
+  when: item.inventory_groups is not defined or (group_names | intersect(item.inventory_groups) | length)
   with_items: '{{ datadog_checks|list }}'
   notify: restart datadog-agent
