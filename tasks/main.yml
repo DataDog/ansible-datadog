@@ -1,12 +1,12 @@
 ---
-- include: pkg-debian.yml
+- import_playbook: pkg-debian.yml
   when: ansible_os_family == "Debian"
 
-- include: pkg-redhat.yml
+- import_playbook: pkg-redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include: agent5.yml
+- import_playbook: agent5.yml
   when: datadog_agent5
 
-- include: agent6.yml
+- import_playbook: agent6.yml
   when: not datadog_agent5
