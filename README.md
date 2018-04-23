@@ -56,12 +56,12 @@ To enable the process agent on agent 5, you need to set on `datadog_config`:
 
 * `process_agent_enabled` to true
 
-To enable the cmdline scrubbing by the process agent, under the `datadog_config_ex`, put:
+To enable/disable the process args scrubbing by the process agent, under the `datadog_config_ex`, put:
 
 ```yml
 process.config:
-  scrub_args: true
-  custom_sensitive_words: "consul_token,dd_api_key"
+  scrub_args: true # default value is true
+  custom_sensitive_words: "consul_token,dd_api_key" # to expand the default list of sensitive words
 ```
 
 Dependencies
@@ -84,8 +84,8 @@ Example Playbooks
       logs_enabled: true  # log collection is available on agent 6
       process_config: # on agent 6
         enabled: "true" # to enable process-agent
-        scrub_args: true # to enable cmdline scrubbing
-        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the list of sensitive words used by the scrubber
+        scrub_args: true # to enable/disable process args scrubbing; default value is true
+        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the default list of sensitive words
     datadog_config_ex:
       trace.config:
         env: dev
