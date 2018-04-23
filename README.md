@@ -52,6 +52,18 @@ Variables:
 - `datadog_agent5` - install agent5 instead of agent6 (default to `false`)
 - `datadog_agent5_apt_repo` - Override default Datadog `apt` repository for agent5
 
+To enable the process agent on agent 5, you need to set on `datadog_config`:
+
+* `process_agent_enabled` to true
+
+To enable the cmdline scrubbing by the process agent, under the `datadog_config_ex`, put:
+
+```yml
+process.config:
+  scrub_args: true
+  custom_sensitive_words: "consul_token,dd_api_key"
+```
+
 Dependencies
 ------------
 None
@@ -70,6 +82,10 @@ Example Playbooks
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
       logs_enabled: true  # log collection is available on agent 6
+      process_config: # on agent 6
+        enabled: "true" # to enable process-agent
+        scrub_args: true # to enable cmdline scrubbing
+        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the list of sensitive words used by the scrubber
     datadog_config_ex:
       trace.config:
         env: dev
