@@ -22,9 +22,13 @@ Role Variables
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
   Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms
-- `datadog_checks` - YAML configuration for agent checks to drop into `/etc/dd-agent/conf.d`.
-- `datadog_config` - Settings to place in the `/etc/dd-agent/datadog.conf` INI file that go under the `[Main]` section.
-- `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional).
+- `datadog_checks` - YAML configuration for agent checks to drop into:
+  + `/etc/datadog-agent/conf.d/<check_name>/conf.yaml` for agent6
+  + `/etc/dd-agent/conf.d` for agent5.
+- `datadog_config` - Settings to place in the main agent configuration file:
+  + `/etc/datadog-agent/datadog.yaml` for agent6
+  + `/etc/dd-agent/datadog.conf` for agent5 (under the `[Main]` section).
+- `datadog_config_ex` - Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional). Agent5 only.
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
 - `datadog_apt_key_url_new` - Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role)
@@ -56,8 +60,54 @@ Dependencies
 ------------
 None
 
+Configuring a check
+-------------------
+
+To configure a check you need to add an entry to the `datadog_checks` section.
+The first level key is the name of the check and the value is the yaml payload
+to write the configuration file.
+
+Example:
+
+**Process check**
+
+We define 2 instances for the `process` check.
+This will create:
+- for agent6: `/etc/datadog-agent/conf.d/process/conf.yaml`
+- for agent5: `/etc/datadog-agent/conf.d/process.yaml`
+
+```yml
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: ssh
+            search_string: ['ssh', 'sshd' ]
+          - name: syslog
+            search_string: ['rsyslog' ]
+            cpu_check_interval: 0.2
+            exact_match: true
+            ignore_denied_access: true
+```
+
+**custom check**
+
+We define 1 instance for a custom check.
+
+This will create:
+- for agent6: `/etc/datadog-agent/conf.d/my_custom_check/conf.yaml`
+- for agent5: `/etc/datadog-agent/conf.d/my_custom_check.yaml`
+
+```yml
+    datadog_checks:
+      my_custom_check:
+        init_config:
+        instances:
+          - some_data: true
+```
+
 Example Playbooks
--------------------------
+-----------------
 ```yml
 - hosts: servers
   roles:
