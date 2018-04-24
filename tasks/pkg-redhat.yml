@@ -6,7 +6,9 @@
     sha256sum: 694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085
 
 - name: Import new RPM key
-  rpm_key: key=/tmp/DATADOG_RPM_KEY_E09422B3.public state=present
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_E09422B3.public
+    state: present
 
 - name: Install DataDog yum repo
   yum_repository:
@@ -30,7 +32,7 @@
 
 - name: Install pinned datadog-agent package
   yum:
-    name: datadog-agent-{{ datadog_agent_version }}
+    name: "datadog-agent-{{ datadog_agent_version }}"
     state: present
   when: datadog_agent_version != ""
   notify: restart datadog-agent
