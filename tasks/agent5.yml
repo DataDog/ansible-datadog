@@ -3,23 +3,29 @@
   template:
     src: datadog.conf.j2
     dest: /etc/dd-agent/datadog.conf
-    owner: '{{ datadog_user }}'
-    group: '{{ datadog_group }}'
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
 - name: Ensure datadog-agent is running
-  service: name=datadog-agent state=started enabled=yes
+  service:
+    name: datadog-agent
+    state: started
+    enabled: yes
   when: datadog_enabled
 
 - name: Ensure datadog-agent is not running
-  service: name=datadog-agent state=stopped enabled=no
+  service:
+    name: datadog-agent
+    state: stopped
+    enabled: no
   when: not datadog_enabled
 
 - name: Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
-    dest: /etc/dd-agent/conf.d/{{ item }}.yaml
-    owner: '{{ datadog_user }}'
-    group: '{{ datadog_group }}'
-  with_items: '{{ datadog_checks|list }}'
+    dest: "/etc/dd-agent/conf.d/{{ item }}.yaml"
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
+  with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
