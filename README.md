@@ -60,8 +60,8 @@ To enable/disable the process args scrubbing by the process agent, under the `da
 
 ```yml
 process.config:
-  scrub_args: true # default value is true
-  custom_sensitive_words: "consul_token,dd_api_key" # to expand the default list of sensitive words
+  scrub_args: true # enables scrubbing of sensitive arguments from the command line; default value is true
+  custom_sensitive_words: "consul_token,dd_api_key" # to expand the default list of sensitive words used by the cmdline scrubber
 ```
 
 Dependencies
@@ -83,9 +83,10 @@ Example Playbooks
       apm_enabled: "true" # has to be set as a string
       logs_enabled: true  # log collection is available on agent 6
       process_config: # on agent 6
-        enabled: "true" # to enable process-agent
-        scrub_args: true # to enable/disable process args scrubbing; default value is true
-        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the default list of sensitive words
+        enabled: "true" # has to be set as a string.
+        # Possible values are: "true", "false" (for only container collection) or "disabled" (to disable the process-agent entirely)
+        scrub_args: true # enables scrubbing of sensitive arguments from the command line; default value is true
+        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the default list of sensitive words used by the cmdline scrubber
     datadog_config_ex:
       trace.config:
         env: dev
