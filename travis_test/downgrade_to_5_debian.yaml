@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  roles:
+    - { role: '/home/travis/build/DataDog/ansible-datadog/'}
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_agent5: true
+    datadog_agent_version: 1:5.23.0-1
+    datadog_agent_allow_downgrade: yes
+    datadog_config:
+      tags: "mytag0, mytag1"
+      log_level: INFO
+      apm_enabled: "true" # has to be set as a string
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+        extra_aggregators: version
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: agent
+            search_string: ['agent' ]

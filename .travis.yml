@@ -2,8 +2,37 @@
 language: python
 python: "2.7"
 
+env:
+  matrix:
+  - AGENT_VERSION=5 ANSIBLE_VERSION=2.2
+  - AGENT_VERSION=5 ANSIBLE_VERSION=2.4
+  - AGENT_VERSION=6 ANSIBLE_VERSION=2.2
+  - AGENT_VERSION=6 ANSIBLE_VERSION=2.4
+
+before_install:
+  - sudo apt-get install -y software-properties-common
+  - sudo apt-add-repository -y "ppa:ansible/ansible-${ANSIBLE_VERSION}"
+  - sudo apt-get update -y
+  - sudo apt-get install -y ansible
+  - ansible --version
+
 install:
   - pip install ansible-lint
 
 script:
   - ansible-lint -v $(find tests -name *yml) -x ANSIBLE0006,ANSIBLE0010
+
+  # testing dry run
+  - sudo ansible-playbook -i travis_test/inventory/travis.ini "travis_test/install_agent_${AGENT_VERSION}.yaml" --check
+  - sudo ansible-playbook -i travis_test/inventory/travis.ini "travis_test/downgrade_to_5_debian.yaml" --check
+
+  # installing latest version of ${AGENT_VERSION}
+  - sudo ansible-playbook -i travis_test/inventory/travis.ini "travis_test/install_agent_${AGENT_VERSION}.yaml"
+  - ps aux | grep -v grep | grep agent
+  - sleep 3 # let the agent open the API port
+  - if [ "${AGENT_VERSION}" = "6" ]; then sudo datadog-agent status; else sudo dd-agent info; fi
+
+  # downgrading to 5.23.0
+  - sudo ansible-playbook -i travis_test/inventory/travis.ini "travis_test/downgrade_to_5_debian.yaml"
+  - ps aux | grep -v grep | grep agent
+  - sudo dd-agent info
