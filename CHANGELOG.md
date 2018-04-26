@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.1.0 / Unreleased
+
+* [FEATURE] Support "--check" Ansible option for dry-run.
+
 # 2.0.3 / 2018-04-13
 
 * [BUGFIX] Removing legacy http apt repos pre-dating usage of HTTPS. See [#116][]
