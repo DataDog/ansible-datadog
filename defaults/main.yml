@@ -25,6 +25,7 @@ datadog_agent_version: ""
 
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
+# On centos this will only work with ansible 2.4 and up
 datadog_agent_allow_downgrade: no
 
 ########################################################################

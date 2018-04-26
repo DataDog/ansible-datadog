@@ -4,6 +4,7 @@ CHANGELOG
 # 2.1.0 / Unreleased
 
 * [FEATURE] Support "--check" Ansible option for dry-run.
+* [BUGFIX] Fix downgrade on centos.
 
 # 2.0.3 / 2018-04-13
 

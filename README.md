@@ -28,7 +28,7 @@ Role Variables
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
 - `datadog_apt_key_url_new` - Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role)
-- `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details)
+- `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.
 
 Agent 5 (older version)
 -----------------------
@@ -41,7 +41,7 @@ To install agent5, you need to:
 - either set `datadog_agent_version` to an existing agent5 version
   (recommended) or leave it empty to always install the latest version (`5.*`).
 
-To downgrade from agent6 to agent5, you need to:
+To downgrade from agent6 to agent5, you need to (**on centos this will only work with ansible 2.4 and up**):
 
 - set `datadog_agent5` to true
 - pin `datadog_agent_version` to an existing agent5 version
