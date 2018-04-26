@@ -12,7 +12,7 @@
     name: datadog-agent
     state: started
     enabled: yes
-  when: datadog_enabled
+  when: datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent is not running
   service:

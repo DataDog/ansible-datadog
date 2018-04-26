@@ -4,4 +4,4 @@
   service:
     name: datadog-agent
     state: restarted
-  when: datadog_enabled
+  when: datadog_enabled and not ansible_check_mode

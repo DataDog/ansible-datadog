@@ -3,6 +3,7 @@
   apt:
     name: apt-transport-https
     state: present
+  when: not ansible_check_mode
 
 - name: Install ubuntu apt-key server
   apt_key:
@@ -26,18 +27,21 @@
   with_items:
     - "deb http://apt.datadoghq.com/ stable main"
     - "deb http://apt.datadoghq.com/ stable 6"
+  when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date
   apt_repository:
     repo: "{{ datadog_apt_repo }}"
     state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
     update_cache: yes
+  when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date (agent5)
   apt_repository:
     repo: "{{ datadog_agent5_apt_repo }}"
     state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
     update_cache: yes
+  when: not ansible_check_mode
 
 - name: Ensure pinned version of Datadog agent is installed
   apt:
@@ -46,7 +50,7 @@
     force: "{{ datadog_agent_allow_downgrade }}"
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: datadog_agent_version != ""
+  when: (datadog_agent_version != "") and (not ansible_check_mode)
 
 - name: Ensure Datadog agent is installed
   apt:
@@ -54,4 +58,4 @@
     state: latest
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: datadog_agent_version == ""
+  when: (datadog_agent_version == "") and (not ansible_check_mode)
