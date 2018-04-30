@@ -52,18 +52,6 @@ Variables:
 - `datadog_agent5` - install agent5 instead of agent6 (default to `false`)
 - `datadog_agent5_apt_repo` - Override default Datadog `apt` repository for agent5
 
-To enable the process agent on agent 5, you need to set on `datadog_config`:
-
-* `process_agent_enabled` to true
-
-To enable/disable the process args scrubbing by the process agent, under the `datadog_config_ex`, put:
-
-```yml
-process.config:
-  scrub_args: true # enables scrubbing of sensitive arguments from the command line; default value is true
-  custom_sensitive_words: "consul_token,dd_api_key" # to expand the default list of sensitive words used by the cmdline scrubber
-```
-
 Dependencies
 ------------
 None
@@ -82,11 +70,6 @@ Example Playbooks
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
       logs_enabled: true  # log collection is available on agent 6
-      process_config: # on agent 6
-        enabled: "true" # has to be set as a string.
-        # Possible values are: "true", "false" (for only container collection) or "disabled" (to disable the process-agent entirely)
-        scrub_args: true # enables scrubbing of sensitive arguments from the command line; default value is true
-        custom_sensitive_words: ['consul_token','dd_api_key'] # to expand the default list of sensitive words used by the cmdline scrubber
     datadog_config_ex:
       trace.config:
         env: dev
@@ -140,6 +123,47 @@ Example Playbooks
 - hosts: servers
   roles:
     - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+```
+
+
+Process Agent
+-------------------------
+
+To control the behavior of the Process Agent, use the `enabled` variable under the `datadog_config` field.
+It has to be set as a string and the possible values are: "true", "false" (for only container collection)
+or "disabled" (to disable the Process Agent entirely)
+
+#### Variables
+
+- `scrub_args` - enables the scrubbing of sensitive arguments from a process command line. Default value is true
+- `custom_sensitive_words` - expands the default list of sensitive words used by the cmdline scrubber
+
+#### Example of configuration
+```yml
+datadog_config:
+  process_config:
+    enabled: "true" # has to be set as a string
+    scrub_args: true
+    custom_sensitive_words: ['consul_token','dd_api_key']
+```
+
+### Agent 5
+
+To enable/disable the Process Agent on Agent 5, you need to set on `datadog_config`:
+
+- `process_agent_enabled` to true/false
+
+Set the available variables inside `process.config` under the `datadog_config_ex`
+field to control the Process Agent's features.
+
+#### Example of configuration
+```yml
+datadog_config:
+  process_agent_enabled: true
+datadog_config_ex:  
+  process.config:
+    scrub_args: true
+    custom_sensitive_words: "consul_token,dd_api_key"
 ```
 
 Known Issues and Workarounds
