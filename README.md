@@ -125,6 +125,47 @@ Example Playbooks
     - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
 
+
+Process Agent
+-------------------------
+
+To control the behavior of the Process Agent, use the `enabled` variable under the `datadog_config` field.
+It has to be set as a string and the possible values are: "true", "false" (for only container collection)
+or "disabled" (to disable the Process Agent entirely)
+
+#### Variables
+
+- `scrub_args` - enables the scrubbing of sensitive arguments from a process command line. Default value is true
+- `custom_sensitive_words` - expands the default list of sensitive words used by the cmdline scrubber
+
+#### Example of configuration
+```yml
+datadog_config:
+  process_config:
+    enabled: "true" # has to be set as a string
+    scrub_args: true
+    custom_sensitive_words: ['consul_token','dd_api_key']
+```
+
+### Agent 5
+
+To enable/disable the Process Agent on Agent 5, you need to set on `datadog_config`:
+
+- `process_agent_enabled` to true/false
+
+Set the available variables inside `process.config` under the `datadog_config_ex`
+field to control the Process Agent's features.
+
+#### Example of configuration
+```yml
+datadog_config:
+  process_agent_enabled: true
+datadog_config_ex:  
+  process.config:
+    scrub_args: true
+    custom_sensitive_words: "consul_token,dd_api_key"
+```
+
 Known Issues and Workarounds
 ----------------------------
 
