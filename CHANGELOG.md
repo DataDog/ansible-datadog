@@ -1,10 +1,13 @@
 CHANGELOG
 =========
 
-# 2.1.0 / Unreleased
+# 2.1.0 / 2018-05-14
 
 * [FEATURE] Support "--check" Ansible option for dry-run.
 * [BUGFIX] Fix downgrade on centos.
+* [IMPROVEMENT] Update conf paths to respect agent6 best practice (thanks [@dbr1993][]).
+* [IMPROVEMENT] Fix YAML cosmetics: standardize syntax everywhere (thanks [@tomgoren][]).
+* [DEPRECATION] Drop support for EOL versions of ansible (<2.2).
 
 # 2.0.3 / 2018-04-13
 
@@ -89,3 +92,5 @@ Initial release, compatible with Ansible v1 & v2
 [@gtrummell]: https://github.com/gtrummell
 [@jeffwidman]: https://github.com/jeffwidman
 [@pmbauer]: https://github.com/pmbauer
+[@tomgoren]: https://github.com/tomgoren
+[@dbr1993 ]: https://github.com/dbr1993
