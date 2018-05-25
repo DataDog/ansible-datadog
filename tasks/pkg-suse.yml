@@ -1,0 +1,46 @@
+---
+- name: Download new RPM key
+  get_url:
+    url: "{{ datadog_zypper_gpgkey }}"
+    dest: /tmp/DATADOG_RPM_KEY.public
+    sha256sum: "{{ datadog_zypper_gpgkey_sha256sum }}"
+
+- name: Import new RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY.public
+    state: present
+  when: not ansible_check_mode
+
+- name: Install DataDog zypper repo
+  zypper_repository:
+    name: datadog
+    description: Datadog, Inc.
+    repo: "{{ datadog_yum_repo }}"
+    enabled: yes
+    auto_import_keys: yes
+    state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
+
+- name: Install DataDog yum repo (agent5)
+  zypper_repository:
+    name: datadog-beta
+    description: Datadog, Inc.
+    repo: "{{ datadog_agent5_yum_repo }}"
+    enabled: yes
+    auto_import_keys: yes
+    state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
+
+- name: Install pinned datadog-agent package
+  zypper:
+    name: "datadog-agent-{{ datadog_agent_version }}"
+    state: present
+    update_cache: yes
+  when: (datadog_agent_version != "") and (not ansible_check_mode)
+  notify: restart datadog-agent
+
+- name: Install latest datadog-agent package
+  zypper:
+    name: datadog-agent
+    state: latest
+    update_cache: yes
+  when: datadog_agent_version == ""
+  notify: restart datadog-agent
