@@ -20,6 +20,9 @@ galaxy_info:
       versions:
         - 7
         - 6
+    - name: opensuse
+      versions:
+        - 12
   categories:
     - monitoring
 dependencies: []
