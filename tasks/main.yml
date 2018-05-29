@@ -10,7 +10,7 @@
 
 - include_tasks: agent6.yml
   when: not datadog_agent5 and ansible_version.major == 2 and ansible_version.minor >= 4
-  
+
 - include: pkg-debian.yml
   when: ansible_os_family == "Debian" and ansible_version.major == 2 and (ansible_version.minor == 2 or ansible_version.minor == 3)
 
