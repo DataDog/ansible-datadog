@@ -106,6 +106,29 @@ This will create:
           - some_data: true
 ```
 
+**autodiscovery check**
+
+There is no pre-processing nor post-processing on the YAML. This means every
+YAML sections will be added to the final configuration file, including
+`autodiscovery identifiers`.
+
+This example will configure the PostgeSQL check through **autodiscovery**:
+
+```yml
+    datadog_checks:
+      postgres:
+        ad_identifiers:
+          - db-master
+          - db-slave
+        init_config:
+        instances:
+          - host: %%host%%
+            port: %%port%%
+            username: username
+            password: password
+```
+
+
 Example Playbooks
 -----------------
 ```yml
