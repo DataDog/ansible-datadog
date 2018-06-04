@@ -1,7 +1,14 @@
 ---
+- name: Stat if RPM key already exist
+  stat:
+    path: /tmp/DATADOG_RPM_KEY.public
+  register: ddkey
+
 - name: Download new RPM key
-  shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
-  # Work around due to SNI check for SLES11
+  shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public" # Work around due to SNI check for SLES11
+  args:
+    warn: no
+  when: not ddkey.stat.exists
 
 - name: Import new RPM key
   rpm_key:

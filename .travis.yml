@@ -20,7 +20,7 @@ install:
   - pip install ansible-lint
 
 script:
-  - ansible-lint -v $(find tests -name *yml) -x ANSIBLE0006,ANSIBLE0010
+  - ansible-lint -v $(find tests -name *yml) -x ANSIBLE0006,ANSIBLE0010,ANSIBLE0013
 
   # testing dry run
   - sudo ansible-playbook -i travis_test/inventory/travis.ini "travis_test/install_agent_${AGENT_VERSION}.yaml" --check
