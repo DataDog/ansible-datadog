@@ -22,6 +22,7 @@ galaxy_info:
         - 6
     - name: opensuse
       versions:
+        - 11
         - 12
   categories:
     - monitoring
