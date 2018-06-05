@@ -1,10 +1,10 @@
 ---
-- name: Create /etc/datadog-agent
+- name: Create Datadog agent config directory
   file:
     dest: /etc/datadog-agent
     state: directory
 
-- name: Create main Datadog agent yaml configuration file (beta)
+- name: Create main Datadog agent configuration file
   template:
     src: datadog.yaml.j2
     dest: /etc/datadog-agent/datadog.yaml
