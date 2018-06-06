@@ -23,7 +23,7 @@ Role Variables
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
   Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms
 - `datadog_checks` - YAML configuration for agent checks to drop into:
-  + `/etc/datadog-agent/conf.d/<check_name>/conf.yaml` for agent6
+  + `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for agent6
   + `/etc/dd-agent/conf.d` for agent5.
 - `datadog_config` - Settings to place in the main agent configuration file:
   + `/etc/datadog-agent/datadog.yaml` for agent6
@@ -73,7 +73,7 @@ Example:
 
 We define 2 instances for the `process` check.
 This will create:
-- for agent6: `/etc/datadog-agent/conf.d/process/conf.yaml`
+- for agent6: `/etc/datadog-agent/conf.d/process.d/conf.yaml`
 - for agent5: `/etc/datadog-agent/conf.d/process.yaml`
 
 ```yml
@@ -95,7 +95,7 @@ This will create:
 We define 1 instance for a custom check.
 
 This will create:
-- for agent6: `/etc/datadog-agent/conf.d/my_custom_check/conf.yaml`
+- for agent6: `/etc/datadog-agent/conf.d/my_custom_check.d/conf.yaml`
 - for agent5: `/etc/datadog-agent/conf.d/my_custom_check.yaml`
 
 ```yml
