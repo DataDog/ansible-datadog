@@ -36,6 +36,13 @@
     disable_gpg_check: yes # SLES11 considers datadog's repo as untrusted
     state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
 
+- name: Drop SysVinit script if SLES 11
+  template:
+    src: datadog-agent.init
+    dest: /etc/init.d/datadog-agent
+    mode: 0755
+  when: ansible_lsb.major_release|int == 11
+
 - name: Install pinned datadog-agent package
   zypper:
     name: "datadog-agent={{ datadog_agent_version }}"
