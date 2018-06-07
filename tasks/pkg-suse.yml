@@ -43,6 +43,10 @@
     mode: 0755
   when: ansible_lsb.major_release|int == 11
 
+- name: shell chkconfig init script
+  shell: /sbin/chkconfig -f datadog-agent on # Work around the potential rc conflict from other sysv in sles11
+  when: ansible_lsb.major_release|int == 11
+
 - name: Install pinned datadog-agent package
   zypper:
     name: "datadog-agent={{ datadog_agent_version }}"
