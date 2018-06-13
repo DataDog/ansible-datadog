@@ -48,6 +48,7 @@ datadog_agent5: no
 # repos where datadog-agent v5 packages are available
 datadog_agent5_apt_repo: "deb https://apt.datadoghq.com stable main"
 datadog_agent5_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/"
+datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}"
 
 ###           End of Beta-Agent6-only experimental attributes        ###
 ########################################################################
