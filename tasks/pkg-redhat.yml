@@ -21,7 +21,7 @@
     gpgkey: "{{ datadog_yum_gpgkey }}"
     state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
 
-- name: Install DataDog yum repo (agent5)
+- name: (agent5) Install DataDog yum repo
   yum_repository:
     name: datadog-beta
     description: Datadog, Inc.
