@@ -23,7 +23,7 @@
 
 - name: (agent5) Install DataDog yum repo
   yum_repository:
-    name: datadog
+    name: datadog_5
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: yes
