@@ -36,7 +36,7 @@
     update_cache: yes
   when: not ansible_check_mode
 
-- name: Ensure Datadog repository is up-to-date (agent5)
+- name: (agent5) Ensure Datadog repository is up-to-date
   apt_repository:
     repo: "{{ datadog_agent5_apt_repo }}"
     state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
