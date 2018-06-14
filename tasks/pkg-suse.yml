@@ -1,14 +1,14 @@
 ---
-- name: Run only if SLES11 # Work around due to SNI check for SLES11
-  block:
-    - stat:
-        path: /tmp/DATADOG_RPM_KEY.public
-      register: ddkey
-
-    - shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
-      args:
-        warn: no
-      when: not ddkey.stat.exists
+- block: # Work around due to SNI check for SLES11
+  - name: Stat if RPM key already exist
+    stat:
+      path: /tmp/DATADOG_RPM_KEY.public
+    register: ddkey
+  - name: Download new RPM key
+    shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
+    args:
+      warn: no
+    when: not ddkey.stat.exists
   when: ansible_distribution_version|int == 11
 
 - name: Download new RPM key
