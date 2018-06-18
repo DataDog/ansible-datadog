@@ -4,7 +4,7 @@
     stat:
       path: /tmp/DATADOG_RPM_KEY.public
     register: ddkey
-  - name: Download new RPM key
+  - name: Download new RPM key (SLES11)
     shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
     args:
       warn: no
@@ -36,7 +36,7 @@
 
 - name: (agent5) Install DataDog yum repo
   zypper_repository:
-    name: datadog
+    name: datadog_5
     description: Datadog, Inc.
     repo: "{{ datadog_agent5_zypper_repo }}"
     enabled: yes
@@ -48,6 +48,7 @@
   zypper:
     name: "datadog-agent={{ datadog_agent_version }}"
     state: present
+    force: "{{ datadog_agent_allow_downgrade }}"
   when: (datadog_agent_version != "") and (not ansible_check_mode)
   notify: restart datadog-agent
 
