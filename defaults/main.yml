@@ -23,6 +23,10 @@ datadog_yum_gpgkey_new: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.publ
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
 
+# Avoid checking if the agent is running or not. This can be useful if you're
+# using sysvinit and providing your own init script.
+datadog_skip_running_check: false
+
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 # On centos this will only work with ansible 2.4 and up

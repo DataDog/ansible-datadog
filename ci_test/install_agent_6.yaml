@@ -2,10 +2,12 @@
 
 - hosts: all
   roles:
-    - { role: '/home/travis/build/DataDog/ansible-datadog/'}
+    - { role: '/root/project/'}
   vars:
     datadog_api_key: "11111111111111111111111111111111"
-    datadog_agent5: true
+    datadog_enabled: false
+    # avoid checking that the agent is stopped for centos
+    datadog_skip_running_check: true
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
@@ -20,4 +22,4 @@
         init_config:
         instances:
           - name: agent
-            search_string: ['agent' ]
+            search_string: ['agent', 'sshd' ]
