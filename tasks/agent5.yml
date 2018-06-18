@@ -1,5 +1,10 @@
 ---
-- name: Create main Datadog agent configuration file
+- name: (agent5) Create Datadog agent config directory
+  file:
+    dest: /etc/dd-agent
+    state: directory
+
+- name: (agent5) Create main Datadog agent configuration file
   template:
     src: datadog.conf.j2
     dest: /etc/dd-agent/datadog.conf
@@ -7,21 +12,21 @@
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
-- name: Ensure datadog-agent is running
+- name: (agent5) Ensure datadog-agent is running
   service:
     name: datadog-agent
     state: started
     enabled: yes
-  when: datadog_enabled and not ansible_check_mode
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
-- name: Ensure datadog-agent is not running
+- name: (agent5) Ensure datadog-agent is not running
   service:
     name: datadog-agent
     state: stopped
     enabled: no
-  when: not datadog_enabled
+  when: not datadog_skip_running_check and not datadog_enabled
 
-- name: Create a configuration file for each Datadog check
+- name: (agent5) Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
     dest: "/etc/dd-agent/conf.d/{{ item }}.yaml"

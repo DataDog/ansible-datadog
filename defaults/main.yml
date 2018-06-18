@@ -28,6 +28,10 @@ datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
 
+# Avoid checking if the agent is running or not. This can be useful if you're
+# using sysvinit and providing your own init script.
+datadog_skip_running_check: false
+
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 # On centos this will only work with ansible 2.4 and up

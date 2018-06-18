@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 2.2.0 / 2018-06-06
+
+* [DEPRECATION] Drop support for EOL platform
+* [IMPROVEMENT] Harmonize tasks names between agent5 and agent6 (thanks [@xp-1000][]).
+
 # 2.1.0 / 2018-05-14
 
 * [FEATURE] Support "--check" Ansible option for dry-run.
@@ -93,4 +98,5 @@ Initial release, compatible with Ansible v1 & v2
 [@jeffwidman]: https://github.com/jeffwidman
 [@pmbauer]: https://github.com/pmbauer
 [@tomgoren]: https://github.com/tomgoren
-[@dbr1993 ]: https://github.com/dbr1993
+[@dbr1993]: https://github.com/dbr1993
+[xp-1000]: https://github.com/xp-1000
