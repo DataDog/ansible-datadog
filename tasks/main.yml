@@ -13,10 +13,10 @@
 
 - name: Create a check agent for each Datadog check
   copy:
-    src: {{ item }}.py
-    dest: /etc/dd-agent/checks.d/{{ item }}.py
-    owner: {{ datadog_user }}
-    group: {{ datadog_group }}
+    src: "{{ item }}".py
+    dest: /etc/dd-agent/checks.d/"{{ item }}".py
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
   with_items: '{{ datadog_check_agents }}'
   notify:
    - restart datadog-agent
@@ -47,7 +47,7 @@
 
 - name: Adding datadog system user to {{ item }} group
   user:
-    name: {{ datadog_user }}
-    groups: {{ item }}
+    name: "{{ datadog_user }}"
+    groups: "{{ item }}"
     append: yes
   with_items: '{{ datadog_groups }}'
