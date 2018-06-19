@@ -10,6 +10,9 @@ datadog_checks: {}
 # default check agents enabled
 datadog_check_agents: {}
 
+# default groups to add dd-agent system user to
+datadog_groups: {}
+
 # default user/group
 datadog_user: dd-agent
 datadog_group: root
