@@ -13,8 +13,8 @@
 
 - name: Create a check agent for each Datadog check
   copy:
-    src: {{ item }}.py
-    dest: /etc/dd-agent/checks.d/{{ item }}.py
+    src: "{{ item }}".py
+    dest: /etc/dd-agent/checks.d/"{{ item }}".py
     owner: {{ datadog_user }}
     group: {{ datadog_group }}
   with_items: "{{ datadog_check_agents }}"
@@ -45,9 +45,9 @@
     state: present
   when: data_server_monitoring is defined and data_server_monitoring
 
-- name: Adding datadog system user to {{ item }} group
+- name: Adding datadog system user to "{{ item }}" group
   user:
     name: {{ datadog_user }}
-    groups: {{ item }}
+    groups: "{{ item }}"
     append: yes
   with_items: "{{ datadog_groups }}"
