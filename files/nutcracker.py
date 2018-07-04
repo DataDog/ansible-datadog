@@ -11,7 +11,6 @@ When ready:
 import hashlib
 import json
 import md5
-import memcache
 import os
 import socket
 import sys
@@ -158,42 +157,6 @@ class NutcrackerCheck(AgentCheck):
                 # It's a server.  Send stats.
                 for item in self.SERVER_STATS:
                     self._send_datadog_stat(item, server_data, tags, "server")
-
-        # The key for our roundtrip tests.
-        key = uuid.uuid4().hex
-
-        try:
-            # Make the connection and do a round trip.
-            mc = memcache.Client([host + ':' + str(port)], debug=0)
-
-            mc.set(key, key)
-            data = mc.get(key)
-            mc.delete(key)
-            empty_data = mc.get(key)
-
-            # Did the get work?
-            if data != key:
-                raise Exception("Cannot set and get")
-
-            # Did the delete work?
-            if empty_data:
-                raise Exception("Cannot delete")
-
-        except Exception as e:
-            # Something failed.
-            metric = self.normalize("test_connect_fail", self.SOURCE_TYPE_NAME)
-            self.gauge(metric, 1, tags=tags)
-
-            self.service_check(self.SERVICE_CHECK, AgentCheck.CRITICAL)
-            self.event({
-                'timestamp': int(time.time()),
-                'event_type': 'test_data',
-                'msg_title': 'Cannot get/set/delete',
-                'msg_text': str(e),
-                'aggregation_key': aggregation_key
-            })
-
-            raise
 
         # Connection is ok.
         self.service_check(self.SERVICE_CHECK, AgentCheck.OK)
