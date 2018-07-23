@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.3.0 / 2018-07-23
+
+* [FEATURE] Add support for SUSE/SLES (thanks to [@enarciso][]).
+
 # 2.2.0 / 2018-06-06
 
 * [DEPRECATION] Drop support for EOL platform
@@ -100,3 +104,4 @@ Initial release, compatible with Ansible v1 & v2
 [@tomgoren]: https://github.com/tomgoren
 [@dbr1993]: https://github.com/dbr1993
 [xp-1000]: https://github.com/xp-1000
+[enarciso]: https://github.com/enarciso
