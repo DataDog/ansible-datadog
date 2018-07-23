@@ -5,6 +5,9 @@
 - include: pkg-redhat.yml
   when: ansible_os_family == "RedHat"
 
+- include: pkg-suse.yml
+  when: ansible_os_family == "Suse"
+
 - include: agent5.yml
   when: datadog_agent5
 

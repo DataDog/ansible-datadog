@@ -1,0 +1,60 @@
+---
+- block: # Work around due to SNI check for SLES11
+  - name: Stat if RPM key already exist
+    stat:
+      path: /tmp/DATADOG_RPM_KEY.public
+    register: ddkey
+  - name: Download new RPM key (SLES11)
+    shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
+    args:
+      warn: no
+    when: not ddkey.stat.exists
+  when: ansible_distribution_version|int == 11
+
+- name: Download new RPM key
+  get_url:
+    url: "{{ datadog_zypper_gpgkey }}"
+    dest: /tmp/DATADOG_RPM_KEY.public
+    sha256sum: "{{ datadog_zypper_gpgkey_sha256sum }}"
+  when: ansible_distribution_version|int >= 12
+
+- name: Import new RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY.public
+    state: present
+  when: not ansible_check_mode
+
+- name: Install DataDog zypper repo
+  zypper_repository:
+    name: datadog
+    description: Datadog, Inc.
+    repo: "{{ datadog_zypper_repo }}"
+    enabled: yes
+    auto_import_keys: yes
+    disable_gpg_check: "{% if ansible_distribution_version|int == 11 %}yes{% else %}no{% endif %}" # SLES11 considers datadog's repo as untrusted
+    state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
+
+- name: (agent5) Install DataDog yum repo
+  zypper_repository:
+    name: datadog_5
+    description: Datadog, Inc.
+    repo: "{{ datadog_agent5_zypper_repo }}"
+    enabled: yes
+    auto_import_keys: yes
+    disable_gpg_check: "{% if ansible_distribution_version|int == 11 %}yes{% else %}no{% endif %}" # SLES11 considers datadog's repo as untrusted
+    state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
+
+- name: Install pinned datadog-agent package
+  zypper:
+    name: "datadog-agent={{ datadog_agent_version }}"
+    state: present
+    force: "{{ datadog_agent_allow_downgrade }}"
+  when: (datadog_agent_version != "") and (not ansible_check_mode)
+  notify: restart datadog-agent
+
+- name: Install latest datadog-agent package
+  zypper:
+    name: datadog-agent
+    state: latest
+  when: datadog_agent_version == ""
+  notify: restart datadog-agent
