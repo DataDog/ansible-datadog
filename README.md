@@ -25,6 +25,8 @@ Role Variables
 - `datadog_checks` - YAML configuration for agent checks to drop into:
   + `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for agent6
   + `/etc/dd-agent/conf.d` for agent5.
+- `datadog_disable_untracked_checks` - Set to `true` to remove all checks not present in `datadog_checks` and `datadog_additional_checks`.
+- `datadog_additional_checks`: List of additional checks that won't be remove if `datadog_disable_untracked_checks` is set to `true`.
 - `datadog_config` - Settings to place in the main agent configuration file:
   + `/etc/datadog-agent/datadog.yaml` for agent6
   + `/etc/dd-agent/datadog.conf` for agent5 (under the `[Main]` section).
