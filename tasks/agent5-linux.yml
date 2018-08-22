@@ -26,6 +26,21 @@
     enabled: no
   when: not datadog_skip_running_check and not datadog_enabled
 
+- name: Register all checks directories present in datadog
+  find:
+    paths: /etc/datadog-agent/conf.d/
+    pattern: "*.yaml"
+    file_type: directory
+  register: datadog_conf_directories
+  when: datadog_disable_untracked_checks
+
+- name: Delete checks not present in datadog_tracked_checks
+  file:
+    path: "/etc/datadog-agent/conf.d/{{ item }}.yaml"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).yaml$', '\\1') | list }}"
+  when: datadog_disable_untracked_checks and item not in datadog_tracked_checks
+
 - name: (agent5) Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
