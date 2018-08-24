@@ -1,0 +1,9 @@
+[datadog]
+name=Datadog, Inc.
+enabled=1
+autorefresh=1
+baseurl={% if datadog_agent5 %}{{ datadog_agent5_zypper_repo }}{% else %}{{ datadog_zypper_repo }}{% endif %}
+
+type=rpm-md
+gpgcheck=1
+repo_gpgcheck=0
