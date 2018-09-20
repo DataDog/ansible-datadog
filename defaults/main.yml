@@ -14,6 +14,7 @@ datadog_group: root
 # default apt repo
 datadog_apt_repo: "deb https://apt.datadoghq.com/ stable 6"
 datadog_apt_cache_valid_time: 3600
+datadog_apt_key_retries: 5
 
 # default yum repo and keys
 datadog_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}/"

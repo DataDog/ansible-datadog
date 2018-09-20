@@ -13,7 +13,7 @@
 # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
   register: result
   until: not result.failed is defined or not result.failed
-  retries: 5
+  retries: "{{ datadog_apt_key_retries }}"
   when: datadog_apt_key_url_new is not defined
 
 - name: Install Datadog apt-key
