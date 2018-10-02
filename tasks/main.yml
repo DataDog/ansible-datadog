@@ -5,12 +5,6 @@
 - include: pkg-redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include: agent5.yml
-  when: not datadog_agent6
-
-- include: agent6.yml
-  when: datadog_agent6
-
 - name: Create a check agent for each Datadog check
   copy:
     src: "{{ item }}.py"
@@ -36,7 +30,9 @@
     name: perl-DBD-MySQL
   when: mysql_server_monitoring is defined and mysql_server_monitoring
 
-- mysql_db: name=datadog state=present
+- mysql_db:
+    name: datadog
+    state: present
   when: data_server_monitoring is defined and data_server_monitoring
 
 - mysql_user:
@@ -51,3 +47,9 @@
     groups: "{{ item }}"
     append: yes
   with_items: "{{ datadog_groups }}"
+
+- include: agent5.yml
+  when: not datadog_agent6
+
+- include: agent6.yml
+  when: datadog_agent6
