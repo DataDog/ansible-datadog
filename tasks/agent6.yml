@@ -11,6 +11,7 @@
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
+  when: datadog_api_key is defined
 
 - name: Ensure configuration directories are present for each Datadog check
   file:
@@ -43,6 +44,7 @@
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
+  when: datadog_api_key is defined
 
 - name: Create process agent configuration file
   template:
@@ -51,6 +53,7 @@
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
+  when: datadog_api_key is defined
 
 - name: Ensure datadog-agent is running
   service:
