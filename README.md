@@ -19,6 +19,7 @@ ansible-galaxy install Datadog.datadog
 Role Variables
 --------------
 
+- `datadog_url` - Override the default datadog URL
 - `datadog_api_key` - Your Datadog API key.
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
   Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms
@@ -136,6 +137,7 @@ Example Playbooks
   roles:
     - { role: Datadog.datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
   vars:
+    datadog_url: https://app.datadoghq.com
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.0.0-1" # for apt-based platforms, use a `6.0.0-1` format on yum-based platforms
     datadog_config:
