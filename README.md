@@ -145,6 +145,11 @@ Example Playbooks
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
       logs_enabled: true  # log collection is available on agent 6
+      logs_config:
+          logs_dd_url: "agent-intake.logs.datadoghq.com:443"
+      process_config:
+        enabled: "true"
+        process_dd_url: "https://process.datadoghq.com"
     datadog_config_ex:
       trace.config:
         env: dev
