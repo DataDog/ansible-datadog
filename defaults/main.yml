@@ -15,6 +15,9 @@ datadog_group: root
 datadog_apt_repo: "deb https://apt.datadoghq.com/ stable 6"
 datadog_apt_cache_valid_time: 3600
 datadog_apt_key_retries: 5
+use_apt_backup_keyserver: false
+datadog_apt_keyserver: hkp://keyserver.ubuntu.com:80
+datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 
 # default yum repo and keys
 datadog_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}/"
