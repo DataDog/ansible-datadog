@@ -65,3 +65,10 @@
     state: stopped
     enabled: no
   when: not datadog_skip_running_check and not datadog_enabled
+
+- name: Ensure datadog user is part of specified group
+  user:
+    name: '{{ datadog_user }}'
+    shell: /usr/sbin/nologin
+    groups: '{{ datadog_user_member_group }}'
+  when: datadog_user_member_group|default(None) != None

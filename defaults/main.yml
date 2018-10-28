@@ -9,6 +9,7 @@ datadog_checks: {}
 
 # default user/group
 datadog_user: dd-agent
+datadog_user_member_group:
 datadog_group: root
 
 # default apt repo
