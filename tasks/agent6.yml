@@ -52,6 +52,26 @@
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
+- block: # Adding dd-agent to the docker
+  - name: Testing if docker group exists
+    # using cat to discard error status from grep when docker is not
+    # found. Using 'ignor_errors' still print the error message and disabling
+    # logs output for this task still logs a message in red saying that logs
+    # were discarded.
+    shell: "grep -E '^docker:' /etc/group | cat"
+    args:
+      warn: no
+    register: docker_group_exists
+  - name: Add the dd-agent user to the docker group
+    user:
+      name: dd-agent
+      groups: docker
+      append: yes
+    notify: restart datadog-agent
+    when: docker_group_exists.stdout|length > 0
+  # only try to add the agent to the docker group if the docker check is enabled
+  when: datadog_enabled and not ansible_check_mode and "docker" in datadog_checks
+
 - name: Ensure datadog-agent is running
   service:
     name: datadog-agent
