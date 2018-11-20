@@ -146,13 +146,10 @@ Sending data to Datadog US (default) and configuring a few checks.
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
-      apm_enabled: "true" # has to be set as a string
+      apm_config:
+        enabled: true
+        max_traces_per_second: 10
       logs_enabled: true  # log collection is available on agent 6
-    datadog_config_ex:
-      trace.config:
-        env: dev
-      trace.concentrator:
-        extra_aggregators: version
     datadog_checks:
       process:
         init_config:
@@ -207,8 +204,26 @@ Example for sending data to EU site:
     datadog_api_key: "123456"
 ```
 
+APM
+---
+
+To enable APM with agent V6:
+
+```yaml
+datadog_config:
+    apm_config:
+        enabled: true
+```
+
+To enable APM with agent V5:
+
+```yaml
+datadog_config:
+    apm_enabled: "true" # has to be a string
+```
+
 Process Agent
--------------------------
+-------------
 
 To control the behavior of the Process Agent, use the `enabled` variable under the `datadog_config` field.
 It has to be set as a string and the possible values are: "true", "false" (for only container collection)
@@ -241,7 +256,7 @@ field to control the Process Agent's features.
 ```yml
 datadog_config:
   process_agent_enabled: true
-datadog_config_ex:  
+datadog_config_ex:
   process.config:
     scrub_args: true
     custom_sensitive_words: "consul_token,dd_api_key"
