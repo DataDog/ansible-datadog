@@ -52,6 +52,25 @@
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
+- block: # Adding dd-agent to the systemd-journal if logs collection is enabled
+  - name: Testing if systemd-journal group exists
+    # using cat to discard error status from grep when systemd-journal is not
+    # found. Using 'ignor_errors' still print the error message and disabling
+    # logs output for this task still logs a message in red saying that logs
+    # were discarded.
+    shell: "grep -E '^systemd-journal:' /etc/group | cat"
+    args:
+      warn: no
+    register: systemd_group_exists
+  - name: Add the dd-agent user to the systemd-journal for logs collection
+    user:
+      name: dd-agent
+      groups: systemd-journal
+      append: yes
+    notify: restart datadog-agent
+    when: systemd_group_exists.stdout|length > 0
+  when: datadog_enabled and not ansible_check_mode and datadog_config.get("logs_enabled") == true
+
 - name: Ensure datadog-agent is running
   service:
     name: datadog-agent
