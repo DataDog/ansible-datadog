@@ -36,6 +36,8 @@ Role Variables
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
 - `datadog_apt_key_url_new` - Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role)
 - `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.
+- `datadog_additional_groups` - List of additional groups for `datadog_user`.
+- `datadog_use_local_repo` - Set to `true` only in case you have local repo with datadog sources. When set to true, repo is not handled at all - this assumes you have your e.g. satellite server already configured and containing the datadog rpm. This switch applies to yum repo management only.
 
 Agent 5 (older version)
 -----------------------

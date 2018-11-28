@@ -13,3 +13,9 @@
 
 - include: agent6.yml
   when: not datadog_agent5
+
+- name: add "{{ datadog_user }}" user to additional groups
+  user: name="{{ datadog_user }}" groups="{{ item }}" append=yes
+  with_items: "{{ datadog_additional_groups }}"
+  when: datadog_additional_groups is defined and datadog_additional_groups != ''
+  notify: restart datadog-agent
