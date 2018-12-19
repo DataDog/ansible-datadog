@@ -16,15 +16,15 @@
 
 {# These variables are free-style, passed through a hash -#}
 {% if datadog_config -%}
-{% for key, value in datadog_config.items() -%}
+{% for key, value in datadog_config | dictsort -%}
 {{ key }}: {{ value }}
 {% endfor -%}
 {% endif %}
 
 {% if datadog_config_ex is defined -%}
-{% for section, keyvals in datadog_config_ex.items() %}
+{% for section, keyvals in datadog_config_ex | dictsort %}
 [{{ section }}]
-{% for key, value in keyvals.items() -%}
+{% for key, value in keyvals | dictsort -%}
 {{ key }}: {{ value }}
 {% endfor -%}
 {% endfor %}
