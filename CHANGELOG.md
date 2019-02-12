@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 2.5.0 / 2019-02-12
+
+* [IMPROVEMENT] Allow the use of a backup keyserver for apt in case the main one is down.
+* [IMPROVEMENT] Fix configuration items order to be the same between playbook runs (thanks to [@jpiron][]).
+
 # 2.4.0 / 2018-10-25
 
 * [FEATURE] Add support for "site" configuration.
