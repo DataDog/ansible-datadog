@@ -48,7 +48,7 @@ jobs:
     steps:
       - checkout
       - run: pip install ansible-lint
-      - run: ansible-lint -v $(find . -name *yml) -x ANSIBLE0006,ANSIBLE0010
+      - run: ansible-lint -v $(find . -name *yml) -x ANSIBLE0006,ANSIBLE0010,ANSIBLE0602
 
   debian_24_5:
     docker:
