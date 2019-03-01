@@ -1,4 +1,4 @@
 ---
 - name: set agent download filename agent6 latest
-  set_fact: 
+  set_fact:
     dd_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
