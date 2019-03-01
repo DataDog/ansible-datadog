@@ -1,4 +1,8 @@
 ---
+- fail:
+    msg: "The Datadog ansible role does not currently support Agent 5"
+  when: datadog_agent5
+
 - include: win_agent_6_latest.yml
   when: not datadog_agent5 and (datadog_agent_version == "")
 
