@@ -1,0 +1,4 @@
+---
+- name: set agent download filename to a specific version
+  set_fact: 
+    dd_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-{{ datadog_agent_version }}.msi"

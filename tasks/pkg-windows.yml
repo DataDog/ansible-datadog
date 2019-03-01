@@ -1,0 +1,37 @@
+---
+- include: win_agent_5_latest.yml
+  when: datadog_agent5 and (datadog_agent_version == "")
+
+- include: win_agent_6_latest.yml
+  when: not datadog_agent5 and (datadog_agent_version == "")
+
+- include: win_agent_version.yml
+  when: not datadog_agent_version == ""
+
+- name: show URL var
+  debug:
+    var: dd_download_url
+
+- name: pre-Delete temporary msi
+  win_file:
+    path: '%TEMP%\ddagent.msi'
+    state: absent
+
+- name: Download windows datadog agent
+  win_get_url:
+    url: "{{ dd_download_url }}"
+    dest: '%TEMP%\ddagent.msi'
+  register: download_msi_result
+
+
+- name: Install downloaded agent
+  win_package:
+    path: "{{ download_msi_result.dest }}"
+  when: not ansible_check_mode
+
+- name: Delete temporary msi
+  win_file:
+    path: "{{ download_msi_result.dest }}"
+    state: absent
+  when: download_msi_result.status_code == 200
+
