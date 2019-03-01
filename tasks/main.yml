@@ -14,11 +14,13 @@
 - include: agent6.yml
   when: not datadog_agent5 and ansible_os_family != "Windows"
 
+- fail:
+    msg: "The Datadog ansible role does not currently support Agent 5"
+  when: datadog_agent5 and ansible_os_family == "Windows"
+
 - include: pkg-windows.yml
   when: ansible_os_family == "Windows"
 
 - include: agent6-win.yml
   when: not datadog_agent5 and ansible_os_family == "Windows"
 
-- include: agent5-win.yml
-  when: datadog_agent5 and ansible_os_family == "Windows"

@@ -3,7 +3,7 @@
   win_template:
     src: datadog.yaml.j2
     dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\datadog.yaml"
-  notify: restart datadog-agent
+  notify: restart datadog-agent-win
 
 - name: Ensure configuration directories are present for each Datadog check
   win_file:
@@ -16,26 +16,26 @@
     src: checks.yaml.j2
     dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
   with_items: "{{ datadog_checks|list }}"
-  notify: restart datadog-agent
+  notify: restart datadog-agent-win
 
 - name: Remove old configuration file for each Datadog check
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.yaml"
     state: absent
   with_items: "{{ datadog_checks|list }}"
-  notify: restart datadog-agent
+  notify: restart datadog-agent-win
 
 - name: Create trace agent configuration file
   win_template:
     src: datadog.conf.j2
     dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\trace-agent.conf"
-  notify: restart datadog-agent
+  notify: restart datadog-agent-win
 
 - name: Create process agent configuration file
   win_template:
     src: datadog.conf.j2
     dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\process-agent.conf"
-  notify: restart datadog-agent
+  notify: restart datadog-agent-win
 
 - name: Ensure datadog-agent is running
   win_service:

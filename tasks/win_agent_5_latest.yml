@@ -1,4 +1,0 @@
----
-- name: set agent download filename agent5 latest
-  set_fact:
-    dd_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-latest.msi"
