@@ -11,10 +11,10 @@
 - include: pkg-windows.yml
   when: ansible_os_family == "Windows"
 
-- include: agent5.yml
+- include: agent5-linux.yml
   when: datadog_agent5 and ansible_os_family != "Windows"
 
-- include: agent6.yml
+- include: agent6-linux.yml
   when: not datadog_agent5 and ansible_os_family != "Windows"
 
 - include: agent6-win.yml
