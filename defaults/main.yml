@@ -41,6 +41,10 @@ datadog_skip_running_check: false
 # On centos this will only work with ansible 2.4 and up
 datadog_agent_allow_downgrade: no
 
+# default datadog windows download url
+datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
+datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
+
 ########################################################################
 ###                       Installing agent5                          ###
 

@@ -1,0 +1,4 @@
+---
+- name: set agent download filename agent6 latest
+  set_fact:
+    dd_download_url: "{{ datadog_windows_download_url }}"

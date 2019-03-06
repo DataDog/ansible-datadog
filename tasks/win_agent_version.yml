@@ -1,0 +1,4 @@
+---
+- name: set agent download filename to a specific version
+  set_fact:
+    dd_download_url: "{{ datadog_windows_versioned_url }}-{{ datadog_agent_version }}.msi"

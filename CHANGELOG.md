@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 2.6.0 / 2019-03-05
+
+* [FEATURE] Add support for managing Windows hosts.
+
 # 2.5.0 / 2019-02-12
 
 * [IMPROVEMENT] Allow the use of a backup keyserver for apt in case the main one is down.
