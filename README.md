@@ -7,7 +7,7 @@ Install and configure Datadog base agent & checks. Starting with version `2` of
 this role version 6 of the agent is installed by default (instead of version
 5).
 
-Supports most Debian and RHEL-based Linux distributions.
+Supports most Debian and RHEL-based Linux distributions, and Windows.
 
 Installation
 ------------
@@ -24,7 +24,7 @@ Role Variables
   Defaults to 'datadoghq.com', set to 'datadoghq.eu' to send data to the EU
   site. This option is only available with agent version >= 6.6.0.
 - `datadog_agent_version` - The pinned version of the Agent to install (optional, but highly recommended)
-  Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms
+  Examples: `1:6.0.0-1` on apt-based platforms, `6.0.0-1` on yum-based platforms, `6.0.0` on Windows platforms
 - `datadog_checks` - YAML configuration for agent checks to drop into:
   + `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for agent6
   + `/etc/dd-agent/conf.d` for agent5.
@@ -41,7 +41,7 @@ Role Variables
 Agent 5 (older version)
 -----------------------
 
-This role includes support for Datadog Agent version 5.
+This role includes support for Datadog Agent version 5 for linux only.
 
 To install agent5, you need to:
 
