@@ -24,6 +24,12 @@ galaxy_info:
       versions:
         - 11
         - 12
+    - name: Windows
+      versions:
+        - 2008x64
+        - 2012
+        - 2012R2
+        - 2016
   categories:
     - monitoring
 dependencies: []
