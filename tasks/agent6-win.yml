@@ -46,7 +46,11 @@
 
 - name: Ensure datadog-agent is not running
   win_service:
-    name: datadogagent
+    name: "{{ item }}"
     state: stopped
     enabled: no
   when: not datadog_skip_running_check and not datadog_enabled
+  with_list:
+    - datadogagent
+    - datadog-agent-process
+    - datadog-agent-trace
