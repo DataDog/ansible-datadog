@@ -54,16 +54,12 @@
 
 - name: Ensure datadog-agent is running
   service:
-    name: "{{ item }}"
+    name: datadog-agent
     state: started
     enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
-  with_list:
-    - datadog-agent
-    - datadog-agent-process
-    - datadog-agent-trace
 
-- name: Ensure datadog-agent is not running
+- name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
   service:
     name: "{{ item }}"
     state: stopped
