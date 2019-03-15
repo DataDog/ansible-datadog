@@ -78,7 +78,7 @@ Example:
 We define 2 instances for the `process` check.
 This will create:
 - for agent6: `/etc/datadog-agent/conf.d/process.d/conf.yaml`
-- for agent5: `/etc/datadog-agent/conf.d/process.yaml`
+- for agent5: `/etc/dd-agent/conf.d/process.yaml`
 
 ```yml
     datadog_checks:
@@ -100,7 +100,7 @@ We define 1 instance for a custom check.
 
 This will create:
 - for agent6: `/etc/datadog-agent/conf.d/my_custom_check.d/conf.yaml`
-- for agent5: `/etc/datadog-agent/conf.d/my_custom_check.yaml`
+- for agent5: `/etc/dd-agent/conf.d/my_custom_check.yaml`
 
 ```yml
     datadog_checks:
