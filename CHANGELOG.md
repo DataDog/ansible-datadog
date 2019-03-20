@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+# 3.0.0 / 2019-05-17
+
+- [FEATURE] On Linux: you can now add the Agent's user to additionnal groups.
+- [DEPRECATION] Bumping this minimum supported Ansible version from 2.2 to 2.5 (version prior from 2.5 are EOL).
+- [IMPROVEMENT] Use 'include_tasks' instead of 'include' which bump minimum ansible version to 2.4 (thanks to [@rouge8][]).
+- [FIX] Make sure the Live Process agent and APM agent aren't started when datadog_enabled is set to false (thanks to [@pdecat][]).
+
 # 2.6.0 / 2019-03-05
 
 * [FEATURE] Add support for managing Windows hosts.
