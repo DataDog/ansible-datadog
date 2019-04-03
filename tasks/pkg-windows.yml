@@ -4,10 +4,10 @@
   when: datadog_agent5
 
 - include: win_agent_6_latest.yml
-  when: not datadog_agent5 and (datadog_agent_version == "")
+  when: not datadog_agent5 and (datadog_agent_version | length == 0)
 
 - include: win_agent_version.yml
-  when: not datadog_agent_version == ""
+  when: not datadog_agent_version | length == 0
 
 - name: show URL var
   debug:
