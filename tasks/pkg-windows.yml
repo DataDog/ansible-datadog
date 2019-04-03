@@ -1,5 +1,6 @@
 ---
-- fail:
+- name: Fail if Agent 5
+  fail:
     msg: "The Datadog ansible role does not currently support Agent 5"
   when: datadog_agent5
 
