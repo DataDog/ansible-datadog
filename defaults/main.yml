@@ -32,6 +32,19 @@ datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
 
+# Restart the agent as a specific user to avoid containerization issues.
+datadog_agent_environment:
+  - user: dd-agent
+    stat: True
+  - user: root
+    stat: False
+
+# Default list of Datadog agent services.
+datadog_agent_services:
+  - datadog-agent
+  - datadog-agent-process
+  - datadog-agent-trace
+
 # Avoid checking if the agent is running or not. This can be useful if you're
 # using sysvinit and providing your own init script.
 datadog_skip_running_check: false

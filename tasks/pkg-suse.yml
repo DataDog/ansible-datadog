@@ -24,6 +24,12 @@
     state: present
   when: not ansible_check_mode
 
+- name: Install setfacl support
+  zypper:
+    name: acl
+    state: present
+  when: not ansible_check_mode
+
 # ansible don't allow repo_gpgcheck to be set, we have to create the repo file manually
 - name: Install DataDog zypper repo
   template:

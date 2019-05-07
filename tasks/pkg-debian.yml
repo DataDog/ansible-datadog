@@ -5,6 +5,12 @@
     state: present
   when: not ansible_check_mode
 
+- name: Install setfacl support
+  apt:
+    name: acl
+    state: present
+  when: not ansible_check_mode
+
 - name: Install ubuntu apt-key server
   apt_key:
     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
