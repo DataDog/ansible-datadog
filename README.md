@@ -39,6 +39,7 @@ Role Variables
 - `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.
 - `use_apt_backup_keyserver` - Set `true` to use the backup keyserver instead of the default one
 - `datadog_enabled` - Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`
+- `datadog_additional_groups` - Comma separated list of additional groups for the `datadog_user`.
 
 Agent 5 (older version)
 -----------------------
