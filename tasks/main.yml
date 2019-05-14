@@ -19,9 +19,3 @@
 
 - include_tasks: agent6-win.yml
   when: not datadog_agent5 and ansible_os_family == "Windows"
-
-- name: add "{{ datadog_user }}" user to additional groups - Linux
-  user: name="{{ datadog_user }}" groups="{{ datadog_additional_groups }}" append=yes
-  with_items: "{{ datadog_additional_groups }}"
-  when: datadog_additional_groups is defined and datadog_additional_groups != '' and ansible_os_family != "Windows"
-  notify: restart datadog-agent
