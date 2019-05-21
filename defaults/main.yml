@@ -48,8 +48,13 @@ datadog_agent_allow_downgrade: no
 datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
 datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
 
+# Override to change the name of the windows user to create
 datadog_windows_ddagentuser_name: ""
+# Override to change the password of the created windows user.
 datadog_windows_ddagentuser_password: ""
+
+# do not modify.  Default empty value for constructing the list of optional 
+# arguments to supply to the windows installer.
 win_install_args: " "
 
 ########################################################################

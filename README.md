@@ -40,6 +40,8 @@ Role Variables
 - `use_apt_backup_keyserver` - Set `true` to use the backup keyserver instead of the default one
 - `datadog_enabled` - Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`
 - `datadog_additional_groups` - Comma separated list of additional groups for the `datadog_user`. Linux only.
+- `datadog_windows_ddagentuser_name` - Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.
+- `datadog_windows_ddagentuser_password` - Password to use to create the user, and/or register the service. Windows only.
 
 Agent 5 (older version)
 -----------------------
