@@ -14,6 +14,8 @@
   debug:
     var: dd_download_url
 
+- include_tasks: pkg-windows-opts.yml
+
 - name: pre-Delete temporary msi
   win_file:
     path: '%TEMP%\ddagent.msi'
@@ -29,6 +31,7 @@
 - name: Install downloaded agent
   win_package:
     path: "{{ download_msi_result.dest }}"
+    arguments: "{{ win_install_args }}"
   when: not ansible_check_mode
 
 - name: Delete temporary msi
