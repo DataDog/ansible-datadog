@@ -10,7 +10,7 @@
     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
     keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
     state: present
-# keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
+    # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
   register: result
   until: not result.failed is defined or not result.failed
   retries: "{{ datadog_apt_key_retries }}"

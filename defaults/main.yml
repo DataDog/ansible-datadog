@@ -67,4 +67,3 @@ datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_users
 
 ###           End of Beta-Agent6-only experimental attributes        ###
 ########################################################################
-
