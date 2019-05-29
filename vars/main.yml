@@ -1,0 +1,5 @@
+---
+# Which family verison of the agent are we installing (agent5 or agent6).
+# Defaults to the datadog_agent5 boolean for backwards compatibility. This is
+# not a user facing variable at the moment which is why it isn't in defaults.
+datadog_agent_family: "{{ (datadog_agent_major_version > 5) | ternary('agent', 'agent5') }}"

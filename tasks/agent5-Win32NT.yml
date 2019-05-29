@@ -1,0 +1,4 @@
+---
+- name: fail agent5 on Windows
+  fail:
+    msg: "Datadog Agent version 5 is not available for Windows."
