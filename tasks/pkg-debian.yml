@@ -54,7 +54,7 @@
     force: "{{ datadog_agent_allow_downgrade }}"
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version != "") and (not ansible_check_mode)
+  when: (datadog_agent_version | length != 0) and (not ansible_check_mode)
 
 - name: Ensure Datadog agent is installed
   apt:
@@ -62,4 +62,4 @@
     state: latest
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version == "") and (not ansible_check_mode)
+  when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
