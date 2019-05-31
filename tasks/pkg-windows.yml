@@ -35,4 +35,3 @@
     path: "{{ download_msi_result.dest }}"
     state: absent
   when: download_msi_result.status_code == 200
-

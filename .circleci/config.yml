@@ -1,3 +1,4 @@
+---
 version: 2
 
 # Install the latest version of agent 5 and then try to downgrade to an older version

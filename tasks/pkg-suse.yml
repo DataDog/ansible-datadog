@@ -1,5 +1,5 @@
 ---
-- block: # Work around due to SNI check for SLES11
+- block:  # Work around due to SNI check for SLES11
   - name: Stat if RPM key already exist
     stat:
       path: /tmp/DATADOG_RPM_KEY.public
@@ -38,7 +38,7 @@
   command: zypper refresh datadog
   when: datadog_zypper_repo.changed and not ansible_check_mode
   args:
-    warn: false # silence warning about using zypper directly
+    warn: false  # silence warning about using zypper directly
 
 - name: Install pinned datadog-agent package
   zypper:
