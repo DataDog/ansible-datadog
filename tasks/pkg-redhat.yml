@@ -44,4 +44,4 @@
     name: datadog-agent
     update_cache: yes
     state: latest  # noqa 403
-  when: datadog_agent_version == "" and (not ansible_check_mode)
+  when: (datadog_agent_version | length == 0) and (not ansible_check_mode)

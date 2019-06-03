@@ -2,7 +2,7 @@
 - name: add "{{ datadog_user }}" user to additional groups
   user: name="{{ datadog_user }}" groups="{{ datadog_additional_groups }}" append=yes
   with_items: "{{ datadog_additional_groups }}"
-  when: datadog_additional_groups is defined and datadog_additional_groups != ''
+  when: datadog_additional_groups is defined and (datadog_additional_groups | length != 0)
   notify: restart datadog-agent
 
 - name: Create Datadog agent config directory
