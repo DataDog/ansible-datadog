@@ -42,6 +42,8 @@
 # Using `yum` directly to work around an Ansible bug:
 # https://github.com/ansible/ansible/issues/20608
 - name: Install latest datadog-agent package
-  command: yum install -y datadog-agent
-  when: datadog_agent_version == ""
-  notify: restart datadog-agent
+  yum:
+    name: datadog-agent
+    update_cache: yes
+    state: latest
+  when: datadog_agent_version == "" and (not ansible_check_mode)
