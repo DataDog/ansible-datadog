@@ -43,5 +43,5 @@
   yum:
     name: datadog-agent
     update_cache: yes
-    state: latest
+    state: latest  # noqa 403
   when: datadog_agent_version == "" and (not ansible_check_mode)

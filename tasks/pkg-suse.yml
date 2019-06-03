@@ -34,7 +34,7 @@
   register: datadog_zypper_repo
 
 # refresh zypper repos only if the template changed
-- name: refresh Datadog zypper_repos
+- name: refresh Datadog zypper_repos  # noqa 503
   command: zypper refresh datadog
   when: datadog_zypper_repo.changed and not ansible_check_mode
   args:
@@ -51,6 +51,6 @@
 - name: Install latest datadog-agent package
   zypper:
     name: datadog-agent
-    state: latest
+    state: latest  # noqa 403
   when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
   notify: restart datadog-agent

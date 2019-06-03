@@ -59,7 +59,7 @@
 - name: Ensure Datadog agent is installed
   apt:
     name: datadog-agent
-    state: latest
+    state: latest  # noqa 403
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
