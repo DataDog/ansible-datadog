@@ -39,8 +39,6 @@
   when: (datadog_agent_version != "") and (not ansible_check_mode)
   notify: restart datadog-agent
 
-# Using `yum` directly to work around an Ansible bug:
-# https://github.com/ansible/ansible/issues/20608
 - name: Install latest datadog-agent package
   yum:
     name: datadog-agent
