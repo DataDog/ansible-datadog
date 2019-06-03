@@ -52,5 +52,5 @@
   zypper:
     name: datadog-agent
     state: latest
-  when: datadog_agent_version == ""
+  when: datadog_agent_version == "" and (not ansible_check_mode)
   notify: restart datadog-agent
