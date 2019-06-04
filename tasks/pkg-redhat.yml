@@ -36,12 +36,12 @@
     name: "datadog-agent-{{ datadog_agent_version }}"
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
-  when: (datadog_agent_version != "") and (not ansible_check_mode)
+  when: (datadog_agent_version | length != 0) and (not ansible_check_mode)
   notify: restart datadog-agent
 
 - name: Install latest datadog-agent package
   yum:
     name: datadog-agent
     update_cache: yes
-    state: latest
-  when: datadog_agent_version == "" and (not ansible_check_mode)
+    state: latest  # noqa 403
+  when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
