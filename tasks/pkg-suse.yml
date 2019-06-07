@@ -15,7 +15,7 @@
   get_url:
     url: "{{ datadog_zypper_gpgkey }}"
     dest: /tmp/DATADOG_RPM_KEY.public
-    sha256sum: "{{ datadog_zypper_gpgkey_sha256sum }}"
+    checksum: "sha256:{{ datadog_zypper_gpgkey_sha256sum }}"
   when: ansible_distribution_version|int >= 12
 
 - name: Import new RPM key
