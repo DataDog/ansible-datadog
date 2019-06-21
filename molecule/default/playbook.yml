@@ -3,3 +3,6 @@
   hosts: all
   roles:
     - role: ansible-datadog
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_enabled: true
