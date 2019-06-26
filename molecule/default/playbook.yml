@@ -5,4 +5,21 @@
     - role: ansible-datadog
   vars:
     datadog_api_key: "11111111111111111111111111111111"
-    datadog_enabled: true
+    datadog_enabled: false
+    # avoid checking that the agent is stopped for centos
+    datadog_skip_running_check: true
+    datadog_config:
+      tags: "mytag0, mytag1"
+      log_level: INFO
+      apm_enabled: "true"  # has to be set as a string
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+        extra_aggregators: version
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: agent
+            search_string: ['agent', 'sshd' ]
