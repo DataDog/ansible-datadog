@@ -1,26 +1,51 @@
 ---
 - block:  # Work around due to SNI check for SLES11
-  - name: Stat if RPM key already exist
+  - name: Stat if RPM key already exists
     stat:
       path: /tmp/DATADOG_RPM_KEY.public
     register: ddkey
-  - name: Download new RPM key (SLES11)
+  - name: Download RPM key (SLES11)
     shell: "curl {{ datadog_zypper_gpgkey }} -o /tmp/DATADOG_RPM_KEY.public"
     args:
       warn: no
     when: not ddkey.stat.exists
   when: ansible_distribution_version|int == 11
 
-- name: Download new RPM key
+- name: Download RPM key
   get_url:
     url: "{{ datadog_zypper_gpgkey }}"
     dest: /tmp/DATADOG_RPM_KEY.public
     checksum: "sha256:{{ datadog_zypper_gpgkey_sha256sum }}"
   when: ansible_distribution_version|int >= 12
 
-- name: Import new RPM key
+- name: Import RPM key
   rpm_key:
     key: /tmp/DATADOG_RPM_KEY.public
+    state: present
+  when: not ansible_check_mode
+
+- block:  # Work around due to SNI check for SLES11
+  - name: Stat if new RPM key already exists
+    stat:
+      path: /tmp/DATADOG_RPM_KEY_E09422B3.public
+    register: ddnewkey
+  - name: Download new RPM key (SLES11)
+    shell: "curl {{ datadog_zypper_gpgkey_new }} -o /tmp/DATADOG_RPM_KEY_E09422B3.public"
+    args:
+      warn: no
+    when: not ddnewkey.stat.exists
+  when: ansible_distribution_version|int == 11
+
+- name: Download new RPM key
+  get_url:
+    url: "{{ datadog_zypper_gpgkey_new }}"
+    dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
+    checksum: "sha256:{{ datadog_zypper_gpgkey_new_sha256sum }}"
+  when: ansible_distribution_version|int >= 12
+
+- name: Import new RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_E09422B3.public
     state: present
   when: not ansible_check_mode
 

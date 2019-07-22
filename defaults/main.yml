@@ -31,6 +31,8 @@ datadog_yum_gpgkey_new: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.publ
 datadog_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_userspace_architecture }}"
 datadog_zypper_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
+datadog_zypper_gpgkey_new: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
+datadog_zypper_gpgkey_new_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 
 # Pin agent to a version. Highly recommended.
 datadog_agent_version: ""
