@@ -2,35 +2,32 @@
 dependency:
   name: galaxy
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: docker
 lint:
   name: yamllint
 platforms:
-  - name: win2012
-    box: opentable/win-2012r2-standard-amd64-nocm
-    memory: 2048
+  - name: ubuntu
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu1804}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro  # for systemd
+    privileged: true  # for systemd
+    pre_build_image: true
+  - name: centos
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
 provisioner:
   name: ansible
-  inventory:
-    host_vars:
-      win2012:
-        ansible_become: false
-        ansible_user: vagrant
-        ansible_password: vagrant
-        ansible_port: 5985
-        ansible_host: 127.0.0.1
-        ansible_connection: winrm
-        ansible_winrm_scheme: http
-        ansible_winrm_server_cert_validation: ignore
-    group_vars:
-      linux:
-        ansible_become: true
   lint:
     name: ansible-lint
     options:
       x:
+        - ANSIBLE0006
+        - ANSIBLE0010
         - ANSIBLE0013
 verifier:
   name: testinfra
