@@ -1,2 +1,4 @@
 .vagrant
 *.retry
+pre_tasks/
+post_tasks/

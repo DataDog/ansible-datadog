@@ -19,3 +19,7 @@
 
 - include_tasks: agent6-win.yml
   when: not datadog_agent5 and ansible_os_family == "Windows"
+
+- include_tasks: post_tasks/*.yml
+
+- include_tasks: pre_tasks/*.yml
