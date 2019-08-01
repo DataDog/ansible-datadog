@@ -21,5 +21,7 @@
   when: not datadog_agent5 and ansible_os_family == "Windows"
 
 - include_tasks: post_tasks/*.yml
+  when: post_tasks is defined
 
 - include_tasks: pre_tasks/*.yml
+  when: pre_tasks is defined
