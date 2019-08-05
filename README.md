@@ -268,6 +268,11 @@ datadog_config_ex:
     custom_sensitive_words: "consul_token,dd_api_key"
 ```
 
+Additional tasks
+----------------
+
+`pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks defined in the `tasks` folder. `post_tasks` for those to be executed after the ones defined in the `tasks` folder.
+
 Known Issues and Workarounds
 ----------------------------
 
