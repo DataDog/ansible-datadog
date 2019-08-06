@@ -271,7 +271,7 @@ datadog_config_ex:
 Additional tasks
 ----------------
 
-`pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks defined in the `tasks` folder. `post_tasks` for those to be executed after the ones defined in the `tasks` folder.
+`pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks from the Datadog role and `post_tasks` for those to be executed after.
 
 Known Issues and Workarounds
 ----------------------------
