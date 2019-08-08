@@ -11,6 +11,12 @@
     state: present
   when: not ansible_check_mode
 
+- name: Install setfacl support
+  yum:
+    name: acl
+    state: present
+  when: not ansible_check_mode
+
 - name: Install DataDog yum repo
   yum_repository:
     name: datadog
