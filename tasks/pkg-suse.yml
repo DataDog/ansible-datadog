@@ -30,7 +30,7 @@
       path: /tmp/DATADOG_RPM_KEY_E09422B3.public
     register: ddnewkey
   - name: Download new RPM key (SLES11)
-    shell: "curl {{ datadog_zypper_gpgkey_new }} -o /tmp/DATADOG_RPM_KEY_E09422B3.public"
+    shell: "curl {{ datadog_zypper_gpgkey_e09422b3 }} -o /tmp/DATADOG_RPM_KEY_E09422B3.public"
     args:
       warn: no
     when: not ddnewkey.stat.exists
@@ -38,9 +38,9 @@
 
 - name: Download new RPM key
   get_url:
-    url: "{{ datadog_zypper_gpgkey_new }}"
+    url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
-    checksum: "sha256:{{ datadog_zypper_gpgkey_new_sha256sum }}"
+    checksum: "sha256:{{ datadog_zypper_gpgkey_e09422b3_sha256sum }}"
   when: ansible_distribution_version|int >= 12
 
 - name: Import new RPM key
