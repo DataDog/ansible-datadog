@@ -36,6 +36,15 @@ Role Variables
 - `datadog_apt_repo` - Override default Datadog `apt` repository
 - `datadog_apt_cache_valid_time` - Override the default apt cache expiration time (default 1 hour)
 - `datadog_apt_key_url_new` - Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role)
+- `datadog_yum_repo` - Override default Datadog `yum` repository
+- `datadog_yum_gpgkey` - Override default url to Datadog `yum` key used to verify Agent 5 and Agent 6 (up to 6.13) packages (key ID `4172A230`)
+- `datadog_yum_gpgkey_e09422b3` - Override default url to Datadog `yum` key used to verify Agent 6 (from 6.14 upwards) packages (key ID `E09422B3`)
+- `datadog_yum_gpgkey_e09422b3_sha256sum` - Override default checksum of the `datadog_yum_gpgkey_e09422b3` key
+- `datadog_zypper_repo` - Override default Datadog `zypper` repository
+- `datadog_zypper_gpgkey` - Override default url to Datadog `zypper` key used to verify Agent 5 and Agent 6 (up to 6.13) packages (key ID `4172A230`)
+- `datadog_zypper_gpgkey_sha256sum` - Override default checksum of the `datadog_zypper_gpgkey` key
+- `datadog_zypper_gpgkey_e09422b3` - Override default url to Datadog `zypper` key used to verify Agent 6 (from 6.14 upwards) packages (key ID `E09422B3`)
+- `datadog_zypper_gpgkey_e09422b3_sha256sum` - Override default checksum of the `datadog_zypper_gpgkey_e09422b3` key
 - `datadog_agent_allow_downgrade` - Set to `yes` to allow agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.
 - `use_apt_backup_keyserver` - Set `true` to use the backup keyserver instead of the default one
 - `datadog_enabled` - Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`
