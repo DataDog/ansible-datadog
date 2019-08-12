@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 3.1.0
+
+- [FEATURE] Trust new RPM key on SUSE. See [#203][]
+
 # 3.0.0 / 2019-05-17
 
 - [FEATURE] On Linux: you can now add the Agent's user to additionnal groups.

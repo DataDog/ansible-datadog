@@ -1,9 +1,9 @@
 ---
 - name: Download new RPM key
   get_url:
-    url: "{{ datadog_yum_gpgkey_new }}"
+    url: "{{ datadog_yum_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
-    checksum: "sha256:694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
+    checksum: "sha256:{{ datadog_yum_gpgkey_e09422b3_sha256sum }}"
 
 - name: Import new RPM key
   rpm_key:
