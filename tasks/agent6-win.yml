@@ -25,18 +25,6 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
-- name: Create trace agent configuration file
-  win_template:
-    src: datadog.conf.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\trace-agent.conf"
-  notify: restart datadog-agent-win
-
-- name: Create process agent configuration file
-  win_template:
-    src: datadog.conf.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\process-agent.conf"
-  notify: restart datadog-agent-win
-
 - name: Ensure datadog-agent is running
   win_service:
     name: datadogagent
