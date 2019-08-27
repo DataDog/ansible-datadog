@@ -12,7 +12,7 @@
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
     mode: 0550
-    
+
 - name: Create main Datadog agent configuration file
   template:
     src: datadog.yaml.j2
