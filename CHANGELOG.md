@@ -1,9 +1,11 @@
 CHANGELOG
 =========
 
-# 3.1.0
+# 3.1.0 / 2019-08-30
 
-- [FEATURE] Trust new RPM key on SUSE. See [#203][]
+- [FEATURE] Trust new RPM key on SUSE. See [#203][].
+- [IMPROVEMENT] Windows: Add the ability to specify the 'ddagentuser' name and password in the configuration.
+- [FEATURE] Add 'pre_task' and 'post_task' folder for custom user tasks.
 
 # 3.0.0 / 2019-05-17
 
