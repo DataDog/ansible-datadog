@@ -11,6 +11,12 @@ datadog_checks: {}
 datadog_user: dd-agent
 datadog_group: root
 
+# agent integration variables
+integration_command_user_linux: "dd-agent"
+integration_command_user_windows: "administrator"
+datadog_agent_binary_path_linux: /opt/datadog-agent/bin/agent/agent
+datadog_agent_binary_path_windows: "C:\\Program Files\\Datadog\\Datadog Agent\\bin\\agent.exe"
+
 # list of additional groups for datadog_user
 datadog_additional_groups: {}
 
@@ -56,7 +62,7 @@ datadog_windows_ddagentuser_name: ""
 # Override to change the password of the created windows user.
 datadog_windows_ddagentuser_password: ""
 
-# do not modify.  Default empty value for constructing the list of optional 
+# do not modify.  Default empty value for constructing the list of optional
 # arguments to supply to the windows installer.
 win_install_args: " "
 

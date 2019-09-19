@@ -4,6 +4,7 @@ CHANGELOG
 # 3.2.0 /
 
 * [DEPRECATION] Drop support for EOL version of Ansible (2.5)
+- [FEATURE] Add the `datadog_integration resource` to easily control installed integrations.
 
 # 3.1.0 / 2019-08-30
 
