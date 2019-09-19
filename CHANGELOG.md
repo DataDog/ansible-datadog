@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 3.2.0 /
+
+* [DEPRECATION] Drop support for EOL version of Ansible (2.5)
+
 # 3.1.0 / 2019-08-30
 
 - [FEATURE] Trust new RPM key on SUSE. See [#203][].

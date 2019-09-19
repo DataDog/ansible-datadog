@@ -53,20 +53,6 @@ jobs:
 
   # Agent 5
 
-  debian_25_5:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_5
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_5
-
-  centos_25_5:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_5
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_5
-
   debian_26_5:
     docker:
       - image: datadog/docker-library:ansible_debian_2_6
@@ -110,20 +96,6 @@ jobs:
     <<: *install_agent_5
 
   # Agent 6
-
-  debian_25_6:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_5
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_6
-
-  centos_25_6:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_5
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_6
 
   debian_26_6:
     docker:
@@ -174,9 +146,6 @@ workflows:
       - ansible_lint
 
       # test debian (apt)
-      #   ansible 2.5
-      - debian_25_5
-      - debian_25_6
       #   ansible 2.6
       - debian_26_5
       - debian_26_6
@@ -188,9 +157,6 @@ workflows:
       - debian_28_6
 
       # test centos (rpm)
-      #   ansible 2.5
-      - centos_25_5
-      - centos_25_6
       #   ansible 2.6
       - centos_26_5
       - centos_26_6
