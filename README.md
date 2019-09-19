@@ -9,6 +9,25 @@ this role version 6 of the agent is installed by default (instead of version
 
 Supports most Debian and RHEL-based Linux distributions, and Windows.
 
+- [Ansible Datadog Role](#ansible-datadog-role)
+  * [Installation](#installation)
+  * [Role Variables](#role-variables)
+  * [Agent 5 (older version)](#agent-5--older-version-)
+  * [Dependencies](#dependencies)
+  * [Configuring a check](#configuring-a-check)
+  * [Upgrading an integration](#upgrading-an-integration)
+  * [Example Playbooks](#example-playbooks)
+  * [APM](#apm)
+  * [Process Agent](#process-agent)
+      - [Variables](#variables)
+      - [Example of configuration](#example-of-configuration)
+    + [Agent 5](#agent-5)
+      - [Example of configuration](#example-of-configuration-1)
+  * [Additional tasks](#additional-tasks)
+  * [Known Issues and Workarounds](#known-issues-and-workarounds)
+  * [License](#license)
+  * [Author Information](#author-information)
+
 Installation
 ------------
 
@@ -147,6 +166,48 @@ This example will configure the PostgeSQL check through **autodiscovery**:
 ```
 
 
+Upgrading an integration
+------------------------
+
+**Available for Agent v6.8+**
+
+The `datadog_integration` resource will help you to install specific versions
+of Datadog integrations. Keep in mind the Agent comes with all the
+integrations already installed. So this command is here to allow you to upgrade
+a specific integration without upgrading the whole Agent. For more usage
+information consult the [Agent
+docs](https://docs.datadoghq.com/agent/guide/integration-management/).
+
+Available actions:
+- `install`: install a specific version of the integration.
+- `remove`: removes an integration.
+
+Syntax:
+```yml
+  datadog_integration:
+    <name of the integration>:
+      action: <'install' or 'remove'>
+      version: <the version to install>
+```
+
+### Example
+
+This example installs version `1.11.0` of the ElasticSearch integration and
+removes the `postgres` integration.
+
+
+```yml
+ datadog_integration:
+   datadog-elastic:
+     action: install
+     version: 1.11.0
+   datadog-postgres:
+     action: remove
+```
+
+In order to get the available versions of the integrations, please refer to
+their `CHANGELOG.md` file in the [integrations-core repository](https://github.com/DataDog/integrations-core).
+
 Example Playbooks
 -----------------
 
@@ -157,7 +218,7 @@ Sending data to Datadog US (default) and configuring a few checks.
     - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
-    datadog_agent_version: "1:6.0.0-1" # for apt-based platforms, use a `6.0.0-1` format on yum-based platforms
+    datadog_agent_version: "1:6.8.0-1" # for apt-based platforms, use a `6.8.0-1` format on yum-based platforms
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
@@ -207,6 +268,13 @@ Sending data to Datadog US (default) and configuring a few checks.
             service: nginx
             source: nginx
             sourcecategory: http_web_access
+    # datadog_integration is available on agent 6.8+
+    datadog_integration:
+      datadog-elastic:
+        action: install
+        version: 1.11.0
+      datadog-postgres:
+        action: remove
 ```
 
 Example for sending data to EU site:

@@ -20,6 +20,9 @@
 - include_tasks: agent6-win.yml
   when: not datadog_agent5 and ansible_os_family == "Windows"
 
+- include_tasks: integration.yml
+  when: datadog_integration is defined
+
 - include_tasks: post_tasks/*.yml
   when: post_tasks is defined
 
