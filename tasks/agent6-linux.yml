@@ -10,6 +10,13 @@
     dest: /etc/datadog-agent
     state: directory
 
+- name: Create system-probe configuration file
+  template:
+    src: system-probe.yaml.j2
+    dest: /etc/datadog-agent/system-probe.yaml
+    owner: "root"
+    group: "root"
+
 - name: Create main Datadog agent configuration file
   template:
     src: datadog.yaml.j2

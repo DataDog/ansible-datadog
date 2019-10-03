@@ -1,0 +1,8 @@
+# Managed by Ansible
+
+{% if system_probe_config is defined and system_probe_config|length > 0 -%}
+system_probe_config:
+{% filter indent(width=2, first=True) %}
+{{ system_probe_config | to_nice_yaml }}
+{% endfilter %}
+{% endif %}

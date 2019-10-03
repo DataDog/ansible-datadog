@@ -217,6 +217,8 @@ Sending data to Datadog US (default) and configuring a few checks.
   roles:
     - { role: Datadog.datadog, become: yes }
   vars:
+    system_probe_config:
+      enabled: true
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.8.0-1" # for apt-based platforms, use a `6.8.0-1` format on yum-based platforms
     datadog_config:
@@ -317,6 +319,10 @@ or "disabled" (to disable the Process Agent entirely)
 - `scrub_args` - enables the scrubbing of sensitive arguments from a process command line. Default value is true
 - `custom_sensitive_words` - expands the default list of sensitive words used by the cmdline scrubber
 
+#### System Probe
+
+The network performance monitoring system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`
+
 #### Example of configuration
 ```yml
 datadog_config:
@@ -324,6 +330,9 @@ datadog_config:
     enabled: "true" # has to be set as a string
     scrub_args: true
     custom_sensitive_words: ['consul_token','dd_api_key']
+system_probe_config:
+  enabled: true
+  sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 ```
 
 ### Agent 5

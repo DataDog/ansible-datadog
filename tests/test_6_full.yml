@@ -4,6 +4,14 @@
   vars:
     datadog_api_key: "123456"
     datadog_agent_allow_downgrade: true
+    system_probe_config:
+      enabled: true
+      source_excludes:
+        "*":
+          - 8301
+      dest_excludes:
+        "*":
+          - 8301
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
