@@ -20,6 +20,7 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
   * [APM](#apm)
   * [Process Agent](#process-agent)
       - [Variables](#variables)
+      - [System Probe](#system-probe)
       - [Example of configuration](#example-of-configuration)
     + [Agent 5](#agent-5)
       - [Example of configuration](#example-of-configuration-1)
@@ -217,8 +218,6 @@ Sending data to Datadog US (default) and configuring a few checks.
   roles:
     - { role: Datadog.datadog, become: yes }
   vars:
-    system_probe_config:
-      enabled: true
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.8.0-1" # for apt-based platforms, use a `6.8.0-1` format on yum-based platforms
     datadog_config:
@@ -277,6 +276,8 @@ Sending data to Datadog US (default) and configuring a few checks.
         version: 1.11.0
       datadog-postgres:
         action: remove
+    system_probe_config:
+      enabled: true
 ```
 
 Example for sending data to EU site:
@@ -321,7 +322,9 @@ or "disabled" (to disable the Process Agent entirely)
 
 #### System Probe
 
-The network performance monitoring system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`
+The [network performance monitoring](https://docs.datadoghq.com/network_performance_monitoring/) system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`.
+
+Currently, the system probe only works on Linux with the Agent 6 version and beyond.
 
 #### Example of configuration
 ```yml
