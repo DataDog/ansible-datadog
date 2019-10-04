@@ -10,13 +10,6 @@
     dest: /etc/datadog-agent
     state: directory
 
-- name: Create system-probe configuration file
-  template:
-    src: system-probe.yaml.j2
-    dest: /etc/datadog-agent/system-probe.yaml
-    owner: "root"
-    group: "root"
-
 - name: Create main Datadog agent configuration file
   template:
     src: datadog.yaml.j2
@@ -65,6 +58,14 @@
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
+- name: Create system-probe configuration file
+  template:
+    src: system-probe.yaml.j2
+    dest: /etc/datadog-agent/system-probe.yaml
+    mode: 0644
+    owner: "root"
+    group: "root"
+
 - name: Ensure datadog-agent is running
   service:
     name: datadog-agent
@@ -72,7 +73,14 @@
     enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
-- name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
+- name: Ensure datadog-agent-sysprobe is running if enabled
+  service:
+    name: datadog-agent-sysprobe
+    state: started
+    enabled: yes
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and system_probe_config is defined and system_probe_config["enabled"]
+
+- name: Ensure datadog-agent, datadog-agent-process, datadog-agent-trace and datadog-agent-sysprobe are not running
   service:
     name: "{{ item }}"
     state: stopped
@@ -82,3 +90,4 @@
     - datadog-agent
     - datadog-agent-process
     - datadog-agent-trace
+    - datadog-agent-sysprobe
