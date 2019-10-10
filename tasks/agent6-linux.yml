@@ -65,9 +65,9 @@
   template:
     src: system-probe.yaml.j2
     dest: /etc/datadog-agent/system-probe.yaml
-    mode: 0644
+    mode: 0640
     owner: "root"
-    group: "root"
+    group: "{{ datadog_group }}"
 
 - name: Ensure datadog-agent is running
   service:
