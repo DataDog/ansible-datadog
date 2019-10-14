@@ -203,7 +203,9 @@ Sending data to Datadog US (default) and configuring a few checks.
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.8.0-1" # for apt-based platforms, use a `6.8.0-1` format on yum-based platforms
     datadog_config:
-      tags: "mytag0, mytag1"
+      tags:
+        - env: dev
+        - datacenter: local
       log_level: INFO
       apm_config:
         enabled: true
@@ -235,10 +237,13 @@ Sending data to Datadog US (default) and configuring a few checks.
         instances:
           - nginx_status_url: http://example.com/nginx_status/
             tags:
-              - instance:foo
+              - source: nginx
+              - instance: foo
           - nginx_status_url: http://example2.com:1234/nginx_status/
             tags:
+              - source: nginx
               - instance:bar
+
         #Log collection is available on agent 6
         logs:
           - type: file
