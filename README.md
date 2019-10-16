@@ -307,15 +307,13 @@ The following variables are available for the Process Agent:
 * `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line. Default value is `true`.
 * `custom_sensitive_words`: Expands the default list of sensitive words used by the cmdline scrubber.
 
-### Example of configuration
-
-#### System Probe
+### System Probe
 
 The [network performance monitoring](https://docs.datadoghq.com/network_performance_monitoring/) system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`.
 
 Currently, the system probe only works on Linux with the Agent 6 version and beyond.
 
-#### Example of configuration
+### Example of configuration
 ```yml
 datadog_config:
   process_config:
