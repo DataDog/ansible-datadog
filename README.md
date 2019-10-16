@@ -22,6 +22,7 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
 - [APM](#apm)
 - [Process Agent](#process-agent)
   - [Variables](#variables)
+  - [System Probe](#system-probe)
   - [Example of configuration](#example-of-configuration)
   - [Agent 5](#agent-5)
 - [Additional tasks](#additional-tasks)
@@ -263,6 +264,8 @@ Sending data to Datadog US (default) and configuring a few checks.
         version: 1.11.0
       datadog-postgres:
         action: remove
+    system_probe_config:
+      enabled: true
 ```
 
 Example for sending data to EU site:
@@ -304,14 +307,22 @@ The following variables are available for the Process Agent:
 * `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line. Default value is `true`.
 * `custom_sensitive_words`: Expands the default list of sensitive words used by the cmdline scrubber.
 
-### Example of configuration
+### System Probe
 
+The [network performance monitoring](https://docs.datadoghq.com/network_performance_monitoring/) system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`.
+
+Currently, the system probe only works on Linux with the Agent 6 version and beyond.
+
+### Example of configuration
 ```yml
 datadog_config:
   process_config:
     enabled: "true" # has to be set as a string
     scrub_args: true
     custom_sensitive_words: ['consul_token','dd_api_key']
+system_probe_config:
+  enabled: true
+  sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 ```
 
 ### Agent 5

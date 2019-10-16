@@ -1,5 +1,6 @@
 .vagrant
 *.retry
+.venv
 
 # pre and post tasks folders (user defined)
 pre_tasks/

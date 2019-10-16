@@ -1,4 +1,7 @@
 ---
+system_probe_config:
+  enabled: false
+
 datadog_enabled: yes
 
 # default datadog.conf options

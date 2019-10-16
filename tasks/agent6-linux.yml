@@ -1,4 +1,7 @@
 ---
+- name: populate service facts
+  service_facts:
+
 - name: add "{{ datadog_user }}" user to additional groups
   user: name="{{ datadog_user }}" groups="{{ datadog_additional_groups }}" append=yes
   with_items: "{{ datadog_additional_groups }}"
@@ -58,12 +61,32 @@
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
 
+- name: Create system-probe configuration file
+  template:
+    src: system-probe.yaml.j2
+    dest: /etc/datadog-agent/system-probe.yaml
+    mode: 0640
+    owner: "root"
+    group: "{{ datadog_group }}"
+
 - name: Ensure datadog-agent is running
   service:
     name: datadog-agent
     state: started
     enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+
+- name: set system probe enabled
+  set_fact:
+    datadog_sysprobe_enabled: true
+  when: system_probe_config is defined and system_probe_config["enabled"] and ansible_facts.services['datadog-agent-sysprobe'] is defined
+
+- name: Ensure datadog-agent-sysprobe is running if enabled and installed
+  service:
+    name: datadog-agent-sysprobe
+    state: started
+    enabled: yes
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_sysprobe_enabled
 
 - name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
   service:
