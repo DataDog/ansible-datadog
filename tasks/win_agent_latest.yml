@@ -1,0 +1,4 @@
+---
+- name: set agent download filename to latest
+  set_fact:
+    dd_download_url: "{{ datadog_windows_latest_url }}/datadog-agent-{{ datadog_agent_major_version }}-latest.amd64.msi"

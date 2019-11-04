@@ -31,21 +31,36 @@
   with_items:
     - "deb http://apt.datadoghq.com/ stable main"
     - "deb http://apt.datadoghq.com/ stable 6"
+    - "deb http://apt.datadoghq.com/ stable 7"
   when: not ansible_check_mode
 
-- name: Ensure Datadog repository is up-to-date
+- name: (Agent 7) Ensure Datadog repository is up-to-date
+  apt_repository:
+    repo: "deb https://apt.datadoghq.com stable 7"
+    state: present
+    update_cache: yes
+  when: (datadog_apt_repo | length == 0) and (datadog_agent_major_version == 7) and (not ansible_check_mode)
+
+- name: (Agent 6) Ensure Datadog repository is up-to-date
+  apt_repository:
+    repo: "deb https://apt.datadoghq.com stable 6"
+    state: present
+    update_cache: yes
+  when: (datadog_apt_repo | length == 0) and (datadog_agent_major_version == 6) and (not ansible_check_mode)
+
+- name: (Agent 5) Ensure Datadog repository is up-to-date
+  apt_repository:
+    repo: "deb https://apt.datadoghq.com stable main"
+    state: present
+    update_cache: yes
+  when: (datadog_apt_repo | length == 0) and (datadog_agent_major_version == 5) and (not ansible_check_mode)
+
+- name: (Custom) Ensure Datadog repository is up-to-date
   apt_repository:
     repo: "{{ datadog_apt_repo }}"
-    state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
+    state: present
     update_cache: yes
-  when: not ansible_check_mode
-
-- name: (agent5) Ensure Datadog repository is up-to-date
-  apt_repository:
-    repo: "{{ datadog_agent5_apt_repo }}"
-    state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
-    update_cache: yes
-  when: not ansible_check_mode
+  when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
 - name: Ensure pinned version of Datadog agent is installed
   apt:

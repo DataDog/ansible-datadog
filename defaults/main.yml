@@ -23,8 +23,23 @@ datadog_agent_binary_path_windows: "C:\\Program Files\\Datadog\\Datadog Agent\\b
 # list of additional groups for datadog_user
 datadog_additional_groups: {}
 
-# default apt repo
-datadog_apt_repo: "deb https://apt.datadoghq.com/ stable 6"
+# Major version of the Agent that will be installed.
+# Possible values: 5, 6, 7
+datadog_agent_major_version: 7
+
+# Pin agent to a version. Highly recommended.
+# Defaults to the latest version of the major version chosen in datadog_agent_major_version
+# The version pinned needs to have the same major as datadog_agent_major_version
+datadog_agent_version: ""
+
+# default apt repo and keyserver
+
+# By default, will use the official apt Datadog repository for the chosen major version
+# Agent 5: deb https://apt.datadoghq.com/ stable main
+# Agent 6: deb https://apt.datadoghq.com/ stable 6
+# Agent 7: deb https://apt.datadoghq.com/ stable 7
+# Use this option to override the repository used
+datadog_apt_repo: ""
 datadog_apt_cache_valid_time: 3600
 datadog_apt_key_retries: 5
 use_apt_backup_keyserver: false
@@ -32,20 +47,28 @@ datadog_apt_keyserver: hkp://keyserver.ubuntu.com:80
 datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 
 # default yum repo and keys
-datadog_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}/"
+
+# By default, will use the official yum Datadog repository for the chosen major version
+# Agent 5: https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}
+# Agent 6: https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}
+# Agent 7: https://yum.datadoghq.com/stable/7/{{ ansible_userspace_architecture }}
+# Use this option to override the repository used
+datadog_yum_repo: ""
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_yum_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 
 # default zypper repo and keys
-datadog_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_userspace_architecture }}"
+# By default, will use the official zypper Datadog repository for the chosen major version
+# Agent 5: https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}
+# Agent 6: https://yum.datadoghq.com/suse/stable/6/{{ ansible_userspace_architecture }}
+# Agent 7: https://yum.datadoghq.com/suse/stable/7/{{ ansible_userspace_architecture }}
+# Use this option to override the repository used
+datadog_zypper_repo: ""
 datadog_zypper_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
 datadog_zypper_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
-
-# Pin agent to a version. Highly recommended.
-datadog_agent_version: ""
 
 # Avoid checking if the agent is running or not. This can be useful if you're
 # using sysvinit and providing your own init script.
@@ -57,7 +80,7 @@ datadog_skip_running_check: false
 datadog_agent_allow_downgrade: no
 
 # default datadog windows download url
-datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
+datadog_windows_latest_url: "https://s3.amazonaws.com/ddagent-windows-stable/"
 datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
 
 # Override to change the name of the windows user to create
@@ -68,23 +91,3 @@ datadog_windows_ddagentuser_password: ""
 # do not modify.  Default empty value for constructing the list of optional
 # arguments to supply to the windows installer.
 win_install_args: " "
-
-########################################################################
-###                       Installing agent5                          ###
-
-# To install agent5 instead of agent6 you need to:
-# * set 'datadog_agent5' to true
-datadog_agent5: no
-
-# To downgrade from agent6 to agent5, you need to:
-# * set 'datadog_agent5' to true
-# * pin 'datadog_agent_version' to an existing agent5 version
-# * set 'datadog_agent_allow_downgrade' to yes
-
-# repos where datadog-agent v5 packages are available
-datadog_agent5_apt_repo: "deb https://apt.datadoghq.com stable main"
-datadog_agent5_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}/"
-datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}"
-
-###           End of Beta-Agent6-only experimental attributes        ###
-########################################################################

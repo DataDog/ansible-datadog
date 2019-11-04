@@ -1,8 +1,16 @@
+{% if datadog_zypper_repo | length > 0 %}
+  {% set baseurl = datadog_zypper_repo %}
+{% elif datadog_agent_major_version == 5 %}
+  {% set baseurl = "https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}" %}
+{% else %}
+  {% set baseurl = "https://yum.datadoghq.com/suse/stable/{{ datadog_agent_major_version }}/{{ ansible_userspace_architecture }}" %}
+{% endif %}
+
 [datadog]
 name=Datadog, Inc.
 enabled=1
 autorefresh=1
-baseurl={% if datadog_agent5 %}{{ datadog_agent5_zypper_repo }}{% else %}{{ datadog_zypper_repo }}{% endif %}
+baseurl={{ baseurl }}
 
 type=rpm-md
 gpgcheck=1

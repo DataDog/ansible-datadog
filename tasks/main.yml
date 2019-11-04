@@ -12,13 +12,13 @@
   when: ansible_os_family == "Windows"
 
 - include_tasks: agent5-linux.yml
-  when: datadog_agent5 and ansible_os_family != "Windows"
+  when: datadog_agent_major_version == 5 and ansible_os_family != "Windows"
 
-- include_tasks: agent6-linux.yml
-  when: not datadog_agent5 and ansible_os_family != "Windows"
+- include_tasks: agent-linux.yml
+  when: datadog_agent_major_version > 5 and ansible_os_family != "Windows"
 
-- include_tasks: agent6-win.yml
-  when: not datadog_agent5 and ansible_os_family == "Windows"
+- include_tasks: agent-win.yml
+  when: datadog_agent_major_version > 5 and ansible_os_family == "Windows"
 
 - include_tasks: integration.yml
   when: datadog_integration is defined

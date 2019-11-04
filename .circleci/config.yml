@@ -41,6 +41,28 @@ version: 2
     - run: dd-agent info || true
     - run: ps aux | grep -v grep | grep datadog-agent
 
+# install the latest version of agent5, upgrade to the latest agent7 and downgrade to an old agent5
+.install_agent_7: &install_agent_7
+  steps:
+    - checkout
+    # dry run
+    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7.yaml" --check
+    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml" --check
+
+    # install latest agent5
+    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml"
+    - run: dd-agent info || true
+    - run: ps aux | grep -v grep | grep datadog-agent
+
+    # upgrade to the latest agent6
+    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7.yaml"
+    - run: datadog-agent version
+
+    # downgrading to 5.23.0
+    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml"
+    - run: dd-agent info || true
+    - run: ps aux | grep -v grep | grep datadog-agent
+
 jobs:
 
   ansible_lint:
@@ -139,6 +161,50 @@ jobs:
       - OS_TYPE: "centos"
     <<: *install_agent_6
 
+  # Agent 7
+
+  debian_26_7:
+    docker:
+      - image: datadog/docker-library:ansible_debian_2_6
+    environment:
+      - OS_TYPE: "debian"
+    <<: *install_agent_7
+
+  centos_26_7:
+    docker:
+      - image: datadog/docker-library:ansible_centos_2_6
+    environment:
+      - OS_TYPE: "centos"
+    <<: *install_agent_7
+
+  debian_27_7:
+    docker:
+      - image: datadog/docker-library:ansible_debian_2_7
+    environment:
+      - OS_TYPE: "debian"
+    <<: *install_agent_7
+
+  centos_27_7:
+    docker:
+      - image: datadog/docker-library:ansible_centos_2_7
+    environment:
+      - OS_TYPE: "centos"
+    <<: *install_agent_7
+
+  debian_28_7:
+    docker:
+      - image: datadog/docker-library:ansible_debian_2_8
+    environment:
+      - OS_TYPE: "debian"
+    <<: *install_agent_7
+
+  centos_28_7:
+    docker:
+      - image: datadog/docker-library:ansible_centos_2_8
+    environment:
+      - OS_TYPE: "centos"
+    <<: *install_agent_7
+
 workflows:
   version: 2
   test_datadog_role:
@@ -149,20 +215,27 @@ workflows:
       #   ansible 2.6
       - debian_26_5
       - debian_26_6
+      - debian_26_7
       #   ansible 2.7
       - debian_27_5
       - debian_27_6
+      - debian_27_7
       #   ansible 2.8
       - debian_28_5
       - debian_28_6
+      - debian_28_7
 
       # test centos (rpm)
       #   ansible 2.6
       - centos_26_5
       - centos_26_6
+      - centos_26_7
       #   ansible 2.7
       - centos_27_5
       - centos_27_6
+      - centos_27_7
       #   ansible 2.8
       - centos_28_5
       - centos_28_6
+      - centos_28_7
+

@@ -9,20 +9,20 @@
     args:
       warn: no
     when: not ddkey.stat.exists
-  when: ansible_distribution_version|int == 11
+  when: datadog_agent_major_version < 7 and ansible_distribution_version|int == 11
 
 - name: Download RPM key
   get_url:
     url: "{{ datadog_zypper_gpgkey }}"
     dest: /tmp/DATADOG_RPM_KEY.public
     checksum: "sha256:{{ datadog_zypper_gpgkey_sha256sum }}"
-  when: ansible_distribution_version|int >= 12
+  when: datadog_agent_major_version < 7 and ansible_distribution_version|int >= 12
 
 - name: Import RPM key
   rpm_key:
     key: /tmp/DATADOG_RPM_KEY.public
     state: present
-  when: not ansible_check_mode
+  when: datadog_agent_major_version < 7 and not ansible_check_mode
 
 - block:  # Work around due to SNI check for SLES11
   - name: Stat if new RPM key already exists
