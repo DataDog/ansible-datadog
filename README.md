@@ -49,9 +49,9 @@ To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, `datadog_zypper_repo`
 
 `datadog_agent_major_version` | Default apt repository | Default yum repository | Default zypper repository |
 ------------------------------|------------------------|-----------------------|---------------------------|
-5                             | https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm | https://yum.datadoghq.com/suse/rpm |
-6                             | https://apt.datadoghq.com stable 6 | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
-7                             | https://apt.datadoghq.com stable 7 | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
+5                             | deb https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm | https://yum.datadoghq.com/suse/rpm |
+6                             | deb https://apt.datadoghq.com stable 6 | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
+7                             | deb https://apt.datadoghq.com stable 7 | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
 
 To override the default behavior, set the `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo` variables to something else than an empty string.
 
