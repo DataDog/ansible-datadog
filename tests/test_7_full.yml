@@ -1,0 +1,74 @@
+- hosts: all
+  roles:
+    - { role: ansible-datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+  vars:
+    datadog_agent_major_version: 7
+    datadog_api_key: "123456"
+    datadog_agent_allow_downgrade: true
+    system_probe_config:
+      enabled: true
+      source_excludes:
+        "*":
+          - 8301
+      dest_excludes:
+        "*":
+          - 8301
+    datadog_config:
+      tags: "mytag0, mytag1"
+      log_level: INFO
+      apm_enabled: "true" # has to be set as a string
+      # logs related config
+      logs_enabled: true
+      logset: main
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+        extra_aggregators: version
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: ssh
+            search_string: ['ssh', 'sshd' ]
+          - name: syslog
+            search_string: ['rsyslog' ]
+            cpu_check_interval: 0.2
+            exact_match: true
+            ignore_denied_access: true
+      ssh_check:
+        init_config:
+        instances:
+          - host: localhost
+            port: 22
+            username: root
+            password: changeme
+            sftp_check: True
+            private_key_file:
+            add_missing_keys: True
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://example.com/nginx_status/
+            tags:
+              - instance:foo
+          - nginx_status_url: http://example2.com:1234/nginx_status/
+            tags:
+              - instance:bar
+        logs:
+          - type: file
+            path: /var/log/nginx.log
+            service: nginx
+            source: nginx
+            sourcecategory: webapp
+            tags: env:prod
+          - type: tcp
+            port: 10514
+            service: webapp
+            source: php
+            sourcecategory: front
+            log_processing_rules:
+              - type: exclude_at_match
+                name: exclude_datadoghq_users
+                # Regexp can be anything
+                pattern: User=\w+@datadoghq.com
