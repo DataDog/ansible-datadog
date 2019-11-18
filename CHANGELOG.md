@@ -1,11 +1,11 @@
 CHANGELOG
 =========
 
-# 3.3.0 /
+# 3.3.0 / 2019-11-18
 
 * [FEATURE] Blacklist installation of 6.14.0 and 6.14.1 on Windows.
 * [FEATURE] Run fix + sanity check script before agent install/upgrade on Windows.
-* [FEATURE] Adding support for Datadog system-probe.
+* [FEATURE] Adding support for Datadog system-probe (thanks to [@jstoja][]).
 
 # 3.2.0 / 2019-10-02
 
@@ -145,5 +145,6 @@ Initial release, compatible with Ansible v1 & v2
 [@pmbauer]: https://github.com/pmbauer
 [@tomgoren]: https://github.com/tomgoren
 [@dbr1993]: https://github.com/dbr1993
-[xp-1000]: https://github.com/xp-1000
-[enarciso]: https://github.com/enarciso
+[@xp-1000]: https://github.com/xp-1000
+[@enarciso]: https://github.com/enarciso
+[@jstoja]: https://github.com/jstoja
