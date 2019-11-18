@@ -199,10 +199,10 @@ Sending data to Datadog US (default) and configuring a few checks.
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes } # remove  the "becoome: yes" on Windows
+    - { role: Datadog.datadog, become: yes } # remove the "become: yes" on Windows
   vars:
     datadog_api_key: "123456"
-    datadog_agent_version: "1:6.14.2-1" # for apt-based platforms, use a `6.14.2-1` format on yum-based platforms and `6.14.2` for Windows
+    datadog_agent_version: "1:6.13.0-1" # for apt-based platforms, use a `6.13.0-1` format on yum-based platforms and `6.13.0` for Windows
     datadog_config:
       tags:
         - env: dev
