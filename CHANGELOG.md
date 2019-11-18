@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+# 3.3.0 /
+
+* [FEATURE] Blacklist installation of 6.14.0 and 6.14.1 on Windows.
+* [FEATURE] Run fix + sanity check script before agent install/upgrade on Windows.
+* [FEATURE] Adding support for Datadog system-probe.
+
 # 3.2.0 / 2019-10-02
 
 * [DEPRECATION] Drop support for EOL version of Ansible (2.5)
