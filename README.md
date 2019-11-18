@@ -202,7 +202,7 @@ Sending data to Datadog US (default) and configuring a few checks.
     - { role: Datadog.datadog, become: yes } # remove the "become: yes" on Windows
   vars:
     datadog_api_key: "123456"
-    datadog_agent_version: "1:6.15.0-1" # for apt-based platforms, use a `6.15.0-1` format on yum-based platforms and `6.15.0` for Windows
+    datadog_agent_version: "1:6.13.0-1" # for apt-based platforms, use a `6.13.0-1` format on yum-based platforms and `6.13.0` for Windows
     datadog_config:
       tags:
         - env: dev
