@@ -368,16 +368,16 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
 
 ### Datadog Agent 6.14 for Windows
 
-Due to a critical bug in agent versions `6.14.0` and `6.14.1` for Windows, these versions have
-been blacklisted (stating with the version `3.2.1` of this role).
+Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, these versions have
+been blacklisted (starting with the version `3.3.0` of this role).
 
-**PLEASE NOTE:** ansible will fail on windows if `datadog_agent_version` is set
-to `6.14.0` or `6.14.1`, please use 6.14.2 instead. If the agent version is not
+**PLEASE NOTE:** ansible will fail on Windows if `datadog_agent_version` is set
+to `6.14.0` or `6.14.1`. Please use `6.14.2` instead. If the Agent version is not
 pinned, `6.14.2` will be installed by default.
 
 If you are updating from **6.14.0 or 6.14.1 on Windows**, we **strongly** recommend following these steps:
 
-1. Upgrade `Datadog.datadog` ansible role to the latest version (`>=3.2.1`)
+1. Upgrade the present `Datadog.datadog` ansible role to the latest version (`>=3.3.0`)
 2. Set the `datadog_agent_version` to `6.14.2`
 
 To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
