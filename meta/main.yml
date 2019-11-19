@@ -29,6 +29,13 @@ galaxy_info:
         - 12.3
         - 13.1
         - 13.2
+    - name: SLES
+      versions:
+        - 11SP3
+        - 11SP4
+        - 12
+        - 12SP1
+        - 15
     - name: Windows
       versions:
         - 2008x64
