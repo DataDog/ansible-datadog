@@ -42,8 +42,7 @@ ansible-galaxy install Datadog.datadog
 The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed. by default, it is set to `7`. 
 To install Agent 5, set it to `5`. To install Agent 6, set it to `6`.
 
-The `datadog_agent_version` variable, if set, must use the
-major version set in `datadog_agent_major_version`.
+The `datadog_agent_version` variable, if set, must use the major version set in `datadog_agent_major_version`.
 
 ### Linux repositories
 
