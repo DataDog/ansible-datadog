@@ -45,7 +45,9 @@ To install Agent 5, set it to `5`. To install Agent 6, set it to `6`.
 The `datadog_agent_version` variable, if set, must use the
 major version set in `datadog_agent_major_version`.
 
-To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, `datadog_zypper_repo` has been modified. When they are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version`:
+### Linux repositories
+
+To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_repo` variables has been modified. When they are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version` are used:
 
 `datadog_agent_major_version` | Default apt repository | Default yum repository | Default zypper repository |
 ------------------------------|------------------------|-----------------------|---------------------------|
@@ -64,6 +66,16 @@ With this new behavior, the following Agent 5-specific options are obsolete and 
 
 To install or downgrade to Agent 5 with the v3 role, follow the instructions in the [Agent 5](#agent-5-older-version) section.
 
+### Windows
+
+To behavior of the `datadog_windows_download_url` variable has been modified. When not set, the official Windows msi package corresponding to the `datadog_agent_major_version` is used:
+
+`datadog_agent_major_version` | Default Windows msi package URL |
+------------------------------|------------------------|
+6                             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
+7                             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
+
+To override the default behavior, set the `datadog_windows_download_url` variable to something else than an empty string.
 
 ## Role Variables
 
