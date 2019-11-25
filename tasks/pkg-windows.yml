@@ -15,10 +15,10 @@
     &$env:temp\fix_6_14.ps1
 
 - include_tasks: win_agent_latest.yml
-  when: datadog_agent_major_version > 5 and (datadog_agent_version | length == 0)
+  when: datadog_agent_version | length == 0
 
 - include_tasks: win_agent_version.yml
-  when: datadog_agent_major_version > 5 and (not datadog_agent_version | length == 0)
+  when: not (datadog_agent_version | length == 0)
 
 - name: show URL var
   debug:
