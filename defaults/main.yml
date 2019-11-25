@@ -57,8 +57,11 @@ datadog_skip_running_check: false
 datadog_agent_allow_downgrade: no
 
 # default datadog windows download url
-datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
+# we're pinning 6.14.2 instead of latest for now. See http://dtdg.co/win-614-fix for more details.
+#datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
+datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-6.14.2.msi"
 datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
+datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-stable/scripts/fix_6_14.ps1"
 
 # Override to change the name of the windows user to create
 datadog_windows_ddagentuser_name: ""
