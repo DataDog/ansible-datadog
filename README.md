@@ -27,6 +27,8 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
   - [Agent 5](#agent-5)
 - [Additional tasks](#additional-tasks)
 - [Known Issues and Workarounds](#known-issues-and-workarounds)
+  - [dirmngr](#dirmngr)
+  - [Datadog Agent 6.14 for Windows](#datadog-agent-614-for-windows)
 - [License](#license)
 - [Author Information](#author-information)
 
@@ -435,6 +437,20 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
     - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
 
+### Datadog Agent 6.14 for Windows
+
+Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, these versions have
+been blacklisted (starting with the version `3.3.0` of this role).
+
+**PLEASE NOTE:** ansible will fail on Windows if `datadog_agent_version` is set
+to `6.14.0` or `6.14.1`. Please use `6.14.2` or above instead.
+
+If you are updating from **6.14.0 or 6.14.1 on Windows**, we **strongly** recommend following these steps:
+
+1. Upgrade the present `Datadog.datadog` ansible role to the latest version (`>=3.3.0`)
+2. Set the `datadog_agent_version` to `6.14.2` or above (by default the role install latest).
+
+To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
 
 ## License
 
