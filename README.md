@@ -199,7 +199,7 @@ Sending data to Datadog US (default) and configuring a few checks.
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes } # remove the "become: yes" on Windows
+    - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.13.0-1" # for apt-based platforms, use a `6.13.0-1` format on yum-based platforms and `6.13.0` for Windows
@@ -278,6 +278,55 @@ Example for sending data to EU site:
     datadog_site: "datadoghq.eu"
     datadog_api_key: "123456"
 ```
+
+### Making the playbook work on Windows
+
+On Windows, the `become: yes` option only works if:
+- `become_method` is set to `runas`,
+- `become_user` is set to a user with Administrator powers (for instance, `System`).
+
+Below are two methods to make the above playbook work with Windows hosts:
+
+### Using the inventory file (recommended)
+
+The recommended way to set these options is to set then in the inventory file, by setting the `ansible_become_method` and `ansible_become_user` options:
+
+```ini
+[servers]
+linux1 ansible_host=127.0.0.1
+linux2 ansible_host=127.0.0.2
+windows1 ansible_host=127.0.0.3 ansible_become_method=runas ansible_become_user=System
+windows2 ansible_host=127.0.0.4 ansible_become_method=runas ansible_become_user=System
+```
+
+To avoid repeating the same configuration for all Windows hosts, you can also group them and set the variables at the group level:
+```ini
+[linux]
+linux1 ansible_host=127.0.0.1
+linux2 ansible_host=127.0.0.2
+
+[windows]
+windows1 ansible_host=127.0.0.3
+windows2 ansible_host=127.0.0.4
+
+[windows:vars]
+ansible_become_method=runas
+ansible_become_user=System
+```
+
+### Using the playbook file
+
+Alternatively, if your playbook **only runs on Windows hosts**, you can set these variables directly in the playbook:
+
+```yml
+- hosts: servers
+  roles:
+    - { role: Datadog.datadog, become: yes, become_method: runas, become_user: System }
+  vars:
+    ...
+```
+
+**Warning:** this configuration will fail on Linux hosts (as there is very probably no user named System with root powers on the host). Only use it if the playbook is specific to Windows hosts. Otherwise use the [inventory file method](#using-the-inventory-file-recommended).
 
 ## APM
 
