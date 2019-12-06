@@ -313,7 +313,7 @@ ansible_become=no
 
 ### Using the playbook file
 
-Alternatively, if your playbook **only runs on Windows hosts**, you can do the following in the playbook:
+Alternatively, if your playbook **only runs on Windows hosts**, you can do the following in the playbook file:
 
 ```yml
 - hosts: servers
