@@ -30,19 +30,3 @@
     datadog_agent_redhat_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
     datadog_agent_suse_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
     datadog_agent_windows_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}"
-
-- name: Print
-  debug:
-    var: datadog_agent_debian_version
-
-- name: Print
-  debug:
-    var: datadog_agent_redhat_version
-
-- name: Print
-  debug:
-    var: datadog_agent_suse_version
-
-- name: Print
-  debug:
-    var: datadog_agent_windows_version
