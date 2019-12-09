@@ -64,6 +64,29 @@ ansible-galaxy install Datadog.datadog
 | `datadog_additional_groups`                                                                                                                     | Comma separated list of additional groups for the `datadog_user`. Linux only.                                                                                                                                                                            |
 | `datadog_windows_ddagentuser_name`                                                                                                              | Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.                                                                                                                                                                      |
 | `datadog_windows_ddagentuser_password`                                                                                                          | Password to use to create the user, and/or register the service. Windows only.                                                                                                                                                                           |
+## datadog_agent_version variable
+
+Starting with version 3 of this role, when the `datadog_agent_version` variable is used to pin a specific Agent version, the role will derive per-OS version names to comply with the version naming schemes of the operating systems we support (eg. `1:7.16.0-1` for Debian- and SUSE- based, `7.16.0-1` for Redhat-based and `7.16.0` for Windows).
+
+This makes it possible to target hosts running different operating systems in the same Ansible run.
+
+For instance, you can now provide:
+
+```yaml
+datadog_agent_version: 7.16.0
+```
+
+and the role will install `1:7.16.0-1` on Debian- and SUSE-based systems, `7.16.0-1` on Redhat-based systems, and `7.16.0` on Windows
+(if not provided, the role uses `1` as the epoch, and `1` as the release number).
+
+Alternatively, you can provide:
+
+```yaml
+datadog_agent_version: 1:7.16.0-1
+```
+
+and the role will install `1:7.16.0-1` on Debian- and SUSE-based systems, `7.16.0-1` on Redhat-based systems, and `7.16.0` on Windows.
+
 
 ## Agent 5 (older version)
 
