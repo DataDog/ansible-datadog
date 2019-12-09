@@ -199,7 +199,7 @@ Sending data to Datadog US (default) and configuring a few checks.
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes } # remove the "become: yes" on Windows
+    - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
     datadog_agent_version: "1:6.13.0-1" # for apt-based platforms, use a `6.13.0-1` format on yum-based platforms and `6.13.0` for Windows
@@ -278,6 +278,52 @@ Example for sending data to EU site:
     datadog_site: "datadoghq.eu"
     datadog_api_key: "123456"
 ```
+
+### Making the playbook work on Windows
+
+On Windows, the `become: yes` option is not needed (and will make the role fail, as ansible won't be able to use it).
+
+Below are two methods to make the above playbook work with Windows hosts:
+
+### Using the inventory file (recommended)
+
+Set the `ansible_become` option to `no` in the inventory file for each Windows host:
+
+```ini
+[servers]
+linux1 ansible_host=127.0.0.1
+linux2 ansible_host=127.0.0.2
+windows1 ansible_host=127.0.0.3 ansible_become=no
+windows2 ansible_host=127.0.0.4 ansible_become=no
+```
+
+To avoid repeating the same configuration for all Windows hosts, you can also group them and set the variable at the group level:
+```ini
+[linux]
+linux1 ansible_host=127.0.0.1
+linux2 ansible_host=127.0.0.2
+
+[windows]
+windows1 ansible_host=127.0.0.3
+windows2 ansible_host=127.0.0.4
+
+[windows:vars]
+ansible_become=no
+```
+
+### Using the playbook file
+
+Alternatively, if your playbook **only runs on Windows hosts**, you can do the following in the playbook file:
+
+```yml
+- hosts: servers
+  roles:
+    - { role: Datadog.datadog }
+  vars:
+    ...
+```
+
+**Warning:** this configuration will fail on Linux hosts (as it's not setting `become: yes` for them). Only use it if the playbook is specific to Windows hosts. Otherwise use the [inventory file method](#using-the-inventory-file-recommended).
 
 ## APM
 
