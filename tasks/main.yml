@@ -1,5 +1,6 @@
 ---
 - include_tasks: parse-version.yml
+  when: datadog_agent_version | length > 0
 
 - include_tasks: pkg-debian.yml
   when: ansible_os_family == "Debian"
