@@ -32,39 +32,53 @@ datadog_agent_major_version: 7
 # The version pinned needs to have the same major as datadog_agent_major_version
 datadog_agent_version: ""
 
-# default apt repo and keyserver
+# Default apt repo and keyserver
 
-# By default, will use the official apt Datadog repository for the chosen major version
-# Agent 5: deb https://apt.datadoghq.com/ stable main
-# Agent 6: deb https://apt.datadoghq.com/ stable 6
-# Agent 7: deb https://apt.datadoghq.com/ stable 7
-# Use this option to override the repository used
+# By default, the roll uses the official yum Datadog repository for the chosen major version
+# Use the datadog_yum_repo variable to override the repository used.
 datadog_apt_repo: ""
+
+# The default apt repository for each major Agent version is specified in the following variables.
+# These variables are for internal use only, do not modify them.
+datadog_agent5_apt_repo: "deb https://apt.datadoghq.com/ stable main"
+datadog_agent6_apt_repo: "deb https://apt.datadoghq.com/ stable 6"
+datadog_agent7_apt_repo: "deb https://apt.datadoghq.com/ stable 7"
+
+
 datadog_apt_cache_valid_time: 3600
 datadog_apt_key_retries: 5
 use_apt_backup_keyserver: false
 datadog_apt_keyserver: hkp://keyserver.ubuntu.com:80
 datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 
-# default yum repo and keys
+# Default yum repo and keys
 
-# By default, will use the official yum Datadog repository for the chosen major version
-# Agent 5: https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}
-# Agent 6: https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}
-# Agent 7: https://yum.datadoghq.com/stable/7/{{ ansible_userspace_architecture }}
-# Use this option to override the repository used
+# By default, the roll uses the official yum Datadog repository for the chosen major version
+# Use the datadog_yum_repo variable to override the repository used.
 datadog_yum_repo: ""
+
+# The default yum repository for each major Agent version is specified in the following variables.
+# These variables are for internal use only, do not modify them.
+datadog_agent5_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_userspace_architecture }}"
+datadog_agent6_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_userspace_architecture }}"
+datadog_agent7_yum_repo: "https://yum.datadoghq.com/stable/7/{{ ansible_userspace_architecture }}"
+
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_yum_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 
-# default zypper repo and keys
-# By default, will use the official zypper Datadog repository for the chosen major version
-# Agent 5: https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}
-# Agent 6: https://yum.datadoghq.com/suse/stable/6/{{ ansible_userspace_architecture }}
-# Agent 7: https://yum.datadoghq.com/suse/stable/7/{{ ansible_userspace_architecture }}
-# Use this option to override the repository used
+# Default zypper repo and keys
+
+# By default, the roll uses the official yum Datadog repository for the chosen major version
+# Use the datadog_yum_repo variable to override the repository used.
 datadog_zypper_repo: ""
+
+# The default zypper repository for each major Agent version is specified in the following variables.
+# These variables are for internal use only, do not modify them.
+datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_userspace_architecture }}"
+datadog_agent6_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_userspace_architecture }}"
+datadog_agent7_zypper_repo: "https://yum.datadoghq.com/suse/stable/7/{{ ansible_userspace_architecture }}"
+
 datadog_zypper_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
 datadog_zypper_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
@@ -79,15 +93,23 @@ datadog_skip_running_check: false
 # On centos this will only work with ansible 2.4 and up
 datadog_agent_allow_downgrade: no
 
-# default windows latest msi package URL
+# Default windows latest msi package URL
+
 # By default, will use the official latest msi package for the chosen major version.
-# Agent 6: https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi
-# Agent 7: https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi
-# Use this option to override the msi package used
+# Use the datadog_windows_download_url option to override the msi package used.
 # Note: we're pinning 6.14.2 instead of latest for now. See http://dtdg.co/win-614-fix for more details.
 datadog_windows_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-6.14.2.msi"
 
+# The default msi package for each major Agent version is specified in the following variables.
+# These variables are for internal use only, do not modify them.
+datadog_windows_agent6_latest_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
+datadog_windows_agent7_latest_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi"
+
+# If datadog_agent_version is set, the role will use the following url prefix instead, and append the version number to it
+# in order to get the full url to the msi package.
 datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
+
+# url of the 6.14 fix script. See http://dtdg.co/win-614-fix for more details.
 datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-stable/scripts/fix_6_14.ps1"
 
 # Override to change the name of the windows user to create

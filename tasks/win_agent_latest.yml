@@ -7,5 +7,5 @@
 
 - name: Set agent download filename to latest
   set_fact:
-    dd_download_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-{{ datadog_agent_major_version }}-latest.amd64.msi"
+    dd_download_url: "{% if datadog_agent_major_version == 7 %}{{ datadog_windows_agent7_latest_url }}{% else %}{{ datadog_windows_agent6_latest_url }}{% endif %}"
   when: datadog_windows_download_url | length == 0
