@@ -1,4 +1,6 @@
 ---
+- include_tasks: parse-version.yml
+
 - include_tasks: pkg-debian.yml
   when: ansible_os_family == "Debian"
 
