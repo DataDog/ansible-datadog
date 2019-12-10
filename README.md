@@ -42,6 +42,8 @@ ansible-galaxy install Datadog.datadog
 The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed. by default, it is set to `7`. 
 To install Agent 5, set it to `5`. To install Agent 6, set it to `6`.
 
+The `datadog_agent5` variable is thus obsolete and has been removed.
+
 The `datadog_agent_version` variable, if set, must use the major version set in `datadog_agent_major_version`.
 
 ### Linux repositories
@@ -56,12 +58,7 @@ To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_r
 
 To override the default behavior, set the `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo` variables to something else than an empty string.
 
-With this new behavior, the following Agent 5-specific options are obsolete and have been removed:
-
-- `datadog_agent5`,
-- `datadog_agent5_apt_repo`,
-- `datadog_agent5_yum_repo`,
-- `datadog_agent5_zypper_repo`.
+If you were previously using the Agent 5 variables `datadog_agent5_apt_repo`, `datadog_agent5_yum_repo`, or `datadog_agent5_zypper_repo` to set custom Agent 5 repositories, use `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo`(with `datadog_agent_major_version` set to `5`) instead.
 
 To install or downgrade to Agent 5 with the v3 role, follow the instructions in the [Agent 5](#agent-5-older-version) section.
 
@@ -113,10 +110,18 @@ This role includes support for Datadog Agent version 5 for Linux only. To instal
 1. Set `datadog_agent_major_version` parmeter to `5`.
 2. Set `datadog_agent_version` to an existing Agent v5 version or leave it empty to always install the latest version (`5.*`).
 
+## Agent major version downgrades
+
 To downgrade from Agent v6 or v7 to Agent v5, you need to (**on centos this will only work with ansible 2.4 and up**):
 
 1. Set `datadog_agent_major_version` to `5`.
 2. Pin `datadog_agent_version` to an existing Agent 5 version.
+3. Set `datadog_agent_allow_downgrade` to `yes`.
+
+Likewise, to downgrade from Agent v7 to Agent v6, you need to (**on centos this will only work with ansible 2.4 and up**):
+
+1. Set `datadog_agent_major_version` to `6`.
+2. Pin `datadog_agent_version` to an existing Agent 6 version.
 3. Set `datadog_agent_allow_downgrade` to `yes`.
 
 ## Dependencies
