@@ -49,12 +49,12 @@
 
 - name: Ensure pinned version of Datadog agent is installed
   apt:
-    name: "datadog-agent={{ datadog_agent_version }}"
+    name: "datadog-agent={{ datadog_agent_debian_version }}"
     state: present
     force: "{{ datadog_agent_allow_downgrade }}"
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version | length != 0) and (not ansible_check_mode)
+  when: (datadog_agent_debian_version is defined) and (not ansible_check_mode)
 
 - name: Ensure Datadog agent is installed
   apt:
@@ -62,4 +62,4 @@
     state: latest  # noqa 403
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
+  when: (datadog_agent_debian_version is not defined) and (not ansible_check_mode)
