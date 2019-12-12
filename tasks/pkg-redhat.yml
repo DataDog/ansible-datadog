@@ -18,8 +18,8 @@
     baseurl: "{{ item.value }}"
     enabled: yes
     gpgcheck: yes
-    gpgkey: "{% if datadog_agent_major_version == 7 %}{{ datadog_yum_gpgkey_e09422b3 }}{% else %}{{ datadog_yum_gpgkey }}{% endif %}"
-    state: "{% if item.key == datadog_agent_major_version and datadog_yum_repo | length == 0 %}present{% else %}absent{% endif %}"
+    gpgkey: "{% if datadog_agent_major_version|int == 7 %}{{ datadog_yum_gpgkey_e09422b3 }}{% else %}{{ datadog_yum_gpgkey }}{% endif %}"
+    state: "{% if item.key == datadog_agent_major_version|int and datadog_yum_repo | length == 0 %}present{% else %}absent{% endif %}"
   when: (not ansible_check_mode)
   with_dict: "{
     5: '{{ datadog_agent5_yum_repo }}',

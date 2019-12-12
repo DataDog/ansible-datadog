@@ -43,7 +43,7 @@
   apt_repository:
     filename: datadog_agent
     repo: "{{ item.value }}"
-    state: "{% if item.key == datadog_agent_major_version and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
+    state: "{% if item.key == datadog_agent_major_version|int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
     update_cache: yes
   when: (not ansible_check_mode)
   with_dict: "{
