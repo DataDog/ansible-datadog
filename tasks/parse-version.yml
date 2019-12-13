@@ -24,11 +24,14 @@
     datadog_release: "1"
   when: datadog_release | length == 0
 
-- name: Fail if datadog_agent_version and datadog_agent_major_version are not compatible
+- name: Stop play if datadog_agent_version and datadog_agent_major_version are not compatible
   fail:
     msg: "The provided major version {{ datadog_agent_major_version }} is not compatible with the
-      version {{ datadog_major }} deduced from datadog_agent_version ({{ datadog_agent_version }})"
+      version {{ datadog_major }} deduced from datadog_agent_version ({{ datadog_agent_version }}).
+      Aborting play."
   when: datadog_agent_major_version | length > 0 and datadog_major != datadog_agent_major_version
+  any_errors_fatal: true # Abort the whole play if an error is raised.
+                         # Necessary since we run_once this task, without this only one host's run is stopped.
 
 - name: Set datadog_agent_major_version to deduced value from datadog_agent_version
   set_fact:
