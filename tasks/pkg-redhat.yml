@@ -28,7 +28,7 @@
 
 - name: (Custom) Install Datadog yum repo
   yum_repository:
-    name: datadog_custom
+    name: ansible_datadog_custom
     description: Datadog, Inc.
     baseurl: "{{ datadog_yum_repo }}"
     enabled: yes

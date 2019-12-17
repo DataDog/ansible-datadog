@@ -25,7 +25,7 @@
 
 - name: Remove previous datadog apt list file
   file:
-    path: /etc/apt/sources.list.d/datadog_agent.list
+    path: /etc/apt/sources.list.d/ansible_datadog_agent.list
     state: absent
 
 - name: Ensure Datadog non-https repositories are deprecated
