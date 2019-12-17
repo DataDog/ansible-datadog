@@ -5,13 +5,13 @@
 [![Build Status](https://travis-ci.org/DataDog/ansible-datadog.svg?branch=master)](https://travis-ci.org/DataDog/ansible-datadog)
 
 Install and configure Datadog Agent & checks.
-The version `3` of this role installs the Datadog Agent version 7 by default.
+The version `4` of this role installs the Datadog Agent version 7 by default.
 
 Supports most Debian and RHEL-based Linux distributions, and Windows.
 
 - [Installation](#installation)
 - [Role Variables](#role-variables)
-- [Role upgrade from v2 to v3](#role-upgrade-from-v2-to-v3)
+- [Role upgrade from v3 to v4](#role-upgrade-from-v3-to-v4)
 - [datadog_agent_version variable](#datadog_agent_version-variable)
 - [Agent v5 (older version)](#agent-v5-older-version)
 - [Agent version downgrades](#agent-version-downgrades)
@@ -70,7 +70,7 @@ ansible-galaxy install Datadog.datadog
 | `datadog_windows_ddagentuser_name`                                                                                                              | Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.                                                                                                                                                                      |
 | `datadog_windows_ddagentuser_password`                                                                                                          | Password to use to create the user, and/or register the service. Windows only.                                                                                                                                                                           |
 
-## Role upgrade from v2 to v3
+## Role upgrade from v3 to v4
 
 The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed, `7` by default. 
 To install Agent v5, set it to `5`. To install Agent v6, set it to `6`.
@@ -91,8 +91,8 @@ To override the default behavior, set the `datadog_apt_repo`, `datadog_yum_repo`
 
 If you were previously using the Agent v5 variables `datadog_agent5_apt_repo`, `datadog_agent5_yum_repo`, or `datadog_agent5_zypper_repo` to set custom Agent v5 repositories, use `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo`(with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version) instead.
 
-To install Agent v5 with the v3 role, follow the instructions in the [Agent v5](#agent-v5-older-version) section.
-To downgrade an Agent installation with the v3 role, follow the instructions in the [Agent downgrade](#agent-version-downgrades) section.
+To install Agent v5 with the v4 role, follow the instructions in the [Agent v5](#agent-v5-older-version) section.
+To downgrade an Agent installation with the v4 role, follow the instructions in the [Agent downgrade](#agent-version-downgrades) section.
 
 ### Windows
 
