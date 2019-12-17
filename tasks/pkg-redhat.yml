@@ -13,7 +13,7 @@
 
 - name: Install Datadog yum repo
   yum_repository:
-    name: "datadog_{{ item.key }}"
+    name: "ansible_datadog_{{ item.key }}"
     description: Datadog, Inc.
     baseurl: "{{ item.value }}"
     enabled: yes
