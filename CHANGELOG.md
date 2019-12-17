@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+# 4.0.0 / 2019-12-19
+
+* **This role will install Agent v7 by default.** Datadog Agent v7 runs checks with Python 3, so if you were running any custom checks written in Python, they must be compatible with Python 3. If you were not running any custom checks or if your custom checks are already compatible with Python 3, then it is safe to upgrade to Agent v7.
+  * Refer to the [role upgrade section](README.md#role-upgrade-from-v3-to-v4) of the docs for the complete list of changes and instructions to upgrade this role from v3 to v4.
+
+* [FEATURE] Infer major version from `datadog_agent_version`. See [#239][].
+
+
 # 3.3.0 / 2019-11-18
 
 * [FEATURE] Blacklist installation of 6.14.0 and 6.14.1 on Windows.
@@ -137,14 +145,21 @@ Initial release, compatible with Ansible v1 & v2
 [#90]: https://github.com/DataDog/ansible-datadog/issues/90
 [#98]: https://github.com/DataDog/ansible-datadog/issues/98
 [#105]: https://github.com/DataDog/ansible-datadog/issues/105
+[#107]: https://github.com/DataDog/ansible-datadog/issues/107
+[#116]: https://github.com/DataDog/ansible-datadog/issues/116
+[#203]: https://github.com/DataDog/ansible-datadog/issues/203
+[#239]: https://github.com/DataDog/ansible-datadog/issues/239
 [@brendanlong]: https://github.com/brendanlong
+[@dbr1993]: https://github.com/dbr1993
+[@enarciso]: https://github.com/enarciso
 [@eplanet]: https://github.com/eplanet
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
 [@jeffwidman]: https://github.com/jeffwidman
-[@pmbauer]: https://github.com/pmbauer
-[@tomgoren]: https://github.com/tomgoren
-[@dbr1993]: https://github.com/dbr1993
-[@xp-1000]: https://github.com/xp-1000
-[@enarciso]: https://github.com/enarciso
+[@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
+[@pdecat]: https://github.com/pdecat
+[@pmbauer]: https://github.com/pmbauer
+[@rouge8]: https://github.com/rouge8
+[@tomgoren]: https://github.com/tomgoren
+[@xp-1000]: https://github.com/xp-1000
