@@ -46,11 +46,10 @@
     state: "{% if item.key == datadog_agent_major_version|int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
     update_cache: yes
   when: (not ansible_check_mode)
-  with_dict: "{
-    5: '{{ datadog_agent5_apt_repo }}',
-    6: '{{ datadog_agent6_apt_repo }}',
+  with_dict:
+    5: '{{ datadog_agent5_apt_repo }}'
+    6: '{{ datadog_agent6_apt_repo }}'
     7: '{{ datadog_agent7_apt_repo }}'
-  }"
 
 - name: (Custom) Ensure Datadog repository is up-to-date
   apt_repository:
