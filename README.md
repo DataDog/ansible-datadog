@@ -263,7 +263,7 @@ Sending data to Datadog US (default) and configuring a few checks.
     - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
-    datadog_agent_version: "1:7.16.0-1" # apt-based format; the role will deduce and use the `7.16.0-1` format on yum-based platforms and `7.16.0` on Windows
+    datadog_agent_version: "7.16.0"
     datadog_config:
       tags:
         - "env:dev"
@@ -272,7 +272,7 @@ Sending data to Datadog US (default) and configuring a few checks.
       apm_config:
         enabled: true
         max_traces_per_second: 10
-      logs_enabled: true  # log collection is available on agent 6
+      logs_enabled: true  # log collection is available on Agent 6 and 7
     datadog_checks:
       process:
         init_config:
@@ -306,7 +306,7 @@ Sending data to Datadog US (default) and configuring a few checks.
               - "source:nginx"
               - "instance:bar"
 
-        #Log collection is available on agent 6
+        #Log collection is available on Agent 6 and 7
         logs:
           - type: file
             path: /var/log/access.log
@@ -318,7 +318,7 @@ Sending data to Datadog US (default) and configuring a few checks.
             service: nginx
             source: nginx
             sourcecategory: http_web_access
-    # datadog_integration is available on agent 6.8+
+    # datadog_integration is available on Agent 6.8+
     datadog_integration:
       datadog-elastic:
         action: install
