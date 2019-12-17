@@ -11,7 +11,10 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
 
 - [Installation](#installation)
 - [Role Variables](#role-variables)
-- [Agent 5 (older version)](#agent-5-older-version)
+- [Role upgrade from v2 to v3](#role-upgrade-from-v2-to-v3)
+- [datadog_agent_version variable](#datadog_agent_version-variable)
+- [Agent v5 (older version)](#agent-v5-older-version)
+- [Agent version downgrades](#agent-version-downgrades)
 - [Dependencies](#dependencies)
 - [Configuring a check](#configuring-a-check)
   - [Process Check](#process-check)
@@ -37,14 +40,42 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
 ansible-galaxy install Datadog.datadog
 ```
 
+## Role Variables
+
+| Variable                                                                                                                                        | Description                                                                                                                                                                                                                                              |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `datadog_api_key`                                                                                                                               | Your Datadog API key.                                                                                                                                                                                                                                    |
+| `datadog_site`                                                                                                                                  | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with agent version >= 6.6.0.                                                         |
+| `datadog_agent_version`                                                                                                                         | The pinned version of the Agent to install (optional, but highly recommended). Example: `7.15.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note** Downgrades are not supported on Windows platforms. |
+| `datadog_agent_major_version`                                                                                                                         | The major version of the Agent which will be installed. Its possible values are 5, 6 or 7 (default to 7). If set `datadog_agent_version` will take precedence, otherwise the latest version of the specified major will be installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. |
+| `datadog_checks`                                                                                                                                | YAML configuration for agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6 and v7, <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                  |
+| `datadog_config`                                                                                                                                | Settings to place in the main Agent configuration file: <br> - `/etc/datadog-agent/datadog.yaml` for Agent v6 and v7,<br> - `/etc/dd-agent/datadog.conf` for Agent v5 (under the `[Main]` section).                                                               |
+| `datadog_config_ex`                                                                                                                             | Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional). Agent v5 only.                                                                                                                                                                      |
+| `datadog_apt_repo`                                                                                                                              | Override default Datadog `apt` repository.                                                                                                                                                                                                              |
+| `datadog_apt_cache_valid_time`                                                                                                                  | Override the default apt cache expiration time (default 1 hour).                                                                                                                                                                                         |
+| `datadog_apt_key_url_new`                                                                                                                       | Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                |
+| `datadog_yum_repo`                                                                                                                              | Override default Datadog `yum` repository.                                                                                                                                                                                                               |
+| `datadog_yum_gpgkey` | Override default url to Datadog `yum` key used to verify Agent v5 and Agent v6 (up to 6.13) packages (key ID `4172A230`). |                                                                                                                                                                                                                                                          |
+| `datadog_yum_gpgkey_e09422b3`                                                                                                                   | Override default url to Datadog `yum` key used to verify Agent v6 (from 6.14 upwards) and v7 packages (key ID `E09422B3`).                                                                                                                                       |
+| `datadog_yum_gpgkey_e09422b3_sha256sum`                                                                                                         | Override default checksum of the `datadog_yum_gpgkey_e09422b3` key.                                                                                                                                                                                      |
+| `datadog_zypper_repo`                                                                                                                           | Override default Datadog `zypper` repository.                                                                                                                                                                                                            |
+| `datadog_zypper_gpgkey`                                                                                                                         | Override default url to Datadog `zypper` key used to verify Agent v5 and Agent v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                             |
+| `datadog_zypper_gpgkey_sha256sum`                                                                                                               | Override default checksum of the `datadog_zypper_gpgkey` key.                                                                                                                                                                                             |
+| `datadog_zypper_gpgkey_e09422b3`                                                                                                                | Override default url to Datadog `zypper` key used to verify Agent v6 (from 6.14 upwards) and v7 packages (key ID `E09422B3`).                                                                                                                                    |
+| `datadog_zypper_gpgkey_e09422b3_sha256sum`                                                                                                      | Override default checksum of the `datadog_zypper_gpgkey_e09422b3` key.                                                                                                                                                                                    |
+| `datadog_agent_allow_downgrade`                                                                                                                 | Set to `yes` to allow Agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.                                                                        |
+| `use_apt_backup_keyserver`                                                                                                                      | Set `true` to use the backup keyserver instead of the default one.                                                                                                                                                                                       |
+| `datadog_enabled`                                                                                                                               | Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`                                                                                                                                                                      |
+| `datadog_additional_groups`                                                                                                                     | Comma separated list of additional groups for the `datadog_user`. Linux only.                                                                                                                                                                            |
+| `datadog_windows_ddagentuser_name`                                                                                                              | Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.                                                                                                                                                                      |
+| `datadog_windows_ddagentuser_password`                                                                                                          | Password to use to create the user, and/or register the service. Windows only.                                                                                                                                                                           |
+
 ## Role upgrade from v2 to v3
 
 The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed, `7` by default. 
-To install Agent 5, set it to `5`. To install Agent 6, set it to `6`.
+To install Agent v5, set it to `5`. To install Agent v6, set it to `6`.
 
 The `datadog_agent5` variable is thus obsolete and has been removed.
-
-The `datadog_agent_version` variable, if set, must use the major version set in `datadog_agent_major_version`.
 
 ### Linux repositories
 
@@ -58,9 +89,10 @@ To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_r
 
 To override the default behavior, set the `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo` variables to something else than an empty string.
 
-If you were previously using the Agent 5 variables `datadog_agent5_apt_repo`, `datadog_agent5_yum_repo`, or `datadog_agent5_zypper_repo` to set custom Agent 5 repositories, use `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo`(with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific version of agent 5) instead.
+If you were previously using the Agent v5 variables `datadog_agent5_apt_repo`, `datadog_agent5_yum_repo`, or `datadog_agent5_zypper_repo` to set custom Agent v5 repositories, use `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo`(with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version) instead.
 
-To install or downgrade to Agent 5 with the v3 role, follow the instructions in the [Agent 5](#agent-5-older-version) section.
+To install Agent v5 with the v3 role, follow the instructions in the [Agent v5](#agent-v5-older-version) section.
+To downgrade an Agent installation with the v3 role, follow the instructions in the [Agent downgrade](#agent-version-downgrades) section.
 
 ### Windows
 
@@ -73,35 +105,6 @@ To behavior of the `datadog_windows_download_url` variable has been modified. Wh
 
 To override the default behavior, set the `datadog_windows_download_url` variable to something else than an empty string.
 
-## Role Variables
-
-| Variable                                                                                                                                        | Description                                                                                                                                                                                                                                              |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `datadog_api_key`                                                                                                                               | Your Datadog API key.                                                                                                                                                                                                                                    |
-| `datadog_site`                                                                                                                                  | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with agent version >= 6.6.0.                                                         |
-| `datadog_agent_major_version`                                                                                                                         | The major version of the Agent which will be installed. Its possible values are 5, 6 or 7 (default to 7). If set `datadog_agent_version` will take precedence, otherwise the latest version of the specified major will be installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. |
-| `datadog_agent_version`                                                                                                                         | The pinned version of the Agent to install (optional, but highly recommended). Example: `7.15.0`. Using `datadog_agent_major_version` is not needed is `datadog_agent_version` is used.. **Note** Downgrades are not supported on Windows platforms. |
-| `datadog_checks`                                                                                                                                | YAML configuration for agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6. <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                  |
-| `datadog_config`                                                                                                                                | Settings to place in the main Agent configuration file: <br> - `/etc/datadog-agent/datadog.yaml` for Agent v6 <br> - `/etc/dd-agent/datadog.conf` for Agent v5 (under the `[Main]` section).                                                               |
-| `datadog_config_ex`                                                                                                                             | Extra INI sections to go in `/etc/dd-agent/datadog.conf` (optional). Agent v5 only.                                                                                                                                                                      |
-| `datadog_apt_repo`                                                                                                                              | Override default Datadog `apt` repository                                                                                                                                                                                                                |
-| `datadog_apt_cache_valid_time`                                                                                                                  | Override the default apt cache expiration time (default 1 hour).                                                                                                                                                                                         |
-| `datadog_apt_key_url_new`                                                                                                                       | Override default url to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                |
-| `datadog_yum_repo`                                                                                                                              | Override default Datadog `yum` repository.                                                                                                                                                                                                               |
-| `datadog_yum_gpgkey` | Override default url to Datadog `yum` key used to verify Agent v5 and Agent v6 (up to 6.13) packages (key ID `4172A230`) |                                                                                                                                                                                                                                                          |
-| `datadog_yum_gpgkey_e09422b3`                                                                                                                   | Override default url to Datadog `yum` key used to verify Agent v6 (from 6.14 upwards) and v7 packages (key ID `E09422B3`)                                                                                                                                       |
-| `datadog_yum_gpgkey_e09422b3_sha256sum`                                                                                                         | Override default checksum of the `datadog_yum_gpgkey_e09422b3` key.                                                                                                                                                                                      |
-| `datadog_zypper_repo`                                                                                                                           | Override default Datadog `zypper` repository.                                                                                                                                                                                                            |
-| `datadog_zypper_gpgkey`                                                                                                                         | Override default url to Datadog `zypper` key used to verify Agent v5 and Agent v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                             |
-| `datadog_zypper_gpgkey_sha256sum`                                                                                                               | Override default checksum of the `datadog_zypper_gpgkey` key                                                                                                                                                                                             |
-| `datadog_zypper_gpgkey_e09422b3`                                                                                                                | Override default url to Datadog `zypper` key used to verify Agent v6 (from 6.14 upwards) and v7 packages (key ID `E09422B3`)                                                                                                                                    |
-| `datadog_zypper_gpgkey_e09422b3_sha256sum`                                                                                                      | Override default checksum of the `datadog_zypper_gpgkey_e09422b3` key                                                                                                                                                                                    |
-| `datadog_agent_allow_downgrade`                                                                                                                 | Set to `yes` to allow Agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.                                                                        |
-| `use_apt_backup_keyserver`                                                                                                                      | Set `true` to use the backup keyserver instead of the default one.                                                                                                                                                                                       |
-| `datadog_enabled`                                                                                                                               | Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`                                                                                                                                                                      |
-| `datadog_additional_groups`                                                                                                                     | Comma separated list of additional groups for the `datadog_user`. Linux only.                                                                                                                                                                            |
-| `datadog_windows_ddagentuser_name`                                                                                                              | Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.                                                                                                                                                                      |
-| `datadog_windows_ddagentuser_password`                                                                                                          | Password to use to create the user, and/or register the service. Windows only.                                                                                                                                                                           |
 ## datadog_agent_version variable
 
 Starting with version 3 of this role, when the `datadog_agent_version` variable is used to pin a specific Agent version, the role will derive per-OS version names to comply with the version naming schemes of the operating systems we support (eg. `1:7.16.0-1` for Debian- and SUSE- based, `7.16.0-1` for Redhat-based and `7.16.0` for Windows).
@@ -126,26 +129,20 @@ datadog_agent_version: 1:7.16.0-1
 and the role will install `1:7.16.0-1` on Debian- and SUSE-based systems, `7.16.0-1` on Redhat-based systems, and `7.16.0` on Windows.
 
 
-## Agent 5 (older version)
+## Agent v5 (older version)
 
-This role includes support for Datadog Agent version 5 for Linux only. To install Agent 5, you need to:
+This role includes support for Datadog Agent version 5 for Linux only.
 
-1. Set `datadog_agent_major_version` parmeter to `5`.
-2. Set `datadog_agent_version` to an existing Agent v5 version or leave it empty to always install the latest version (`5.*`).
+To install Agent v5, either set `datadog_agent_major_version` to 5 to install the latest version of Agent v5 or set `datadog_agent_version` to an existing Agent v5.
 
-## Agent major version downgrades
+## Agent version downgrades
 
-To downgrade from Agent v6 or v7 to Agent v5, you need to (**on centos this will only work with ansible 2.4 and up**):
+To downgrade to a prior version of the Agent, you need to (**on centos this will only work with ansible 2.4 and up**):
 
-1. Set `datadog_agent_major_version` to `5`.
-2. Pin `datadog_agent_version` to an existing Agent 5 version.
-3. Set `datadog_agent_allow_downgrade` to `yes`.
+1. Set `datadog_agent_version` to a specific version to downgrade to (ex: 5.32.5),
+2. Set `datadog_agent_allow_downgrade` to `yes`.
 
-Likewise, to downgrade from Agent v7 to Agent v6, you need to (**on centos this will only work with ansible 2.4 and up**):
-
-1. Set `datadog_agent_major_version` to `6`.
-2. Pin `datadog_agent_version` to an existing Agent 6 version.
-3. Set `datadog_agent_allow_downgrade` to `yes`.
+**Note:** downgrades are not supported on Windows platforms.
 
 ## Dependencies
 
@@ -266,8 +263,7 @@ Sending data to Datadog US (default) and configuring a few checks.
     - { role: Datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
-    datadog_agent_major_version: 6
-    datadog_agent_version: "1:6.13.0-1" # for apt-based platforms, use a `6.13.0-1` format on yum-based platforms and `6.13.0` for Windows
+    datadog_agent_version: "1:7.16.0-1" # apt-based format; the role will deduce and use the `7.16.0-1` format on yum-based platforms and `7.16.0` on Windows
     datadog_config:
       tags:
         - "env:dev"
@@ -331,6 +327,17 @@ Sending data to Datadog US (default) and configuring a few checks.
         action: remove
     system_probe_config:
       enabled: true
+```
+
+Example for installing the latest Agent 6:
+
+```yml
+- hosts: servers
+  roles:
+    - { role: Datadog.datadog, become: yes }
+  vars:
+    datadog_agent_major_version: 6
+    datadog_api_key: "123456"
 ```
 
 Example for sending data to EU site:
