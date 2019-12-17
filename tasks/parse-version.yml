@@ -30,8 +30,6 @@
       version {{ datadog_major }} deduced from datadog_agent_version ({{ datadog_agent_version }}).
       Aborting play."
   when: datadog_agent_major_version | length > 0 and datadog_major != datadog_agent_major_version
-  any_errors_fatal: true # Abort the whole play if an error is raised.
-                         # Necessary since we run_once this task, without this only one host's run is stopped.
 
 - name: Set datadog_agent_major_version to deduced value from datadog_agent_version
   set_fact:
