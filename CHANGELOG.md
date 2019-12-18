@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-# 4.0.0 / 2019-12-19
+# 4.0.0 / 2019-12-18
 
 **This role will install Agent v7 by default.** Datadog Agent v7 runs checks with Python 3, so if you were running any custom checks written in Python, they must be compatible with Python 3. If you were not running any custom checks or if your custom checks are already compatible with Python 3, then it is safe to upgrade to Agent v7.
 
