@@ -8,6 +8,7 @@ CHANGELOG
 * [MAJOR] Agent 7 support. See [#220][].
   * Refer to the [role upgrade section](README.md#role-upgrade-from-v3-to-v4) of the docs for the complete list of changes and instructions to upgrade this role from v3 to v4.
 * [FEATURE] Infer major version from `datadog_agent_version`. See [#239][].
+* [FEATURE] Allow pinned version install on multiple platforms at the same time. See [#235][].
 
 
 # 3.3.0 / 2019-11-18
@@ -150,6 +151,7 @@ Initial release, compatible with Ansible v1 & v2
 [#116]: https://github.com/DataDog/ansible-datadog/issues/116
 [#203]: https://github.com/DataDog/ansible-datadog/issues/203
 [#220]: https://github.com/DataDog/ansible-datadog/issues/220
+[#235]: https://github.com/DataDog/ansible-datadog/issues/235
 [#239]: https://github.com/DataDog/ansible-datadog/issues/239
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
