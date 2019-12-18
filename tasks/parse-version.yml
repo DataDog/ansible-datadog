@@ -3,7 +3,7 @@
   set_fact:
     agent_version: "{{ datadog_agent_version | regex_search(regexp, '\\g<epoch>', '\\g<major>', '\\g<minor>', '\\g<bugfix>', '\\g<suffix>', '\\g<release>') }}"
   vars:
-    regexp: '(?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>[^-\s]+)?(?:-(?P<release>[0-9]+))?'
+    regexp: '(?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>(?:~|-)[^0-9\s-]+[^-\s]*)?(?:-(?P<release>[0-9]+))?'
 
 - name: Set version vars
   set_fact:
@@ -23,6 +23,17 @@
   set_fact:
     datadog_release: "1"
   when: datadog_release | length == 0
+
+- name: Stop play if datadog_agent_version and datadog_agent_major_version are not compatible
+  fail:
+    msg: "The provided major version {{ datadog_agent_major_version }} is not compatible with the
+      version {{ datadog_major }} deduced from datadog_agent_version ({{ datadog_agent_version }}).
+      Aborting play."
+  when: datadog_agent_major_version | length > 0 and datadog_major != datadog_agent_major_version
+
+- name: Set datadog_agent_major_version to deduced value from datadog_agent_version
+  set_fact:
+    datadog_agent_major_version: "{{ datadog_major }}"
 
 - name: Set OS-specific versions
   set_fact:

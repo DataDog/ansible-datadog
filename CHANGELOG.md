@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+# 4.0.0 / 2019-12-18
+
+**This role will install Agent v7 by default.** Datadog Agent v7 runs checks with Python 3, so if you were running any custom checks written in Python, they must be compatible with Python 3. If you were not running any custom checks or if your custom checks are already compatible with Python 3, then it is safe to upgrade to Agent v7.
+
+* [MAJOR] Agent 7 support. See [#220][].
+  * Refer to the [role upgrade section](README.md#role-upgrade-from-v3-to-v4) of the docs for the complete list of changes and instructions to upgrade this role from v3 to v4.
+* [FEATURE] Infer major version from `datadog_agent_version`. See [#239][].
+* [FEATURE] Allow pinned version install on multiple platforms at the same time. See [#235][].
+
 # 3.4.0 / 2019-12-18
 
 * [FEATURE] Reset pinned Windows version. See [#234][].
@@ -146,9 +155,12 @@ Initial release, compatible with Ansible v1 & v2
 [#107]: https://github.com/DataDog/ansible-datadog/issues/107
 [#116]: https://github.com/DataDog/ansible-datadog/issues/116
 [#203]: https://github.com/DataDog/ansible-datadog/issues/203
+[#220]: https://github.com/DataDog/ansible-datadog/issues/220
 [#224]: https://github.com/DataDog/ansible-datadog/issues/224
 [#233]: https://github.com/DataDog/ansible-datadog/issues/233
 [#234]: https://github.com/DataDog/ansible-datadog/issues/234
+[#235]: https://github.com/DataDog/ansible-datadog/issues/235
+[#239]: https://github.com/DataDog/ansible-datadog/issues/239
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
 [@enarciso]: https://github.com/enarciso
