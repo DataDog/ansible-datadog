@@ -1,9 +1,12 @@
 CHANGELOG
 =========
 
-# Unreleased
+=======
+# 3.4.0 / 2019-12-18
 
-* [META] Update list of platforms supported by the role.
+* [FEATURE] Reset pinned Windows version. See [#234][].
+* [DOCS] Add README instructions for Windows hosts. See [#233][].
+* [META] Update list of platforms supported by the role. See [#224][].
 
 # 3.3.0 / 2019-11-18
 
@@ -141,14 +144,23 @@ Initial release, compatible with Ansible v1 & v2
 [#90]: https://github.com/DataDog/ansible-datadog/issues/90
 [#98]: https://github.com/DataDog/ansible-datadog/issues/98
 [#105]: https://github.com/DataDog/ansible-datadog/issues/105
+[#107]: https://github.com/DataDog/ansible-datadog/issues/107
+[#116]: https://github.com/DataDog/ansible-datadog/issues/116
+[#203]: https://github.com/DataDog/ansible-datadog/issues/203
+[#224]: https://github.com/DataDog/ansible-datadog/issues/224
+[#233]: https://github.com/DataDog/ansible-datadog/issues/233
+[#234]: https://github.com/DataDog/ansible-datadog/issues/234
 [@brendanlong]: https://github.com/brendanlong
+[@dbr1993]: https://github.com/dbr1993
+[@enarciso]: https://github.com/enarciso
 [@eplanet]: https://github.com/eplanet
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
 [@jeffwidman]: https://github.com/jeffwidman
-[@pmbauer]: https://github.com/pmbauer
-[@tomgoren]: https://github.com/tomgoren
-[@dbr1993]: https://github.com/dbr1993
-[@xp-1000]: https://github.com/xp-1000
-[@enarciso]: https://github.com/enarciso
+[@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
+[@pdecat]: https://github.com/pdecat
+[@pmbauer]: https://github.com/pmbauer
+[@rouge8]: https://github.com/rouge8
+[@tomgoren]: https://github.com/tomgoren
+[@xp-1000]: https://github.com/xp-1000
