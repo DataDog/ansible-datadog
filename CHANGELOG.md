@@ -1,7 +1,6 @@
 CHANGELOG
 =========
 
-=======
 # 3.4.0 / 2019-12-18
 
 * [FEATURE] Reset pinned Windows version. See [#234][].
