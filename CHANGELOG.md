@@ -10,6 +10,11 @@ CHANGELOG
 * [FEATURE] Infer major version from `datadog_agent_version`. See [#239][].
 * [FEATURE] Allow pinned version install on multiple platforms at the same time. See [#235][].
 
+# 3.4.0 / 2019-12-18
+
+* [FEATURE] Reset pinned Windows version. See [#234][].
+* [DOCS] Add README instructions for Windows hosts. See [#233][].
+* [META] Update list of platforms supported by the role. See [#224][].
 
 # 3.3.0 / 2019-11-18
 
@@ -151,6 +156,9 @@ Initial release, compatible with Ansible v1 & v2
 [#116]: https://github.com/DataDog/ansible-datadog/issues/116
 [#203]: https://github.com/DataDog/ansible-datadog/issues/203
 [#220]: https://github.com/DataDog/ansible-datadog/issues/220
+[#224]: https://github.com/DataDog/ansible-datadog/issues/224
+[#233]: https://github.com/DataDog/ansible-datadog/issues/233
+[#234]: https://github.com/DataDog/ansible-datadog/issues/234
 [#235]: https://github.com/DataDog/ansible-datadog/issues/235
 [#239]: https://github.com/DataDog/ansible-datadog/issues/239
 [@brendanlong]: https://github.com/brendanlong
