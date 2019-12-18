@@ -3,6 +3,9 @@
   file:
     dest: /etc/dd-agent
     state: directory
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
+    mode: 0550
 
 - name: (agent5) Create main Datadog agent configuration file
   template:
@@ -10,6 +13,7 @@
     dest: /etc/dd-agent/datadog.conf
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   notify: restart datadog-agent
 
 - name: (agent5) Ensure datadog-agent is running
@@ -32,5 +36,6 @@
     dest: "/etc/dd-agent/conf.d/{{ item }}.yaml"
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent

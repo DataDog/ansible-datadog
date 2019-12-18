@@ -12,6 +12,9 @@
   file:
     dest: /etc/datadog-agent
     state: directory
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
+    mode: 0550
 
 - name: Create main Datadog agent configuration file
   template:
@@ -19,6 +22,7 @@
     dest: /etc/datadog-agent/datadog.yaml
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   notify: restart datadog-agent
 
 - name: Ensure configuration directories are present for each Datadog check
@@ -27,6 +31,7 @@
     state: directory
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0550
   with_items: '{{ datadog_checks|list }}'
 
 - name: Create a configuration file for each Datadog check
@@ -35,6 +40,7 @@
     dest: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
 
@@ -51,6 +57,7 @@
     dest: /etc/datadog-agent/trace-agent.conf
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   notify: restart datadog-agent
 
 - name: Create process agent configuration file
@@ -59,6 +66,7 @@
     dest: /etc/datadog-agent/process-agent.conf
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0440
   notify: restart datadog-agent
 
 - name: Create system-probe configuration file
