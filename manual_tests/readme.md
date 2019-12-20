@@ -9,7 +9,7 @@ This is an example setup, based on vagrant + virtualbox, that allows to easily r
 
 # Setup
 
-in `$WORK_DIR/ansible-datadog/tests`:
+in `$WORK_DIR/ansible-datadog/manual_tests`:
 
 - provision VM: `vagrant up`
 - connect to the VM to check the configuration: `vagrant ssh`
@@ -17,4 +17,4 @@ in `$WORK_DIR/ansible-datadog/tests`:
 
 in `$WORK_DIR`:
 
-- run ansible-playbook: `ansible-playbook ansible-datadog/tests/test_5_full.yml -i ansible-datadog/tests/inventory`
+- run ansible-playbook: `ansible-playbook ansible-datadog/manual_tests/test_5_full.yml -i ansible-datadog/manual_tests/inventory`
