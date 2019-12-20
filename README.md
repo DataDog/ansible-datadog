@@ -33,6 +33,7 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
 - [Known Issues and Workarounds](#known-issues-and-workarounds)
   - [dirmngr](#dirmngr)
   - [Datadog Agent 6.14 for Windows](#datadog-agent-614-for-windows)
+- [Development](#development)
 - [License](#license)
 - [Author Information](#author-information)
 
@@ -74,7 +75,7 @@ ansible-galaxy install Datadog.datadog
 
 ## Role upgrade from v3 to v4
 
-The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed, `7` by default. 
+The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed, `7` by default.
 To install Agent v5, set it to `5`. To install Agent v6, set it to `6`.
 
 The `datadog_agent5` variable is thus obsolete and has been removed.
@@ -500,6 +501,64 @@ If you are updating from **6.14.0 or 6.14.1 on Windows**, we **strongly** recomm
 2. Set the `datadog_agent_version` to `6.14.2` or above (by default the role install latest).
 
 To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
+
+## Development
+
+To contribute, you will have to follow the contribution guide in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+### Manual testing
+
+To test the roles provided by this project, you can follow the instructions in the manual tests [readme.md](./manual_tests/readme.md).
+
+### Integration testing
+
+This project uses [kitchen](https://kitchen.ci/) as its integration tests engine. To really verify integration tests, you should have [vagrant](https://www.vagrantup.com/) installed on your machine as it is used as driver-engine.
+
+Kitchen allows you to test specific recipes described in [kitchen.yml](./kitchen.yml). For now, there is only a basic one on ubuntu but that should be enough to develop others or to add features in TDD.
+
+To list available targets, you can use the `list` command:
+
+```bash
+bundle exec kitchen list
+```
+
+To test a specific target, you can run:
+
+```bash
+bundle exec kitchen test <target>
+```
+
+So for example, if you want to test the agent installation, you can run:
+
+```bash
+bundle exec kitchen test default-ubuntu-1810
+```
+
+More information about kitchen on its [Getting Started](https://kitchen.ci/docs/getting-started/introduction/).
+
+### Development loop
+
+To develop some fixes or some features, the easiest way is to work on the platform and version of your choice, setting the machine up with the `create` command and applying the recipe with the `converge` command. If you want to explore the machine and try different things, you can also login into the machine with the `login` command.
+
+```bash
+# Create the relevant vagrant virtual machine
+bundle exec kitchen create default-ubuntu-1810
+
+# Converge to test your recipe
+bundle exec kitchen converge default-ubuntu-1810
+
+# Login to your machine to check stuff
+bundle exec kitchen login default-ubuntu-1810
+
+# Verify the integration tests for your machine
+bundle exec kitchen verify default-ubuntu-1810
+
+# Clean your machine
+bundle exec kitchen destroy default-ubuntu-1810
+```
+
+It is advised that you work in TDD and that you write tests before making changes so that developing your feature or fix is just making tests pass.
+
 
 ## License
 
