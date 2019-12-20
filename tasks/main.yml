@@ -22,7 +22,7 @@
 
 - name: Linux Install Tasks (Agent 5)
   include_tasks: agent5-linux.yml
-  when: datadog_agent5 and ansible_os_family != "Windows"
+  when: datadog_agent_major_version|int == 5 and ansible_os_family != "Windows"
 
 - name: Agent5 Install Tasks (Linux)
   include_tasks: agent6-linux.yml
