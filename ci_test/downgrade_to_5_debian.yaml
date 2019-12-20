@@ -5,7 +5,7 @@
     - { role: '/root/project/'}
   vars:
     datadog_api_key: "11111111111111111111111111111111"
-    datadog_agent5: true
+    datadog_agent_major_version: 5
     datadog_agent_version: 1:5.23.0-1
     datadog_agent_allow_downgrade: yes
     datadog_config:

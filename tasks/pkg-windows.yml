@@ -2,7 +2,7 @@
 - name: Fail if Agent 5
   fail:
     msg: "The Datadog ansible role does not currently support Agent 5"
-  when: datadog_agent5
+  when: datadog_agent_major_version|int == 5
 
 - name: Download windows datadog agent 614 fix script
   win_get_url:
@@ -14,11 +14,11 @@
     Set-ExecutionPolicy Bypass -Scope Process -Force
     &$env:temp\fix_6_14.ps1
 
-- include_tasks: win_agent_6_latest.yml
-  when: not datadog_agent5 and (datadog_agent_version | length == 0)
+- include_tasks: win_agent_latest.yml
+  when: datadog_agent_windows_version is not defined
 
 - include_tasks: win_agent_version.yml
-  when: not datadog_agent_version | length == 0
+  when: datadog_agent_windows_version is defined
 
 - name: show URL var
   debug:

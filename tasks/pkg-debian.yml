@@ -23,6 +23,11 @@
     state: present
   when: datadog_apt_key_url_new is defined
 
+- name: Remove previous datadog apt list file
+  file:
+    path: /etc/apt/sources.list.d/ansible_datadog_agent.list
+    state: absent
+
 - name: Ensure Datadog non-https repositories are deprecated
   apt_repository:
     repo: "{{ item }}"
@@ -31,30 +36,37 @@
   with_items:
     - "deb http://apt.datadoghq.com/ stable main"
     - "deb http://apt.datadoghq.com/ stable 6"
+    - "deb http://apt.datadoghq.com/ stable 7"
   when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date
   apt_repository:
-    repo: "{{ datadog_apt_repo }}"
-    state: "{% if datadog_agent5 %}absent{% else %}present{% endif %}"
+    filename: ansible_datadog_agent
+    repo: "{{ item.value }}"
+    state: "{% if item.key == datadog_agent_major_version|int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
     update_cache: yes
-  when: not ansible_check_mode
+  when: (not ansible_check_mode)
+  with_dict:
+    5: '{{ datadog_agent5_apt_repo }}'
+    6: '{{ datadog_agent6_apt_repo }}'
+    7: '{{ datadog_agent7_apt_repo }}'
 
-- name: (agent5) Ensure Datadog repository is up-to-date
+- name: (Custom) Ensure Datadog repository is up-to-date
   apt_repository:
-    repo: "{{ datadog_agent5_apt_repo }}"
-    state: "{% if datadog_agent5 %}present{% else %}absent{% endif %}"
+    filename: ansible_datadog_agent
+    repo: "{{ datadog_apt_repo }}"
+    state: present
     update_cache: yes
-  when: not ansible_check_mode
+  when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
 - name: Ensure pinned version of Datadog agent is installed
   apt:
-    name: "datadog-agent={{ datadog_agent_version }}"
+    name: "datadog-agent={{ datadog_agent_debian_version }}"
     state: present
     force: "{{ datadog_agent_allow_downgrade }}"
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version | length != 0) and (not ansible_check_mode)
+  when: (datadog_agent_debian_version is defined) and (not ansible_check_mode)
 
 - name: Ensure Datadog agent is installed
   apt:
@@ -62,4 +74,4 @@
     state: latest  # noqa 403
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  when: (datadog_agent_version | length == 0) and (not ansible_check_mode)
+  when: (datadog_agent_debian_version is not defined) and (not ansible_check_mode)

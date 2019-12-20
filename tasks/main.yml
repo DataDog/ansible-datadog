@@ -1,6 +1,11 @@
 ---
+
+- name: Set Facts for Datadog Agent Major Version
+  include_tasks: set-parse-version.yml
+
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
+
   when: ansible_os_family == "Debian"
 
 - name: RedHat Install Tasks
