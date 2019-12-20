@@ -20,7 +20,7 @@
   include_tasks: pkg-windows.yml
   when: ansible_os_family == "Windows"
 
-- name: Agent5 Install Tasks (Linux)
+- name: Linux Install Tasks (Agent 5)
   include_tasks: agent5-linux.yml
   when: datadog_agent5 and ansible_os_family != "Windows"
 
