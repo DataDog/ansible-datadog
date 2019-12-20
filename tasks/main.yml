@@ -30,7 +30,7 @@
 
 - name: Agent6 Install Tasks (Windows)
   include_tasks: agent-win.yml
-  when: not datadog_agent5 and ansible_os_family == "Windows"
+  when: datadog_agent_major_version|int > 5 and ansible_os_family == "Windows"
 
 - name: Integrations Tasks
   include_tasks: integration.yml
