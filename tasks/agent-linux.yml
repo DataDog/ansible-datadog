@@ -80,7 +80,7 @@
   set_fact:
     datadog_sysprobe_enabled: "{{ system_probe_config is defined
       and system_probe_config['enabled']
-      and ansible_facts.services['datadog-agent-sysprobe'] is defined }}"
+      and (ansible_facts.services['datadog-agent-sysprobe'] is defined or ansible_facts.services['datadog-agent-sysprobe.service'] is defined) }}"
 
 - name: Ensure datadog-agent-sysprobe is running if enabled and installed
   service:
