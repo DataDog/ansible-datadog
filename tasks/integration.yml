@@ -41,6 +41,7 @@
 
 - name: Removing integrations (Windows)
   win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
+  become: yes
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "remove" and ansible_os_family == "Windows"
@@ -61,6 +62,7 @@
 
 - name: Install pinned version of integrations (Windows)
   win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ item.key }}=={{ item.value.version }}"
+  become: yes
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "install" and ansible_os_family == "Windows"
