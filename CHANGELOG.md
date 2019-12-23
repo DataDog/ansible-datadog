@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 3.4.1 / 2019-12-23
+
+* [BUGFIX] Fix system-probe.yaml.j2 indent filter. See [#240][]
+* [BUGFIX] Fix sysprobe service detection for systemd services. See [#242][]
+
 # 3.4.0 / 2019-12-18
 
 * [FEATURE] Reset pinned Windows version. See [#234][].
@@ -149,6 +154,8 @@ Initial release, compatible with Ansible v1 & v2
 [#224]: https://github.com/DataDog/ansible-datadog/issues/224
 [#233]: https://github.com/DataDog/ansible-datadog/issues/233
 [#234]: https://github.com/DataDog/ansible-datadog/issues/234
+[#240]: https://github.com/DataDog/ansible-datadog/issues/240
+[#242]: https://github.com/DataDog/ansible-datadog/issues/242
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
 [@enarciso]: https://github.com/enarciso
