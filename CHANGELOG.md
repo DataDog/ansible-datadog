@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+# 4.0.1 / 2019-12-23
+
+* [BUGFIX] Fix system-probe.yaml.j2 indent filter. See [#240][]
+* [BUGFIX] Fix sysprobe service detection for systemd services. See [#242][]
+* [OTHER] Improve ansible-galaxy score by following best practices. See [#236][]
+* [OTHER] Include names for `include_tasks`. See [#226][]. Thanks to [@the-real-cphilips][].
+
 # 4.0.0 / 2019-12-18
 
 **This role will install Agent v7 by default.** Datadog Agent v7 runs checks with Python 3, so if you were running any custom checks written in Python, they must be compatible with Python 3. If you were not running any custom checks or if your custom checks are already compatible with Python 3, then it is safe to upgrade to Agent v7.
@@ -157,10 +164,14 @@ Initial release, compatible with Ansible v1 & v2
 [#203]: https://github.com/DataDog/ansible-datadog/issues/203
 [#220]: https://github.com/DataDog/ansible-datadog/issues/220
 [#224]: https://github.com/DataDog/ansible-datadog/issues/224
+[#226]: https://github.com/DataDog/ansible-datadog/issues/226
 [#233]: https://github.com/DataDog/ansible-datadog/issues/233
 [#234]: https://github.com/DataDog/ansible-datadog/issues/234
 [#235]: https://github.com/DataDog/ansible-datadog/issues/235
+[#236]: https://github.com/DataDog/ansible-datadog/issues/236
 [#239]: https://github.com/DataDog/ansible-datadog/issues/239
+[#240]: https://github.com/DataDog/ansible-datadog/issues/240
+[#242]: https://github.com/DataDog/ansible-datadog/issues/242
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
 [@enarciso]: https://github.com/enarciso
@@ -173,5 +184,6 @@ Initial release, compatible with Ansible v1 & v2
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
 [@rouge8]: https://github.com/rouge8
+[@the-real-cphilips]: https://github.com/the-real-cphilips
 [@tomgoren]: https://github.com/tomgoren
 [@xp-1000]: https://github.com/xp-1000
