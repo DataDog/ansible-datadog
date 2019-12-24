@@ -39,7 +39,7 @@ Supports most Debian and RHEL-based Linux distributions, and Windows.
 ## Installation
 
 ```
-ansible-galaxy install Datadog.datadog
+ansible-galaxy install datadog.datadog
 ```
 
 ## Role Variables
@@ -262,7 +262,7 @@ Sending data to Datadog US (default) and configuring a few checks.
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes }
+    - { role: datadog.datadog, become: yes }
   vars:
     datadog_api_key: "123456"
     datadog_agent_version: "7.16.0"
@@ -336,7 +336,7 @@ Example for installing the latest Agent 6:
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes }
+    - { role: datadog.datadog, become: yes }
   vars:
     datadog_agent_major_version: 6
     datadog_api_key: "123456"
@@ -347,7 +347,7 @@ Example for sending data to EU site:
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog, become: yes }
+    - { role: datadog.datadog, become: yes }
   vars:
     datadog_site: "datadoghq.eu"
     datadog_api_key: "123456"
@@ -392,7 +392,7 @@ Alternatively, if your playbook **only runs on Windows hosts**, you can do the f
 ```yml
 - hosts: servers
   roles:
-    - { role: Datadog.datadog }
+    - { role: datadog.datadog }
   vars:
     ...
 ```
@@ -483,7 +483,7 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
         state: present
 
   roles:
-    - { role: Datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+    - { role: datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
 ```
 
 ### Datadog Agent 6.14 for Windows
@@ -496,7 +496,7 @@ to `6.14.0` or `6.14.1`. Please use `6.14.2` or above instead.
 
 If you are updating from **6.14.0 or 6.14.1 on Windows**, we **strongly** recommend following these steps:
 
-1. Upgrade the present `Datadog.datadog` ansible role to the latest version (`>=3.3.0`)
+1. Upgrade the present `datadog.datadog` ansible role to the latest version (`>=3.3.0`)
 2. Set the `datadog_agent_version` to `6.14.2` or above (by default the role install latest).
 
 To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
