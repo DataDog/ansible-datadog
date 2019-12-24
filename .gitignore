@@ -5,3 +5,6 @@
 # pre and post tasks folders (user defined)
 pre_tasks/
 post_tasks/
+.kitchen/
+.kitchen.local.yml
+.bundle
