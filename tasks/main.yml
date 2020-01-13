@@ -1,5 +1,8 @@
 ---
 
+- name: Check if OS is supported
+  include_tasks: os-check.yml
+
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
