@@ -12,7 +12,7 @@ datadog_checks: {}
 
 # default user/group
 datadog_user: dd-agent
-datadog_group: root
+datadog_group: dd-agent
 
 # agent integration variables
 integration_command_user_linux: "dd-agent"
