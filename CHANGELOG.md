@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+# 4.1.0 / 2019-01-20
+
+* [FEATURE] Fail with explicit message if OS is not supported by the role. See [#247][]
+* [BUGFIX] Ensure that system-probe is stopped if it is disabled or not installed. See [#249][]
+* [BUGFIX] Change default datadog_agent group to dd-agent. See [#248][]
+* [OTHER] Update instructions to use datadog.datadog as the role name. See [#246][]
+* [OTHER] Add development guidelines & small kitchen dev environment. See [#243][]
+
 # 4.0.1 / 2019-12-23
 
 * [BUGFIX] Fix system-probe.yaml.j2 indent filter. See [#240][]
@@ -172,6 +180,11 @@ Initial release, compatible with Ansible v1 & v2
 [#239]: https://github.com/DataDog/ansible-datadog/issues/239
 [#240]: https://github.com/DataDog/ansible-datadog/issues/240
 [#242]: https://github.com/DataDog/ansible-datadog/issues/242
+[#243]: https://github.com/DataDog/ansible-datadog/issues/243
+[#246]: https://github.com/DataDog/ansible-datadog/issues/246
+[#247]: https://github.com/DataDog/ansible-datadog/issues/247
+[#248]: https://github.com/DataDog/ansible-datadog/issues/248
+[#249]: https://github.com/DataDog/ansible-datadog/issues/249
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
 [@enarciso]: https://github.com/enarciso
