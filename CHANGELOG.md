@@ -6,8 +6,8 @@ CHANGELOG
 * [FEATURE] Fail with explicit message if OS is not supported by the role. See [#247][]
 * [BUGFIX] Ensure that system-probe is stopped if it is disabled or not installed. See [#249][]
 * [BUGFIX] Change default datadog_agent group to dd-agent. See [#248][]
-* [OTHER] Update instructions to use datadog.datadog as the role name. See [#246][]
-* [OTHER] Add development guidelines & small kitchen dev environment. See [#243][]
+* [DOCS] Update instructions to use datadog.datadog as the role name. See [#246][]
+* [DOCS] Add development guidelines & small kitchen dev environment. See [#243][]
 
 # 4.0.1 / 2019-12-23
 
