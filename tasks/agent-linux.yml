@@ -94,7 +94,7 @@
     name: datadog-agent-sysprobe
     state: stopped
     enabled: no
-  when: not datadog_skip_running_check and (not datadog_enabled or not datadog_sysprobe_enabled)
+  when: not datadog_skip_running_check and (not datadog_enabled or not datadog_sysprobe_enabled) and ansible_facts.services['datadog-agent-sysprobe'] is defined
 
 - name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
   service:
