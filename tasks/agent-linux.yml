@@ -76,11 +76,15 @@
     enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
+- name: set system probe installed
+  set_fact:
+    datadog_sysprobe_installed: "{{ ansible_facts.services['datadog-agent-sysprobe'] is defined or ansible_facts.services['datadog-agent-sysprobe.service'] is defined }}"
+
 - name: set system probe enabled
   set_fact:
     datadog_sysprobe_enabled: "{{ system_probe_config is defined
       and system_probe_config['enabled']
-      and (ansible_facts.services['datadog-agent-sysprobe'] is defined or ansible_facts.services['datadog-agent-sysprobe.service'] is defined) }}"
+      and datadog_sysprobe_installed }}"
 
 - name: Ensure datadog-agent-sysprobe is running if enabled and installed
   service:
@@ -94,7 +98,7 @@
     name: datadog-agent-sysprobe
     state: stopped
     enabled: no
-  when: not datadog_skip_running_check and (not datadog_enabled or not datadog_sysprobe_enabled)
+  when: not datadog_skip_running_check and (not datadog_enabled or not datadog_sysprobe_enabled) and datadog_sysprobe_installed
 
 - name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
   service:
