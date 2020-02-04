@@ -103,8 +103,8 @@ To behavior of the `datadog_windows_download_url` variable has been modified. Wh
 
 `datadog_agent_major_version` | Default Windows msi package URL |
 ------------------------------|------------------------|
-6                             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
-7                             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
+6                             | https://ddagent-windows-stable.s3.amazonaws.com/datadog-agent-6-latest.amd64.msi |
+7                             | https://ddagent-windows-stable.s3.amazonaws.com/datadog-agent-7-latest.amd64.msi |
 
 To override the default behavior, set the `datadog_windows_download_url` variable to something else than an empty string.
 
