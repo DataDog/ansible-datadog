@@ -453,7 +453,7 @@ Once modification completed, follow the steps below:
 
 3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`
 
-You may also follow this [documentation](https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup) to setup NPM manually.
+You may also follow the [Datadog Network Performance Monitoring documentation (NPM)](https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup) to set it up manually.
 
 ### Agent 5
 
