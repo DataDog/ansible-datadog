@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-# 4.1.0 / 2019-01-20
+# 4.1.1 / 2020-02-10
+
+* [BUGFIX] Add skip check on sysprobe set_fact tasks. See [#259][]
+* [BUGFIX] Only try to stop sysprobe if it is installed. See [#255][]. Thanks to [@dv9io0o][]
+
+# 4.1.0 / 2020-01-20
 
 * [FEATURE] Fail with explicit message if OS is not supported by the role. See [#247][]
 * [BUGFIX] Ensure that system-probe is stopped if it is disabled or not installed. See [#249][]
@@ -185,8 +190,11 @@ Initial release, compatible with Ansible v1 & v2
 [#247]: https://github.com/DataDog/ansible-datadog/issues/247
 [#248]: https://github.com/DataDog/ansible-datadog/issues/248
 [#249]: https://github.com/DataDog/ansible-datadog/issues/249
+[#255]: https://github.com/DataDog/ansible-datadog/issues/255
+[#259]: https://github.com/DataDog/ansible-datadog/issues/259
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
+[@dv9io0o]: https://github.com/dv9io0o
 [@enarciso]: https://github.com/enarciso
 [@eplanet]: https://github.com/eplanet
 [@geoffwright]: https://github.com/geoffwright
