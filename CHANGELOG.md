@@ -4,7 +4,7 @@ CHANGELOG
 # 4.1.1 / 2020-02-10
 
 * [BUGFIX] Add skip check on sysprobe set_fact tasks. See [#259][]
-* [BUGFIX] Only try to stop sysprobe if it is installed. See [#255][]. Thanks to [@dv9io0o][]
+* [BUGFIX] Only try to stop sysprobe if it is installed. See [#255][]. Thanks to [@dv9io0o][].
 
 # 4.1.0 / 2020-01-20
 
