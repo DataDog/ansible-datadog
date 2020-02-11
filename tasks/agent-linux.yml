@@ -78,7 +78,8 @@
 
 - name: set system probe installed
   set_fact:
-    datadog_sysprobe_installed: "{{ ansible_facts.services['datadog-agent-sysprobe'] is defined or ansible_facts.services['datadog-agent-sysprobe.service'] is defined }}"
+    datadog_sysprobe_installed: "{{ ansible_facts.services['datadog-agent-sysprobe'] is defined
+      or ansible_facts.services['datadog-agent-sysprobe.service'] is defined }}"
   when: not datadog_skip_running_check
 
 - name: set system probe enabled
