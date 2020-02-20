@@ -447,6 +447,7 @@ system_probe_config:
 ```
 
 Once modification completed, follow the steps below:
+
 1. Start the system-probe: `sudo service datadog-agent-sysprobe start` Note: If the service wrapper is not available on your system, run the following command instead: `sudo initctl start datadog-agent-sysprobe`
 
 2. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent) with `sudo service datadog-agent restart`
