@@ -446,6 +446,16 @@ system_probe_config:
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 ```
 
+Once modification completed, follow the steps below:
+
+1. Start the system-probe: `sudo service datadog-agent-sysprobe start` Note: If the service wrapper is not available on your system, run the following command instead: `sudo initctl start datadog-agent-sysprobe`
+
+2. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent) with `sudo service datadog-agent restart`
+
+3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`
+
+You may also follow the [Datadog Network Performance Monitoring documentation (NPM)](https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup) to set it up manually.
+
 ### Agent 5
 
 To enable/disable the Process Agent on Agent 5, you need to set on `datadog_config` the `process_agent_enabled` parameter to `true`/`false`.
