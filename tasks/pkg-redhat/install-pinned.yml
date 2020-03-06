@@ -5,4 +5,5 @@
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
   register: datadog_agent_install
+  when: not ansible_check_mode
   notify: restart datadog-agent

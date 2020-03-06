@@ -38,7 +38,7 @@
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
 - include_tasks: pkg-redhat/install-pinned.yml
-  when: (datadog_agent_redhat_version is defined) and (not ansible_check_mode)
+  when: datadog_agent_redhat_version is defined
 
 - include_tasks: pkg-redhat/install-latest.yml
-  when: (datadog_agent_redhat_version is not defined) and (not ansible_check_mode)
+  when: datadog_agent_redhat_version is not defined

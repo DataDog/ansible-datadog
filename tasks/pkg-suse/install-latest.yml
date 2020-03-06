@@ -4,4 +4,5 @@
     name: datadog-agent
     state: latest  # noqa 403
   register: datadog_agent_install
+  when: not ansible_check_mode
   notify: restart datadog-agent

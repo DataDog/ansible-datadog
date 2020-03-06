@@ -77,7 +77,7 @@
   when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
 - include_tasks: pkg-debian/install-pinned.yml
-  when: (datadog_agent_debian_version is defined) and (not ansible_check_mode)
+  when: datadog_agent_debian_version is defined
 
 - include_tasks: pkg-debian/install-latest.yml
-  when: (datadog_agent_debian_version is not defined) and (not ansible_check_mode)
+  when: datadog_agent_debian_version is not defined
