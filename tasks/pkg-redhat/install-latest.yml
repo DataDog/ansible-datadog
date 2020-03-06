@@ -5,3 +5,4 @@
     update_cache: yes
     state: latest  # noqa 403
   register: datadog_agent_install
+  notify: restart datadog-agent

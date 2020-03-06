@@ -67,10 +67,8 @@
   args:
     warn: false  # silence warning about using zypper directly
 
-- name: Install pinned version
-  include_tasks: pkg-suse/install-pinned.yml
+- include_tasks: pkg-suse/install-pinned.yml
   when: (datadog_agent_suse_version is defined) and (not ansible_check_mode)
 
-- name: Install latest version
-  include_tasks: pkg-suse/install-latest.yml
+- include_tasks: pkg-suse/install-latest.yml
   when: (datadog_agent_suse_version is not defined) and (not ansible_check_mode)

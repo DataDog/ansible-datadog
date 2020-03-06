@@ -76,10 +76,8 @@
     update_cache: yes
   when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
-- name: Install pinned version
-  include_tasks: pkg-debian/install-pinned.yml
+- include_tasks: pkg-debian/install-pinned.yml
   when: (datadog_agent_debian_version is defined) and (not ansible_check_mode)
 
-- name: Install latest version
-  include_tasks: pkg-debian/install-latest.yml
+- include_tasks: pkg-debian/install-latest.yml
   when: (datadog_agent_debian_version is not defined) and (not ansible_check_mode)
