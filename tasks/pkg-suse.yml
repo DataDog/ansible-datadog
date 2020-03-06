@@ -67,17 +67,10 @@
   args:
     warn: false  # silence warning about using zypper directly
 
-- name: Install pinned datadog-agent package
-  zypper:
-    name: "datadog-agent={{ datadog_agent_suse_version }}"
-    state: present
-    oldpackage: "{{ datadog_agent_allow_downgrade }}"
+- name: Install pinned version
+  include_tasks: pkg-suse/install-pinned.yml
   when: (datadog_agent_suse_version is defined) and (not ansible_check_mode)
-  notify: restart datadog-agent
 
-- name: Install latest datadog-agent package
-  zypper:
-    name: datadog-agent
-    state: latest  # noqa 403
+- name: Install latest version
+  include_tasks: pkg-suse/install-latest.yml
   when: (datadog_agent_suse_version is not defined) and (not ansible_check_mode)
-  notify: restart datadog-agent
