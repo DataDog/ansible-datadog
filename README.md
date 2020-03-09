@@ -477,6 +477,9 @@ datadog_config_ex:
 
 `pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks from the Datadog role and `post_tasks` for those to be executed after.
 
+All installation tasks on all supported platforms register a `datadog_agent_install` variable that can then
+be used in `post_tasks` to check the installation task's result: `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
+
 ## Known Issues and Workarounds
 
 ### dirmngr

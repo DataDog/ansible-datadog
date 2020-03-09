@@ -37,11 +37,11 @@
     dest: '%TEMP%\ddagent.msi'
   register: download_msi_result
 
-
 - name: Install downloaded agent
   win_package:
     path: "{{ download_msi_result.dest }}"
     arguments: "{{ win_install_args }}"
+  register: datadog_agent_install
   when: not ansible_check_mode
 
 - name: Delete temporary msi
