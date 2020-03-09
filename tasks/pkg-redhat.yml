@@ -37,17 +37,8 @@
     state: present
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
-- name: Install pinned datadog-agent package
-  yum:
-    name: "datadog-agent-{{ datadog_agent_redhat_version }}"
-    state: present
-    allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
-  when: (datadog_agent_redhat_version is defined) and (not ansible_check_mode)
-  notify: restart datadog-agent
+- include_tasks: pkg-redhat/install-pinned.yml
+  when: datadog_agent_redhat_version is defined
 
-- name: Install latest datadog-agent package
-  yum:
-    name: datadog-agent
-    update_cache: yes
-    state: latest  # noqa 403
-  when: (datadog_agent_redhat_version is not defined) and (not ansible_check_mode)
+- include_tasks: pkg-redhat/install-latest.yml
+  when: datadog_agent_redhat_version is not defined

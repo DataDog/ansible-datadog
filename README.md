@@ -69,7 +69,7 @@ ansible-galaxy install datadog.datadog
 | `datadog_agent_allow_downgrade`                                                                                                                 | Set to `yes` to allow Agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **On centos this will only work with ansible 2.4 and up**.                                                                        |
 | `use_apt_backup_keyserver`                                                                                                                      | Set `true` to use the backup keyserver instead of the default one.                                                                                                                                                                                       |
 | `datadog_enabled`                                                                                                                               | Set to `false` to prevent `datadog-agent` service from starting. Defaults to `true`                                                                                                                                                                      |
-| `datadog_additional_groups`                                                                                                                     | Comma separated list of additional groups for the `datadog_user`. Linux only.                                                                                                                                                                            |
+| `datadog_additional_groups`                                                                                                                     | Either a list, or a string containing a comma-separated list of additional groups for the `datadog_user`. Linux only.                                                                                                                                                                            |
 | `datadog_windows_ddagentuser_name`                                                                                                              | Name of windows user to create/use, in the format `<domain>\<user>`.  Windows only.                                                                                                                                                                      |
 | `datadog_windows_ddagentuser_password`                                                                                                          | Password to use to create the user, and/or register the service. Windows only.                                                                                                                                                                           |
 
@@ -476,6 +476,9 @@ datadog_config_ex:
 ## Additional tasks
 
 `pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks from the Datadog role and `post_tasks` for those to be executed after.
+
+All installation tasks on all supported platforms register a `datadog_agent_install` variable that can then
+be used in `post_tasks` to check the installation task's result: `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
 
 ## Known Issues and Workarounds
 
