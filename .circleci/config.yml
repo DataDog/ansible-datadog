@@ -15,6 +15,8 @@ commands:
       - run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
       - run: python get-pip.py
       - run: rm get-pip.py
+      - run: cp ci_test/utils/systemctl.py /usr/bin/systemctl
+      - run: cp ci_test/utils/systemctl.py /usr/bin/systemd
 
   setup_debian:
     steps:
@@ -23,6 +25,8 @@ commands:
       - run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
       - run: python get-pip.py
       - run: rm get-pip.py
+      - run: cp ci_test/utils/systemctl.py /bin/systemctl
+      - run: cp ci_test/utils/systemctl.py /bin/systemd
 
   # Install the latest version of agent 5 and then try to downgrade to an older version
   install_agent_5:
@@ -114,6 +118,7 @@ jobs:
     environment:
       - OS_TYPE: "centos"
     steps:
+      - run: echo $$
       - checkout
       - setup_centos
       - setup_ansible:
@@ -185,10 +190,14 @@ jobs:
   centos_26_6:
     docker:
       - image: centos:7
+        command:
+          - exit 1
+
     environment:
       - OS_TYPE: "centos"
     steps:
       - checkout
+      - run: cat /proc/1/comm
       - setup_centos
       - setup_ansible:
         ansible_version: "2.6"
