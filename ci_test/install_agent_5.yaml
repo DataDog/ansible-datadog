@@ -7,7 +7,7 @@
     datadog_api_key: "11111111111111111111111111111111"
     datadog_agent_major_version: 5
     # avoid checking that the agent is stopped for centos
-    datadog_skip_running_check: true
+    # datadog_skip_running_check: true
     datadog_config:
       tags: "mytag0, mytag1"
       log_level: INFO
