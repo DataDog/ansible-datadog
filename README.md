@@ -8,7 +8,7 @@ The Ansible Datadog role installs and configures the Datadog Agent and integrati
 
 Supports most Debian and RHEL-based Linux distributions, and Windows.
 
-### Installation
+## Installation
 
 Install the [Datadog role][1] from Ansible Galaxy on your Ansible server:
 
@@ -75,9 +75,9 @@ To define two instances for the `process` check use the configuration below. Thi
         init_config:
         instances:
           - name: ssh
-            search_string: ['ssh', 'sshd' ]
+            search_string: ['ssh', 'sshd']
           - name: syslog
-            search_string: ['rsyslog' ]
+            search_string: ['rsyslog']
             cpu_check_interval: 0.2
             exact_match: true
             ignore_denied_access: true
@@ -361,7 +361,7 @@ Alternatively, if your playbook **only runs on Windows hosts**, you can do the f
 
 ## APM
 
-To enable APM with Agent v6 use the following configuration:
+To enable APM with Agent v6 and v7 use the following configuration:
 
 ```yaml
 datadog_config:
@@ -450,13 +450,13 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
 - hosts: all
   pre_tasks:
     - name: Debian Stretch requires dirmngr package to be installed in order to use apt_key
-      become: yes  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+      become: yes
       apt:
         name: dirmngr
         state: present
 
   roles:
-    - { role: datadog.datadog, become: yes, datadog_api_key: "mykey" }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+    - { role: datadog.datadog, become: yes, datadog_api_key: "mykey" }
 ```
 
 ### Datadog Agent 6.14 for Windows
