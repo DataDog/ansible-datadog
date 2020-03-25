@@ -120,30 +120,116 @@ The example below configures the PostgeSQL check through **Autodiscovery**:
 
 Learn more about [Autodiscovery in the Datadog documentation][3].
 
+### Tracing
+
+To enable trace collection with Agent v6 or v7 use the following configuration:
+
+```yaml
+datadog_config:
+    apm_config:
+        enabled: true
+```
+
+To enable trace collection with Agent v5 use the following configuration:
+
+```yaml
+datadog_config:
+    apm_enabled: "true" # has to be a string
+```
+
+### Live processes
+
+To enable [live process][6] collection with Agent v6 or v7 use the following configuration:
+
+```yml
+datadog_config:
+  process_config:
+    enabled: "true" # type: string
+```
+
+The possible values for `enabled` are: `"true"`, `"false"` (only container collection), or `"disabled"` (disable live processes entirely).
+
+#### Variables
+
+The following variables are available for live processes:
+
+* `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line (defaults to `true`).
+* `custom_sensitive_words`: Expands the default list of sensitive words used by the cmdline scrubber.
+
+#### System Probe
+
+The [network performance monitoring][7] system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+
+**Note**: The system probe only works on Linux with the Agent v6+.
+
+#### Example configuration
+
+```yml
+datadog_config:
+  process_config:
+    enabled: "true" # type: string
+    scrub_args: true
+    custom_sensitive_words: ['consul_token','dd_api_key']
+system_probe_config:
+  enabled: true
+  sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+```
+
+Once modification is complete, follow the steps below:
+
+1. Start the system-probe: `sudo service datadog-agent-sysprobe start` **Note**: If the service wrapper is not available on your system, run this command instead: `sudo initctl start datadog-agent-sysprobe`.
+2. [Restart the Agent][8]: `sudo service datadog-agent restart`.
+3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`.
+
+For manual setup, refer to the [Network Performance Monitoring (NPM)][9] documentation.
+
+#### Agent 5
+
+To enable [live process][6] collection with Agent v5 use the following configuration:
+
+#### Example of configuration
+
+```yml
+datadog_config:
+  process_agent_enabled: true
+datadog_config_ex:
+  process.config:
+    scrub_args: true
+    custom_sensitive_words: "consul_token,dd_api_key"
+```
+
 ## Versions
 
-Starting with v3 of the Datadog Ansible role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example `1:7.16.0-1` for Debian and SUSE based, `7.16.0-1` for Redhat-based, and `7.16.0` for Windows. This makes it possible to target hosts running different operating systems in the same Ansible run.
+By default, the current major version of the Datadog Ansible role installs Agent v7. The variables `datadog_agent_version` and `datadog_agent_major_version` are available to control the Agent version installed.
 
-For instance, if you provide `datadog_agent_version: 7.16.0`, the role installs `1:7.16.0-1` on Debian and SUSE-based, `7.16.0-1` on Redhat-based, and `7.16.0` on Windows. If the version is not provided, the role uses `1` as the epoch and `1` as the release number.
+For v3+ of this role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example:
 
-Alternatively, if you provide `datadog_agent_version: 1:7.16.0-1`, the role installs `1:7.16.0-1` on Debian and SUSE-based, `7.16.0-1` on Redhat-based, and `7.16.0` on Windows.
+* `1:7.16.0-1` for Debian and SUSE based
+* `7.16.0-1` for Redhat-based
+* `7.16.0` for Windows.
+
+This makes it possible to target hosts running different operating systems in the same Ansible run, for example:
+
+| Provided                            | Installs     | System                |
+|-------------------------------------|--------------|-----------------------|
+| `datadog_agent_version: 7.16.0`     | `1:7.16.0-1` | Debian and SUSE-based |
+| `datadog_agent_version: 7.16.0`     | `7.16.0-1`   | Redhat-based          |
+| `datadog_agent_version: 7.16.0`     | `7.16.0`     | Windows               |
+| `datadog_agent_version: 1:7.16.0-1` | `1:7.16.0-1` | Debian and SUSE-based |
+| `datadog_agent_version: 1:7.16.0-1` | `7.16.0-1`   | Redhat-based          |
+| `datadog_agent_version: 1:7.16.0-1` | `7.16.0`     | Windows               |
+
+**Note**: If the version is not provided, the role uses `1` as the epoch and `1` as the release number.
 
 **Agent v5 (older version)**:
 
-The Datadog Ansible role includes support for Datadog Agent v5 for Linux only. To install Agent v5, use `datadog_agent_major_version: 5` to install the latest version of Agent v5 or set `datadog_agent_version` to an existing Agent v5.
+The Datadog Ansible role includes support for Datadog Agent v5 for Linux only. To install Agent v5, use `datadog_agent_major_version: 5` to install the latest version of Agent v5 or set `datadog_agent_version` to a specific version of Agent v5. **Note**: The `datadog_agent5` variable is obsolete and has been removed.
 
-**Note**: The `datadog_agent5` variable is obsolete and has been removed.
+### Repositories
 
-### Upgrade
+#### Linux
 
-Role upgrade from v3 to v4
-
-The `datadog_agent_major_version` variable has been introduced, to tell the module which major version of the Agent will be installed, `7` by default.
-To install Agent v5, set it to `5`. To install Agent v6, set it to `6`.
-
-#### Linux repositories
-
-To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_repo` variables has been modified. When they are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version` are used:
+When the variables `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_repo` are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version` are used:
 
 | # | Default apt repository                    | Default yum repository             | Default zypper repository               |
 |---|-------------------------------------------|------------------------------------|-----------------------------------------|
@@ -151,38 +237,43 @@ To behavior of the `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_r
 | 6 | deb https://apt.datadoghq.com stable 6    | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
 | 7 | deb https://apt.datadoghq.com stable 7    | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
 
-To override the default behavior, set the `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo` variables to something else than an empty string.
+To override the default behavior, set these variables to something else than an empty string.
 
-If you were previously using the Agent v5 variables `datadog_agent5_apt_repo`, `datadog_agent5_yum_repo`, or `datadog_agent5_zypper_repo` to set custom Agent v5 repositories, use `datadog_apt_repo`, `datadog_yum_repo`, or `datadog_zypper_repo`(with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version) instead.
+If you previously used the Agent v5 variables, use the **New** variables below with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version.
 
-To install Agent v5 with the v4 role, follow the instructions in the [Agent v5](#agent-v5-older-version) section.
-To downgrade an Agent installation with the v4 role, follow the instructions in the [Agent downgrade](#agent-version-downgrades) section.
+| Old                          | New                   |
+|------------------------------|-----------------------|
+| `datadog_agent5_apt_repo`    | `datadog_apt_repo`    |
+| `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
+| `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
 
 #### Windows
 
-To behavior of the `datadog_windows_download_url` variable has been modified. When not set, the official Windows msi package corresponding to the `datadog_agent_major_version` is used:
+When the variable `datadog_windows_download_url` is not set, the official Windows msi package corresponding to the `datadog_agent_major_version` is used:
 
 | # | Default Windows msi package URL                                                  |
 |---|----------------------------------------------------------------------------------|
 | 6 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
 | 7 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
 
-To override the default behavior, set the `datadog_windows_download_url` variable to something else than an empty string.
+To override the default behavior, set this variable to something else than an empty string.
+
+### Upgrade
+
+To upgrade from Agent v6 to v7, use `datadog_agent_major_version: 7` to install the latest version or set `datadog_agent_version` to a specific version of Agent v7. Use similar logic to upgrade from Agent v5 to v6.
 
 #### Integrations
 
 **Available for Agent v6.8+**
 
-Upgrading an integration
-
-The `datadog_integration` resource helps you to install specific version of a Datadog integration. Keep in mind the Agent comes with all the integrations already installed. So this command is here to allow you to upgrade a specific integration without upgrading the whole Agent. For more usage information consult the [Agent documentation](https://docs.datadoghq.com/agent/guide/integration-management/).
+Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with all the integrations already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [Integration Management][4].
 
 Available actions:
 
 * `install`: Installs a specific version of the integration.
 * `remove`: Removes an integration.
 
-Syntax:
+##### Syntax
 
 ```yml
   datadog_integration:
@@ -191,7 +282,7 @@ Syntax:
       version: <VERSION_TO_INSTALL>
 ```
 
-**Example**:
+##### Example
 
 This example installs version `1.11.0` of the ElasticSearch integration and removes the `postgres` integration.
 
@@ -204,16 +295,19 @@ This example installs version `1.11.0` of the ElasticSearch integration and remo
      action: remove
 ```
 
-In order to get the available versions of the integrations, please refer to their `CHANGELOG.md` file in the [integrations-core repository](https://github.com/DataDog/integrations-core).
+To see the available versions of Datadog integrations, refer to their `CHANGELOG.md` file in the [integrations-core repository][5].
 
 ### Downgrade
 
-To downgrade to a prior version of the Agent, you need to (**on centos this will only work with ansible 2.4 and up**):
+To downgrade to a prior version of the Agent:
 
-1. Set `datadog_agent_version` to a specific version to downgrade to (ex: 5.32.5),
+1. Set `datadog_agent_version` to a specific version, for example: `5.32.5`.
 2. Set `datadog_agent_allow_downgrade` to `yes`.
 
-**Note:** downgrades are not supported on Windows platforms.
+**Notes:**
+
+- Downgrades for Centos only work with Ansible 2.4+.
+- Downgrades are not supported for Windows platforms.
 
 ## Playbooks
 
@@ -234,7 +328,7 @@ Sending data to Datadog US (default) and configuring a few checks.
       apm_config:
         enabled: true
         max_traces_per_second: 10
-      logs_enabled: true  # log collection is available on Agent 6 and 7
+      logs_enabled: true  # available with Agent v6 and v7
     datadog_checks:
       process:
         init_config:
@@ -299,7 +393,7 @@ Example for installing the latest Agent v6:
     - { role: datadog.datadog, become: yes }
   vars:
     datadog_agent_major_version: 6
-    datadog_api_key: "123456"
+    datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
 Example for sending data to EU site:
@@ -310,7 +404,7 @@ Example for sending data to EU site:
     - { role: datadog.datadog, become: yes }
   vars:
     datadog_site: "datadoghq.eu"
-    datadog_api_key: "123456"
+    datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
 ### Windows
@@ -359,79 +453,6 @@ Alternatively, if your playbook **only runs on Windows hosts**, you can do the f
 
 **Warning:** this configuration will fail on Linux hosts (as it's not setting `become: yes` for them). Only use it if the playbook is specific to Windows hosts. Otherwise use the [inventory file method](#using-the-inventory-file-recommended).
 
-## APM
-
-To enable APM with Agent v6 and v7 use the following configuration:
-
-```yaml
-datadog_config:
-    apm_config:
-        enabled: true
-```
-
-To enable APM with agent v5 use the following configuration:
-
-```yaml
-datadog_config:
-    apm_enabled: "true" # has to be a string
-```
-
-## Process Agent
-
-To control the behavior of the Process Agent, use the `enabled` variable under the `datadog_config` field. It has to be set as a string and the possible values are: `true`, `false` (for only container collection) or `disabled` (to disable the Process Agent entirely)
-
-### Variables
-
-The following variables are available for the Process Agent:
-
-* `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line. Default value is `true`.
-* `custom_sensitive_words`: Expands the default list of sensitive words used by the cmdline scrubber.
-
-### System Probe
-
-The [network performance monitoring](https://docs.datadoghq.com/network_performance_monitoring/) system probe is configured under the `system_probe_config` variable.  Any variables nested underneath will be written to the `system-probe.yaml`.
-
-Currently, the system probe only works on Linux with the Agent 6 version and beyond.
-
-### Example of configuration
-```yml
-datadog_config:
-  process_config:
-    enabled: "true" # has to be set as a string
-    scrub_args: true
-    custom_sensitive_words: ['consul_token','dd_api_key']
-system_probe_config:
-  enabled: true
-  sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
-```
-
-Once modification completed, follow the steps below:
-
-1. Start the system-probe: `sudo service datadog-agent-sysprobe start` Note: If the service wrapper is not available on your system, run the following command instead: `sudo initctl start datadog-agent-sysprobe`
-
-2. [Restart the Agent](https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent) with `sudo service datadog-agent restart`
-
-3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`
-
-You may also follow the [Datadog Network Performance Monitoring documentation (NPM)](https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup) to set it up manually.
-
-### Agent 5
-
-To enable/disable the Process Agent on Agent 5, you need to set on `datadog_config` the `process_agent_enabled` parameter to `true`/`false`.
-
-Set the available variables inside `process.config` under the `datadog_config_ex` field to control the Process Agent's features.
-
-#### Example of configuration
-
-```yml
-datadog_config:
-  process_agent_enabled: true
-datadog_config_ex:
-  process.config:
-    scrub_args: true
-    custom_sensitive_words: "consul_token,dd_api_key"
-```
-
 ## Additional tasks
 
 `pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks from the Datadog role and `post_tasks` for those to be executed after.
@@ -475,3 +496,9 @@ To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
 [3]: https://docs.datadoghq.com/agent/autodiscovery
+[4]: https://docs.datadoghq.com/agent/guide/integration-management/
+[5]: https://github.com/DataDog/integrations-core
+[6]: https://docs.datadoghq.com/infrastructure/process/
+[7]: https://docs.datadoghq.com/network_performance_monitoring/
+[8]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
+[9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
