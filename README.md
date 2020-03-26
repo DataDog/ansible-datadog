@@ -6,7 +6,8 @@ The Ansible Datadog role installs and configures the Datadog Agent and integrati
 
 ### Requirements
 
-Supports most Debian and RHEL-based Linux distributions, and Windows.
+- Requires Ansible v2.6+.
+- Supports most Debian and RHEL-based Linux distributions, and Windows.
 
 ## Installation
 
@@ -16,15 +17,12 @@ Install the [Datadog role][1] from Ansible Galaxy on your Ansible server:
 ansible-galaxy install datadog.datadog
 ```
 
-**Note**: `ansible-galaxy` is shipped with Ansible v1.4.2+. If you're using an earlier version of Ansible, download the role directly from the project's [Github page][2].
-
-To deploy the Datadog Agent on hosts, add to your playbook the Datadog role with your API key:
+To deploy the Datadog Agent on hosts, add the Datadog role and your API key to your playbook :
 
 ```text
 - hosts: servers
   roles:
-    - { role: datadog.datadog, become: yes }  # On Ansible < 1.9, use "sudo: yes" instead of "become: yes"
-  vars:
+    - { role: datadog.datadog, become: yes }
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
@@ -87,8 +85,8 @@ To define two instances for the `process` check use the configuration below. Thi
 
 To configure a custom check use the configuration below. This creates the corresponding configuration files:
 
-* Agent v6 & v7: `/etc/datadog-agent/conf.d/my_custom_check.d/conf.yaml`
-* Agent v5: `/etc/dd-agent/conf.d/my_custom_check.yaml`
+- Agent v6 & v7: `/etc/datadog-agent/conf.d/my_custom_check.d/conf.yaml`
+- Agent v5: `/etc/dd-agent/conf.d/my_custom_check.yaml`
 
 ```yml
     datadog_checks:
@@ -183,11 +181,9 @@ Once modification is complete, follow the steps below:
 
 For manual setup, refer to the [Network Performance Monitoring (NPM)][9] documentation.
 
-#### Agent 5
+#### Agent v5
 
 To enable [live process][6] collection with Agent v5 use the following configuration:
-
-#### Example of configuration
 
 ```yml
 datadog_config:
@@ -195,8 +191,14 @@ datadog_config:
 datadog_config_ex:
   process.config:
     scrub_args: true
-    custom_sensitive_words: "consul_token,dd_api_key"
+    custom_sensitive_words: "<FIRST_WORD>,<SECOND_WORD>"
 ```
+
+### Additional tasks
+
+`pre_tasks` and `post_tasks` folders are available to run user defined tasks. `pre_tasks` run before executing any tasks from the Datadog Ansible role and `post_tasks` run after execution of the role.
+
+Installation tasks on supported platforms register the variable `datadog_agent_install`, which can be used in `post_tasks` to check the installation task's result. `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
 
 ## Versions
 
@@ -204,9 +206,9 @@ By default, the current major version of the Datadog Ansible role installs Agent
 
 For v3+ of this role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example:
 
-* `1:7.16.0-1` for Debian and SUSE based
-* `7.16.0-1` for Redhat-based
-* `7.16.0` for Windows.
+- `1:7.16.0-1` for Debian and SUSE based
+- `7.16.0-1` for Redhat-based
+- `7.16.0` for Windows.
 
 This makes it possible to target hosts running different operating systems in the same Ansible run, for example:
 
@@ -270,8 +272,8 @@ Use the `datadog_integration` resource to install a specific version of a Datado
 
 Available actions:
 
-* `install`: Installs a specific version of the integration.
-* `remove`: Removes an integration.
+- `install`: Installs a specific version of the integration.
+- `remove`: Removes an integration.
 
 ##### Syntax
 
@@ -311,19 +313,21 @@ To downgrade to a prior version of the Agent:
 
 ## Playbooks
 
-Sending data to Datadog US (default) and configuring a few checks.
+Below are some sample playbooks to assist you with using the Datadog Ansible role.
+
+The following example sends data to Datadog US (default), enables logs, and configures a few checks.
 
 ```yml
 - hosts: servers
   roles:
     - { role: datadog.datadog, become: yes }
   vars:
-    datadog_api_key: "123456"
+    datadog_api_key: "<YOUR_DD_API_KEY>"
     datadog_agent_version: "7.16.0"
     datadog_config:
       tags:
-        - "env:dev"
-        - "datacenter:local"
+        - "<KEY>:<VALUE>"
+        - "<KEY>:<VALUE>"
       log_level: INFO
       apm_config:
         enabled: true
@@ -346,7 +350,7 @@ Sending data to Datadog US (default) and configuring a few checks.
           - host: localhost
             port: 22
             username: root
-            password: changeme
+            password: <YOUR_PASSWORD>
             sftp_check: True
             private_key_file:
             add_missing_keys: True
@@ -360,7 +364,7 @@ Sending data to Datadog US (default) and configuring a few checks.
           - nginx_status_url: http://example2.com:1234/nginx_status/
             tags:
               - "source:nginx"
-              - "instance:bar"
+              - "<KEY>:<VALUE>"
 
         #Log collection is available on Agent 6 and 7
         logs:
@@ -385,7 +389,9 @@ Sending data to Datadog US (default) and configuring a few checks.
       enabled: true
 ```
 
-Example for installing the latest Agent v6:
+### Agent v6
+
+This example installs the latest Agent v6:
 
 ```yml
 - hosts: servers
@@ -396,7 +402,9 @@ Example for installing the latest Agent v6:
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-Example for sending data to EU site:
+### EU site
+
+This example sends data to the EU site:
 
 ```yml
 - hosts: servers
@@ -409,13 +417,11 @@ Example for sending data to EU site:
 
 ### Windows
 
-On Windows, the `become: yes` option is not needed (and will make the role fail, as ansible won't be able to use it).
+On Windows, the `become: yes` option should be removed because it will make the role fail. Below are two methods to make the example playbooks work with Windows hosts:
 
-Below are two methods to make the above playbook work with Windows hosts:
+#### Inventory file
 
-### Using the inventory file (recommended)
-
-Set the `ansible_become` option to `no` in the inventory file for each Windows host:
+Using the inventory file is the recommended approach. Set the `ansible_become` option to `no` in the inventory file for each Windows host:
 
 ```ini
 [servers]
@@ -425,7 +431,8 @@ windows1 ansible_host=127.0.0.3 ansible_become=no
 windows2 ansible_host=127.0.0.4 ansible_become=no
 ```
 
-To avoid repeating the same configuration for all Windows hosts, you can also group them and set the variable at the group level:
+To avoid repeating the same configuration for all Windows hosts, group them and set the variable at the group level:
+
 ```ini
 [linux]
 linux1 ansible_host=127.0.0.1
@@ -439,9 +446,9 @@ windows2 ansible_host=127.0.0.4
 ansible_become=no
 ```
 
-### Using the playbook file
+#### Playbook file
 
-Alternatively, if your playbook **only runs on Windows hosts**, you can do the following in the playbook file:
+Alternatively, if your playbook **only runs on Windows hosts**, use the following in the playbook file:
 
 ```yml
 - hosts: servers
@@ -451,14 +458,7 @@ Alternatively, if your playbook **only runs on Windows hosts**, you can do the f
     ...
 ```
 
-**Warning:** this configuration will fail on Linux hosts (as it's not setting `become: yes` for them). Only use it if the playbook is specific to Windows hosts. Otherwise use the [inventory file method](#using-the-inventory-file-recommended).
-
-## Additional tasks
-
-`pre_tasks` and `post_tasks` folders allow to run user defined tasks. `pre_tasks` for tasks to be executed before executing any tasks from the Datadog role and `post_tasks` for those to be executed after.
-
-All installation tasks on all supported platforms register a `datadog_agent_install` variable that can then
-be used in `post_tasks` to check the installation task's result: `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
+**Note**: This configuration fails on Linux hosts. Only use it if the playbook is specific to Windows hosts. Otherwise, use the [inventory file method](#inventory-file).
 
 ## Troubleshooting
 
@@ -477,7 +477,7 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
         state: present
 
   roles:
-    - { role: datadog.datadog, become: yes, datadog_api_key: "mykey" }
+    - { role: datadog.datadog, become: yes, datadog_api_key: "<YOUR_DD_API_KEY>" }
 ```
 
 ### Datadog Agent 6.14 for Windows
