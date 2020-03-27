@@ -9,7 +9,7 @@ The Ansible Datadog role installs and configures the Datadog Agent and integrati
 - Requires Ansible v2.6+.
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 
-## Installation
+### Installation
 
 Install the [Datadog role][1] from Ansible Galaxy on your Ansible server:
 
@@ -462,15 +462,15 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 ## Troubleshooting
 
-### dirmngr
+### Debian stretch
 
-On Debian Stretch, the `apt_key` module that the role uses requires an additional system dependency to work correctly. Unfortunately that dependency (`dirmngr`) is not provided by the module. To work around this, you can add the following configuration to the playbooks that make use of the present role:
+On Debian stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
 
 ```yml
 ---
 - hosts: all
   pre_tasks:
-    - name: Debian Stretch requires dirmngr package to be installed in order to use apt_key
+    - name: Debian Stretch requires the dirmngr package to use apt_key
       become: yes
       apt:
         name: dirmngr
@@ -480,18 +480,18 @@ On Debian Stretch, the `apt_key` module that the role uses requires an additiona
     - { role: datadog.datadog, become: yes, datadog_api_key: "<YOUR_DD_API_KEY>" }
 ```
 
-### Datadog Agent 6.14 for Windows
+### Windows
 
-Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, these versions have been blacklisted (starting with the version `3.3.0` of this role).
+Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, these versions have been blacklisted (starting with version `3.3.0` of this role).
 
-**NOTE:** Ansible will fail on Windows if `datadog_agent_version` is set to `6.14.0` or `6.14.1`. Please use `6.14.2` or above instead.
+**NOTE:** Ansible fails on Windows if `datadog_agent_version` is set to `6.14.0` or `6.14.1`. Use `6.14.2` or above.
 
-If you are updating from **6.14.0 or 6.14.1 on Windows**, we **strongly** recommend following these steps:
+If you are updating from **6.14.0 or 6.14.1 on Windows**, use the following steps:
 
-1. Upgrade the present `datadog.datadog` ansible role to the latest version (`>=3.3.0`)
-2. Set the `datadog_agent_version` to `6.14.2` or above (by default the role install latest).
+1. Upgrade the present `datadog.datadog` Ansible role to the latest version (`>=3.3.0`).
+2. Set the `datadog_agent_version` to `6.14.2` or above (defaults to latest).
 
-To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
+For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 6.14.1 on Windows][10].
 
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
@@ -502,3 +502,4 @@ To learn more about this bug, please read [here](http://dtdg.co/win-614-fix).
 [7]: https://docs.datadoghq.com/network_performance_monitoring/
 [8]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
 [9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
+[10]: https://app.datadoghq.com/help/agent_fix
