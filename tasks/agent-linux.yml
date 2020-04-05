@@ -44,22 +44,6 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
 
-- name: Create trace agent configuration file
-  template:
-    src: datadog.conf.j2
-    dest: /etc/datadog-agent/trace-agent.conf
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-  notify: restart datadog-agent
-
-- name: Create process agent configuration file
-  template:
-    src: datadog.conf.j2
-    dest: /etc/datadog-agent/process-agent.conf
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-  notify: restart datadog-agent
-
 - name: Create system-probe configuration file
   template:
     src: system-probe.yaml.j2
