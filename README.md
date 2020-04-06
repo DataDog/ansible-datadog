@@ -23,6 +23,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 - hosts: servers
   roles:
     - { role: datadog.datadog, become: yes }
+  vars:
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
@@ -124,15 +125,15 @@ To enable trace collection with Agent v6 or v7 use the following configuration:
 
 ```yaml
 datadog_config:
-    apm_config:
-        enabled: true
+  apm_config:
+    enabled: true
 ```
 
 To enable trace collection with Agent v5 use the following configuration:
 
 ```yaml
 datadog_config:
-    apm_enabled: "true" # has to be a string
+  apm_enabled: "true" # has to be a string
 ```
 
 ### Live processes
@@ -204,7 +205,7 @@ Installation tasks on supported platforms register the variable `datadog_agent_i
 
 By default, the current major version of the Datadog Ansible role installs Agent v7. The variables `datadog_agent_version` and `datadog_agent_major_version` are available to control the Agent version installed.
 
-For v3+ of this role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example:
+For v4+ of this role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example:
 
 - `1:7.16.0-1` for Debian and SUSE based
 - `7.16.0-1` for Redhat-based
@@ -241,7 +242,7 @@ When the variables `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_r
 
 To override the default behavior, set these variables to something else than an empty string.
 
-If you previously used the Agent v5 variables, use the **New** variables below with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version.
+If you previously used the Agent v5 variables, use the **new** variables below with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version.
 
 | Old                          | New                   |
 |------------------------------|-----------------------|
@@ -308,7 +309,6 @@ To downgrade to a prior version of the Agent:
 
 **Notes:**
 
-- Downgrades for Centos only work with Ansible 2.4+.
 - Downgrades are not supported for Windows platforms.
 
 ## Playbooks
@@ -477,7 +477,9 @@ On Debian stretch, the `apt_key` module used by the role requires an additional 
         state: present
 
   roles:
-    - { role: datadog.datadog, become: yes, datadog_api_key: "<YOUR_DD_API_KEY>" }
+    - { role: datadog.datadog, become: yes }
+  vars:
+    datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
 ### Windows
