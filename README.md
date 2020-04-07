@@ -157,7 +157,7 @@ The following variables are available for live processes:
 
 #### System Probe
 
-The [network performance monitoring][7] system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+The [Network Performance Monitoring][7] (NPM) system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
 
 **Note**: The system probe only works on Linux with the Agent v6+.
 
@@ -180,7 +180,7 @@ Once modification is complete, follow the steps below:
 2. [Restart the Agent][8]: `sudo service datadog-agent restart`.
 3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`.
 
-For manual setup, refer to the [Network Performance Monitoring (NPM)][9] documentation.
+For manual setup, refer to the [NPM][9] documentation.
 
 #### Agent v5
 
@@ -254,7 +254,7 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 
 When the variable `datadog_windows_download_url` is not set, the official Windows MSI package corresponding to the `datadog_agent_major_version` is used:
 
-| # | Default Windows msi package URL                                                  |
+| # | Default Windows MSI package URL                                                  |
 |---|----------------------------------------------------------------------------------|
 | 6 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
 | 7 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
