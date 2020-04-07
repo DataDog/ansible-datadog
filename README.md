@@ -17,7 +17,7 @@ Install the [Datadog role][1] from Ansible Galaxy on your Ansible server:
 ansible-galaxy install datadog.datadog
 ```
 
-To deploy the Datadog Agent on hosts, add the Datadog role and your API key to your playbook :
+To deploy the Datadog Agent on hosts, add the Datadog role and your API key to your playbook:
 
 ```text
 - hosts: servers
@@ -40,7 +40,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_config_ex`                        | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).                                                                                                                                                                                                                      |
 | `datadog_apt_repo`                         | Override the default Datadog `apt` repository.                                                                                                                                                                                                                                                            |
 | `datadog_apt_cache_valid_time`             | Override the default apt cache expiration time (defaults to 1 hour).                                                                                                                                                                                                                                      |
-| `datadog_apt_key_url_new`                  | Override the default URL to Datadog `apt` key (key ID `382E94DE` ; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                                                             |
+| `datadog_apt_key_url_new`                  | Override the default URL to Datadog `apt` key (key ID `382E94DE`; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                                                             |
 | `datadog_yum_repo`                         | Override the default Datadog `yum` repository.                                                                                                                                                                                                                                                            |
 | `datadog_yum_gpgkey`                       | Override the default URL to the Datadog `yum` key used to verify Agent v5 and v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                                                                               |
 | `datadog_yum_gpgkey_e09422b3`              | Override the default URL to the Datadog `yum` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                               |
@@ -59,7 +59,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 ### Integrations
 
-To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check and the value is the YAML payload to write the configuration file. Examples are provided below.
+To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
 
 #### Process check
 
@@ -101,7 +101,7 @@ To configure a custom check use the configuration below. This creates the corres
 
 When using Autodiscovery, there is no pre-processing nor post-processing on the YAML. This means every YAML section is added to the final configuration file, including `autodiscovery identifiers`.
 
-The example below configures the PostgeSQL check through **Autodiscovery**:
+The example below configures the PostgreSQL check through **Autodiscovery**:
 
 ```yml
     datadog_checks:
