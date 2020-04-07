@@ -153,7 +153,7 @@ The possible values for `enabled` are: `"true"`, `"false"` (only container colle
 The following variables are available for live processes:
 
 * `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line (defaults to `true`).
-* `custom_sensitive_words`: Expands the default list of sensitive words used by the cmdline scrubber.
+* `custom_sensitive_words`: Expands the default list of sensitive words used by the command line scrubber.
 
 #### System Probe
 
@@ -184,7 +184,7 @@ For manual setup, refer to the [Network Performance Monitoring (NPM)][9] documen
 
 #### Agent v5
 
-To enable [live process][6] collection with Agent v5 use the following configuration:
+To enable [live process][6] collection with Agent v5, use the following configuration:
 
 ```yml
 datadog_config:
@@ -197,7 +197,7 @@ datadog_config_ex:
 
 ### Additional tasks
 
-`pre_tasks` and `post_tasks` folders are available to run user defined tasks. `pre_tasks` run before executing any tasks from the Datadog Ansible role and `post_tasks` run after execution of the role.
+`pre_tasks` and `post_tasks` folders are available to run user defined tasks. `pre_tasks` run before executing any tasks from the Datadog Ansible role, and `post_tasks` run after execution of the role.
 
 Installation tasks on supported platforms register the variable `datadog_agent_install`, which can be used in `post_tasks` to check the installation task's result. `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
 
@@ -252,7 +252,7 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 
 #### Windows
 
-When the variable `datadog_windows_download_url` is not set, the official Windows msi package corresponding to the `datadog_agent_major_version` is used:
+When the variable `datadog_windows_download_url` is not set, the official Windows MSI package corresponding to the `datadog_agent_major_version` is used:
 
 | # | Default Windows msi package URL                                                  |
 |---|----------------------------------------------------------------------------------|
@@ -464,7 +464,7 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 ### Debian stretch
 
-On Debian stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
+On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
 
 ```yml
 ---
