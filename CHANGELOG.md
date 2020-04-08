@@ -1,6 +1,24 @@
 CHANGELOG
 =========
 
+# 4.2.0 / 2020-04-08
+
+* [FEATURE] Ensure the start mode when starting on Windows. See [#271][]. Thanks to [@DevKyleS][].
+  * The Agent service will now always be started on Windows at the end of an Ansible run
+  if `datadog_enabled` is set to `true`.
+  Previously, if the Agent was already installed, the start mode of the existing Agent
+  service was used (which meant a disabled Agent service would remain disabled
+  after an Ansible run, even with `datadog_enabled: true`).
+  If you manually disabled the Agent service and want it to remain disabled,
+  set `datadog_enabled` to `false`.
+* [FEATURE] Remove old INI config files from v6/v7 configuration. See [#271][]. Thanks to [@b2jrock][].
+* [FEATURE] Register result when Agent install task is run. See [#268][].
+* [BUGFIX] Update `datadog_additional_groups` task & doc. See [#267][].
+* [BUGFIX] Fix role idempotence on Debian. See [#262][]. Thanks to [@jharley][].
+* [DOCS] README update: system-probe installation steps. See [#257][].
+* [DOCS] README update: minimum Ansible version & various fixes. See [#264][].
+* [DOCS] Documentation (README, CONTRIBUTING) overhaul. See [#270][].
+
 # 4.1.1 / 2020-02-10
 
 * [BUGFIX] Add skip check on sysprobe set_fact tasks. See [#259][]
@@ -191,7 +209,16 @@ Initial release, compatible with Ansible v1 & v2
 [#248]: https://github.com/DataDog/ansible-datadog/issues/248
 [#249]: https://github.com/DataDog/ansible-datadog/issues/249
 [#255]: https://github.com/DataDog/ansible-datadog/issues/255
+[#257]: https://github.com/DataDog/ansible-datadog/issues/257
 [#259]: https://github.com/DataDog/ansible-datadog/issues/259
+[#262]: https://github.com/DataDog/ansible-datadog/issues/262
+[#264]: https://github.com/DataDog/ansible-datadog/issues/264
+[#267]: https://github.com/DataDog/ansible-datadog/issues/267
+[#268]: https://github.com/DataDog/ansible-datadog/issues/268
+[#270]: https://github.com/DataDog/ansible-datadog/issues/270
+[#271]: https://github.com/DataDog/ansible-datadog/issues/271
+[@DevKyleS]: https://github.com/DevKyleS
+[@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
 [@dv9io0o]: https://github.com/dv9io0o
@@ -200,6 +227,7 @@ Initial release, compatible with Ansible v1 & v2
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
 [@jeffwidman]: https://github.com/jeffwidman
+[@jharley]: https://github.com/jharley
 [@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
 [@pdecat]: https://github.com/pdecat
