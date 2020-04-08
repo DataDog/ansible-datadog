@@ -1,5 +1,19 @@
 ---
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0 # The Windows orb give you everything you need to start using the Windows executor.
+
+commands:
+  run_win_bash:
+    parameters:
+      command:
+        type: string
+        default: ""
+    steps:
+      - run:
+          command: <<parameters.command>>
+          shell: bash.exe
 
 # Install the latest version of agent 5 and then try to downgrade to an older version
 .install_agent_5: &install_agent_5
@@ -64,7 +78,6 @@ version: 2
     - run: ps aux | grep -v grep | grep datadog-agent
 
 jobs:
-
   ansible_lint:
     docker:
       - image: datadog/docker-library:ansible_debian_2_4
@@ -205,6 +218,28 @@ jobs:
       - OS_TYPE: "centos"
     <<: *install_agent_7
 
+  windows_28_7:
+    executor: win/default
+    steps:
+      - checkout
+      - run: Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
+      - run: Add-AppxPackage .\Ubuntu.appx
+      # - run_win_bash:
+      #     command: echo $PATH
+      # - run_win_bash:
+      #     command: pip install ansible==2.8.*
+      # - run_win_bash:
+      #     command: git clone https://github.com/ansible/ansible && cd ansible && git checkout v2.8.10
+      # - run_win_bash:
+      #     command: pip install fnctl
+      # - run_win_bash:
+      #     command: pip install -e ./ansible/
+      # - run_win_bash:
+      #     command: cp ./ansible/bin/ansible ./ansible/bin/ansible-playbook
+      # - run_win_bash:
+      #     command: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7.yaml" --check
+
+
 workflows:
   version: 2
   test_datadog_role:
@@ -238,3 +273,6 @@ workflows:
       - centos_28_5
       - centos_28_6
       - centos_28_7
+
+      # test windows
+      - windows_28_7
