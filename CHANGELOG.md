@@ -4,10 +4,11 @@ CHANGELOG
 # 4.2.0 / 2020-04-08
 
 * [FEATURE] Ensure the start mode when starting on Windows. See [#271][]. Thanks to [@DevKyleS][].
-  * This change means that the Agent service will always be started on
-  Windows at the end of an Ansible run if `datadog_enabled` is set to `true`.
-  Previously, the current start mode of the Agent service was used (which meant a disabled Agent
-  service would remain disabled after an Ansible run, even with `datadog_enabled: true`).
+  * The Agent service will now always be started on Windows at the end of an Ansible run
+  if `datadog_enabled` is set to `true`.
+  Previously, if the Agent was already installed, the start mode of the existing Agent
+  service was used (which meant a disabled Agent service would remain disabled
+  after an Ansible run, even with `datadog_enabled: true`).
   If you manually disabled the Agent service and want it to remain disabled,
   set `datadog_enabled` to `false`.
 * [FEATURE] Remove old INI config files from v6/v7 configuration. See [#271][]. Thanks to [@b2jrock][].
