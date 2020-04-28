@@ -50,16 +50,23 @@
   set_fact:
     datadog_remove_custom_repo_file: "False"
 
+
 - name: Check if custom repository file exists
   stat:
     path: /etc/apt/sources.list.d/ansible_datadog_custom.list
   register: datadog_custom_repo_file
 
+- name: Fetch custom repository file
+  slurp:
+    src: /etc/apt/sources.list.d/ansible_datadog_custom.list
+  register: datadog_custom_repo_file_contents
+  when: datadog_custom_repo_file.stat.exists
+
 - name: Flag custom repository file for deletion if different from current repository config
   set_fact:
     datadog_remove_custom_repo_file: "{{ datadog_repo_file_contents != datadog_apt_repo }}"
   vars:
-    datadog_repo_file_contents: "{{ lookup('file', '/etc/apt/sources.list.d/ansible_datadog_custom.list') }}"
+    datadog_repo_file_contents: "{{ datadog_custom_repo_file_contents['content'] | b64decode | trim }}"
   when: datadog_custom_repo_file.stat.exists
 
 - name: (Custom) Remove Datadog custom repository file when not set or updated
