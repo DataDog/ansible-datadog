@@ -50,7 +50,6 @@
   set_fact:
     datadog_remove_custom_repo_file: "False"
 
-
 - name: Check if custom repository file exists
   stat:
     path: /etc/apt/sources.list.d/ansible_datadog_custom.list
