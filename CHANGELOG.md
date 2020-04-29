@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 4.2.1 / 2020-04-29
+
+* [BUGFIX] Fix error when checking custom repository file on debian-based systems. See [#275][].
+
 # 4.2.0 / 2020-04-08
 
 * [FEATURE] Ensure the start mode when starting on Windows. See [#271][]. Thanks to [@DevKyleS][].
@@ -217,6 +221,7 @@ Initial release, compatible with Ansible v1 & v2
 [#268]: https://github.com/DataDog/ansible-datadog/issues/268
 [#270]: https://github.com/DataDog/ansible-datadog/issues/270
 [#271]: https://github.com/DataDog/ansible-datadog/issues/271
+[#275]: https://github.com/DataDog/ansible-datadog/issues/275
 [@DevKyleS]: https://github.com/DevKyleS
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
