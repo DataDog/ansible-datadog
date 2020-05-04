@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-# 4.2.1 / 2020-04-29
+# 4.2.1 / 2020-05-04
 
 * [BUGFIX] Fix error when checking custom repository file on debian-based systems. See [#275][].
 
