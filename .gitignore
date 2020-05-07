@@ -3,8 +3,8 @@
 .venv
 
 # pre and post tasks folders (user defined)
-pre_tasks/
-post_tasks/
+tasks/pre_tasks/
+tasks/post_tasks/
 .kitchen/
 .kitchen.local.yml
 .bundle

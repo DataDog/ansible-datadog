@@ -30,7 +30,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 #### Role variables
 
 | Variable                                   | Description                                                                                                                                                                                                                                                                                               |
-|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:-------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                          | Your Datadog API key.                                                                                                                                                                                                                                                                                     |
 | `datadog_site`                             | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                          |
 | `datadog_agent_version`                    | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                       |
@@ -40,7 +40,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_config_ex`                        | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).                                                                                                                                                                                                                      |
 | `datadog_apt_repo`                         | Override the default Datadog `apt` repository.                                                                                                                                                                                                                                                            |
 | `datadog_apt_cache_valid_time`             | Override the default apt cache expiration time (defaults to 1 hour).                                                                                                                                                                                                                                      |
-| `datadog_apt_key_url_new`                  | Override the default URL to Datadog `apt` key (key ID `382E94DE`; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                                                             |
+| `datadog_apt_key_url_new`                  | Override the default URL to Datadog `apt` key (key ID `382E94DE`; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                                                              |
 | `datadog_yum_repo`                         | Override the default Datadog `yum` repository.                                                                                                                                                                                                                                                            |
 | `datadog_yum_gpgkey`                       | Override the default URL to the Datadog `yum` key used to verify Agent v5 and v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                                                                               |
 | `datadog_yum_gpgkey_e09422b3`              | Override the default URL to the Datadog `yum` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                               |
@@ -214,7 +214,7 @@ For v4+ of this role, when `datadog_agent_version` is used to pin a specific Age
 This makes it possible to target hosts running different operating systems in the same Ansible run, for example:
 
 | Provided                            | Installs     | System                |
-|-------------------------------------|--------------|-----------------------|
+|:------------------------------------|:-------------|:----------------------|
 | `datadog_agent_version: 7.16.0`     | `1:7.16.0-1` | Debian and SUSE-based |
 | `datadog_agent_version: 7.16.0`     | `7.16.0-1`   | Redhat-based          |
 | `datadog_agent_version: 7.16.0`     | `7.16.0`     | Windows               |
@@ -234,18 +234,18 @@ The Datadog Ansible role includes support for Datadog Agent v5 for Linux only. T
 
 When the variables `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_repo` are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version` are used:
 
-| # | Default apt repository                    | Default yum repository             | Default zypper repository               |
-|---|-------------------------------------------|------------------------------------|-----------------------------------------|
-| 5 | deb https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm      | https://yum.datadoghq.com/suse/rpm      |
-| 6 | deb https://apt.datadoghq.com stable 6    | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
-| 7 | deb https://apt.datadoghq.com stable 7    | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
+| #  | Default apt repository                    | Default yum repository             | Default zypper repository               |
+|:---|:------------------------------------------|:-----------------------------------|:----------------------------------------|
+| 5  | deb https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm      | https://yum.datadoghq.com/suse/rpm      |
+| 6  | deb https://apt.datadoghq.com stable 6    | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
+| 7  | deb https://apt.datadoghq.com stable 7    | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
 
 To override the default behavior, set these variables to something else than an empty string.
 
 If you previously used the Agent v5 variables, use the **new** variables below with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version.
 
 | Old                          | New                   |
-|------------------------------|-----------------------|
+|:-----------------------------|:----------------------|
 | `datadog_agent5_apt_repo`    | `datadog_apt_repo`    |
 | `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
 | `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
@@ -254,10 +254,10 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 
 When the variable `datadog_windows_download_url` is not set, the official Windows MSI package corresponding to the `datadog_agent_major_version` is used:
 
-| # | Default Windows MSI package URL                                                  |
-|---|----------------------------------------------------------------------------------|
-| 6 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
-| 7 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
+| #  | Default Windows MSI package URL                                                  |
+|:---|:---------------------------------------------------------------------------------|
+| 6  | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
+| 7  | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
 
 To override the default behavior, set this variable to something else than an empty string.
 
@@ -464,22 +464,23 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 ### Debian stretch
 
-On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
+On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration task to the `pre_tasks/main.yml` file to your repo's copy of the present role, then check in your changes to the file `pre_tasks/main.yml`. 
 
 ```yml
 ---
-- hosts: all
-  pre_tasks:
-    - name: Debian Stretch requires the dirmngr package to use apt_key
-      become: yes
-      apt:
-        name: dirmngr
-        state: present
 
-  roles:
-    - { role: datadog.datadog, become: yes }
-  vars:
-    datadog_api_key: "<YOUR_DD_API_KEY>"
+# Place holder plays for user defined pre-tasks
+# Intentionally left blank
+# To use: 1. add tasks here, 
+#         2. exclude this folder/file from .gitignore list
+#         3. check files in this folder to your repo
+#
+- name: Debian Stretch requires the dirmngr package to use apt_key
+  become: yes
+  apt:
+    name: dirmngr
+    state: present
+
 ```
 
 ### Windows
