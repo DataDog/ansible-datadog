@@ -30,7 +30,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 #### Role variables
 
 | Variable                                   | Description                                                                                                                                                                                                                                                                                               |
-|:-------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                          | Your Datadog API key.                                                                                                                                                                                                                                                                                     |
 | `datadog_site`                             | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                          |
 | `datadog_agent_version`                    | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                       |
@@ -214,7 +214,7 @@ For v4+ of this role, when `datadog_agent_version` is used to pin a specific Age
 This makes it possible to target hosts running different operating systems in the same Ansible run, for example:
 
 | Provided                            | Installs     | System                |
-|:------------------------------------|:-------------|:----------------------|
+|-------------------------------------|--------------|-----------------------|
 | `datadog_agent_version: 7.16.0`     | `1:7.16.0-1` | Debian and SUSE-based |
 | `datadog_agent_version: 7.16.0`     | `7.16.0-1`   | Redhat-based          |
 | `datadog_agent_version: 7.16.0`     | `7.16.0`     | Windows               |
@@ -234,18 +234,18 @@ The Datadog Ansible role includes support for Datadog Agent v5 for Linux only. T
 
 When the variables `datadog_apt_repo`, `datadog_yum_repo`, and `datadog_zypper_repo` are not set, the official Datadog repositories for the major version set in `datadog_agent_major_version` are used:
 
-| #  | Default apt repository                    | Default yum repository             | Default zypper repository               |
-|:---|:------------------------------------------|:-----------------------------------|:----------------------------------------|
-| 5  | deb https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm      | https://yum.datadoghq.com/suse/rpm      |
-| 6  | deb https://apt.datadoghq.com stable 6    | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
-| 7  | deb https://apt.datadoghq.com stable 7    | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
+| # | Default apt repository                    | Default yum repository             | Default zypper repository               |
+|----|-------------------------------------------|------------------------------------|-----------------------------------------|
+| 5 | deb https://apt.datadoghq.com stable main | https://yum.datadoghq.com/rpm      | https://yum.datadoghq.com/suse/rpm      |
+| 6 | deb https://apt.datadoghq.com stable 6    | https://yum.datadoghq.com/stable/6 | https://yum.datadoghq.com/suse/stable/6 |
+| 7 | deb https://apt.datadoghq.com stable 7    | https://yum.datadoghq.com/stable/7 | https://yum.datadoghq.com/suse/stable/7 |
 
 To override the default behavior, set these variables to something else than an empty string.
 
 If you previously used the Agent v5 variables, use the **new** variables below with `datadog_agent_major_version` set to `5` or `datadog_agent_version` pinned to a specific Agent v5 version.
 
 | Old                          | New                   |
-|:-----------------------------|:----------------------|
+|------------------------------|-----------------------|
 | `datadog_agent5_apt_repo`    | `datadog_apt_repo`    |
 | `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
 | `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
@@ -254,10 +254,10 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 
 When the variable `datadog_windows_download_url` is not set, the official Windows MSI package corresponding to the `datadog_agent_major_version` is used:
 
-| #  | Default Windows MSI package URL                                                  |
-|:---|:---------------------------------------------------------------------------------|
-| 6  | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
-| 7  | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
+| # | Default Windows MSI package URL                                                  |
+|---|----------------------------------------------------------------------------------|
+| 6 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
+| 7 | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
 
 To override the default behavior, set this variable to something else than an empty string.
 
