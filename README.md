@@ -464,17 +464,11 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 ### Debian stretch
 
-On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration task to the `pre_tasks/main.yml` file to your repo's copy of the present role, then check in your changes to the file `pre_tasks/main.yml`. 
+On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration task to the `tasks/pre_tasks/main.yml` file (create if necessary) then commit the file to your repo's copy of the present role. 
 
 ```yml
 ---
 
-# Place holder plays for user defined pre-tasks
-# Intentionally left blank
-# To use: 1. add tasks here, 
-#         2. exclude this folder/file from .gitignore list
-#         3. check files in this folder to your repo
-#
 - name: Debian Stretch requires the dirmngr package to use apt_key
   become: yes
   apt:
