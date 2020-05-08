@@ -1,13 +1,21 @@
 ---
 
+- name: User-defined Pre Tasks
+  include_tasks: "{{ found_pre_task_file }}"
+  vars:
+    pre_tasks_paths:
+      files:
+        - "pre_tasks/main.yml"
+        - "pre_tasks.yml"
+      skip: true
+    found_pre_task_file: "{{ lookup('first_found', pre_tasks_paths) }}"
+  when: found_pre_task_file|length > 0
+
 - name: Check if OS is supported
   include_tasks: os-check.yml
 
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
-
-- name: User-defined Pre Tasks
-  include_tasks: pre_tasks/main.yml
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
@@ -42,5 +50,12 @@
   when: datadog_integration is defined
 
 - name: User-defined Post Tasks
-  include_tasks: post_tasks/main.yml
-
+  include_tasks: "{{ found_post_task_file }}"
+  vars:
+    post_tasks_paths:
+      files:
+        - "post_tasks/main.yml"
+        - "post_tasks.yml"
+      skip: true
+    found_post_task_file: "{{ lookup('first_found', post_tasks_paths) }}"
+  when: found_post_task_file|length > 0
