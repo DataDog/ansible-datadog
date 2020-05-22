@@ -43,3 +43,8 @@
     - datadogagent
     - datadog-agent-process
     - datadog-agent-trace
+
+- name: Create installation information file
+  template:
+    src: install_info.j2
+    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\install_info"
