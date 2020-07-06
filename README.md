@@ -484,7 +484,7 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
 
 ### Windows
 
-Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, installation of these versions has blocked (starting with version `3.3.0` of this role).
+Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, installation of these versions is now blocked (starting with version `3.3.0` of this role).
 
 **NOTE:** Ansible fails on Windows if `datadog_agent_version` is set to `6.14.0` or `6.14.1`. Use `6.14.2` or above.
 
