@@ -8,5 +8,6 @@ group :development do
   gem 'json_spec', '~> 1.1.0'
   gem 'kitchen-ansible'
   gem 'kitchen-vagrant'
+  gem 'rack', '>= 2.1.4'
   gem 'serverspec'
 end
