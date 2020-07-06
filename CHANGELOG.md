@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+# 4.3.0 / 2020-07-06
+
+* [FEATURE] Record installation information for telemetry and troubleshooting purposes. See [#281][].
+* [BUGFIX] Fix error when facts value doesn't exist on Redhat OS family of the arm architecture. See [#283][]. Thanks to [@kanga333][].
+* [BUGFIX] Fix idempotence when reinstalling same pinned version See [#269][].
+* [DOCS] Update wording on blocking install of problematic agent versions. See [#284][].
+
 # 4.2.1 / 2020-05-04
 
 * [BUGFIX] Fix error when checking custom repository file on debian-based systems. See [#275][].
@@ -219,9 +226,13 @@ Initial release, compatible with Ansible v1 & v2
 [#264]: https://github.com/DataDog/ansible-datadog/issues/264
 [#267]: https://github.com/DataDog/ansible-datadog/issues/267
 [#268]: https://github.com/DataDog/ansible-datadog/issues/268
+[#269]: https://github.com/DataDog/ansible-datadog/issues/269
 [#270]: https://github.com/DataDog/ansible-datadog/issues/270
 [#271]: https://github.com/DataDog/ansible-datadog/issues/271
 [#275]: https://github.com/DataDog/ansible-datadog/issues/275
+[#281]: https://github.com/DataDog/ansible-datadog/issues/281
+[#283]: https://github.com/DataDog/ansible-datadog/issues/283
+[#284]: https://github.com/DataDog/ansible-datadog/issues/284
 [@DevKyleS]: https://github.com/DevKyleS
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
@@ -235,6 +246,7 @@ Initial release, compatible with Ansible v1 & v2
 [@jharley]: https://github.com/jharley
 [@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
+[@kanga333]: https://github.com/kanga333
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
 [@rouge8]: https://github.com/rouge8
