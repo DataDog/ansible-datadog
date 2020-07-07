@@ -6,7 +6,6 @@ CHANGELOG
 * [FEATURE] Record installation information for telemetry and troubleshooting purposes. See [#281][].
 * [BUGFIX] Fix error when facts value doesn't exist on Redhat OS family of the arm architecture. See [#283][]. Thanks to [@kanga333][].
 * [BUGFIX] Fix idempotence when reinstalling same pinned version See [#269][].
-* [DOCS] Update wording on blocking install of problematic agent versions. See [#284][].
 
 # 4.2.1 / 2020-05-04
 
@@ -232,7 +231,6 @@ Initial release, compatible with Ansible v1 & v2
 [#275]: https://github.com/DataDog/ansible-datadog/issues/275
 [#281]: https://github.com/DataDog/ansible-datadog/issues/281
 [#283]: https://github.com/DataDog/ansible-datadog/issues/283
-[#284]: https://github.com/DataDog/ansible-datadog/issues/284
 [@DevKyleS]: https://github.com/DevKyleS
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
