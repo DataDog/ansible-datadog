@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-# 4.3.0 / 2020-07-06
+# 4.3.0 / 2020-07-07
 
 * [FEATURE] Record installation information for telemetry and troubleshooting purposes. See [#281][].
 * [BUGFIX] Fix error when facts value doesn't exist on Redhat OS family of the arm architecture. See [#283][]. Thanks to [@kanga333][].
