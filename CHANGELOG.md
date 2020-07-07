@@ -5,7 +5,7 @@ CHANGELOG
 
 * [FEATURE] Record installation information for telemetry and troubleshooting purposes. See [#281][].
 * [BUGFIX] Fix error when facts value doesn't exist on Redhat OS family of the arm architecture. See [#283][]. Thanks to [@kanga333][].
-* [BUGFIX] Fix idempotence when reinstalling same pinned version See [#269][].
+* [BUGFIX] (Windows) Fix idempotence when reinstalling same pinned version. See [#269][].
 
 # 4.2.1 / 2020-05-04
 
