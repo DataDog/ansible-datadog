@@ -25,6 +25,11 @@
         env: dev
       trace.concentrator:
         extra_aggregators: version
+    datadog_integration:
+      datadog-aqua:
+        action: 'install'
+        version: '1.0.0'
+        third_party: true
     datadog_checks:
       process:
         init_config:
