@@ -285,6 +285,16 @@ Available actions:
       version: <VERSION_TO_INSTALL>
 ```
 
+To install third party integrations, set `third_party` to true:
+
+```yml
+  datadog_integration:
+    <INTEGRATION_NAME>:
+      action: <ACTION>
+      version: <VERSION_TO_INSTALL>
+      third_party: true
+```
+
 ##### Example
 
 This example installs version `1.11.0` of the ElasticSearch integration and removes the `postgres` integration.

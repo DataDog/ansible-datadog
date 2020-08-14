@@ -49,20 +49,19 @@
 # Install integrations
 
 - name: Install pinned version of integrations (Unix)
-  command:
-    argv:
-      - "{{ datadog_agent_binary_path }}"
-      - integration
-      - install
-      - "{{ item.key }}=={{ item.value.version }}"
+  command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
   become: yes
   become_user: "{{ integration_command_user }}"
+  vars:
+    third_party: "{% if 'third_party' in item.value and item.value.third_party == true %}--third-party{% endif %}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "install" and ansible_os_family != "Windows"
 
 - name: Install pinned version of integrations (Windows)
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ item.key }}=={{ item.value.version }}"
+  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
   become: yes
+  vars:
+    third_party: "{% if 'third_party' in item.value and item.value.third_party == true %}--third-party{% endif %}"
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "install" and ansible_os_family == "Windows"
