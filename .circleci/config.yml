@@ -71,7 +71,7 @@ jobs:
     steps:
       - checkout
       - run: pip install ansible-lint
-      - run: ansible-lint -v $(find . -name *yml) -x ANSIBLE0006,ANSIBLE0010,602,ANSIBLE0017
+      - run: ansible-lint -v $(find . -name '*yml')
 
   # Agent 5
 
