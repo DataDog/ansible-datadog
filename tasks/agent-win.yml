@@ -30,14 +30,12 @@
     name: datadogagent
     state: started
     start_mode: auto
-    enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent is not running
   win_service:
     name: "{{ item }}"
     state: stopped
-    enabled: no
   when: not datadog_skip_running_check and not datadog_enabled
   with_list:
     - datadogagent
