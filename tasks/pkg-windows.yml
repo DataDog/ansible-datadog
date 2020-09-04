@@ -71,6 +71,23 @@
   register: download_msi_result
   when: not datadog_skip_windows_install
 
+- name: Create Binary directory root (if not default)
+  win_file:
+    path: "{{ datadog_windows_program_files_dir }}"
+    state: directory
+  when: datadog_windows_program_files_dir | length > 0
+
+- name: Set default permissions on binary directory root (if not default)
+  win_acl:
+    path: "{{ datadog_windows_program_files_dir }}"
+    inherit: ContainerInherit,ObjectInherit
+    user: "BUILTIN\\USERS"
+    rights: ReadAndExecute
+    type: allow
+    state: present
+    propagation: None
+  when: datadog_windows_program_files_dir | length > 0
+
 - name: Install downloaded agent
   win_package:
     path: "{{ download_msi_result.dest }}"

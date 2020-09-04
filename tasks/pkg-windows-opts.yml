@@ -8,6 +8,21 @@
     win_install_args: "{{ win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
   when: datadog_windows_ddagentuser_password | length > 0
 
+- name: Set Program Files Target Directory
+  set_fact:
+    win_install_args: "{{ win_install_args }} PROJECTLOCATION=\"{{ datadog_windows_program_files_dir }}\" "
+  when: datadog_windows_program_files_dir | length > 0
+
+- name: Set Config Files Target Directory
+  set_fact:
+    win_install_args: "{{ win_install_args }} APPLICATIONDATADIRECTORY=\"{{ datadog_windows_config_files_dir }}\" "
+  when: datadog_windows_config_files_dir | length > 0
+
+- name: Set config root for config Files
+  set_fact:
+    datadog_windows_config_root: "{{ datadog_windows_config_files_dir }}"
+  when: datadog_windows_config_files_dir | length > 0
+
 - name: Set Test
   set_fact:
     win_install_args: "{{ win_install_args }}"

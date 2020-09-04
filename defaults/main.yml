@@ -103,6 +103,15 @@ datadog_windows_ddagentuser_name: ""
 # Override to change the password of the created windows user.
 datadog_windows_ddagentuser_password: ""
 
+# Override to change the binary installation directory (instead of default c:\program files\datadog\datadog agent)
+datadog_windows_program_files_dir: ""
+
+# Override to change the root of the configuration directory
+datadog_windows_config_files_dir: ""
+
+# Default configuration root.  Do not modify
+datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
+
 # do not modify.  Default empty value for constructing the list of optional
 # arguments to supply to the windows installer.
 win_install_args: " "
