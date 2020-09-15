@@ -412,7 +412,9 @@ This example installs the latest Agent v6:
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-### EU site
+### Configuring the site
+
+If using a site other than the default `datadoghq.com`, set the `datadog_site` var to the appropiate URL (eg: `datadoghq.eu`,  `us3.datadoghq.com`).
 
 This example sends data to the EU site:
 
