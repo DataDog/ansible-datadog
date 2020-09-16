@@ -1,6 +1,7 @@
 ---
 - name: Install apt-transport-https
   apt:
+    update_cache: yes
     name: apt-transport-https
     state: present
   when: not ansible_check_mode
