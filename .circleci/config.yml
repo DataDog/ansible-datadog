@@ -1,240 +1,89 @@
 ---
-version: 2
+version: 2.1
 
-# Install the latest version of agent 5 and then try to downgrade to an older version
-.install_agent_5: &install_agent_5
-  steps:
-    - checkout
-    # dry run
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" --check
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml" --check
+commands:
+  dry_run:
+    parameters:
+      version:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" --check
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5.yaml" --check
 
-    # install latest agent5
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
+  install_agent_5:
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml"
+      - run: dd-agent info || true
+      - run: ps aux | grep -v grep | grep datadog-agent
 
-    # downgrading to 5.23.0
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
+  install_agent:
+    parameters:
+      version:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml"
+      - run: datadog-agent version
 
-# install the latest version of agent5, upgrade to the latest agent6 and downgrade to an old agent5
-.install_agent_6: &install_agent_6
-  steps:
-    - checkout
-    # dry run
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_6.yaml" --check
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml" --check
+  downgrade_agent_5_23_0:
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5.yaml"
+      - run: dd-agent info || true
+      - run: ps aux | grep -v grep | grep datadog-agent
 
-    # install latest agent5
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
+  test_agent:
+    parameters:
+      version:
+        type: string
+    steps:
+      - checkout
+      - dry_run:
+          version: "<<parameters.version>>"
+      - install_agent_5
+      - when:
+          condition:
+            not:
+              equal: [<<parameters.version>>, "5"]
+          steps:
+            - install_agent:
+                version: <<parameters.version>>
+      - downgrade_agent_5_23_0
 
-    # upgrade to the latest agent6
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_6.yaml"
-    - run: datadog-agent version
-
-    # downgrading to 5.23.0
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
-
-# install the latest version of agent5, upgrade to the latest agent7 and downgrade to an old agent5
-.install_agent_7: &install_agent_7
-  steps:
-    - checkout
-    # dry run
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7.yaml" --check
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml" --check
-
-    # install latest agent5
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
-
-    # upgrade to the latest agent6
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7.yaml"
-    - run: datadog-agent version
-
-    # downgrading to 5.23.0
-    - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5_${OS_TYPE}.yaml"
-    - run: dd-agent info || true
-    - run: ps aux | grep -v grep | grep datadog-agent
 
 jobs:
-
+  # TODO: Use 2.10 image, fix file permission errors (E208) that arise.
   ansible_lint:
     docker:
-      - image: datadog/docker-library:ansible_debian_2_4
+      - image: datadog/docker-library:ansible_debian_2_7
     steps:
       - checkout
       - run: pip install ansible-lint
-      - run: ansible-lint -v $(find . -name '*yml')
+      - run: ansible-lint -v .
 
   # Agent 5
 
-  debian_26_5:
+  test:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
     docker:
-      - image: datadog/docker-library:ansible_debian_2_6
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_5
-
-  centos_26_5:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_6
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_5
-
-  debian_27_5:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_7
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_5
-
-  centos_27_5:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_7
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_5
-
-  debian_28_5:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_8
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_5
-
-  centos_28_5:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_8
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_5
-
-  # Agent 6
-
-  debian_26_6:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_6
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_6
-
-  centos_26_6:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_6
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_6
-
-  debian_27_6:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_7
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_6
-
-  centos_27_6:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_7
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_6
-
-  debian_28_6:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_8
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_6
-
-  centos_28_6:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_8
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_6
-
-  # Agent 7
-
-  debian_26_7:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_6
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_7
-
-  centos_26_7:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_6
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_7
-
-  debian_27_7:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_7
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_7
-
-  centos_27_7:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_7
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_7
-
-  debian_28_7:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_8
-    environment:
-      - OS_TYPE: "debian"
-    <<: *install_agent_7
-
-  centos_28_7:
-    docker:
-      - image: datadog/docker-library:ansible_centos_2_8
-    environment:
-      - OS_TYPE: "centos"
-    <<: *install_agent_7
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_agent:
+          version: "<<parameters.agent_version>>"
 
 workflows:
   version: 2
   test_datadog_role:
     jobs:
       - ansible_lint
-
-      # test debian (apt)
-      #   ansible 2.6
-      - debian_26_5
-      - debian_26_6
-      - debian_26_7
-      #   ansible 2.7
-      - debian_27_5
-      - debian_27_6
-      - debian_27_7
-      #   ansible 2.8
-      - debian_28_5
-      - debian_28_6
-      - debian_28_7
-
-      # test centos (rpm)
-      #   ansible 2.6
-      - centos_26_5
-      - centos_26_6
-      - centos_26_7
-      #   ansible 2.7
-      - centos_27_5
-      - centos_27_6
-      - centos_27_7
-      #   ansible 2.8
-      - centos_28_5
-      - centos_28_6
-      - centos_28_7
+      - test:
+          matrix:
+            parameters:
+              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10"]
+              agent_version: ["5", "6", "7"]
+              os: ["debian", "centos"]
