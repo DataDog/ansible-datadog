@@ -50,7 +50,7 @@ commands:
 
 
 jobs:
-  # TODO: Use 2.10 image, fix file ermission errors (E208) that arise.
+  # TODO: Use 2.10 image, fix file permission errors (E208) that arise.
   ansible_lint:
     docker:
       - image: datadog/docker-library:ansible_debian_2_7
