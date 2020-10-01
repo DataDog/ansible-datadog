@@ -5,6 +5,7 @@ CHANGELOG
 
 * [BUGFIX] (Windows) Fix compatibility with Ansible 2.10. See [#289][].
 * [FEATURE] Adds support for 3rd party integrations via the `datadog-agent integration` command. See [#291][].
+* [BUGFIX] Updates apt cache prior to attempting install.  See [#297][].
 
 # 4.3.0 / 2020-07-07
 
@@ -238,6 +239,7 @@ Initial release, compatible with Ansible v1 & v2
 [#283]: https://github.com/DataDog/ansible-datadog/issues/283
 [#289]: https://github.com/DataDog/ansible-datadog/issues/289
 [#291]: https://github.com/DataDog/ansible-datadog/issues/291
+[#297]: https://github.com/DataDog/ansible-datadog/issues/297
 [@DevKyleS]: https://github.com/DevKyleS
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
