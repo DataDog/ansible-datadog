@@ -1,5 +1,5 @@
 ---
-role_version: 4.2.2
+role_version: 4.4.0
 
 system_probe_config:
   enabled: false
