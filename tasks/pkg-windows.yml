@@ -56,7 +56,6 @@
   when: not datadog_skip_windows_install
 
 - include_tasks: pkg-windows-opts.yml
-  when: not datadog_skip_windows_install
 
 - name: pre-Delete temporary msi
   win_file:
