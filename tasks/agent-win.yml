@@ -39,8 +39,8 @@
   when: not datadog_skip_running_check and not datadog_enabled
   with_list:
     - datadogagent
-    - datadog-agent-process
-    - datadog-agent-trace
+    - datadog-process-agent
+    - datadog-trace-agent
 
 - name: Create installation information file
   template:
