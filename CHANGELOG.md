@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 4.5.0 / 2020-10-26
+
+* [FEATURE] (Windows) Adds support for non-default installation and configuration directories.  See [#295][].
+* [BUGFIX] (Windows) Fixes incorrect service name when validating services.  See [#307][].
+
 # 4.4.0 / 2020-09-30
 
 * [BUGFIX] (Windows) Fix compatibility with Ansible 2.10. See [#289][].
@@ -239,7 +244,9 @@ Initial release, compatible with Ansible v1 & v2
 [#283]: https://github.com/DataDog/ansible-datadog/issues/283
 [#289]: https://github.com/DataDog/ansible-datadog/issues/289
 [#291]: https://github.com/DataDog/ansible-datadog/issues/291
+[#295]: https://github.com/DataDog/ansible-datadog/issues/295
 [#297]: https://github.com/DataDog/ansible-datadog/issues/297
+[#307]: https://github.com/DataDog/ansible-datadog/issues/307
 [@DevKyleS]: https://github.com/DevKyleS
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
