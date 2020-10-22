@@ -2,25 +2,25 @@
 - name: Create main Datadog agent configuration file
   win_template:
     src: datadog.yaml.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\datadog.yaml"
+    dest: "{{ datadog_windows_config_root }}\\datadog.yaml"
   notify: restart datadog-agent-win
 
 - name: Ensure configuration directories are present for each Datadog check
   win_file:
-    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d"
+    path: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.d"
     state: directory
   with_items: '{{ datadog_checks|list }}'
 
 - name: Create a configuration file for each Datadog check
   win_template:
     src: checks.yaml.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
+    dest: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.d\\conf.yaml"
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
 - name: Remove old configuration file for each Datadog check
   win_file:
-    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.yaml"
+    path: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.yaml"
     state: absent
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
@@ -45,4 +45,4 @@
 - name: Create installation information file
   template:
     src: install_info.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\install_info"
+    dest: "{{ datadog_windows_config_root }}\\install_info"
