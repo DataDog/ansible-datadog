@@ -1,13 +1,25 @@
 ---
-- name: Download new RPM key
+- name: Download new RPM key (Expires in 2022)
   get_url:
     url: "{{ datadog_yum_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
     checksum: "sha256:{{ datadog_yum_gpgkey_e09422b3_sha256sum }}"
 
-- name: Import new RPM key
+- name: Import new RPM key (Expires in 2022)
   rpm_key:
     key: /tmp/DATADOG_RPM_KEY_E09422B3.public
+    state: present
+  when: not ansible_check_mode
+
+- name: Download new RPM key (Expires in 2024)
+  get_url:
+    url: "{{ datadog_yum_gpgkey_20200908 }}"
+    dest: /tmp/DATADOG_RPM_KEY_20200908.public
+    checksum: "sha256:{{ datadog_yum_gpgkey_20200908_sha256sum }}"
+
+- name: Import new RPM key (Expires in 2024)
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_20200908.public
     state: present
   when: not ansible_check_mode
 
@@ -18,7 +30,7 @@
     baseurl: "{{ item.value }}"
     enabled: yes
     gpgcheck: yes
-    gpgkey: "{% if datadog_agent_major_version|int == 7 %}{{ datadog_yum_gpgkey_e09422b3 }}{% else %}{{ datadog_yum_gpgkey }}{% endif %}"
+    gpgkey: "{% if datadog_agent_major_version|int == 7 %}{{ datadog_yum_gpgkey_20200908 }}{% else %}{{ datadog_yum_gpgkey }}{% endif %}"
     state: "{% if item.key == datadog_agent_major_version|int and datadog_yum_repo | length == 0 %}present{% else %}absent{% endif %}"
   when: (not ansible_check_mode)
   with_dict:
