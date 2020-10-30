@@ -1,7 +1,7 @@
 ---
 - name: Install latest datadog-agent package
   yum:
-    name: datadog-agent
+    name: "{{ datadog_agent_flavor }}"
     update_cache: yes
     state: latest  # noqa 403
   register: datadog_agent_install

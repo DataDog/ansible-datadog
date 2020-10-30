@@ -37,6 +37,10 @@ datadog_agent_major_version: ""
 # compatible (ie. the major version in datadog_agent_version must be datadog_agent_major_version)
 datadog_agent_version: ""
 
+# Default Package name for APT and RPM installs - can override in playbook for IOT Agent
+datadog_agent_flavor: "datadog-agent"
+
+
 # Default apt repo and keyserver
 
 # By default, the roll uses the official apt Datadog repository for the chosen major version
