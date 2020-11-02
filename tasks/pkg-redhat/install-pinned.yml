@@ -1,7 +1,7 @@
 ---
 - name: Install pinned datadog-agent package
   yum:
-    name: "datadog-agent-{{ datadog_agent_redhat_version }}"
+    name: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version }}"
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
   register: datadog_agent_install
