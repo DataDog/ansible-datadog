@@ -55,12 +55,12 @@
   - name: Stat if 20200908 key (Expires 2024) RPM key already exists
     stat:
       path: /tmp/DATADOG_RPM_KEY_20200908.public
-    register: ddnewkey
+    register: ddnewkey_20200908
   - name: Download 20200908 key (Expires 2024) RPM key (SLES11)
     get_url:
       url: "{{ datadog_zypper_gpgkey_20200908 }}"
       dest: /tmp/DATADOG_RPM_KEY_20200908.public
-    when: not ddnewkey.stat.exists
+    when: not  ddnewkey_20200908.stat.exists
   when: ansible_distribution_version|int == 11
 
 - name: Download 20200908 key (Expires 2024) RPM key

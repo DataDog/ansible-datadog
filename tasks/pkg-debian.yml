@@ -30,8 +30,8 @@
     keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
     state: present
     # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
-  register: result
-  until: not result.failed is defined or not result.failed
+  register: result_2032
+  until: not result_2032.failed is defined or not result_2032.failed
   retries: "{{ datadog_apt_key_retries }}"
   when: datadog_apt_key_url_new is not defined
 
