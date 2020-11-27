@@ -67,7 +67,7 @@
   yum_repository:
     name: "ansible_datadog_{{ item }}.repo"
     state: absent
-  with_items: [ 5, 6, 7 ]
+  with_items: [ 5, 6, 7, "custom" ]
 
 - include_tasks: pkg-redhat/install-pinned.yml
   when: datadog_agent_redhat_version is defined
