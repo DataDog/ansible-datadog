@@ -16,6 +16,7 @@
   template:
     src: datadog.yaml.j2
     dest: /etc/datadog-agent/datadog.yaml
+    mode: 0640
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
@@ -32,6 +33,7 @@
   template:
     src: checks.yaml.j2
     dest: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
+    mode: 0640
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   with_items: "{{ datadog_checks|list }}"
