@@ -76,7 +76,7 @@
 
 - name: Remove old yum repo files
   yum_repository:
-    name: "ansible_datadog_{{ item }}.repo"
+    name: "ansible_datadog_{{ item }}"
     state: absent
   with_items: [ 5, 6, 7, "custom" ]
 
