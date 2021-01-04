@@ -342,7 +342,6 @@ The following example sends data to Datadog US (default), enables logs, and conf
       log_level: INFO
       apm_config:
         enabled: true
-        max_traces_per_second: 10
       logs_enabled: true  # available with Agent v6 and v7
     datadog_checks:
       process:
