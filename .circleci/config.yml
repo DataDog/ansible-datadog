@@ -30,7 +30,7 @@ commands:
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
 
-  test_agent:
+  test_agent_install_downgrade:
     parameters:
       version:
         type: string
@@ -48,6 +48,14 @@ commands:
                 version: <<parameters.version>>
       - downgrade_agent_5_23_0
 
+  test_agent_install:
+    parameters:
+      version:
+        type: string
+    steps:
+      - checkout
+      - install_agent:
+          version: <<parameters.version>>
 
 jobs:
   # TODO: Use 2.10 image, fix file permission errors (E208) that arise.
@@ -59,9 +67,7 @@ jobs:
       - run: pip install ansible-lint
       - run: ansible-lint -v .
 
-  # Agent 5
-
-  test:
+  test_install_downgrade:
     parameters:
       ansible_version:
         type: string
@@ -73,7 +79,22 @@ jobs:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
       - checkout
-      - test_agent:
+      - test_agent_install_downgrade:
+          version: "<<parameters.agent_version>>"
+
+  test_install:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_agent_install:
           version: "<<parameters.agent_version>>"
 
 workflows:
@@ -81,9 +102,16 @@ workflows:
   test_datadog_role:
     jobs:
       - ansible_lint
-      - test:
+      - test_install_downgrade:
           matrix:
             parameters:
               ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10"]
               agent_version: ["5", "6", "7"]
               os: ["debian", "centos"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["2_8", "2_9", "2_10"]
+              agent_version: ["6", "7"]
+              os: ["suse"]

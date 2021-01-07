@@ -33,9 +33,13 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 |--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                          | Your Datadog API key.                                                                                                                                                                                                                                                                                     |
 | `datadog_site`                             | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                          |
+| `datadog_agent_flavor`                     | Override the default Debian / Redhat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.                                                                                                                                                                 |  
 | `datadog_agent_version`                    | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                       |
 | `datadog_agent_major_version`              | The major version of the Agent to install. The possible values are 5, 6, or 7 (default). If `datadog_agent_version` is set, it takes precedence otherwise the latest version of the specified major is installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. |
 | `datadog_checks`                           | YAML configuration for Agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6 and v7, <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                                                            |
+| `datadog_disable_untracked_checks` | Set to `true` to remove all checks not present in `datadog_checks` and `datadog_additional_checks`. |
+| `datadog_additional_checks` | List of additional checks that won't be removed if `datadog_disable_untracked_checks` is set to `true`. |
+| `datadog_disable_default_checks` | Set to `true` to remove all default checks. |
 | `datadog_config`                           | Settings for the main Agent configuration file: <br> - `/etc/datadog-agent/datadog.yaml` for Agent v6 and v7,<br> - `/etc/dd-agent/datadog.conf` for Agent v5 (under the `[Main]` section).                                                                                                               |
 | `datadog_config_ex`                        | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).                                                                                                                                                                                                                      |
 | `datadog_apt_repo`                         | Override the default Datadog `apt` repository.                                                                                                                                                                                                                                                            |
@@ -341,7 +345,6 @@ The following example sends data to Datadog US (default), enables logs, and conf
       log_level: INFO
       apm_config:
         enabled: true
-        max_traces_per_second: 10
       logs_enabled: true  # available with Agent v6 and v7
     datadog_checks:
       process:

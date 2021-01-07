@@ -1,5 +1,5 @@
 ---
-role_version: 4.2.2
+role_version: 4.5.0
 
 system_probe_config:
   enabled: false
@@ -11,6 +11,18 @@ datadog_config: {}
 
 # default checks enabled
 datadog_checks: {}
+
+# set this to `true` to delete untracked checks
+datadog_disable_untracked_checks: false
+
+# Add additional checks to keep when `datadog_disable_untracked_checks` is set to `true`
+datadog_additional_checks: []
+
+# set this to `true` to delete default checks
+datadog_disable_default_checks: false
+
+# default tracked checks
+datadog_tracked_checks: "{{ datadog_checks | list + datadog_additional_checks }}"
 
 # default user/group
 datadog_user: dd-agent
@@ -37,9 +49,13 @@ datadog_agent_major_version: ""
 # compatible (ie. the major version in datadog_agent_version must be datadog_agent_major_version)
 datadog_agent_version: ""
 
+# Default Package name for APT and RPM installs - can override in playbook for IOT Agent
+datadog_agent_flavor: "datadog-agent"
+
+
 # Default apt repo and keyserver
 
-# By default, the roll uses the official apt Datadog repository for the chosen major version
+# By default, the role uses the official apt Datadog repository for the chosen major version
 # Use the datadog_apt_repo variable to override the repository used.
 datadog_apt_repo: ""
 
@@ -52,17 +68,20 @@ datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 
 # Default yum repo and keys
 
-# By default, the roll uses the official yum Datadog repository for the chosen major version
+# By default, the role uses the official yum Datadog repository for the chosen major version
 # Use the datadog_yum_repo variable to override the repository used.
 datadog_yum_repo: ""
 
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
+# this key expires in 2022
 datadog_yum_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
-
+# this key expires in 2024
+datadog_yum_gpgkey_20200908: "http://yum.datadoghq.com/DATADOG_RPM_KEY_20200908.public"
+datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
 # Default zypper repo and keys
 
-# By default, the roll uses the official zypper Datadog repository for the chosen major version
+# By default, the role uses the official zypper Datadog repository for the chosen major version
 # Use the datadog_zypper_repo variable to override the repository used.
 datadog_zypper_repo: ""
 
@@ -70,6 +89,8 @@ datadog_zypper_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
 datadog_zypper_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
+datadog_zypper_gpgkey_20200908: "http://yum.datadoghq.com/DATADOG_RPM_KEY_20200908.public"
+datadog_zypper_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
 
 # Avoid checking if the agent is running or not. This can be useful if you're
 # using sysvinit and providing your own init script.
@@ -102,6 +123,15 @@ datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-st
 datadog_windows_ddagentuser_name: ""
 # Override to change the password of the created windows user.
 datadog_windows_ddagentuser_password: ""
+
+# Override to change the binary installation directory (instead of default c:\program files\datadog\datadog agent)
+datadog_windows_program_files_dir: ""
+
+# Override to change the root of the configuration directory
+datadog_windows_config_files_dir: ""
+
+# Default configuration root.  Do not modify
+datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
 
 # do not modify.  Default empty value for constructing the list of optional
 # arguments to supply to the windows installer.

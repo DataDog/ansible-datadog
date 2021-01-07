@@ -2,25 +2,46 @@
 - name: Create main Datadog agent configuration file
   win_template:
     src: datadog.yaml.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\datadog.yaml"
+    dest: "{{ datadog_windows_config_root }}\\datadog.yaml"
   notify: restart datadog-agent-win
+
+- name: Register all checks directories present in datadog
+  win_find:
+    paths: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d"
+    pattern: "*.d"
+    file_type: directory
+  register: datadog_conf_directories
+  when: datadog_disable_untracked_checks or datadog_disable_default_checks
+
+- name: Delete checks not present in datadog_tracked_checks
+  win_file:
+    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_disable_untracked_checks and item not in datadog_tracked_checks
+
+- name: Delete default checks
+  file:
+    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_disable_default_checks
 
 - name: Ensure configuration directories are present for each Datadog check
   win_file:
-    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d"
+    path: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.d"
     state: directory
   with_items: '{{ datadog_checks|list }}'
 
 - name: Create a configuration file for each Datadog check
   win_template:
     src: checks.yaml.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
+    dest: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.d\\conf.yaml"
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
 - name: Remove old configuration file for each Datadog check
   win_file:
-    path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.yaml"
+    path: "{{ datadog_windows_config_root }}\\conf.d\\{{ item }}.yaml"
     state: absent
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
@@ -39,10 +60,10 @@
   when: not datadog_skip_running_check and not datadog_enabled
   with_list:
     - datadogagent
-    - datadog-agent-process
-    - datadog-agent-trace
+    - datadog-process-agent
+    - datadog-trace-agent
 
 - name: Create installation information file
   template:
     src: install_info.j2
-    dest: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\install_info"
+    dest: "{{ datadog_windows_config_root }}\\install_info"

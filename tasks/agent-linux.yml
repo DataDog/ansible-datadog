@@ -4,7 +4,7 @@
 
 - name: add "{{ datadog_user }}" user to additional groups
   user: name="{{ datadog_user }}" groups="{{ datadog_additional_groups }}" append=yes
-  when: datadog_additional_groups is defined and (datadog_additional_groups | length != 0)
+  when: datadog_additional_groups | default([], true) | length > 0
   notify: restart datadog-agent
 
 - name: Create Datadog agent config directory
@@ -16,9 +16,31 @@
   template:
     src: datadog.yaml.j2
     dest: /etc/datadog-agent/datadog.yaml
+    mode: 0640
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   notify: restart datadog-agent
+
+- name: Register all checks directories present in datadog
+  find:
+    paths: /etc/datadog-agent/conf.d/
+    pattern: "*.d"
+    file_type: directory
+  register: datadog_conf_directories
+  when: datadog_disable_untracked_checks or datadog_disable_default_checks
+
+- name: Delete checks not present in datadog_tracked_checks
+  file:
+    path: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_disable_untracked_checks and item not in datadog_tracked_checks
+
+- name: Delete all default checks
+  file:
+    path: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml.default"
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_disable_default_checks
 
 - name: Ensure configuration directories are present for each Datadog check
   file:
@@ -32,6 +54,7 @@
   template:
     src: checks.yaml.j2
     dest: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
+    mode: 0640
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
   with_items: "{{ datadog_checks|list }}"
@@ -96,6 +119,14 @@
     - datadog-agent
     - datadog-agent-process
     - datadog-agent-trace
+
+- name: Ensure datadog-agent-security is not running
+  service:
+    name: datadog-agent-security
+    state: stopped
+    enabled: no
+  when: not datadog_skip_running_check and not datadog_enabled
+  ignore_errors: yes # Since older versions of the Agent don't include the security agent
 
 - name: Create installation information file
   template:

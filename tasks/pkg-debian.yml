@@ -6,7 +6,7 @@
     state: present
   when: not ansible_check_mode
 
-- name: Install ubuntu apt-key server
+- name: Install apt-key from keyserver (Expires 2022)
   apt_key:
     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
     keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
@@ -17,9 +17,27 @@
   retries: "{{ datadog_apt_key_retries }}"
   when: datadog_apt_key_url_new is not defined
 
-- name: Install Datadog apt-key
+- name: Install Datadog apt-key from url (Expires 2022)
   apt_key:
     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+    url: "{{ datadog_apt_key_url_new }}"
+    state: present
+  when: datadog_apt_key_url_new is defined
+
+- name: Install apt-key from keyserver (Expires 2032)
+  apt_key:
+    id: D75CEA17048B9ACBF186794B32637D44F14F620E
+    keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
+    state: present
+    # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
+  register: result_2032
+  until: not result_2032.failed is defined or not result_2032.failed
+  retries: "{{ datadog_apt_key_retries }}"
+  when: datadog_apt_key_url_new is not defined
+
+- name: Install Datadog apt-key from url (Expires 2032)
+  apt_key:
+    id: D75CEA17048B9ACBF186794B32637D44F14F620E
     url: "{{ datadog_apt_key_url_new }}"
     state: present
   when: datadog_apt_key_url_new is defined
