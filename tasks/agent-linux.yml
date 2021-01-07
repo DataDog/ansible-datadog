@@ -120,6 +120,14 @@
     - datadog-agent-process
     - datadog-agent-trace
 
+- name: Ensure datadog-agent-security is not running
+  service:
+    name: datadog-agent-security
+    state: stopped
+    enabled: no
+  when: not datadog_skip_running_check and not datadog_enabled
+  ignore_errors: yes # Since older versions of the Agent don't include the security agent
+
 - name: Create installation information file
   template:
     src: install_info.j2
