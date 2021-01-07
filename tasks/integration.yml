@@ -2,22 +2,22 @@
 - name: set agent binary path (windows)
   set_fact:
     datadog_agent_binary_path: "{{ datadog_agent_binary_path_windows }}"
-  when: ansible_os_family == "Windows"
+  when: ansible_facts.os_family == "Windows"
 
 - name: set agent binary path (unix)
   set_fact:
     datadog_agent_binary_path: "{{ datadog_agent_binary_path_linux }}"
-  when: ansible_os_family != "Windows"
+  when: ansible_facts.os_family != "Windows"
 
 - name: set agent user for integration commmand (windows)
   set_fact:
     integration_command_user: "{{ integration_command_user_windows }}"
-  when: ansible_os_family == "Windows"
+  when: ansible_facts.os_family == "Windows"
 
 - name: set agent agent binary path (unix)
   set_fact:
     integration_command_user: "{{ integration_command_user_linux }}"
-  when: ansible_os_family != "Windows"
+  when: ansible_facts.os_family != "Windows"
 
 - name: Validate integrations actions
   fail:
@@ -37,14 +37,14 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove" and ansible_os_family != "Windows"
+  when: item.value.action == "remove" and ansible_facts.os_family != "Windows"
 
 - name: Removing integrations (Windows)
   win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
   become: yes
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove" and ansible_os_family == "Windows"
+  when: item.value.action == "remove" and ansible_facts.os_family == "Windows"
 
 # Install integrations
 
@@ -55,7 +55,7 @@
   vars:
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_os_family != "Windows"
+  when: item.value.action == "install" and ansible_facts.os_family != "Windows"
 
 - name: Install pinned version of integrations (Windows)
   win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
@@ -64,4 +64,4 @@
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_os_family == "Windows"
+  when: item.value.action == "install" and ansible_facts.os_family == "Windows"
