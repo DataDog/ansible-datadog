@@ -26,7 +26,7 @@
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
     state: absent
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_disable_default_checks
+  when: datadog_disable_default_checks and item not in datadog_tracked_check
 
 - name: Ensure configuration directories are present for each Datadog check
   win_file:
