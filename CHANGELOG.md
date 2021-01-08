@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+# 4.6.0 / 2021-01-11
+
+* [FEATURE] Allow removing checks. See [#151] and [#320]. Thanks [@Jno21].
+* [BUGFIX] Make security-agent also affected by datadog_enabled. See [#318].
+* [BUGFIX] Change configuration perms on Linux. See [#313]. Thanks [@loliee].
+* [CHORE] Do not name the RPM repo file differently depending on the Agent version. See [#311].
+* [CHORE] Replace facts from 'ansible_*' to using 'ansible_facts' dictionary. See [#304]. Thanks to [@samasc30].
+
 # 4.5.0 / 2020-11-06
 
 * [FEATURE] (Windows) Adds support for non-default installation and configuration directories.  See [#295][].
@@ -216,6 +224,7 @@ Initial release, compatible with Ansible v1 & v2
 [#105]: https://github.com/DataDog/ansible-datadog/issues/105
 [#107]: https://github.com/DataDog/ansible-datadog/issues/107
 [#116]: https://github.com/DataDog/ansible-datadog/issues/116
+[#151]: https://github.com/DataDog/ansible-datadog/issues/151
 [#203]: https://github.com/DataDog/ansible-datadog/issues/203
 [#220]: https://github.com/DataDog/ansible-datadog/issues/220
 [#224]: https://github.com/DataDog/ansible-datadog/issues/224
@@ -250,10 +259,16 @@ Initial release, compatible with Ansible v1 & v2
 [#295]: https://github.com/DataDog/ansible-datadog/issues/295
 [#297]: https://github.com/DataDog/ansible-datadog/issues/297
 [#303]: https://github.com/DataDog/ansible-datadog/issues/303
+[#304]: https://github.com/DataDog/ansible-datadog/issues/304
 [#307]: https://github.com/DataDog/ansible-datadog/issues/307
 [#308]: https://github.com/DataDog/ansible-datadog/issues/308
 [#309]: https://github.com/DataDog/ansible-datadog/issues/309
+[#311]: https://github.com/DataDog/ansible-datadog/issues/311
+[#313]: https://github.com/DataDog/ansible-datadog/issues/313
+[#318]: https://github.com/DataDog/ansible-datadog/issues/318
+[#320]: https://github.com/DataDog/ansible-datadog/issues/320
 [@DevKyleS]: https://github.com/DevKyleS
+[@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
 [@dbr1993]: https://github.com/dbr1993
@@ -267,9 +282,11 @@ Initial release, compatible with Ansible v1 & v2
 [@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
 [@kanga333]: https://github.com/kanga333
+[@loliee]: https://github.com/loliee
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
 [@rouge8]: https://github.com/rouge8
+[@samasc30]: https://github.com/samasc30
 [@the-real-cphilips]: https://github.com/the-real-cphilips
 [@tomgoren]: https://github.com/tomgoren
 [@xp-1000]: https://github.com/xp-1000
