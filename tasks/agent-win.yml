@@ -8,7 +8,8 @@
 - name: Register all checks directories present in datadog
   win_find:
     paths: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d"
-    pattern: "*.d"
+    patterns:
+    - "*.d"
     file_type: directory
   register: datadog_conf_directories
   when: datadog_disable_untracked_checks or datadog_disable_default_checks
@@ -17,14 +18,17 @@
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
     state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_disable_untracked_checks and item not in datadog_tracked_checks
+  notify: restart datadog-agent-win
 
 - name: Delete default checks
-  file:
+  win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_disable_default_checks
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_disable_default_checks and item not in datadog_tracked_checks
+  notify: restart datadog-agent-win
 
 - name: Ensure configuration directories are present for each Datadog check
   win_file:
