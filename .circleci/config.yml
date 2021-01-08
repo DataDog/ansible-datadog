@@ -65,7 +65,7 @@ jobs:
     steps:
       - checkout
       - run: pip install ansible-lint
-      - run: ansible-lint -x 204 -v . # exclude 204 (line too long)
+      - run: ansible-lint -v .
 
   test_install_downgrade:
     parameters:
