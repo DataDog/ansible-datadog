@@ -39,6 +39,7 @@
 - name: Delete all default checks
   file:
     path: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml.default"
+    state: absent
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_disable_default_checks
 

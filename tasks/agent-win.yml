@@ -23,6 +23,7 @@
 - name: Delete default checks
   file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
+    state: absent
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_disable_default_checks
 
