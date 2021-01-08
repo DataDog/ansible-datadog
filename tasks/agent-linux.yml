@@ -24,7 +24,8 @@
 - name: Register all checks directories present in datadog
   find:
     paths: /etc/datadog-agent/conf.d/
-    pattern: "*.d"
+    patterns:
+    - "*.d"
     file_type: directory
   register: datadog_conf_directories
   when: datadog_disable_untracked_checks or datadog_disable_default_checks

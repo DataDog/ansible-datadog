@@ -29,7 +29,8 @@
 - name: Register all checks files present in datadog
   find:
     paths: /etc/dd-agent/conf.d/
-    pattern: "*.yaml"
+    patterns:
+    - "*.yaml"
     file_type: file
   register: datadog_conf_files
   when: datadog_disable_untracked_checks
@@ -37,7 +38,8 @@
 - name: Register all checks files present in datadog
   find:
     paths: /etc/dd-agent/conf.d/
-    pattern: "*.yaml.default"
+    patterns:
+    - "*.yaml.default"
     file_type: file
   register: datadog_conf_files_default
   when: datadog_disable_default_checks
