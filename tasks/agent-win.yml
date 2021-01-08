@@ -22,7 +22,7 @@
   when: datadog_disable_untracked_checks and item not in datadog_tracked_checks
 
 - name: Delete default checks
-  file:
+  win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
     state: absent
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
