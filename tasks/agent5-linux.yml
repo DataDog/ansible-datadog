@@ -55,7 +55,8 @@
   file:
     path: "/etc/dd-agent/conf.d/{{ item }}.yaml.default"
     state: absent
-  loop: "{{ datadog_conf_files_default.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"
+  loop: "{{ datadog_conf_files_default.files | map(attribute='path') | list
+             | map('basename') | list | map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"
   when: datadog_disable_default_checks and item not in datadog_tracked_check
 
 - name: (agent5) Create a configuration file for each Datadog check
