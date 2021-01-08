@@ -57,7 +57,7 @@
     state: absent
   loop: "{{ datadog_conf_files_default.files | map(attribute='path') | list
              | map('basename') | list | map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"
-  when: datadog_disable_default_checks and item not in datadog_tracked_check
+  when: datadog_disable_default_checks and item not in datadog_tracked_checks
 
 - name: (agent5) Create a configuration file for each Datadog check
   template:
