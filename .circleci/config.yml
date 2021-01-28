@@ -164,7 +164,7 @@ workflows:
               os: ["centos8"]
               python: ["python3"]
 
-      # Newer suse images only have Pythpn 3 installed
+      # Newer suse images only have Python 3 installed
       - test_install:
           matrix:
             parameters:
