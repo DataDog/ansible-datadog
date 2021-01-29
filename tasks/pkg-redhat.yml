@@ -3,7 +3,7 @@
   fail:
     msg: "The installation of the Agent on CentOS / RHEL versions < 8 requires the 'yum' module, which is not compatible with Python 3.
           To run this role, use a Python 2 interpreter on hosts running CentOS / RHEL < 8."
-  when: (ansible_facts.distribution_major_version | int <= 7) and (ansible_facts.python.version.major | int >= 3)
+  when: (not datadog_ignore_old_centos_python3_error) and (ansible_facts.distribution_major_version | int <= 7) and (ansible_facts.python.version.major | int >= 3)
 
 - name: Download new RPM key (Expires in 2022)
   get_url:
