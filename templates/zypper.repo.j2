@@ -15,5 +15,5 @@ autorefresh=1
 baseurl={{ baseurl }}
 
 type=rpm-md
-gpgcheck=1
+gpgcheck={{ datadog_zypper_gpgcheck|int }}
 repo_gpgcheck=0
