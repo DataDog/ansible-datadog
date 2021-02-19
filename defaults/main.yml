@@ -72,6 +72,7 @@ datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 # Use the datadog_yum_repo variable to override the repository used.
 datadog_yum_repo: ""
 
+datadog_yum_gpgcheck: yes
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 # this key expires in 2022
 datadog_yum_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
@@ -85,6 +86,7 @@ datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077
 # Use the datadog_zypper_repo variable to override the repository used.
 datadog_zypper_repo: ""
 
+datadog_zypper_gpgcheck: yes
 datadog_zypper_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
 datadog_zypper_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"

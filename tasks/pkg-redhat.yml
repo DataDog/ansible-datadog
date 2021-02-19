@@ -29,7 +29,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: yes
-    gpgcheck: yes
+    gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: "{{ datadog_yum_gpgkey }}"
   register: repofile5
   when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
@@ -40,7 +40,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent6_yum_repo }}"
     enabled: yes
-    gpgcheck: yes
+    gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: "{{ datadog_yum_gpgkey }}"
   register: repofile6
   when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
@@ -51,7 +51,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent7_yum_repo }}"
     enabled: yes
-    gpgcheck: yes
+    gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: "{{ datadog_yum_gpgkey_20200908 }}"
   register: repofile7
   when: (datadog_agent_major_version|int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
@@ -62,7 +62,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_yum_repo }}"
     enabled: yes
-    gpgcheck: yes
+    gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: "{{ datadog_yum_gpgkey }}"
   register: repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
