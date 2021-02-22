@@ -74,7 +74,7 @@ datadog_yum_repo: ""
 
 datadog_yum_gpgcheck: yes
 datadog_yum_gpgkey: "https://yum.datadoghq.com/DATADOG_RPM_KEY.public"
-# the CURRENT key always points to the key that is used to sign repodata and latest pakcages
+# the CURRENT key always points to the key that is used to sign repodata and latest packages
 datadog_yum_gpgkey_current: "https://yum.datadoghq.com/DATADOG_RPM_KEY_CURRENT.public"
 # this key expires in 2022
 datadog_yum_gpgkey_e09422b3: "https://yum.datadoghq.com/DATADOG_RPM_KEY_E09422B3.public"
