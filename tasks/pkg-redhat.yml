@@ -7,6 +7,17 @@
         and (ansible_facts.distribution_major_version | int <= 7)
         and (ansible_facts.python.version.major | int >= 3)
 
+- name: Download current RPM key
+  get_url:
+    url: "{{ datadog_yum_gpgkey_current }}"
+    dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
+
+- name: Import current RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_CURRENT.public
+    state: present
+  when: not ansible_check_mode
+
 - name: Download new RPM key (Expires in 2022)
   get_url:
     url: "{{ datadog_yum_gpgkey_e09422b3 }}"
@@ -38,7 +49,12 @@
     baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: yes
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: "{{ datadog_yum_gpgkey }}"
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+      "{{ datadog_yum_gpgkey }}",
+    ]
   register: repofile5
   when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -49,7 +65,12 @@
     baseurl: "{{ datadog_agent6_yum_repo }}"
     enabled: yes
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: "{{ datadog_yum_gpgkey }}"
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+      "{{ datadog_yum_gpgkey }}",
+    ]
   register: repofile6
   when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -60,7 +81,11 @@
     baseurl: "{{ datadog_agent7_yum_repo }}"
     enabled: yes
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: "{{ datadog_yum_gpgkey_20200908 }}"
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: repofile7
   when: (datadog_agent_major_version|int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -71,7 +96,12 @@
     baseurl: "{{ datadog_yum_repo }}"
     enabled: yes
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: "{{ datadog_yum_gpgkey }}"
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+      "{{ datadog_yum_gpgkey }}",
+    ]
   register: repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
