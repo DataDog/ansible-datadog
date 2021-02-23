@@ -11,6 +11,7 @@
   get_url:
     url: "{{ datadog_yum_gpgkey_current }}"
     dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
+    force: yes
 
 - name: Import current RPM key
   rpm_key:

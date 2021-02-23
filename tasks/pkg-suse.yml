@@ -8,6 +8,7 @@
     get_url:
       url: "{{ datadog_zypper_gpgkey_current }}"
       dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
+      force: yes
     when: not ddkeycurrent.stat.exists
   when: ansible_distribution_version|int == 11
 
@@ -15,6 +16,7 @@
   get_url:
     url: "{{ datadog_zypper_gpgkey_current }}"
     dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
+    force: yes
   when: ansible_distribution_version|int >= 12
 
 - name: Import current RPM key
