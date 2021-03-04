@@ -161,9 +161,12 @@ The following variables are available for live processes:
 
 #### System Probe
 
-The [Network Performance Monitoring][7] (NPM) system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+The system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
 
-**Note**: The system probe only works on Linux with the Agent v6+.
+The [Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
+
+**Note**: The system probe works on Linux with the Agent v6+.
+**Note**: NPM is supported on Windows starting with the Agent version 6.27/7.27.
 
 #### Example configuration
 
@@ -176,6 +179,8 @@ datadog_config:
 system_probe_config:
   enabled: true
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+network_config:
+  enabled: true
 ```
 
 Once modification is complete, follow the steps below:
