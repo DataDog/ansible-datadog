@@ -161,7 +161,7 @@ The following variables are available for live processes:
 * `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line (defaults to `true`).
 * `custom_sensitive_words`: Expands the default list of sensitive words used by the command line scrubber.
 
-#### System Probe
+#### System probe
 
 The [Network Performance Monitoring][7] (NPM) system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
 
@@ -434,7 +434,7 @@ This example sends data to the EU site:
 
 ### Windows
 
-On Windows, the `become: yes` option should be removed because it will make the role fail. Below are two methods to make the example playbooks work with Windows hosts:
+On Windows, remove the `become: yes` option so the role does not fail. Below are two methods to make the example playbooks work with Windows hosts:
 
 #### Inventory file
 
