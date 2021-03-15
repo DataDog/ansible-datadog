@@ -177,7 +177,6 @@ datadog_config:
     scrub_args: true
     custom_sensitive_words: ['consul_token','dd_api_key']
 system_probe_config:
-  enabled: true
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 network_config:
   enabled: true
