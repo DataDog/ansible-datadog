@@ -161,7 +161,7 @@ The following variables are available for live processes:
 
 #### System Probe
 
-The system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+The system probe is configured under the `network_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
 
 The [Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
 
