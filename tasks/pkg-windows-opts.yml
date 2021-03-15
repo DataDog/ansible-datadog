@@ -87,9 +87,8 @@
   set_fact:
     win_install_args: "{{ win_install_args }}"
 
-# Add the installation arguments if Windows NPM is to be installed
+# Add the installation arguments to install Windows NPM.
 - name: Set Windows NPM flag
   set_fact:
     win_install_args: "{{ win_install_args }} NPM=true"
   when: datadog_sysprobe_enabled
-
