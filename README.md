@@ -165,7 +165,7 @@ The system probe is configured under the `network_config` variable. Any variable
 
 [Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
 
-**Note**: The system probe works on Linux with the Agent v6+.
+**Note**: The system probe works on Linux with Agent v6+. NPM is supported on Windows with Agent v6.27+ and v7.27+.
 **Note**: NPM is supported on Windows starting with the Agent version 6.27/7.27.
 
 #### Example configuration
