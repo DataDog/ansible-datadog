@@ -61,11 +61,12 @@
   win_service:
     name: "{{ item }}"
     state: stopped
+    start_mode: disabled
   when: not datadog_skip_running_check and not datadog_enabled
   with_list:
-    - datadogagent
-    - datadog-process-agent
     - datadog-trace-agent
+    - datadog-process-agent
+    - datadogagent    
 
 - name: Create installation information file
   template:
