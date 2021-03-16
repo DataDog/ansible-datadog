@@ -1,9 +1,20 @@
 ---
-- name: Install pinned datadog-agent package
-  yum:
+- name: Install pinned datadog-agent package (dnf)
+  dnf:
     name: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version }}"
+    update_cache: yes
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
   register: datadog_agent_install
-  when: not ansible_check_mode
+  when: not ansible_check_mode and ansible_facts.python.version.major | int >= 3
+  notify: restart datadog-agent
+
+- name: Install pinned datadog-agent package (yum)
+  yum:
+    name: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version }}"
+    update_cache: yes
+    state: present
+    allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
+  register: datadog_agent_install
+  when: not ansible_check_mode and ansible_facts.python.version.major | int < 3
   notify: restart datadog-agent

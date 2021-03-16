@@ -82,6 +82,13 @@ datadog_yum_gpgkey_20200908: "http://yum.datadoghq.com/DATADOG_RPM_KEY_20200908.
 datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
 # Default zypper repo and keys
 
+# By default, we fail early & print a helpful message if a Python 3 interpreter is used on CentOS < 8, as
+# the 'yum' module is only available on Python 2, and the 'python3-dnf' package is not available before
+# CentOS 8.
+# If set to true, this option removes this check and allows the install to proceed. Useful in specific setups
+# where an old CentOS host using a Python 3 interpreter does have 'dnf' (eg. through backports).
+datadog_ignore_old_centos_python3_error: false
+
 # By default, the role uses the official zypper Datadog repository for the chosen major version
 # Use the datadog_zypper_repo variable to override the repository used.
 datadog_zypper_repo: ""
