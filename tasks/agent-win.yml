@@ -58,7 +58,7 @@
   with_list:
     - datadog-trace-agent
     - datadog-process-agent
-    
+
 - name: Ensure datadog-agent is running
   win_service:
     name: datadogagent
@@ -66,7 +66,7 @@
     start_mode: auto
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
-- name: Ensure datadog-agent is not running
+- name: Ensure datadog-agent is disabled
   win_service:
     name: "{{ item }}"
     state: stopped
