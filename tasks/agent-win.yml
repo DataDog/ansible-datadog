@@ -50,12 +50,6 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
-- name: Create system-probe configuration file
-  win_template:
-    src: system-probe.yaml.j2
-    dest: "{{ datadog_windows_config_root }}\\system-probe.yaml"
-  when: datadog_sysprobe_enabled
-
 - name: Ensure datadog-agent is running
   win_service:
     name: datadogagent
