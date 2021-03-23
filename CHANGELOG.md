@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+# 4.7.0 / 2021-03-23
+
+* [FEATURE] Enable configuring `gpgcheck` option on RPM repofiles. See [#324].
+* [FEATURE] Add NPM support for Windows. See [#326].
+* [IMPROVEMENT] Implement usage of multiple GPG keys in repofiles, use keys from keys.datadoghq.com. See [#325].
+* [BUGFIX] Use the `dnf` task instead of `yum` when we detect that a Python 3 interpreter is used on a target host. See [#301].
+* [DOCS] Lint README for Documentation style. See [#327].
+
 # 4.6.0 / 2021-01-11
 
 * [FEATURE] Allow removing checks. See [#151] and [#320]. Thanks [@Jno21].
@@ -258,6 +266,7 @@ Initial release, compatible with Ansible v1 & v2
 [#291]: https://github.com/DataDog/ansible-datadog/issues/291
 [#295]: https://github.com/DataDog/ansible-datadog/issues/295
 [#297]: https://github.com/DataDog/ansible-datadog/issues/297
+[#301]: https://github.com/DataDog/ansible-datadog/issues/301
 [#303]: https://github.com/DataDog/ansible-datadog/issues/303
 [#304]: https://github.com/DataDog/ansible-datadog/issues/304
 [#307]: https://github.com/DataDog/ansible-datadog/issues/307
@@ -267,6 +276,10 @@ Initial release, compatible with Ansible v1 & v2
 [#313]: https://github.com/DataDog/ansible-datadog/issues/313
 [#318]: https://github.com/DataDog/ansible-datadog/issues/318
 [#320]: https://github.com/DataDog/ansible-datadog/issues/320
+[#324]: https://github.com/DataDog/ansible-datadog/issues/324
+[#325]: https://github.com/DataDog/ansible-datadog/issues/325
+[#326]: https://github.com/DataDog/ansible-datadog/issues/326
+[#327]: https://github.com/DataDog/ansible-datadog/issues/327
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
