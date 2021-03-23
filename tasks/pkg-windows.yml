@@ -58,7 +58,7 @@
 ## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
 - name: Set windows NPM installed
   set_fact:
-    datadog_sysprobe_enabled: "{{ network_config['enabled'] }}"
+    datadog_sysprobe_enabled: "{{ network_config is defined and network_config['enabled'] }}"
 
 - include_tasks: pkg-windows-opts.yml
 
