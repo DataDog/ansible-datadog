@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 4.7.1 / 2021-03-23
+
+* [BUGFIX] Revert addition of NPM support for Windows, which introduced multiple issues. See [#333].
+
 # 4.7.0 / 2021-03-23
 
 * [FEATURE] Enable configuring `gpgcheck` option on RPM repofiles. See [#324].
@@ -280,6 +284,7 @@ Initial release, compatible with Ansible v1 & v2
 [#325]: https://github.com/DataDog/ansible-datadog/issues/325
 [#326]: https://github.com/DataDog/ansible-datadog/issues/326
 [#327]: https://github.com/DataDog/ansible-datadog/issues/327
+[#333]: https://github.com/DataDog/ansible-datadog/issues/333
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
