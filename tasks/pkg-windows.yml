@@ -55,11 +55,6 @@
     var: dd_download_url
   when: not datadog_skip_windows_install
 
-## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
-- name: Set windows NPM installed
-  set_fact:
-    datadog_sysprobe_enabled: "{{ network_config['enabled'] }}"
-
 - include_tasks: pkg-windows-opts.yml
 
 - name: pre-Delete temporary msi
@@ -91,10 +86,6 @@
     state: present
     propagation: None
   when: datadog_windows_program_files_dir | length > 0
-
-- name: Show installation flags
-  debug:
-    var: win_install_args
 
 - name: Install downloaded agent
   win_package:
