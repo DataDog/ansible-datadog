@@ -122,9 +122,7 @@
     owner: "root"
     group: "{{ datadog_group }}"
   notify:
-    "{% if datadog_before_7180 and datadog_sysprobe_enabled %}restart datadog-agent-sysprobe{%
-        elif (not datadog_before_7180) %}restart datadog-agent{%
-        endif %}"
+    "{% if datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
 
 - name: Ensure datadog-agent is running
   service:
