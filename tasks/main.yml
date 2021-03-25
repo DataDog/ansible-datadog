@@ -5,7 +5,7 @@
 - name: Check if OS is supported
   include_tasks: os-check.yml
 
-- name: resolve datadog_tracked_checks later to defend against variable presidence issues arising from null datadog_checks
+- name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks 
   include_tasks: sanitize-checks.yml
 
 - name: Set Facts for Datadog Agent Major Version
