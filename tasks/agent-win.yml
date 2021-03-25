@@ -14,6 +14,10 @@
   register: datadog_conf_directories
   when: datadog_disable_untracked_checks or datadog_disable_default_checks
 
+- name: "[Debug] Print contents of datadog_tracked_checks"
+  debug:
+    msg: "Value of datadog_tracked_checks: {{ datadog_tracked_checks }}.   Is datadog_tracked_checks_null? {{ datadog_tracked_checks is none }}"
+
 - name: Delete checks not present in datadog_tracked_checks
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
