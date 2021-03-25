@@ -138,6 +138,17 @@
     enabled: yes
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_sysprobe_enabled
 
+- name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  when: not datadog_skip_running_check and not datadog_enabled
+  with_list:
+    - datadog-agent
+    - datadog-agent-process
+    - datadog-agent-trace
+
 # Stop system-probe manually on Agent versions < 6/7.18, as it was not tied
 # to the main Agent service: https://github.com/DataDog/datadog-agent/pull/4883
 - name: Ensure datadog-agent-sysprobe is stopped if disabled or not installed (before 6/7.18.0)
@@ -149,17 +160,6 @@
     and (not datadog_enabled or not datadog_sysprobe_enabled)
     and datadog_before_7180
     and datadog_sysprobe_installed
-
-- name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
-  service:
-    name: "{{ item }}"
-    state: stopped
-    enabled: no
-  when: not datadog_skip_running_check and not datadog_enabled
-  with_list:
-    - datadog-agent
-    - datadog-agent-process
-    - datadog-agent-trace
 
 - name: Ensure datadog-agent-security is not running
   service:
