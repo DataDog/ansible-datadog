@@ -1,18 +1,18 @@
 ---
-- name: populate service facts
+- name: Populate service facts
   service_facts:
 
-- name: set before 6/7.23.0 flag
+- name: Set before 6/7.23.0 flag
   set_fact:
     datadog_before_7230: "{{ datadog_major is defined and datadog_minor is defined
       and datadog_major | int < 8 and datadog_minor | int < 23 }}"
 
-- name: set before 6/7.18.0 flag
+- name: Set before 6/7.18.0 flag
   set_fact:
     datadog_before_7180: "{{ datadog_major is defined and datadog_minor is defined
       and datadog_major | int < 8 and datadog_minor | int < 18 }}"
 
-- name: add "{{ datadog_user }}" user to additional groups
+- name: Add "{{ datadog_user }}" user to additional groups
   user: name="{{ datadog_user }}" groups="{{ datadog_additional_groups }}" append=yes
   when: datadog_additional_groups | default([], true) | length > 0
   notify: restart datadog-agent
@@ -81,7 +81,7 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
 
-- name: set system probe installed
+- name: Set system probe installed
   set_fact:
     datadog_sysprobe_installed: "{{ ansible_facts.services['datadog-agent-sysprobe'] is defined
       or ansible_facts.services['datadog-agent-sysprobe.service'] is defined }}"
@@ -90,7 +90,7 @@
 # Before 6/7.23.0, system_probe_config controls the system-probe service
 # datadog_minor is only defined when a specific Agent version is given
 # (see tasks/parse-version.yml)
-- name: set system probe enabled (before 6/7.23.0)
+- name: Set system probe enabled (before 6/7.23.0)
   set_fact:
     datadog_sysprobe_enabled: "{{ system_probe_config is defined
       and 'enabled' in (system_probe_config | default({}, true))
@@ -101,7 +101,7 @@
 
 # Since 6/7.23.0, setting enabled: true in system_probe_config or network_config
 # is enough to start the system-probe service: https://github.com/DataDog/datadog-agent/pull/6640 
-- name: set system probe enabled (since 6/7.23.0)
+- name: Set system probe enabled (since 6/7.23.0)
   set_fact:
     datadog_sysprobe_enabled: "{{
       ((system_probe_config is defined
