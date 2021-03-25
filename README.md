@@ -163,9 +163,11 @@ The following variables are available for live processes:
 
 #### System probe
 
-The [Network Performance Monitoring][7] (NPM) system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+The system probe is configured under the `network_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
 
-**Note**: The system probe only works on Linux with the Agent v6+.
+[Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
+
+**Note**: The system probe works on Linux with Agent v6+. NPM is supported on Windows with Agent v6.27+ and v7.27+.
 
 #### Example configuration
 
@@ -176,8 +178,9 @@ datadog_config:
     scrub_args: true
     custom_sensitive_words: ['consul_token','dd_api_key']
 system_probe_config:
-  enabled: true
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+network_config:
+  enabled: true
 ```
 
 Once modification is complete, follow the steps below:
@@ -498,6 +501,14 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
   vars:
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
+
+### CentOS 6/7 with Python 3 interpreter
+
+The `yum` Python module, which is used in this role to install the Agent on CentOS-based hosts, is only available on Python 2. When a Python 3 interpreter is detected on a target host, the `dnf` package manager and the `dnf` Python module are used instead.
+
+However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used. This role will fail early when this situation is detected to indicate that a Python 2 interpreter is needed when installing the Agent on CentOS / RHEL < 8.
+
+To bypass this early failure detection (for instance, if `dnf` and the `python3-dnf` package are available on your host), set the `datadog_ignore_old_centos_python3_error` variable to `true`.
 
 ### Windows
 

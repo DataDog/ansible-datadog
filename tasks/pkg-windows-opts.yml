@@ -86,3 +86,9 @@
 - name: Set Test
   set_fact:
     win_install_args: "{{ win_install_args }}"
+
+# Add the installation arguments to install Windows NPM.
+- name: Set Windows NPM flag
+  set_fact:
+    win_install_args: "{{ win_install_args }} ADDLOCAL=MainApplication,NPM"
+  when: datadog_sysprobe_enabled

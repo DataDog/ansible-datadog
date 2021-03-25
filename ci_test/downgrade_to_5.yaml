@@ -22,4 +22,4 @@
         init_config:
         instances:
           - name: agent
-            search_string: ['agent' ]
+            search_string: ['agent']
