@@ -2,11 +2,9 @@
 role_version: 4.7.1
 
 # default system-probe.yaml options
-system_probe_config:
-  enabled: false
+system_probe_config: {}
 
-network_config:
-  enabled: false
+network_config: {}
 
 # define if the datadog-agent services should be enabled
 datadog_enabled: yes
