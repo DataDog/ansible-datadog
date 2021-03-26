@@ -2,10 +2,11 @@
 - name: Populate service facts
   service_facts:
 
-- name: Set before 6/7.23.0 flag
+- name: Set before 6/7.24.1 flag
   set_fact:
-    datadog_before_7230: "{{ datadog_major is defined and datadog_minor is defined
-      and datadog_major | int < 8 and datadog_minor | int < 23 }}"
+    datadog_before_7241: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined
+      and datadog_major | int < 8
+      and (datadog_minor | int < 24 or (datadog_minor | int == 24 and datadog_bugfix | int < 1)) }}"
 
 - name: Set before 6/7.18.0 flag
   set_fact:
@@ -97,21 +98,21 @@
       or ansible_facts.services['datadog-agent-sysprobe.service'] is defined }}"
   when: not datadog_skip_running_check
 
-# Before 6/7.23.0, system_probe_config controls the system-probe service
+# Before 6/7.24.1, system_probe_config controls the system-probe service
 # datadog_minor is only defined when a specific Agent version is given
 # (see tasks/parse-version.yml)
-- name: Set system probe enabled (before 6/7.23.0)
+- name: Set system probe enabled (before 6/7.24.1)
   set_fact:
     datadog_sysprobe_enabled: "{{ system_probe_config is defined
       and 'enabled' in (system_probe_config | default({}, true))
       and system_probe_config['enabled']
       and datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check
-    and datadog_before_7230
+    and datadog_before_7241
 
-# Since 6/7.23.0, setting enabled: true in system_probe_config or network_config
-# is enough to start the system-probe service: https://github.com/DataDog/datadog-agent/pull/6640 
-- name: Set system probe enabled (since 6/7.23.0)
+# Since 6/7.24.1, setting enabled: true in network_config is enough to start the system-probe service:
+# https://docs.datadoghq.com/network_monitoring/performance/setup/?tab=agent#setup
+- name: Set system probe enabled (since 6/7.24.1)
   set_fact:
     datadog_sysprobe_enabled: "{{
       ((system_probe_config is defined
@@ -122,7 +123,7 @@
       and network_config['enabled']))
       and datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check
-    and (not datadog_before_7230)
+    and (not datadog_before_7241)
 
 - name: Ensure datadog-agent is running
   service:
