@@ -1,6 +1,7 @@
 ---
 - name: Create main Datadog agent configuration file
   win_template:
+    #FIXME: should have permissions set to only be readable by ddagentuser
     src: datadog.yaml.j2
     dest: "{{ datadog_windows_config_root }}\\datadog.yaml"
   notify: restart datadog-agent-win
@@ -77,3 +78,4 @@
   template:
     src: install_info.j2
     dest: "{{ datadog_windows_config_root }}\\install_info"
+    mode: 0644

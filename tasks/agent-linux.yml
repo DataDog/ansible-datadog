@@ -11,6 +11,7 @@
   file:
     dest: /etc/datadog-agent
     state: directory
+    mode: 0755
 
 - name: Create main Datadog agent configuration file
   template:
@@ -52,6 +53,7 @@
     state: directory
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0755
   with_items: '{{ datadog_checks|list }}'
 
 - name: Create a configuration file for each Datadog check
@@ -138,3 +140,4 @@
     dest: /etc/datadog-agent/install_info
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0644
