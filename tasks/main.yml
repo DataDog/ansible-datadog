@@ -1,6 +1,6 @@
 ---
 - name: Gather Ansible Facts
-  setup:
+  ansible.builtin.setup:
 
 - name: Check if OS is supported
   include_tasks: os-check.yml
