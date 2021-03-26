@@ -1,0 +1,9 @@
+[windows]
+win ansible_host=127.0.0.1
+
+[windows:vars]
+ansible_user=Administrator
+ansible_become=no
+ansible_connection=winrm
+ansible_port=5986
+ansible_winrm_server_cert_validation=ignore
