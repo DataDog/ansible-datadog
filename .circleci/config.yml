@@ -77,10 +77,9 @@ commands:
           python: "<<parameters.python>>"
 
 jobs:
-  # TODO: Use 2.10 image, fix file permission errors (E208) that arise.
   ansible_lint:
     docker:
-      - image: datadog/docker-library:ansible_debian_2_7
+      - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
       - run: pip install ansible-lint
