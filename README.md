@@ -163,7 +163,7 @@ The following variables are available for live processes:
 
 #### System probe
 
-The system probe is configured under the `network_config` variable. Any variables nested underneath are written to the `system-probe.yaml`.
+The system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `system_probe_config` section.
 
 [Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
 
@@ -183,13 +183,15 @@ network_config:
   enabled: true
 ```
 
-Once modification is complete, follow the steps below:
+**Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, refer to [the public documentation][8] on how to enable system-probe.
+
+On Linux, once this modification is complete, follow the steps below if you installed an Agent version older than 6.18.0 or 7.18.0:
 
 1. Start the system-probe: `sudo service datadog-agent-sysprobe start` **Note**: If the service wrapper is not available on your system, run this command instead: `sudo initctl start datadog-agent-sysprobe`.
-2. [Restart the Agent][8]: `sudo service datadog-agent restart`.
+2. [Restart the Agent][9]: `sudo service datadog-agent restart`.
 3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`.
 
-For manual setup, refer to the [NPM][9] documentation.
+For manual setup, refer to the [NPM][8] documentation.
 
 #### Agent v5
 
@@ -334,7 +336,7 @@ To downgrade to a prior version of the Agent:
 
 Below are some sample playbooks to assist you with using the Datadog Ansible role.
 
-The following example sends data to Datadog US (default), enables logs, and configures a few checks.
+The following example sends data to Datadog US (default), enables logs, NPM and configures a few checks.
 
 ```yml
 - hosts: servers
@@ -403,7 +405,7 @@ The following example sends data to Datadog US (default), enables logs, and conf
         version: 1.11.0
       datadog-postgres:
         action: remove
-    system_probe_config:
+    network_config:
       enabled: true
 ```
 
@@ -530,6 +532,6 @@ For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 
 [5]: https://github.com/DataDog/integrations-core
 [6]: https://docs.datadoghq.com/infrastructure/process/
 [7]: https://docs.datadoghq.com/network_performance_monitoring/
-[8]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
-[9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
+[8]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
+[9]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
 [10]: https://app.datadoghq.com/help/agent_fix
