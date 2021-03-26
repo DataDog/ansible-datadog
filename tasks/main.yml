@@ -39,11 +39,3 @@
 - name: Integrations Tasks
   include_tasks: integration.yml
   when: datadog_integration is defined
-
-- name: Post Tasks
-  include_tasks: post_tasks/*.yml
-  when: post_tasks is defined
-
-- name: Pre Tasks
-  include_tasks: pre_tasks/*.yml
-  when: pre_tasks is defined

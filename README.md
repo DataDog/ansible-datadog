@@ -204,12 +204,6 @@ datadog_config_ex:
     custom_sensitive_words: "<FIRST_WORD>,<SECOND_WORD>"
 ```
 
-### Additional tasks
-
-`pre_tasks` and `post_tasks` folders are available to run user defined tasks. `pre_tasks` run before executing any tasks from the Datadog Ansible role, and `post_tasks` run after execution of the role.
-
-Installation tasks on supported platforms register the variable `datadog_agent_install`, which can be used in `post_tasks` to check the installation task's result. `datadog_agent_install.changed` is set to `true` if the installation task did install something, and `false` otherwise (for instance if the requested version was already installed).
-
 ## Versions
 
 By default, the current major version of the Datadog Ansible role installs Agent v7. The variables `datadog_agent_version` and `datadog_agent_major_version` are available to control the Agent version installed.
