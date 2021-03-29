@@ -18,8 +18,10 @@ Run the Vagrantfile defined in `ansible-datadog/manual_tests`:
 - From `ansible-datadog`'s parent directory, run:
 
 ```shell
-ansible-playbook ansible-datadog/manual_tests/test_5_full.yml -i ansible-datadog/manual_tests/inventory
+ansible-playbook ansible-datadog/manual_tests/test_6_full.yml -i ansible-datadog/manual_tests/inventory
 ```
+
+Note: Replace `test_6_full.yml` with any of the other yaml files on this directory.
 
 # Windows test setup from WSL
 
@@ -37,3 +39,5 @@ https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/Configu
 ```shell
 ansible-playbook -k ansible-datadog/manual_tests/test_6_full.yml -i ansible-datadog/manual_tests/inventory_win
 ```
+
+Note: Replace `test_6_full.yml` with any of the other yaml files on this directory.
