@@ -11,7 +11,7 @@
     dest: /etc/dd-agent/datadog.conf
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
-    mode: 0644
+    mode: 0644 #FIXME: should have permissions set to only be readable by owner
   notify: restart datadog-agent
 
 - name: (agent5) Ensure datadog-agent is running
@@ -69,6 +69,6 @@
     dest: "/etc/dd-agent/conf.d/{{ item }}.yaml"
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
-    mode: 0644
+    mode: 0644 #FIXME: should have permissions set to only be readable by owner
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
