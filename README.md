@@ -8,6 +8,11 @@ The Ansible Datadog role installs and configures the Datadog Agent and integrati
 
 - Requires Ansible v2.6+.
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
+- When using Ansible 2.10+ on Windows, requires the `ansible.windows` collection to be installed:
+
+  ```shell
+  ansible-galaxy collection install ansible.windows
+  ```
 
 ### Installation
 

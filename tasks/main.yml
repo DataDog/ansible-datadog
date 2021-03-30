@@ -1,6 +1,11 @@
 ---
-- name: Gather Ansible Facts
-  setup:
+- name: Include Gather Ansible Facts task on Ansible >= 2.10
+  include_tasks: facts-ansible10.yml
+  when: ansible_version.major >= 2 and ansible_version.minor >= 10
+
+- name: Include Gather Ansible Facts task on Ansible < 2.10
+  include_tasks: facts-ansible9.yml
+  when: ansible_version.major == 2 and ansible_version.minor < 10
 
 - name: Check if OS is supported
   include_tasks: os-check.yml
