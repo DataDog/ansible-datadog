@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: datadog
+  namespace: datadog
   author: 'Brian Akins, Dustin Brown & Datadog'
   description: Install Datadog agent and configure checks
   license: Apache2

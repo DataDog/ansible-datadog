@@ -3,6 +3,7 @@
   file:
     dest: /etc/dd-agent
     state: directory
+    mode: 0755
 
 - name: (agent5) Create main Datadog agent configuration file
   template:
@@ -10,6 +11,7 @@
     dest: /etc/dd-agent/datadog.conf
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0644 #FIXME: should have permissions set to only be readable by owner
   notify: restart datadog-agent
 
 - name: (agent5) Ensure datadog-agent is running
@@ -67,12 +69,6 @@
     dest: "/etc/dd-agent/conf.d/{{ item }}.yaml"
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
+    mode: 0644 #FIXME: should have permissions set to only be readable by owner
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
-
-- name: Create installation information file
-  template:
-    src: install_info.j2
-    dest: /etc/dd-agent/install_info
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"

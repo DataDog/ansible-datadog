@@ -109,6 +109,7 @@
     dest: /etc/zypp/repos.d/datadog.repo
     owner: "root"
     group: "root"
+    mode: 0644
   register: datadog_zypper_repo
 
 # refresh zypper repos only if the template changed
