@@ -18,6 +18,10 @@
         env: dev
       trace.concentrator:
         extra_aggregators: version
+    system_probe_config:
+      sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+    network_config:
+      enabled: true
     datadog_checks:
       process:
         init_config:
