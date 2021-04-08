@@ -26,9 +26,6 @@ datadog_additional_checks: []
 # set this to `true` to delete default checks
 datadog_disable_default_checks: false
 
-# default tracked checks
-datadog_tracked_checks: "{{ datadog_checks | list + datadog_additional_checks }}"
-
 # default user/group
 datadog_user: dd-agent
 datadog_group: dd-agent
