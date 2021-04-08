@@ -1,7 +1,6 @@
 - name: Defend against defined but null datadog_checks variable
   set_fact:
-      datadog_checks: "{{datadog_checks | default({})}}"
-  when: datadog_checks is none
+      datadog_checks: "{{ datadog_checks | default({}, true) }}"
 
 - name: Resolve datadog_tracked_checks
   set_fact:
