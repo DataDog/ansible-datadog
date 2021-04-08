@@ -58,6 +58,7 @@
   with_list:
     - datadog-trace-agent
     - datadog-process-agent
+
 - name: Create system-probe configuration file
   win_template:
     src: system-probe.yaml.j2
