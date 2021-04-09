@@ -51,6 +51,15 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
+- name: Ensure datadog-trace-agent and datadog-process-agent are not disabled
+  win_service:
+    name: "{{ item }}"
+    start_mode: manual
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+  with_list:
+    - datadog-trace-agent
+    - datadog-process-agent
+
 - name: Create system-probe configuration file
   win_template:
     src: system-probe.yaml.j2
@@ -64,15 +73,16 @@
     start_mode: auto
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
-- name: Ensure datadog-agent is not running
+- name: Ensure datadog-agent is disabled
   win_service:
     name: "{{ item }}"
     state: stopped
+    start_mode: disabled
   when: not datadog_skip_running_check and not datadog_enabled
   with_list:
-    - datadogagent
-    - datadog-process-agent
     - datadog-trace-agent
+    - datadog-process-agent
+    - datadogagent    
 
 - name: Create installation information file
   template:
