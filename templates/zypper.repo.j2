@@ -1,6 +1,9 @@
+{% set repo_gpgcheck = datadog_zypper_repo_gpgcheck|int %}
+
 {% if datadog_zypper_repo | length > 0 %}
   {% set baseurl = datadog_zypper_repo %}
 {% elif datadog_agent_major_version|int == 5 %}
+  {% set repo_gpgcheck = 0 %}{# we don't sign Agent 5 repodata #}
   {% set baseurl = datadog_agent5_zypper_repo %}
 {% elif datadog_agent_major_version|int == 6 %}
   {% set baseurl = datadog_agent6_zypper_repo %}
@@ -16,7 +19,7 @@ baseurl={{ baseurl }}
 
 type=rpm-md
 gpgcheck={{ datadog_zypper_gpgcheck|int }}
-repo_gpgcheck=0
+repo_gpgcheck={{ repo_gpgcheck }}
 {# zypper in SUSE < 15 will not parse (SUSE 11) or respect (SUSE 12 - 14) mutliple entries in gpgkey #}
 {% if ansible_distribution_version|int < 15 %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
