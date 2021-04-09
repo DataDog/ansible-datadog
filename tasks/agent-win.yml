@@ -52,7 +52,7 @@
 
 - name: Ensure datadog-trace-agent and datadog-process-agent are not disabled
   win_service:
-    name: "{{item}}"    
+    name: "{{ item }}"
     start_mode: manual
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
   with_list:
