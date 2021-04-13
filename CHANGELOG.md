@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+# 4.8.0 / 2021-04-13
+
+* [FEATURE] Add NPM support for Windows. See [#335].
+* [IMPROVEMENT] Split Windows handler into its own file, so we don't include anything from ansible.windows on non-Windows; add a note about the dependency on `ansible.windows`. See [#337].
+* [IMPROVEMENT] Turn on `repo_gpgcheck` on RPM repositories by default. See [#341].
+* [IMPROVEMENT] Align Windows agent to Linux so that service is disabled when `datadog_enabled` is `false`. See [#338]. Thanks [@erikhjensen].
+* [BUGFIX] Fix system-probe enablement conditions. See [#336].
+* [CHORE] Fix issues found by linter (fix file permissions, add `role_name` and `namespace` to `galaxy_info`, remove pre/post tasks). See [#340].
+
 # 4.7.1 / 2021-03-23
 
 * [BUGFIX] Revert addition of NPM support for Windows, which introduced multiple issues. See [#333].
@@ -285,6 +294,12 @@ Initial release, compatible with Ansible v1 & v2
 [#326]: https://github.com/DataDog/ansible-datadog/issues/326
 [#327]: https://github.com/DataDog/ansible-datadog/issues/327
 [#333]: https://github.com/DataDog/ansible-datadog/issues/333
+[#335]: https://github.com/DataDog/ansible-datadog/issues/335
+[#336]: https://github.com/DataDog/ansible-datadog/issues/336
+[#337]: https://github.com/DataDog/ansible-datadog/issues/337
+[#338]: https://github.com/DataDog/ansible-datadog/issues/338
+[#340]: https://github.com/DataDog/ansible-datadog/issues/340
+[#341]: https://github.com/DataDog/ansible-datadog/issues/341
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
@@ -293,6 +308,7 @@ Initial release, compatible with Ansible v1 & v2
 [@dv9io0o]: https://github.com/dv9io0o
 [@enarciso]: https://github.com/enarciso
 [@eplanet]: https://github.com/eplanet
+[@erikhjensen]: https://github.com/erikhjensen
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
 [@jeffwidman]: https://github.com/jeffwidman
