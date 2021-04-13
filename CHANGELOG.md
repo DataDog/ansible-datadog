@@ -8,7 +8,7 @@ CHANGELOG
 * [IMPROVEMENT] Turn on `repo_gpgcheck` on RPM repositories by default. See [#341].
 * [IMPROVEMENT] Align Windows agent to Linux so that service is disabled when `datadog_enabled` is `false`. See [#338]. Thanks [@erikhjensen].
 * [BUGFIX] Fix system-probe enablement conditions. See [#336].
-* [CHORE] Fix issues found by linter (fix file permissions, add `role_name` and `namespace` to `galaxy_info`, remove pre/post tasks. See [#340].
+* [CHORE] Fix issues found by linter (fix file permissions, add `role_name` and `namespace` to `galaxy_info`, remove pre/post tasks). See [#340].
 
 # 4.7.1 / 2021-03-23
 
