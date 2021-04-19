@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 4.8.1 / 2021-04-19
+
+* [BUGFIX] Fix Agent not restarting after a configuration change on Windows. See [#347].
+
 # 4.8.0 / 2021-04-13
 
 * [FEATURE] Add NPM support for Windows. See [#335].
@@ -300,6 +304,7 @@ Initial release, compatible with Ansible v1 & v2
 [#338]: https://github.com/DataDog/ansible-datadog/issues/338
 [#340]: https://github.com/DataDog/ansible-datadog/issues/340
 [#341]: https://github.com/DataDog/ansible-datadog/issues/341
+[#347]: https://github.com/DataDog/ansible-datadog/issues/347
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
