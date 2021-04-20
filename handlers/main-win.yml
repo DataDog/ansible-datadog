@@ -1,6 +1,5 @@
 ---
-
-- name: restart datadog-agent-win
+- name: Restart Windows datadogagent service
   win_service:
     name: datadogagent
     state: restarted
