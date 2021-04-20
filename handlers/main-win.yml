@@ -1,8 +1,1 @@
 ---
-
-- name: restart datadog-agent-win
-  win_service:
-    name: datadogagent
-    state: restarted
-    force_dependent_services: true
-  when: datadog_enabled and not ansible_check_mode
