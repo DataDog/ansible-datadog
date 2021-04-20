@@ -1,6 +1,6 @@
 ---
 # This file doesn't actually contain "handlers" in the Ansible sense: when running
-# our role, ansible only loads the contents of handlers/main.yml as handlers.
+# our role, Ansible only loads the contents of handlers/main.yml as handlers.
 # However, this is here because this is a "handler-like" task that is dynamically
 # included by a handler task in handlers/main.yml.
 - name: Restart Windows datadogagent service

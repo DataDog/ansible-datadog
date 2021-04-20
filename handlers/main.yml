@@ -15,8 +15,8 @@
 # We can't add the Windows handler directly here because that makes the role require
 # the ansible.windows collection on all platforms. We only want it to be needed on Windows.
 # Therefore, what we do is the following: when needed, our Windows tasks call this handler to require a
-# Windows Agent restart.
-# Therefore, if requested by our role, the below task is executed at the end of the playbook run.
+# Windows Agent restart (through notify: restart datadog-agent-win).
+# When notified, the below handler is executed at the end of the playbook run.
 # The include_tasks loads the handlers/main-win.yml file, which contains the real service restart task
 # (which depends on ansible.windows), and runs it, triggering the Windows Agent restart.
 - name: restart datadog-agent-win
