@@ -98,7 +98,7 @@ CHANGELOG
 * [BUGFIX] Fix system-probe.yaml.j2 indent filter. See [#240][]
 * [BUGFIX] Fix sysprobe service detection for systemd services. See [#242][]
 * [OTHER] Improve ansible-galaxy score by following best practices. See [#236][]
-* [OTHER] Include names for `include_tasks`. See [#226][]. Thanks to [@the-real-cphilips][].
+* [OTHER] Include names for `include_tasks`. See [#226][]. Thanks to [@the-real-cphillips][].
 
 # 4.0.0 / 2019-12-18
 
@@ -331,6 +331,6 @@ Initial release, compatible with Ansible v1 & v2
 [@pmbauer]: https://github.com/pmbauer
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
-[@the-real-cphilips]: https://github.com/the-real-cphilips
+[@the-real-cphillips]: https://github.com/the-real-cphillips
 [@tomgoren]: https://github.com/tomgoren
 [@xp-1000]: https://github.com/xp-1000
