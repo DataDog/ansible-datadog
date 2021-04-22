@@ -30,9 +30,13 @@
 - name: "Create temporary directory for key manipulation"
   ansible.builtin.tempfile:
     state: directory
-    suffix: build
+    suffix: keys
   register: tempdir
   when: key_needs_import
+
+- name: "Debug tempdir"
+  ansible.builtin.debug:
+    var: tempdir
 
 - name: "Download {{ keyring_url }} to import key {{ key_fingerprint }}"
   get_url:
