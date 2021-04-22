@@ -34,10 +34,6 @@
   register: tempdir
   when: key_needs_import
 
-- name: "Debug tempdir"
-  ansible.builtin.debug:
-    var: tempdir
-
 - name: "Download {{ keyring_url }} to import key {{ key_fingerprint }}"
   get_url:
     url: "{{ keyring_url }}"

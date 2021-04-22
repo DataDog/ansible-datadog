@@ -13,19 +13,20 @@
     group: root
     mode: "0644"
     state: touch
+  when: not ansible_check_mode
 
 - name: Install apt keys from default URLs
   include_tasks: _apt-key-import.yml
   with_dict:
     "{{ datadog_apt_default_keys|items2dict }}"
-  when: datadog_apt_key_url_new is not defined
+  when: datadog_apt_key_url_new is not defined and not ansible_check_mode
 
 - name: Install apt keys from custom URL
   include_tasks: _apt-key-import.yml
   with_dict:
     A2923DFF56EDA6E76E55E492D3A80E30382E94DE: "{{ datadog_apt_key_url_new }}"
     D75CEA17048B9ACBF186794B32637D44F14F620E: "{{ datadog_apt_key_url_new }}"
-  when: datadog_apt_key_url_new is defined
+  when: datadog_apt_key_url_new is defined and not ansible_check_mode
 
 - name: "Ensure {{ datadog_apt_trusted_d_keyring }} exists with same contents as {{ datadog_apt_usr_share_keyring }} for older distro versions"
   copy:
@@ -33,7 +34,7 @@
     dest: "{{ datadog_apt_trusted_d_keyring }}"
     mode: "0644"
     remote_src: yes
-  when: (ansible_distribution == 'Debian' and ansible_lsb.major_release|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)
+  when: ((ansible_distribution == 'Debian' and ansible_lsb.major_release|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)) and not ansible_check_mode
 
 - name: Ensure Datadog non-https repositories are deprecated
   apt_repository:
