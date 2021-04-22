@@ -7,7 +7,7 @@
   when: not ansible_check_mode
 
 - name: "Ensure {{ datadog_apt_usr_share_keyring }} exists"
-  ansible.builtin.file:
+  file:
     path: "{{ datadog_apt_usr_share_keyring }}"
     owner: root
     group: root
