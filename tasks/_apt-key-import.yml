@@ -1,0 +1,59 @@
+# We allow users to specify a file from which to import keys, so we expect
+# that to be a binary keyring; at the same time, we have ascii armored
+# individual keys at keys.datadoghq.com that we import. The below procedure
+# can be called for a URL pointing to a keyring or an ascii armored file
+# and extract and import a specific key from it (we specialcase the
+# DATADOG_APT_KEY_CURRENT value, which we always expect to be ascii
+# armored individual key).
+
+- set_fact:
+    key_fingerprint: "{{ item.key }}"
+    keyring_url: "{{ item.value }}"
+
+- name: "Find out whether key {{ key_fingerprint }} is already imported"
+  ansible.builtin.shell: "gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --list-keys --with-fingerprint --with-colons | grep {{ key_fingerprint }}"
+  register: key_exists_result
+  failed_when: false  # we expect the command to fail when the key is not found; we never want this task to fail
+  when: key_fingerprint != datadog_apt_key_current_name  # we always want to import the CURRENT key
+
+- set_fact:
+    key_needs_import: "{{ 'false' if key_exists_result.rc == 0 else 'true' }}"
+  when: key_fingerprint != datadog_apt_key_current_name
+
+- set_fact:
+    key_needs_import: "true"
+  when: key_fingerprint == datadog_apt_key_current_name
+
+- name: "Create temporary directory for key manipulation"
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: build
+  register: tempdir
+  when: key_needs_import
+
+- name: "Download {{ keyring_url }} to import key {{ key_fingerprint }}"
+  get_url:
+    url: "{{ keyring_url }}"
+    dest: "{{ tempdir.path }}/{{ key_fingerprint }}"
+    force: yes
+  when: key_needs_import
+
+# gpg --dearmor called on a binary keyring does nothing
+- name: "Ensure downloaded file for {{ key_fingerprint }} is a binary keyring"
+  ansible.builtin.shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg"
+  when: key_needs_import
+
+- name: "Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})"
+  ansible.builtin.shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path}}/single.gpg"
+  when: key_fingerprint != datadog_apt_key_current_name and key_needs_import
+
+- name: "Extract the required key from the binary keyring (when {{ datadog_apt_key_current_name }})"
+  ansible.builtin.copy:
+    src: "{{ tempdir.path }}/binary.gpg"
+    dest: "{{ tempdir.path }}/single.gpg"
+    remote_src: yes
+  when: key_fingerprint == datadog_apt_key_current_name and key_needs_import
+
+- name: "Import key {{ key_fingerprint }} to {{ datadog_apt_usr_share_keyring }} keyring"
+  ansible.builtin.shell: "cat {{ tempdir.path }}/single.gpg | gpg -q --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch"
+  when: key_needs_import
