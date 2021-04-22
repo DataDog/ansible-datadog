@@ -6,13 +6,17 @@
 # DATADOG_APT_KEY_CURRENT value, which we always expect to be ascii
 # armored individual key).
 
+# NOTE: we use 'noqa risky-shell-pipe' throughout this file, because Debian's
+# default shell is /bin/sh which doesn't have a pipefail option and the
+# presence of a different shell isn't guaranteed.
+
 - name: "Set local variables for processed key {{ item.key }}"
   set_fact:
     key_fingerprint: "{{ item.key }}"
     keyring_url: "{{ item.value }}"
 
 - name: "Find out whether key {{ key_fingerprint }} is already imported"
-  shell: "gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --list-keys --with-fingerprint --with-colons | grep {{ key_fingerprint }}"
+  shell: "gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --list-keys --with-fingerprint --with-colons | grep {{ key_fingerprint }}"  # noqa risky-shell-pipe
   register: key_exists_result
   failed_when: false  # we expect the command to fail when the key is not found; we never want this task to fail
   when: key_fingerprint != datadog_apt_key_current_name  # we always want to import the CURRENT key
@@ -43,7 +47,7 @@
 
 # gpg --dearmor called on a binary keyring does nothing
 - name: "Ensure downloaded file for {{ key_fingerprint }} is a binary keyring"
-  shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg"
+  shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg"  # noqa risky-shell-pipe
   when: key_needs_import
 
 - name: "Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})"
@@ -54,9 +58,10 @@
   copy:
     src: "{{ tempdir.path }}/binary.gpg"
     dest: "{{ tempdir.path }}/single.gpg"
+    mode: "0600"
     remote_src: yes
   when: key_fingerprint == datadog_apt_key_current_name and key_needs_import
 
 - name: "Import key {{ key_fingerprint }} to {{ datadog_apt_usr_share_keyring }} keyring"
-  shell: "cat {{ tempdir.path }}/single.gpg | gpg -q --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch"
+  shell: "cat {{ tempdir.path }}/single.gpg | gpg -q --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch"  # noqa risky-shell-pipe
   when: key_needs_import
