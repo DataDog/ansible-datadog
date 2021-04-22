@@ -6,7 +6,8 @@
 # DATADOG_APT_KEY_CURRENT value, which we always expect to be ascii
 # armored individual key).
 
-- set_fact:
+- name: "Set local variables for processed key {{ item.key }}"
+  set_fact:
     key_fingerprint: "{{ item.key }}"
     keyring_url: "{{ item.value }}"
 
@@ -16,11 +17,13 @@
   failed_when: false  # we expect the command to fail when the key is not found; we never want this task to fail
   when: key_fingerprint != datadog_apt_key_current_name  # we always want to import the CURRENT key
 
-- set_fact:
+- name: "Set local helper variable for determining key import (when not {{ datadog_apt_key_current_name }})"
+  set_fact:
     key_needs_import: "{{ 'false' if key_exists_result.rc == 0 else 'true' }}"
   when: key_fingerprint != datadog_apt_key_current_name
 
-- set_fact:
+- name: "Set local helper variable for determining key import (when {{ datadog_apt_key_current_name }})"
+  set_fact:
     key_needs_import: "true"
   when: key_fingerprint == datadog_apt_key_current_name
 
@@ -44,7 +47,7 @@
   when: key_needs_import
 
 - name: "Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})"
-  ansible.builtin.shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path}}/single.gpg"
+  ansible.builtin.shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path }}/single.gpg"
   when: key_fingerprint != datadog_apt_key_current_name and key_needs_import
 
 - name: "Extract the required key from the binary keyring (when {{ datadog_apt_key_current_name }})"

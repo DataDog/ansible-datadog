@@ -31,6 +31,7 @@
   copy:
     src: "{{ datadog_apt_usr_share_keyring }}"
     dest: "{{ datadog_apt_trusted_d_keyring }}"
+    mode: "0644"
     remote_src: yes
   when: (ansible_distribution == 'Debian' and ansible_lsb.major_release|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)
 
