@@ -11,7 +11,7 @@
   # We turn off repo_gpgcheck on custom repos and on RHEL/CentOS 8.1 because
   # of https://bugzilla.redhat.com/show_bug.cgi?id=1792506
   set_fact:
-    do_repo_gpgcheck: >-
+    do_yum_repo_gpgcheck: >-
       {{ datadog_yum_repo_gpgcheck if datadog_yum_repo_gpgcheck != '' else (
         'no' if (
           ansible_facts.distribution_version.startswith('8.1.') or ansible_facts.distribution_version == '8.1' or
@@ -78,7 +78,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent6_yum_repo }}"
     enabled: yes
-    repo_gpgcheck: "{{ do_repo_gpgcheck }}"
+    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",
@@ -95,7 +95,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent7_yum_repo }}"
     enabled: yes
-    repo_gpgcheck: "{{ do_repo_gpgcheck }}"
+    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",
@@ -111,7 +111,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_yum_repo }}"
     enabled: yes
-    repo_gpgcheck: "{{ do_repo_gpgcheck }}"
+    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",

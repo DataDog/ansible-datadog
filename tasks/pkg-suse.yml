@@ -1,4 +1,11 @@
 ---
+- name: Find out whether to set repo_gpgcheck or not
+  set_fact:
+    do_zypper_repo_gpgcheck: >-
+      {{ datadog_zypper_repo_gpgcheck if datadog_zypper_repo_gpgcheck != '' else (
+        'yes' if datadog_zypper_repo == '' and datadog_agent_major_version|int != 5 else 'no'
+      ) }}
+
 - block:  # Work around due to SNI check for SLES11
   - name: Stat if current RPM key already exists
     stat:
