@@ -288,6 +288,10 @@ Available actions:
 - `install`: Installs a specific version of the integration.
 - `remove`: Removes an integration.
 
+##### Datadog Marketplace
+
+[Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) integrations can be installed via the `datadog_integration` resource. Note that Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
+
 ##### Syntax
 
 ```yml
