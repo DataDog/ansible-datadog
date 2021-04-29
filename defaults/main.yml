@@ -72,7 +72,7 @@ datadog_apt_backup_keyserver: hkp://pool.sks-keyservers.net:80
 # Use the datadog_yum_repo variable to override the repository used.
 datadog_yum_repo: ""
 
-datadog_yum_repo_gpgcheck: yes
+datadog_yum_repo_gpgcheck: ""
 datadog_yum_gpgcheck: yes
 # NOTE: we don't use URLs starting with https://keys.datadoghq.com/, as Python
 # on older CentOS/RHEL/SUSE doesn't support SNI and get_url would fail on them
@@ -98,7 +98,7 @@ datadog_ignore_old_centos_python3_error: false
 # Use the datadog_zypper_repo variable to override the repository used.
 datadog_zypper_repo: ""
 
-datadog_zypper_repo_gpgcheck: yes
+datadog_zypper_repo_gpgcheck: ""
 datadog_zypper_gpgcheck: yes
 datadog_zypper_gpgkey: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY.public"
 datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
