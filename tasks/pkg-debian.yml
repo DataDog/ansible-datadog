@@ -6,6 +6,11 @@
     state: present
   when: not ansible_check_mode
 
+- name: "Check if {{ datadog_apt_usr_share_keyring }} exists with correct mode"
+  stat:
+    path: "{{ datadog_apt_usr_share_keyring }}"
+  register: apt_keyring_file
+
 - name: "Ensure {{ datadog_apt_usr_share_keyring }} exists"
   file:
     path: "{{ datadog_apt_usr_share_keyring }}"
@@ -13,7 +18,7 @@
     group: root
     mode: "0644"
     state: touch
-  when: not ansible_check_mode
+  when: not ansible_check_mode and (not apt_keyring_file.stat.exists or not apt_keyring_file.stat.mode == "0644")
 
 - name: Install apt keys from default URLs
   include_tasks: _apt-key-import.yml
