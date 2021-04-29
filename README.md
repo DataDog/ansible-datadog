@@ -261,6 +261,8 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 | `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
 | `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
 
+Since version 4.9.0, the `use_apt_backup_keyserver` variable has been removed, as APT keys are now obtained from https://keys.datadoghq.com.
+
 #### Windows
 
 When the variable `datadog_windows_download_url` is not set, the official Windows MSI package corresponding to the `datadog_agent_major_version` is used:
@@ -483,6 +485,27 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 **Note**: This configuration fails on Linux hosts. Only use it if the playbook is specific to Windows hosts. Otherwise, use the [inventory file method](#inventory-file).
 
 ## Troubleshooting
+
+### Debian stretch
+
+**Note:** this information applies to versions of the role prior to 4.9.0. Since 4.9.0, the `apt_key` module is no longer used by the role.
+
+On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
+
+```yml
+---
+- hosts: all
+  pre_tasks:
+    - name: Debian Stretch requires the dirmngr package to use apt_key
+      become: yes
+      apt:
+        name: dirmngr
+        state: present
+  roles:
+    - { role: datadog.datadog, become: yes }
+  vars:
+    datadog_api_key: "<YOUR_DD_API_KEY>"
+```
 
 ### CentOS 6/7 with Python 3 interpreter
 
