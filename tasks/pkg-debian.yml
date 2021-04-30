@@ -43,7 +43,7 @@
     remote_src: yes
   when: ((ansible_distribution == 'Debian' and ansible_lsb.major_release|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)) and not ansible_check_mode
 
-- name: Ensure Datadog non-https repositories are deprecated
+- name: Ensure Datadog non-https repositories and repositories not using signed-by option are deprecated
   apt_repository:
     repo: "{{ item }}"
     state: "absent"
@@ -52,6 +52,9 @@
     - "deb http://apt.datadoghq.com/ stable main"
     - "deb http://apt.datadoghq.com/ stable 6"
     - "deb http://apt.datadoghq.com/ stable 7"
+    - "deb https://apt.datadoghq.com/ stable main"
+    - "deb https://apt.datadoghq.com/ stable 6"
+    - "deb https://apt.datadoghq.com/ stable 7"
   when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date
