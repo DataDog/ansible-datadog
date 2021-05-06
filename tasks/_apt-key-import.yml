@@ -1,0 +1,83 @@
+# We allow users to specify a file from which to import keys, so we expect
+# that to be a binary keyring; at the same time, we have ascii armored
+# individual keys at keys.datadoghq.com that we import. The below procedure
+# can be called for a URL pointing to a keyring or an ascii armored file
+# and extract and import a specific key from it (we specialcase the
+# DATADOG_APT_KEY_CURRENT value, which we always expect to be ascii
+# armored individual key).
+
+# NOTE: we use 'noqa risky-shell-pipe' throughout this file, because Debian's
+# default shell is /bin/sh which doesn't have a pipefail option and the
+# presence of a different shell isn't guaranteed.
+
+# NOTE: in order to display Ansible's `changed: [hostname]` properly throughout
+# tasks in this file, we added `changed_when: false` to a lot of them, even if
+# they actually run every time (e.g. importing the CURRENT key). The reason is
+# that they operate inside a temporary directory and they don't have a
+# permanent effect on the host (nothing will actually change on the host
+# whether these tasks run or not) except the last one - the actual import of
+# the key to `datadog_apt_usr_share_keyring`.
+
+- name: "Set local variables for processed key {{ item.key }}"
+  set_fact:
+    key_fingerprint: "{{ item.key }}"
+    keyring_url: "{{ item.value }}"
+
+- name: "Find out whether key {{ key_fingerprint }} is already imported"
+  shell: "gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --list-keys --with-fingerprint --with-colons | grep {{ key_fingerprint }}"  # noqa risky-shell-pipe
+  register: key_exists_result
+  failed_when: false  # we expect the command to fail when the key is not found; we never want this task to fail
+  changed_when: key_exists_result.rc != 0
+  when: key_fingerprint != datadog_apt_key_current_name  # we always want to import the CURRENT key
+
+- name: "Set local helper variable for determining key import (when not {{ datadog_apt_key_current_name }})"
+  set_fact:
+    key_needs_import: "{{ 'false' if key_exists_result.rc == 0 else 'true' }}"
+  when: key_fingerprint != datadog_apt_key_current_name
+
+- name: "Set local helper variable for determining key import (when {{ datadog_apt_key_current_name }})"
+  set_fact:
+    key_needs_import: "true"
+  when: key_fingerprint == datadog_apt_key_current_name
+
+- name: "Create temporary directory for key manipulation"
+  tempfile:
+    state: directory
+    suffix: keys
+  register: tempdir
+  when: key_needs_import
+  changed_when: false
+
+- name: "Download {{ keyring_url }} to import key {{ key_fingerprint }}"
+  get_url:
+    url: "{{ keyring_url }}"
+    dest: "{{ tempdir.path }}/{{ key_fingerprint }}"
+    force: yes
+  when: key_needs_import
+  changed_when: false
+
+# gpg --dearmor called on a binary keyring does nothing
+- name: "Ensure downloaded file for {{ key_fingerprint }} is a binary keyring"
+  shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg"  # noqa risky-shell-pipe
+  when: key_needs_import
+  changed_when: false
+
+- name: "Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})"
+  shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path }}/single.gpg"
+  when: key_fingerprint != datadog_apt_key_current_name and key_needs_import
+  changed_when: false
+
+- name: "Extract the required key from the binary keyring (when {{ datadog_apt_key_current_name }})"
+  copy:
+    src: "{{ tempdir.path }}/binary.gpg"
+    dest: "{{ tempdir.path }}/single.gpg"
+    mode: "0600"
+    remote_src: yes
+  when: key_fingerprint == datadog_apt_key_current_name and key_needs_import
+  changed_when: false
+
+- name: "Import key {{ key_fingerprint }} to {{ datadog_apt_usr_share_keyring }} keyring"
+  shell: "cat {{ tempdir.path }}/single.gpg | gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch"  # noqa risky-shell-pipe
+  when: key_needs_import
+  register: key_import_result
+  changed_when: '"imported: 1" in key_import_result.stderr'

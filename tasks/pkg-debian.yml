@@ -6,43 +6,44 @@
     state: present
   when: not ansible_check_mode
 
-- name: Install apt-key from keyserver (Expires 2022)
-  apt_key:
-    id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
-    keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
-    state: present
-    # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
-  register: result
-  until: not result.failed is defined or not result.failed
-  retries: "{{ datadog_apt_key_retries }}"
-  when: datadog_apt_key_url_new is not defined
+- name: "Check if {{ datadog_apt_usr_share_keyring }} exists with correct mode"
+  stat:
+    path: "{{ datadog_apt_usr_share_keyring }}"
+  register: apt_keyring_file
 
-- name: Install Datadog apt-key from url (Expires 2022)
-  apt_key:
-    id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
-    url: "{{ datadog_apt_key_url_new }}"
-    state: present
-  when: datadog_apt_key_url_new is defined
+- name: "Ensure {{ datadog_apt_usr_share_keyring }} exists"
+  file:
+    path: "{{ datadog_apt_usr_share_keyring }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: touch
+  when: not ansible_check_mode and (not apt_keyring_file.stat.exists or not apt_keyring_file.stat.mode == "0644")
 
-- name: Install apt-key from keyserver (Expires 2032)
-  apt_key:
-    id: D75CEA17048B9ACBF186794B32637D44F14F620E
-    keyserver: "{{ datadog_apt_backup_keyserver if use_apt_backup_keyserver else datadog_apt_keyserver }}"
-    state: present
-    # keyserver.ubuntu.com is a pool of server, we should retry if one of them is down
-  register: result_2032
-  until: not result_2032.failed is defined or not result_2032.failed
-  retries: "{{ datadog_apt_key_retries }}"
-  when: datadog_apt_key_url_new is not defined
+- name: Install apt keys from default URLs
+  include_tasks: _apt-key-import.yml
+  with_items:
+    "{{ datadog_apt_default_keys }}"
+  when: datadog_apt_key_url_new is not defined and not ansible_check_mode
 
-- name: Install Datadog apt-key from url (Expires 2032)
-  apt_key:
-    id: D75CEA17048B9ACBF186794B32637D44F14F620E
-    url: "{{ datadog_apt_key_url_new }}"
-    state: present
-  when: datadog_apt_key_url_new is defined
+- name: Install apt keys from custom URL
+  include_tasks: _apt-key-import.yml
+  with_items:
+    - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+      value: "{{ datadog_apt_key_url_new }}"
+    - key: D75CEA17048B9ACBF186794B32637D44F14F620E
+      value: "{{ datadog_apt_key_url_new }}"
+  when: datadog_apt_key_url_new is defined and not ansible_check_mode
 
-- name: Ensure Datadog non-https repositories are deprecated
+- name: "Ensure {{ datadog_apt_trusted_d_keyring }} exists with same contents as {{ datadog_apt_usr_share_keyring }} for older distro versions"
+  copy:
+    src: "{{ datadog_apt_usr_share_keyring }}"
+    dest: "{{ datadog_apt_trusted_d_keyring }}"
+    mode: "0644"
+    remote_src: yes
+  when: ((ansible_distribution == 'Debian' and ansible_lsb.major_release|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)) and not ansible_check_mode
+
+- name: Ensure Datadog non-https repositories and repositories not using signed-by option are deprecated
   apt_repository:
     repo: "{{ item }}"
     state: "absent"
@@ -51,6 +52,9 @@
     - "deb http://apt.datadoghq.com/ stable main"
     - "deb http://apt.datadoghq.com/ stable 6"
     - "deb http://apt.datadoghq.com/ stable 7"
+    - "deb https://apt.datadoghq.com/ stable main"
+    - "deb https://apt.datadoghq.com/ stable 6"
+    - "deb https://apt.datadoghq.com/ stable 7"
   when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date

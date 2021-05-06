@@ -47,9 +47,9 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_disable_default_checks` | Set to `true` to remove all default checks. |
 | `datadog_config`                           | Settings for the main Agent configuration file: <br> - `/etc/datadog-agent/datadog.yaml` for Agent v6 and v7,<br> - `/etc/dd-agent/datadog.conf` for Agent v5 (under the `[Main]` section).                                                                                                               |
 | `datadog_config_ex`                        | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).                                                                                                                                                                                                                      |
-| `datadog_apt_repo`                         | Override the default Datadog `apt` repository.                                                                                                                                                                                                                                                            |
+| `datadog_apt_repo`                         | Override the default Datadog `apt` repository. Make sure to use the `signed-by` option if repository metadata is signed using Datadog's signing keys: `deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://yourrepo`.                                                                 |
 | `datadog_apt_cache_valid_time`             | Override the default apt cache expiration time (defaults to 1 hour).                                                                                                                                                                                                                                      |
-| `datadog_apt_key_url_new`                  | Override the default URL to Datadog `apt` key (key ID `382E94DE`; the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role).                                                                                                                             |
+| `datadog_apt_key_url_new`                  | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE` and `F14F620E`.                            |
 | `datadog_yum_repo`                         | Override the default Datadog `yum` repository.                                                                                                                                                                                                                                                            |
 | `datadog_yum_repo_gpgcheck`                | Override the default `repo_gpgcheck` value (empty). If empty, value is dynamically set to `yes` when custom `datadog_yum_repo` is not used and system is not RHEL/CentOS 8.1 (due to [a bug](https://bugzilla.redhat.com/show_bug.cgi?id=1792506) in dnf), otherwise it's set to `no`. Note that repodata signature verification is always turned off for Agent 5.                                                                         |
 | `datadog_yum_gpgcheck`                     | Override the default `gpgcheck` value (`yes`) - use `no` to turn off package GPG signature verification.                                                                                                                                                                                                  |
@@ -64,7 +64,6 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_zypper_gpgkey_e09422b3`           | Override the default URL to the Datadog `zypper` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                            |
 | `datadog_zypper_gpgkey_e09422b3_sha256sum` | Override the default checksum of the `datadog_zypper_gpgkey_e09422b3` key.                                                                                                                                                                                                                                |
 | `datadog_agent_allow_downgrade`            | Set to `yes` to allow Agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **Note**: On Centos this only works with Ansible 2.4+.                                                                                                                             |
-| `use_apt_backup_keyserver`                 | Set to `true` to use the backup keyserver instead of the default one.                                                                                                                                                                                                                                     |
 | `datadog_enabled`                          | Set to `false` to prevent `datadog-agent` service from starting (defaults to `true`).                                                                                                                                                                                                                     |
 | `datadog_additional_groups`                | Either a list, or a string containing a comma-separated list of additional groups for the `datadog_user` (Linux only).                                                                                                                                                                                    |
 | `datadog_windows_ddagentuser_name`         | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).                                                                                                                                                                                                                   |
@@ -261,6 +260,8 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 | `datadog_agent5_apt_repo`    | `datadog_apt_repo`    |
 | `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
 | `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
+
+Since version 4.9.0, the `use_apt_backup_keyserver` variable has been removed, as APT keys are now obtained from https://keys.datadoghq.com.
 
 #### Windows
 
@@ -491,6 +492,8 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 ### Debian stretch
 
+**Note:** this information applies to versions of the role prior to 4.9.0. Since 4.9.0, the `apt_key` module is no longer used by the role.
+
 On Debian Stretch, the `apt_key` module used by the role requires an additional system dependency to work correctly. The dependency (`dirmngr`) is not provided by the module. Add the following configuration to your playbooks to make use of the present role:
 
 ```yml
@@ -502,7 +505,6 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
       apt:
         name: dirmngr
         state: present
-
   roles:
     - { role: datadog.datadog, become: yes }
   vars:
