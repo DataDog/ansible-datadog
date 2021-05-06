@@ -322,6 +322,10 @@ Initial release, compatible with Ansible v1 & v2
 [#341]: https://github.com/DataDog/ansible-datadog/issues/341
 [#347]: https://github.com/DataDog/ansible-datadog/issues/347
 [#349]: https://github.com/DataDog/ansible-datadog/issues/349
+[#351]: https://github.com/DataDog/ansible-datadog/issues/351
+[#352]: https://github.com/DataDog/ansible-datadog/issues/352
+[#353]: https://github.com/DataDog/ansible-datadog/issues/353
+[#354]: https://github.com/DataDog/ansible-datadog/issues/354
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
