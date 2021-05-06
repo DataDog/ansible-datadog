@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+# 4.9.0 / 2021-05-06
+
+* [IMPROVEMENT] Improvements for APT keys management. See [#351].
+  * By default, get keys from keys.datadoghq.com, not the Ubuntu keyserver.
+  * Always add the `DATADOG_APT_KEY_CURRENT.public` key (contains key used to sign current repodata).
+  * Add `signed-by` option to all sources list lines.
+  * On Debian >= 9 and Ubuntu >= 16, only add keys to `/usr/share/keyrings/datadog-archive-keyring.gpg`.
+  * On older systems, also add the same keyring to `/etc/apt/trusted.gpg.d`.
+* [BUGFIX] Don't set `repo_gpgcheck=1` by default on RHEL/CentOS 8.1 and on custom repos. See [#352].
+* [BUGFIX] Change RPM key URLs to non-SNI versions to ensure the role continues to work with Python <= 2.7.9. See [#353].
+* [DOCS] Add a note about installing marketplace integrations. See [#354].
+
 # 4.8.2 / 2021-04-21
 
 * [BUGFIX] Another fix for agent not restarting after a configuration change on Windows. See [#349].
@@ -310,6 +322,10 @@ Initial release, compatible with Ansible v1 & v2
 [#341]: https://github.com/DataDog/ansible-datadog/issues/341
 [#347]: https://github.com/DataDog/ansible-datadog/issues/347
 [#349]: https://github.com/DataDog/ansible-datadog/issues/349
+[#351]: https://github.com/DataDog/ansible-datadog/issues/351
+[#352]: https://github.com/DataDog/ansible-datadog/issues/352
+[#353]: https://github.com/DataDog/ansible-datadog/issues/353
+[#354]: https://github.com/DataDog/ansible-datadog/issues/354
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
