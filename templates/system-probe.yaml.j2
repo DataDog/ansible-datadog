@@ -4,12 +4,9 @@
 system_probe_config:
 {# The "first" option is only supported by jinja 2.10+
   which is not present on older systems (CentOS 7, Debian 8, etc.)
-  Using the equivalent option "indentfirst" will work with
-  all currently existing jinja 2 versions (as of this comment, up to 2.10).
-  TODO: when future versions of Jinja are released, check that
-  indentfirst is still supported.
+  Using the equivalent option "indentfirst" no longer works in jinja 3.
  #}
-{% filter indent(width=2, indentfirst=True) %}
+{% filter indent(width=2, first=True) %}
 {{ system_probe_config | to_nice_yaml }}
 {% endfilter %}
 {% endif %}
