@@ -4,7 +4,7 @@
     msg: "The Datadog ansible role does not currently support Agent 5"
   when: datadog_agent_major_version|int == 5
 
-# This is a best-effort solution to avoid redownloading the msi when 
+# This is a best-effort solution to avoid redownloading the msi when
 # It won't work with rc / beta builds, and won't work if the version to install
 # is not pinned (as we don't know what version latest will be before downloading
 # the package).
@@ -72,7 +72,7 @@
     url: "{{ dd_download_url }}"
     dest: '%TEMP%\ddagent.msi'
   register: download_msi_result
-  when: not datadog_skip_windows_install
+  when: (not datadog_skip_windows_install) and (not ansible_check_mode)
 
 - name: Create Binary directory root (if not default)
   win_file:
