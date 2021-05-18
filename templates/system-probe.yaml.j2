@@ -2,25 +2,14 @@
 
 {% if system_probe_config is defined and system_probe_config | default({}, true) | length > 0 -%}
 system_probe_config:
-{# The "first" option is only supported by jinja 2.10+
-  which is not present on older systems (CentOS 7, Debian 8, etc.)
-  Using the equivalent option "indentfirst" no longer works in jinja 3.
- #}
-{% filter indent(width=2, first=True) %}
+{% filter indent(width=2, True) %}
 {{ system_probe_config | to_nice_yaml }}
 {% endfilter %}
 {% endif %}
 
 {% if network_config is defined and network_config | default({}, true) | length > 0 -%}
 network_config:
-{# The "first" option is only supported by jinja 2.10+
-  which is not present on older systems (CentOS 7, Debian 8, etc.)
-  Using the equivalent option "indentfirst" is supported for
-  all jinja 2 versions up to v2.10.
-  TODO: when future versions of Jinja are released, check that
-  indentfirst is still supported.
- #}
-{% filter indent(width=2, indentfirst=True) %}
+{% filter indent(width=2, True) %}
 {{ network_config | to_nice_yaml }}
 {% endfilter %}
 {% endif %}
