@@ -6,6 +6,13 @@
     state: present
   when: not ansible_check_mode
 
+- name: Install gnupg
+  apt:
+    update_cache: yes
+    name: gnupg
+    state: present
+  when: not ansible_check_mode
+
 - name: "Check if {{ datadog_apt_usr_share_keyring }} exists with correct mode"
   stat:
     path: "{{ datadog_apt_usr_share_keyring }}"
