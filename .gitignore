@@ -8,3 +8,7 @@ post_tasks/
 .kitchen/
 .kitchen.local.yml
 .bundle
+
+# OSX github datastore
+**/.DS_Store
+
