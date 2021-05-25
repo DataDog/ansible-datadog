@@ -1,5 +1,5 @@
 ---
-role_version: 4.9.0
+role_version: 4.10.0
 
 # default system-probe.yaml options
 system_probe_config: {}

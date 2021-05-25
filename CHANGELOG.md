@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+# 4.10.0 / 2021-05-25
+
+* [IMPROVEMENT] Make Windows package download behavior in check mode consistent with Linux. See [#359]. Thanks [@camjay].
+* [BUGFIX] Remove `indentfirst` in system-probe.yaml.j2, making the role compatible with Jinja2 >= 3. See [#361]. Thanks [@tasktop-teho].
+* [BUGFIX] Ensure gnupg is installed on Debian/Ubuntu. See [#358].
+
 # 4.9.0 / 2021-05-06
 
 * [IMPROVEMENT] Improvements for APT keys management. See [#351].
@@ -326,10 +332,15 @@ Initial release, compatible with Ansible v1 & v2
 [#352]: https://github.com/DataDog/ansible-datadog/issues/352
 [#353]: https://github.com/DataDog/ansible-datadog/issues/353
 [#354]: https://github.com/DataDog/ansible-datadog/issues/354
+[#358]: https://github.com/DataDog/ansible-datadog/issues/358
+[#359]: https://github.com/DataDog/ansible-datadog/issues/359
+[#361]: https://github.com/DataDog/ansible-datadog/issues/361
+[#362]: https://github.com/DataDog/ansible-datadog/issues/362
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
+[@camjay]: https://github.com/camjay
 [@dbr1993]: https://github.com/dbr1993
 [@dv9io0o]: https://github.com/dv9io0o
 [@enarciso]: https://github.com/enarciso
@@ -347,6 +358,7 @@ Initial release, compatible with Ansible v1 & v2
 [@pmbauer]: https://github.com/pmbauer
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
+[@tasktop-teho]: https://github.com/tasktop-teho
 [@the-real-cphillips]: https://github.com/the-real-cphillips
 [@tomgoren]: https://github.com/tomgoren
 [@xp-1000]: https://github.com/xp-1000
