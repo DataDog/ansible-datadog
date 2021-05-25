@@ -6,7 +6,6 @@ CHANGELOG
 * [IMPROVEMENT] Make Windows package download behavior in check mode consistent with Linux. See [#359]. Thanks [@camjay].
 * [BUGFIX] Remove `indentfirst` in system-probe.yaml.j2, making the role compatible with Jinja2 >= 3. See [#361]. Thanks [@tasktop-teho].
 * [BUGFIX] Ensure gnupg is installed on Debian/Ubuntu. See [#358].
-* [CHORE] Ignore MacOS Github datastore files. See [#362]. Thanks [@camjay].
 
 # 4.9.0 / 2021-05-06
 
