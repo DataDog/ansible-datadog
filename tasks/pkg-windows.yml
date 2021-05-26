@@ -21,6 +21,7 @@
       Write-Host "$($ddmaj).$($ddmin).$($ddpatch)"
     }
   register: version_check
+  check_mode: no
   changed_when: false # By default win_shell returns changed, but we know this script doesn't change anything.
 
 - name: Initialize skip install flag to false
