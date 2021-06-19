@@ -56,6 +56,9 @@
     state: "absent"
     update_cache: yes
   with_items:
+    - "deb http://apt.datadoghq.com/ stable main"
+    - "deb http://apt.datadoghq.com/ stable 6"
+    - "deb http://apt.datadoghq.com/ stable 7"
     - "deb https://apt.datadoghq.com/ stable main"
     - "deb https://apt.datadoghq.com/ stable 6"
     - "deb https://apt.datadoghq.com/ stable 7"
