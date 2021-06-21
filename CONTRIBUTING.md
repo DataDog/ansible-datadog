@@ -2,7 +2,7 @@
 
 The code is licensed under the Apache License 2.0 (see LICENSE for details).
 
-[![Ansible Galaxy](http://img.shields.io/badge/galaxy-Datadog.datadog-660198.svg)](https://galaxy.ansible.com/Datadog/datadog/)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-Datadog.datadog-660198.svg)](https://galaxy.ansible.com/Datadog/datadog/)
 [![Build Status](https://travis-ci.org/DataDog/ansible-datadog.svg?branch=master)](https://travis-ci.org/DataDog/ansible-datadog)
 
 First of all, thanks for contributing!
@@ -110,6 +110,6 @@ Datadog <info@datadoghq.com> --Forked from dustinjamesbrown@gmail.com
 
 [kitchen]: https://kitchen.ci
 [kitchen_yml]: https://github.com/DataDog/ansible-datadog/blob/master/kitchen.yml
-[slack]: http://datadoghq.slack.com
+[slack]: https://datadoghq.slack.com
 [tests]: https://github.com/DataDog/ansible-datadog/blob/master/manual_tests/readme.md
 [vagrant]: https://www.vagrantup.com

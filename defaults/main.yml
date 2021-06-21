@@ -79,7 +79,7 @@ datadog_yum_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADO
 datadog_yum_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 # this key expires in 2024
-datadog_yum_gpgkey_20200908: "http://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
+datadog_yum_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
 # Default zypper repo and keys
 
@@ -101,7 +101,7 @@ datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db
 datadog_zypper_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 datadog_zypper_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
-datadog_zypper_gpgkey_20200908: "http://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
+datadog_zypper_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_zypper_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
 
 # Avoid checking if the agent is running or not. This can be useful if you're
@@ -128,7 +128,7 @@ datadog_windows_agent7_latest_url: "https://s3.amazonaws.com/ddagent-windows-sta
 # in order to get the full url to the msi package.
 datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
 
-# url of the 6.14 fix script. See http://dtdg.co/win-614-fix for more details.
+# url of the 6.14 fix script. See https://dtdg.co/win-614-fix for more details.
 datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-stable/scripts/fix_6_14.ps1"
 
 # Override to change the name of the windows user to create
