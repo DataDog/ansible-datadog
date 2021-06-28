@@ -70,7 +70,7 @@
 - name: Get Windows Agent version
   win_shell: |
     $product_name = "Datadog Agent"
-    $query = "Select Name,IdentifyingNumber,InstallDate,InstallLocation,ProductID,Version FROM Win32_Product where Name like '$pr    oduct_name%'"
+    $query = "Select Name,IdentifyingNumber,InstallDate,InstallLocation,ProductID,Version FROM Win32_Product where Name like '$product_name%'"
     $installs = Get-WmiObject -query $query
 
     if (!$installs -or ($installs.Count -eq 0) -or ($installs.Count -gt 1)) {
@@ -93,4 +93,4 @@
 - name: Set skip install flag if version already installed (Windows)
   set_fact:
     datadog_skip_install: "{{ datadog_version_check_win.stdout | trim == datadog_agent_os2version[ansible_facts.os_family] }}"
-  when: ansible_facts.system == "Windows"
+  when: ansible_facts.os_family == "Windows"
