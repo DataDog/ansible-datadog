@@ -117,3 +117,11 @@
 
 - include_tasks: pkg-debian/install-latest.yml
   when: datadog_agent_debian_version is not defined
+
+- name: Install latest datadog-signing-keys package
+  apt:
+    name: datadog-signing-keys
+    state: latest  # noqa 403
+    # we don't use update_cache: yes, as that was just done by the install-pinned/install-latest
+  register: datadog_signing_keys_install
+  when: not ansible_check_mode
