@@ -36,8 +36,61 @@
     datadog_agent_major_version: "{{ datadog_major }}"
 
 - name: Set OS-specific versions
+  # NOTE: if changing these, make sure the format correspond with values in datadog_version_finding_cmds below
   set_fact:
     datadog_agent_debian_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
     datadog_agent_redhat_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
     datadog_agent_suse_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
     datadog_agent_windows_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}"
+
+- name: Construct commands to find Agent version
+  set_fact:
+    datadog_version_finding_cmds:
+      Debian: "dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'"
+      RedHat: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+      Suse: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+
+- name: Create OS-specific version dict
+  set_fact:
+    datadog_agent_os2version:
+      Debian: "{{ datadog_agent_debian_version }}"
+      RedHat: "{{ datadog_agent_redhat_version }}"
+      Suse: "{{ datadog_agent_suse_version }}"
+      Windows: "{{ datadog_agent_windows_version }}"
+
+- name: Get Linux Agent version
+  shell: "{{ datadog_version_finding_cmds[ansible_facts.os_family] }}"  # noqa 305 - Ansible lint thinks we could use command, but we need shell because some of the cmds have pipes
+  register: datadog_version_check_linux
+  changed_when: false
+  failed_when: false
+  check_mode: no
+  when: ansible_facts.system == "Linux"
+
+# NOTE: This won't work with rc / beta builds.
+- name: Get Windows Agent version
+  win_shell: |
+    $product_name = "Datadog Agent"
+    $query = "Select Name,IdentifyingNumber,InstallDate,InstallLocation,ProductID,Version FROM Win32_Product where Name like '$product_name%'"
+    $installs = Get-WmiObject -query $query
+
+    if (!$installs -or ($installs.Count -eq 0) -or ($installs.Count -gt 1)) {
+      Write-Host ""
+    } else {
+      $ddmaj, $ddmin, $ddpatch, $ddbuild = $installs.Version.split(".")
+      Write-Host "$($ddmaj).$($ddmin).$($ddpatch)"
+    }
+  register: datadog_version_check_win
+  changed_when: false
+  failed_when: false
+  check_mode: no
+  when: ansible_facts.os_family == "Windows"
+
+- name: Set skip install flag if version already installed (Linux)
+  set_fact:
+    datadog_skip_install: "{{ datadog_version_check_linux.stdout | trim == datadog_agent_os2version[ansible_facts.os_family] }}"
+  when: ansible_facts.system == "Linux"
+
+- name: Set skip install flag if version already installed (Windows)
+  set_fact:
+    datadog_skip_install: "{{ datadog_version_check_win.stdout | trim == datadog_agent_os2version[ansible_facts.os_family] }}"
+  when: ansible_facts.os_family == "Windows"

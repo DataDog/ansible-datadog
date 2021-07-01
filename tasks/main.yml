@@ -13,21 +13,24 @@
 - name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks 
   include_tasks: sanitize-checks.yml
 
+# Also sets datadog_skip_install
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
-  when: ansible_facts.os_family == "Debian"
+  when: ansible_facts.os_family == "Debian" and not datadog_skip_install
 
 - name: RedHat Install Tasks
   include_tasks: pkg-redhat.yml
-  when: ansible_facts.os_family == "RedHat"
+  when: ansible_facts.os_family == "RedHat" and not datadog_skip_install
 
 - name: Suse Install Tasks
   include_tasks: pkg-suse.yml
-  when: ansible_facts.os_family == "Suse"
+  when: ansible_facts.os_family == "Suse" and not datadog_skip_install
 
+# Note we don't check datadog_skip_install variable value for windows here,
+# because some tasks in pkg-windows.yml are carried out regardless of its value.
 - name: Windows Install Tasks
   include_tasks: pkg-windows.yml
   when: ansible_facts.os_family == "Windows"
