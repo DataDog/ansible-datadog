@@ -59,7 +59,7 @@
       Windows: "{{ datadog_agent_windows_version }}"
 
 - name: Get Linux Agent version
-  shell: "{{ datadog_version_finding_cmds[ansible_facts.os_family] }}"  # noqa 305 - Ansible lint things we could use command, but we need shell because some of the cmds have pipes
+  shell: "{{ datadog_version_finding_cmds[ansible_facts.os_family] }}"  # noqa 305 - Ansible lint thinks we could use command, but we need shell because some of the cmds have pipes
   register: datadog_version_check_linux
   changed_when: false
   failed_when: false
