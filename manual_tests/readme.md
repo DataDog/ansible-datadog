@@ -18,26 +18,26 @@ Run the Vagrantfile defined in `ansible-datadog/manual_tests`:
 - From `ansible-datadog`'s parent directory, run:
 
 ```shell
-ansible-playbook ansible-datadog/manual_tests/test_6_full.yml -i ansible-datadog/manual_tests/inventory
+ansible-playbook ansible-datadog/manual_tests/test_7_full.yml -i ansible-datadog/manual_tests/inventory
 ```
 
-Note: Replace `test_6_full.yml` with any of the other yaml files on this directory.
+Note: Replace `test_7_full.yml` with any of the other yaml files on this directory.
 
 # Windows test setup from WSL
 
 ## Requirements
 
 - Install Ansible and `pywinrm` inside WSL: `sudo python3 -m pip install  ansible pywinrm`
-- From a Powershell terminal (outside WSL), run the following script to setup WinRM so Ansible can connect:
+- From an elevated Powershell terminal (outside WSL), run the following script to setup WinRM so Ansible can connect:
 https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
 - Make sure the Administrator account is enabled and you know the password (or use a different account in the `inventory_win` file).
 
 ## Setup
 
-- From `ansible-datadog`'s parent directory, run (it will ask for the Administrator password each time):
+- From `ansible-datadog`'s parent directory, run in a WSL console (it will ask for the Administrator password each time):
 
 ```shell
-ansible-playbook -k ansible-datadog/manual_tests/test_6_full.yml -i ansible-datadog/manual_tests/inventory_win
+ansible-playbook -k ansible-datadog/manual_tests/test_7_full.yml -i ansible-datadog/manual_tests/inventory_win
 ```
 
-Note: Replace `test_6_full.yml` with any of the other yaml files on this directory.
+Note: Replace `test_7_full.yml` with any of the other yaml files on this directory.
