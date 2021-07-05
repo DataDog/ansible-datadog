@@ -6,6 +6,7 @@ galaxy_info:
   description: Install Datadog agent and configure checks
   license: Apache2
   min_ansible_version: 2.6
+  github_branch: main
   platforms:
     - name: Ubuntu
       versions:
