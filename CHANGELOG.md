@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+# 4.11.0 / 2021-07-05
+
+* [IMPROVEMENT] Install datadog-signing-keys package on Debian/Ubuntu. See [#372].
+* [IMPROVEMENT] Skip install on Linux systems when pinned version is already installed. See [#371].
+* [IMPROVEMENT] Update 'http' URLs to 'https' wherever possible. See [#369].Thanks [@rossigee].
+* [BUGFIX] Detect existing version in check mode on Windows. See [#364]. Thanks [@camjay].
+
 # 4.10.0 / 2021-05-25
 
 * [IMPROVEMENT] Make Windows package download behavior in check mode consistent with Linux. See [#359]. Thanks [@camjay].
@@ -336,6 +343,10 @@ Initial release, compatible with Ansible v1 & v2
 [#359]: https://github.com/DataDog/ansible-datadog/issues/359
 [#361]: https://github.com/DataDog/ansible-datadog/issues/361
 [#362]: https://github.com/DataDog/ansible-datadog/issues/362
+[#364]: https://github.com/DataDog/ansible-datadog/issues/364
+[#369]: https://github.com/DataDog/ansible-datadog/issues/369
+[#371]: https://github.com/DataDog/ansible-datadog/issues/371
+[#372]: https://github.com/DataDog/ansible-datadog/issues/372
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@b2jrock]: https://github.com/b2jrock
@@ -356,6 +367,7 @@ Initial release, compatible with Ansible v1 & v2
 [@loliee]: https://github.com/loliee
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
+[@rossigee]: https://github.com/rossigee
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
 [@tasktop-teho]: https://github.com/tasktop-teho
