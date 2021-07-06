@@ -1,0 +1,12 @@
+# Managed by Ansible
+
+{% if runtime_security_config is defined and runtime_security_config | default({}, true) | length > 0 -%}
+runtime_security_config:
+{# The "first" option in indent() is only supported by jinja 2.10+
+  while the old equivalent option "indentfirst" is removed in jinja 3.
+  Using non-keyword argument in indent() to be backward compatible.
+#}
+{% filter indent(2, True) %}
+{{ runtime_security_config | to_nice_yaml }}
+{% endfilter %}
+{% endif %}
