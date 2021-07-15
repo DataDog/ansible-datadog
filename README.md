@@ -38,7 +38,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 |--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                          | Your Datadog API key.                                                                                                                                                                                                                                                                                     |
 | `datadog_site`                             | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                          |
-| `datadog_agent_flavor`                     | Override the default Debian / Redhat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.                                                                                                                                                                 |  
+| `datadog_agent_flavor`                     | Override the default Debian / Redhat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.
 | `datadog_agent_version`                    | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                       |
 | `datadog_agent_major_version`              | The major version of the Agent to install. The possible values are 5, 6, or 7 (default). If `datadog_agent_version` is set, it takes precedence otherwise the latest version of the specified major is installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. |
 | `datadog_checks`                           | YAML configuration for Agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6 and v7, <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                                                            |
@@ -173,7 +173,9 @@ The system probe is configured under the `system_probe_config` variable. Any var
 
 [Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
 
-**Note**: The system probe works on Linux with Agent v6+. NPM is supported on Windows with Agent v6.27+ and v7.27+.
+[Cloud Workload Security][8] is configured under the `runtime_security_config` variable.  Any variables nested underneath are written to the `system-probe.yaml` and `security-agent.yaml`, in the `runtime_security_config` section.
+
+**Note**: The system probe is supported on Linux with Agent v6+. NPM is supported on Windows with Agent v6.27+ and v7.27+. Cloud Workload Security is supported on Linux with Agent 6.27+/7.27+.
 
 #### Example configuration
 
@@ -187,17 +189,19 @@ system_probe_config:
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 network_config:
   enabled: true
+runtime_security_config:
+  enabled: true
 ```
 
-**Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, refer to [the public documentation][8] on how to enable system-probe.
+**Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, refer to [the public documentation][9] on how to enable system-probe.
 
 On Linux, once this modification is complete, follow the steps below if you installed an Agent version older than 6.18.0 or 7.18.0:
 
 1. Start the system-probe: `sudo service datadog-agent-sysprobe start` **Note**: If the service wrapper is not available on your system, run this command instead: `sudo initctl start datadog-agent-sysprobe`.
-2. [Restart the Agent][9]: `sudo service datadog-agent restart`.
+2. [Restart the Agent][10]: `sudo service datadog-agent restart`.
 3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`.
 
-For manual setup, refer to the [NPM][8] documentation.
+For manual setup, refer to the [NPM][9] documentation.
 
 #### Agent v5
 
@@ -530,7 +534,7 @@ If you are updating from **6.14.0 or 6.14.1 on Windows**, use the following step
 1. Upgrade the present `datadog.datadog` Ansible role to the latest version (`>=3.3.0`).
 2. Set the `datadog_agent_version` to `6.14.2` or above (defaults to latest).
 
-For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 6.14.1 on Windows][10].
+For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 6.14.1 on Windows][11].
 
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
@@ -539,6 +543,7 @@ For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 
 [5]: https://github.com/DataDog/integrations-core
 [6]: https://docs.datadoghq.com/infrastructure/process/
 [7]: https://docs.datadoghq.com/network_performance_monitoring/
-[8]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
-[9]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
-[10]: https://app.datadoghq.com/help/agent_fix
+[8]: https://docs.datadoghq.com/security_platform/cloud_workload_security/getting_started/
+[9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
+[10]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
+[11]: https://app.datadoghq.com/help/agent_fix

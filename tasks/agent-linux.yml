@@ -172,6 +172,16 @@
   when: not datadog_skip_running_check and not datadog_enabled
   ignore_errors: yes # Since older versions of the Agent don't include the security agent
 
+- name: Create security-agent configuration file
+  template:
+    src: security-agent.yaml.j2
+    dest: /etc/datadog-agent/security-agent.yaml
+    mode: 0640
+    owner: "root"
+    group: "{{ datadog_group }}"
+  notify:
+    "{% if datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
+
 - name: Create installation information file
   template:
     src: install_info.j2
