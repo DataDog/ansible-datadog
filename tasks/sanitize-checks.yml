@@ -5,4 +5,8 @@
 - name: Resolve datadog_tracked_checks
   set_fact:
     datadog_tracked_checks: "{{ datadog_checks | list + datadog_additional_checks | default([], true) }}"
-  
+
+- name: Check variables
+  assert:
+    that:
+      - datadog_checks is mapping
