@@ -185,12 +185,12 @@ datadog_config:
     enabled: "true" # type: string
     scrub_args: true
     custom_sensitive_words: ['consul_token','dd_api_key']
-system_probe_config:
-  sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
-network_config:
-  enabled: true
-runtime_security_config:
-  enabled: true
+  system_probe_config:
+    sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+  network_config:
+    enabled: true
+  runtime_security_config:
+    enabled: true
 ```
 
 **Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, see the [Network Performance Monitoring][9] documentation on how to enable system-probe.
