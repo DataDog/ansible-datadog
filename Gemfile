@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 group :development do
   gem 'rake'
-  gem 'chef', '= 14.10.9'
+  gem 'chef', '15.15.0'
   gem 'chefspec'
   gem 'test-kitchen'
   gem 'json_spec', '~> 1.1.0'
