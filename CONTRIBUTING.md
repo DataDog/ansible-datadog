@@ -52,53 +52,6 @@ To contribute, follow the contributing guidelines above.
 
 To test the roles provided by this project, you can follow the instructions in the manual tests [readme.md][tests].
 
-### Integration testing
-
-This project uses [Kitchen][kitchen] as an integration tests engine. To verify integration tests, install [Vagrant][vagrant] on your machine.
-
-Kitchen allows you to test specific recipes described in [kitchen.yml][kitchen_yml]. There is only one basic recipe on ubuntu but that should be enough to develop others or to add features in TDD.
-
-To list available targets, you can use the `list` command:
-
-```bash
-bundle exec kitchen list
-```
-
-To test a specific target, you can run:
-
-```bash
-bundle exec kitchen test <target>
-```
-
-So for example, if you want to test the agent installation, you can run:
-
-```bash
-bundle exec kitchen test default-ubuntu-1810
-```
-
-### Development loop
-
-To develop some fixes or some features, the easiest way is to work on the platform and version of your choice, setting the machine up with the `create` command and applying the recipe with the `converge` command. If you want to explore the machine and try different things, you can also login into the machine with the `login` command.
-
-```bash
-# Create the relevant vagrant virtual machine
-bundle exec kitchen create default-ubuntu-1810
-
-# Converge to test your recipe
-bundle exec kitchen converge default-ubuntu-1810
-
-# Login to your machine to check stuff
-bundle exec kitchen login default-ubuntu-1810
-
-# Verify the integration tests for your machine
-bundle exec kitchen verify default-ubuntu-1810
-
-# Clean your machine
-bundle exec kitchen destroy default-ubuntu-1810
-```
-
-It is advised that you work in TDD and that you write tests before making changes so that developing your feature or fix is just making tests pass.
-
 ## Author Information
 
 brian@akins.org
@@ -108,8 +61,5 @@ dustinjamesbrown@gmail.com --Forked from brian@akins.org
 Datadog <info@datadoghq.com> --Forked from dustinjamesbrown@gmail.com
 
 
-[kitchen]: https://kitchen.ci
-[kitchen_yml]: https://github.com/DataDog/ansible-datadog/blob/master/kitchen.yml
 [slack]: https://datadoghq.slack.com
 [tests]: https://github.com/DataDog/ansible-datadog/blob/master/manual_tests/readme.md
-[vagrant]: https://www.vagrantup.com
