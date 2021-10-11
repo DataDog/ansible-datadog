@@ -48,6 +48,10 @@ Rebase your changes on `master` and squash your commits whenever possible. This 
 
 To contribute, follow the contributing guidelines above.
 
+### Manual testing
+
+To test the roles provided by this project, you can follow the instructions in the manual tests [readme.md][tests].
+
 ## Author Information
 
 brian@akins.org
@@ -58,3 +62,4 @@ Datadog <info@datadoghq.com> --Forked from dustinjamesbrown@gmail.com
 
 
 [slack]: https://datadoghq.slack.com
+[tests]: https://github.com/DataDog/ansible-datadog/blob/master/manual_tests/readme.md
