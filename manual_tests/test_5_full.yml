@@ -1,0 +1,47 @@
+- hosts: all
+  roles:
+    - { role: ansible-datadog, become: yes }  # On Ansible < 1.9, use `sudo: yes` instead of `become: yes`
+  vars:
+    datadog_agent_major_version: 5
+    datadog_api_key: "123456"
+    datadog_agent_version: "1:5.18.0-1" # for apt-based platforms, use a `5.12.3-1` format on yum-based platforms
+    datadog_agent_allow_downgrade: true
+    datadog_config:
+      tags: "mytag0, mytag1"
+      log_level: INFO
+      apm_enabled: "true" # has to be set as a string
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+        extra_aggregators: version
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: ssh
+            search_string: ['ssh', 'sshd' ]
+          - name: syslog
+            search_string: ['rsyslog' ]
+            cpu_check_interval: 0.2
+            exact_match: true
+            ignore_denied_access: true
+      ssh_check:
+        init_config:
+        instances:
+          - host: localhost
+            port: 22
+            username: root
+            password: changeme
+            sftp_check: True
+            private_key_file:
+            add_missing_keys: True
+      nginx:
+        init_config:
+        instances:
+          - nginx_status_url: http://example.com/nginx_status/
+            tags:
+              - instance:foo
+          - nginx_status_url: http://example2.com:1234/nginx_status/
+            tags:
+              - instance:bar
