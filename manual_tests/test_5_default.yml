@@ -1,6 +1,0 @@
----
-- hosts: all
-  roles:
-  - { role: ansible-datadog, become: yes }
-  vars:
-    datadog_agent_major_version: 5
