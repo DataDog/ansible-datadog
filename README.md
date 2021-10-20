@@ -38,12 +38,12 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 |--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                          | Your Datadog API key.                                                                                                                                                                                                                                                                                     |
 | `datadog_site`                             | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                          |
-| `datadog_agent_flavor`                     | Override the default Debian / Redhat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.                                                                                                                                                                 |  
+| `datadog_agent_flavor`                     | Override the default Debian / RedHat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.
 | `datadog_agent_version`                    | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                       |
 | `datadog_agent_major_version`              | The major version of the Agent to install. The possible values are 5, 6, or 7 (default). If `datadog_agent_version` is set, it takes precedence otherwise the latest version of the specified major is installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. |
 | `datadog_checks`                           | YAML configuration for Agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6 and v7, <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                                                            |
 | `datadog_disable_untracked_checks` | Set to `true` to remove all checks not present in `datadog_checks` and `datadog_additional_checks`. |
-| `datadog_additional_checks` | List of additional checks that won't be removed if `datadog_disable_untracked_checks` is set to `true`. |
+| `datadog_additional_checks` | List of additional checks that are not removed if `datadog_disable_untracked_checks` is set to `true`. |
 | `datadog_disable_default_checks` | Set to `true` to remove all default checks. |
 | `datadog_config`                           | Settings for the main Agent configuration file: <br> - `/etc/datadog-agent/datadog.yaml` for Agent v6 and v7,<br> - `/etc/dd-agent/datadog.conf` for Agent v5 (under the `[Main]` section).                                                                                                               |
 | `datadog_config_ex`                        | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).                                                                                                                                                                                                                      |
@@ -51,13 +51,13 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_apt_cache_valid_time`             | Override the default apt cache expiration time (defaults to 1 hour).                                                                                                                                                                                                                                      |
 | `datadog_apt_key_url_new`                  | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE` and `F14F620E`.                            |
 | `datadog_yum_repo`                         | Override the default Datadog `yum` repository.                                                                                                                                                                                                                                                            |
-| `datadog_yum_repo_gpgcheck`                | Override the default `repo_gpgcheck` value (empty). If empty, value is dynamically set to `yes` when custom `datadog_yum_repo` is not used and system is not RHEL/CentOS 8.1 (due to [a bug](https://bugzilla.redhat.com/show_bug.cgi?id=1792506) in dnf), otherwise it's set to `no`. Note that repodata signature verification is always turned off for Agent 5.                                                                         |
+| `datadog_yum_repo_gpgcheck`                | Override the default `repo_gpgcheck` value (empty). If empty, value is dynamically set to `yes` when custom `datadog_yum_repo` is not used and system is not RHEL/CentOS 8.1 (due to [a bug](https://bugzilla.redhat.com/show_bug.cgi?id=1792506) in dnf), otherwise it's set to `no`. **Note**: repodata signature verification is always turned off for Agent 5.                                                                         |
 | `datadog_yum_gpgcheck`                     | Override the default `gpgcheck` value (`yes`) - use `no` to turn off package GPG signature verification.                                                                                                                                                                                                  |
 | `datadog_yum_gpgkey`                       | Override the default URL to the Datadog `yum` key used to verify Agent v5 and v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                                                                               |
 | `datadog_yum_gpgkey_e09422b3`              | Override the default URL to the Datadog `yum` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                               |
 | `datadog_yum_gpgkey_e09422b3_sha256sum`    | Override the default checksum of the `datadog_yum_gpgkey_e09422b3` key.                                                                                                                                                                                                                                   |
 | `datadog_zypper_repo`                      | Override the default Datadog `zypper` repository.                                                                                                                                                                                                                                                         |
-| `datadog_zypper_repo_gpgcheck`             | Override the default `repo_gpgcheck` value (empty). If empty, value is dynamically set to `yes` when custom `datadog_zypper_repo` is not used, otherwise it's set to `no`. Note that repodata signature verification is always turned off for Agent 5.                                                    |
+| `datadog_zypper_repo_gpgcheck`             | Override the default `repo_gpgcheck` value (empty). If empty, value is dynamically set to `yes` when custom `datadog_zypper_repo` is not used, otherwise it's set to `no`. **Note**: repodata signature verification is always turned off for Agent 5.                                                    |
 | `datadog_zypper_gpgcheck`                  | Override the default `gpgcheck` value (`yes`) - use `no` to turn off package GPG signature verification.                                                                                                                                                                                                  |
 | `datadog_zypper_gpgkey`                    | Override the default URL to the Datadog `zypper` key used to verify Agent v5 and v6 (up to 6.13) packages (key ID `4172A230`).                                                                                                                                                                            |
 | `datadog_zypper_gpgkey_sha256sum`          | Override the default checksum of the `datadog_zypper_gpgkey` key.                                                                                                                                                                                                                                         |
@@ -129,7 +129,7 @@ The example below configures the PostgreSQL check through **Autodiscovery**:
             password: password
 ```
 
-Learn more about [Autodiscovery in the Datadog documentation][3].
+Learn more about [Autodiscovery][3] in the Datadog documentation.
 
 ### Tracing
 
@@ -171,7 +171,9 @@ The following variables are available for live processes:
 
 The system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `system_probe_config` section.
 
-[Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable.  Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
+[Network Performance Monitoring][7] (NPM) is configured under the `network_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `network_config` section.
+
+[Cloud Workload Security][8] is configured under the `runtime_security_config` variable. Any variables nested underneath are written to the `system-probe.yaml` and `security-agent.yaml`, in the `runtime_security_config` section.
 
 **Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
 
@@ -187,17 +189,19 @@ system_probe_config:
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 network_config:
   enabled: true
+runtime_security_config:
+  enabled: true
 ```
 
-**Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, refer to [the public documentation][8] on how to enable system-probe.
+**Note**: This configuration works with Agent 6.24.1+ and 7.24.1+. For older Agent versions, see the [Network Performance Monitoring][9] documentation on how to enable system-probe.
 
 On Linux, once this modification is complete, follow the steps below if you installed an Agent version older than 6.18.0 or 7.18.0:
 
 1. Start the system-probe: `sudo service datadog-agent-sysprobe start` **Note**: If the service wrapper is not available on your system, run this command instead: `sudo initctl start datadog-agent-sysprobe`.
-2. [Restart the Agent][9]: `sudo service datadog-agent restart`.
+2. [Restart the Agent][10]: `sudo service datadog-agent restart`.
 3. Enable the system-probe to start on boot: `sudo service enable datadog-agent-sysprobe`.
 
-For manual setup, refer to the [NPM][8] documentation.
+For manual setup, see the [NPM][9] documentation.
 
 #### Agent v5
 
@@ -219,7 +223,7 @@ By default, the current major version of the Datadog Ansible role installs Agent
 For v4+ of this role, when `datadog_agent_version` is used to pin a specific Agent version, the role derives per-OS version names to comply with the version naming schemes of the supported operating systems, for example:
 
 - `1:7.16.0-1` for Debian and SUSE based
-- `7.16.0-1` for Redhat-based
+- `7.16.0-1` for RedHat-based
 - `7.16.0` for Windows.
 
 This makes it possible to target hosts running different operating systems in the same Ansible run, for example:
@@ -227,10 +231,10 @@ This makes it possible to target hosts running different operating systems in th
 | Provided                            | Installs     | System                |
 |-------------------------------------|--------------|-----------------------|
 | `datadog_agent_version: 7.16.0`     | `1:7.16.0-1` | Debian and SUSE-based |
-| `datadog_agent_version: 7.16.0`     | `7.16.0-1`   | Redhat-based          |
+| `datadog_agent_version: 7.16.0`     | `7.16.0-1`   | RedHat-based          |
 | `datadog_agent_version: 7.16.0`     | `7.16.0`     | Windows               |
 | `datadog_agent_version: 1:7.16.0-1` | `1:7.16.0-1` | Debian and SUSE-based |
-| `datadog_agent_version: 1:7.16.0-1` | `7.16.0-1`   | Redhat-based          |
+| `datadog_agent_version: 1:7.16.0-1` | `7.16.0-1`   | RedHat-based          |
 | `datadog_agent_version: 1:7.16.0-1` | `7.16.0`     | Windows               |
 
 **Note**: If the version is not provided, the role uses `1` as the epoch and `1` as the release number.
@@ -261,7 +265,7 @@ If you previously used the Agent v5 variables, use the **new** variables below w
 | `datadog_agent5_yum_repo`    | `datadog_yum_repo`    |
 | `datadog_agent5_zypper_repo` | `datadog_zypper_repo` |
 
-Since version 4.9.0, the `use_apt_backup_keyserver` variable has been removed, as APT keys are now obtained from https://keys.datadoghq.com.
+Since version 4.9.0, the `use_apt_backup_keyserver` variable has been removed, as APT keys are obtained from https://keys.datadoghq.com.
 
 #### Windows
 
@@ -291,7 +295,7 @@ Available actions:
 
 ##### Datadog Marketplace
 
-[Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) integrations can be installed via the `datadog_integration` resource. Note that Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
+[Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) integrations can be installed with the `datadog_integration` resource. **Note**: Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
 
 ##### Syntax
 
@@ -325,7 +329,7 @@ This example installs version `1.11.0` of the ElasticSearch integration and remo
      action: remove
 ```
 
-To see the available versions of Datadog integrations, refer to their `CHANGELOG.md` file in the [integrations-core repository][5].
+To see the available versions of Datadog integrations, see their `CHANGELOG.md` file in the [integrations-core repository][5].
 
 ### Downgrade
 
@@ -342,7 +346,7 @@ To downgrade to a prior version of the Agent:
 
 Below are some sample playbooks to assist you with using the Datadog Ansible role.
 
-The following example sends data to Datadog US (default), enables logs, NPM and configures a few checks.
+The following example sends data to Datadog US (default), enables logs, NPM, and configures a few checks.
 
 ```yml
 - hosts: servers
@@ -430,7 +434,7 @@ This example installs the latest Agent v6:
 
 ### Configuring the site
 
-If using a site other than the default `datadoghq.com`, set the `datadog_site` var to the appropiate URL (eg: `datadoghq.eu`,  `us3.datadoghq.com`).
+If using a site other than the default `datadoghq.com`, set the `datadog_site` var to the appropriate URL (eg: `datadoghq.eu`,  `us3.datadoghq.com`).
 
 This example sends data to the EU site:
 
@@ -515,13 +519,13 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
 
 The `yum` Python module, which is used in this role to install the Agent on CentOS-based hosts, is only available on Python 2. When a Python 3 interpreter is detected on a target host, the `dnf` package manager and the `dnf` Python module are used instead.
 
-However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used. This role will fail early when this situation is detected to indicate that a Python 2 interpreter is needed when installing the Agent on CentOS / RHEL < 8.
+However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used. This role fails early when this situation is detected to indicate that a Python 2 interpreter is needed when installing the Agent on CentOS / RHEL < 8.
 
 To bypass this early failure detection (for instance, if `dnf` and the `python3-dnf` package are available on your host), set the `datadog_ignore_old_centos_python3_error` variable to `true`.
 
 ### Windows
 
-Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, installation of these versions is now blocked (starting with version `3.3.0` of this role).
+Due to a critical bug in Agent versions `6.14.0` and `6.14.1` on Windows, installation of these versions is blocked (starting with version `3.3.0` of this role).
 
 **NOTE:** Ansible fails on Windows if `datadog_agent_version` is set to `6.14.0` or `6.14.1`. Use `6.14.2` or above.
 
@@ -530,7 +534,7 @@ If you are updating from **6.14.0 or 6.14.1 on Windows**, use the following step
 1. Upgrade the present `datadog.datadog` Ansible role to the latest version (`>=3.3.0`).
 2. Set the `datadog_agent_version` to `6.14.2` or above (defaults to latest).
 
-For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 6.14.1 on Windows][10].
+For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 6.14.1 on Windows][11].
 
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
@@ -539,6 +543,7 @@ For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 
 [5]: https://github.com/DataDog/integrations-core
 [6]: https://docs.datadoghq.com/infrastructure/process/
 [7]: https://docs.datadoghq.com/network_performance_monitoring/
-[8]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
-[9]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
-[10]: https://app.datadoghq.com/help/agent_fix
+[8]: https://docs.datadoghq.com/security_platform/cloud_workload_security/getting_started/
+[9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
+[10]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
+[11]: https://app.datadoghq.com/help/agent_fix
