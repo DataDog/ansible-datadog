@@ -167,7 +167,7 @@ The following variables are available for live processes:
 * `scrub_args`: Enables the scrubbing of sensitive arguments from a process command line (defaults to `true`).
 * `custom_sensitive_words`: Expands the default list of sensitive words used by the command line scrubber.
 
-#### System probe and Network Performance Monitoring
+#### System probe
 
 The system probe is configured under the `system_probe_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `system_probe_config` section.
 
