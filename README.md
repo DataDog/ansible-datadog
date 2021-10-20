@@ -175,7 +175,7 @@ The system probe is configured under the `system_probe_config` variable. Any var
 
 [Cloud Workload Security][8] is configured under the `runtime_security_config` variable. Any variables nested underneath are written to the `system-probe.yaml` and `security-agent.yaml`, in the `runtime_security_config` section.
 
-**Note**: The system probe is supported on Linux with Agent v6+. NPM is supported on Windows with Agent v6.27+ and v7.27+. Cloud Workload Security is supported on Linux with Agent 6.27+/7.27+.
+**Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
 
 #### Example configuration
 
