@@ -8,13 +8,13 @@
   win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
     dest: '%TEMP%\fix_6_14.ps1'
-  when: not datadog_skip_install
+  when: not datadog_skip_install and datadog_apply_windows_614_fix
 
 - name: Run 6.14.0/1 PowerShell fix
   win_shell: |
     Set-ExecutionPolicy Bypass -Scope Process -Force
     &$env:temp\fix_6_14.ps1
-  when: not datadog_skip_install
+  when: not datadog_skip_install and datadog_apply_windows_614_fix
 
 - include_tasks: win_agent_latest.yml
   when: (not datadog_skip_install) and (datadog_agent_windows_version is not defined)
