@@ -68,6 +68,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_additional_groups`                | Either a list, or a string containing a comma-separated list of additional groups for the `datadog_user` (Linux only).                                                                                                                                                                                    |
 | `datadog_windows_ddagentuser_name`         | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).                                                                                                                                                                                                                   |
 | `datadog_windows_ddagentuser_password`     | The password used to create the user and/or register the service (Windows only).                                                                                                                                                                                                                          |
+| `datadog_apply_windows_614_fix`            | Whether or not to download and apply file referenced by `datadog_windows_614_fix_script_url` (Windows only). See https://dtdg.co/win-614-fix for more details. You can set this to `false` assuming your hosts aren't running Datadog Agent 6.14.\* and you're not planning to install that version either. |
 
 ### Integrations
 
