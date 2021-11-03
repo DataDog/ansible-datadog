@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+# 4.12.0 / 2021-11-03
+
+* [FEATURE] Add Cloud Workload Security Agent configuration. See [#375]. Thanks [@alsmola].
+* [IMPROVEMENT] Avoid usage of `ansible_lsb` to not depend on `lsb-release` package on Debian. See [#377].
+* [IMPROVEMENT] Check that `datadog_checks` is a mapping to avoid misconfiguration. See [#384]. Thanks [@soar].
+* [IMPROVEMENT] Enable turning off the Agent 6.14 fix for Windows. See [#399].
+* [DOCS] Mention limitations in enabling NPM on Windows. See [#396].
+* [BUGFIX] Fix execution with `jinja2_native = True`. See [#383]. Thanks [@soar].
+
 # 4.11.0 / 2021-07-05
 
 * [IMPROVEMENT] Install datadog-signing-keys package on Debian/Ubuntu. See [#372].
@@ -347,8 +356,15 @@ Initial release, compatible with Ansible v1 & v2
 [#369]: https://github.com/DataDog/ansible-datadog/issues/369
 [#371]: https://github.com/DataDog/ansible-datadog/issues/371
 [#372]: https://github.com/DataDog/ansible-datadog/issues/372
+[#375]: https://github.com/DataDog/ansible-datadog/issues/375
+[#377]: https://github.com/DataDog/ansible-datadog/issues/377
+[#383]: https://github.com/DataDog/ansible-datadog/issues/383
+[#384]: https://github.com/DataDog/ansible-datadog/issues/384
+[#396]: https://github.com/DataDog/ansible-datadog/issues/396
+[#399]: https://github.com/DataDog/ansible-datadog/issues/399
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
+[@alsmola]: https://github.com/alsmola
 [@b2jrock]: https://github.com/b2jrock
 [@brendanlong]: https://github.com/brendanlong
 [@camjay]: https://github.com/camjay
@@ -370,6 +386,7 @@ Initial release, compatible with Ansible v1 & v2
 [@rossigee]: https://github.com/rossigee
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
+[@soar]: https://github.com/soar
 [@tasktop-teho]: https://github.com/tasktop-teho
 [@the-real-cphillips]: https://github.com/the-real-cphillips
 [@tomgoren]: https://github.com/tomgoren
