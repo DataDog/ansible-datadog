@@ -130,6 +130,8 @@ datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/
 
 # url of the 6.14 fix script. See https://dtdg.co/win-614-fix for more details.
 datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-stable/scripts/fix_6_14.ps1"
+# whether or not to download and apply the above fix
+datadog_apply_windows_614_fix: true
 
 # Override to change the name of the windows user to create
 datadog_windows_ddagentuser_name: ""
