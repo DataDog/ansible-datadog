@@ -56,6 +56,10 @@
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "install" and ansible_facts.os_family != "Windows"
+  register: integration_unix_install
+  changed_when:
+    - 'integration_unix_install is defined'
+    - '"is already installed. Nothing to do." not in integration_unix_install.stdout'
 
 - name: Install pinned version of integrations (Windows)
   win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
@@ -65,3 +69,7 @@
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "install" and ansible_facts.os_family == "Windows"
+  register: integration_windows_install
+  changed_when:
+    - 'integration_windows_install is defined'
+    - '"is already installed. Nothing to do." not in integration_windows_install.stdout'
