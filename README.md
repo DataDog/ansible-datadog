@@ -496,7 +496,6 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 ### Uninstallation
 
 On Windows it's possible to uninstall the Agent by using the following code in your Ansible role:
-```
 - name: Check If Datadog Agent is installed
   win_stat:
   path: 'c:\Program Files\Datadog\Datadog Agent\bin\agent.exe'
