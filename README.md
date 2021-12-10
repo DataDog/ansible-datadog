@@ -452,17 +452,6 @@ This example sends data to the EU site:
 
 On Windows, remove the `become: yes` option so the role does not fail. Below are two methods to make the example playbooks work with Windows hosts:
 
-To uninstall the Agent using Ansible, add the following code to your role:
-```
-- name: Check If Datadog Agent is installed
-  win_stat:
-  path: 'c:\Program Files\Datadog\Datadog Agent\bin\agent.exe'
-  register: stat_file
-- name: Remove windows datadog agent
-  win_shell: start-process msiexec -Wait -ArgumentList ('/log', 'C:\\uninst.log', '/norestart', '/q', '/x', (Get-WmiObject -Class Win32_Product -Filter "Name='Datadog Agent'" -ComputerName .).IdentifyingNumber)
-  when: stat_file.stat.exists == True
-```
-
 #### Inventory file
 
 Using the inventory file is the recommended approach. Set the `ansible_become` option to `no` in the inventory file for each Windows host:
@@ -503,6 +492,19 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 ```
 
 **Note**: This configuration fails on Linux hosts. Only use it if the playbook is specific to Windows hosts. Otherwise, use the [inventory file method](#inventory-file).
+
+### Uninstallation
+
+On Windows it's possible to uninstall the Agent by using the following code in your Ansible role:
+```
+- name: Check If Datadog Agent is installed
+  win_stat:
+  path: 'c:\Program Files\Datadog\Datadog Agent\bin\agent.exe'
+  register: stat_file
+- name: Remove windows datadog agent
+  win_shell: start-process msiexec -Wait -ArgumentList ('/log', 'C:\\uninst.log', '/norestart', '/q', '/x', (Get-WmiObject -Class Win32_Product -Filter "Name='Datadog Agent'" -ComputerName .).IdentifyingNumber)
+  when: stat_file.stat.exists == True
+```
 
 ## Troubleshooting
 
