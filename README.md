@@ -513,7 +513,7 @@ On Windows it's possible to uninstall the Agent by using the following code in y
 ```
 
 However for more control over the uninstall parameters, the following code can be used.
-In this example, the '/norestart' flag was added and a custom location for the uninstallation logs was specified:
+In this example, the '/norestart' flag is added and a custom location for the uninstallation logs is specified:
 
 ```yml
 - name: Check If Datadog Agent is installed
