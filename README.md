@@ -493,6 +493,38 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 
 **Note**: This configuration fails on Linux hosts. Only use it if the playbook is specific to Windows hosts. Otherwise, use the [inventory file method](#inventory-file).
 
+### Uninstallation
+
+On Windows it's possible to uninstall the Agent by using the following code in your Ansible role:
+
+```yml
+- name: Check If Datadog Agent is installed
+  win_shell: |
+    (get-wmiobject win32_product -Filter "Name LIKE '%datadog%'").IdentifyingNumber
+  register: agent_installed_result
+- name: Set Datadog Agent installed fact
+  set_fact:
+    agent_installed: "{{ agent_installed_result.stdout | trim }}"
+- name: Uninstall the Datadog Agent
+  win_package:
+    product_id: "{{ agent_installed }}"
+    state: absent
+  when: agent_installed != ""
+```
+
+However for more control over the uninstall parameters, the following code can be used.
+In this example, the '/norestart' flag is added and a custom location for the uninstallation logs is specified:
+
+```yml
+- name: Check If Datadog Agent is installed
+  win_stat:
+  path: 'c:\Program Files\Datadog\Datadog Agent\bin\agent.exe'
+  register: stat_file
+- name: Uninstall the Datadog Agent
+  win_shell: start-process msiexec -Wait -ArgumentList ('/log', 'C:\\uninst.log', '/norestart', '/q', '/x', (Get-WmiObject -Class Win32_Product -Filter "Name='Datadog Agent'" -ComputerName .).IdentifyingNumber)
+  when: stat_file.stat.exists == True
+```
+
 ## Troubleshooting
 
 ### Debian stretch
