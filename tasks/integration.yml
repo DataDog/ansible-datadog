@@ -9,7 +9,7 @@
     datadog_agent_binary_path: "{{ datadog_agent_binary_path_linux }}"
   when: ansible_facts.os_family != "Windows"
 
-- name: set agent user for integration commmand (windows)
+- name: set agent user for integration command (windows)
   set_fact:
     integration_command_user: "{{ integration_command_user_windows }}"
   when: ansible_facts.os_family == "Windows"
@@ -21,7 +21,7 @@
 
 - name: Validate integrations actions
   fail:
-    msg: "Unkown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'"
+    msg: "Unknown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'"
   when: item.value.action != "install" and item.value.action != "remove"
   loop: "{{ datadog_integration|dict2items }}"
 
@@ -46,30 +46,78 @@
   loop: "{{ datadog_integration|dict2items }}"
   when: item.value.action == "remove" and ansible_facts.os_family == "Windows"
 
+# Check for existing integration installs / versions
+
+- name: "Check for existing install / version of integrations (Unix)"
+  command:
+    argv:
+      - "{{ datadog_agent_binary_path }}"
+      - "integration"
+      - "show"
+      - "{{ item.key }}"
+      - "-q"
+  become: yes
+  become_user: "{{ integration_command_user }}"
+  check_mode: no
+  changed_when:
+    - "integration_unix_existing.stdout is defined"
+    - "item.value.version not in integration_unix_existing.stdout "
+  # Ignore command failure if integration is not already installed
+  failed_when: no
+  register: "integration_unix_existing"
+  loop: "{{ datadog_integration|dict2items }}"
+  when:
+    - "item.value.action == 'install'"
+    - "ansible_facts.os_family != 'Windows'"
+
+- name: "Check for existing install / version of integrations (Windows)"
+  win_command: '"{{ datadog_agent_binary_path }}" integration show {{ item.key }}'
+  become: yes
+  become_user: "{{ integration_command_user }}"
+  check_mode: no
+  changed_when:
+    - "integration_windows_existing.stdout is defined"
+    - "item.value.version not in integration_windows_existing.stdout"
+  # Ignore command failure if integration is not already installed
+  failed_when: no
+  loop: "{{ datadog_integration|dict2items }}"
+  register: "integration_windows_existing"
+  when:
+    - "ansible_facts.os_family == 'Windows'"
+    - "item.value.action == 'install'"
+
 # Install integrations
 
-- name: Install pinned version of integrations (Unix)
-  command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
+- name: "Install pinned version of integrations (Unix)"
+  command:
+    argv:
+      - "{{ datadog_agent_binary_path }}"
+      - "integration"
+      - "install"
+      - "{{ third_party }}"
+      - "{{ item.key }}=={{ item.value.version }}"
   become: yes
   become_user: "{{ integration_command_user }}"
+  changed_when: "integration_unix_existing.stdout is undefined or item.value.version not in integration_unix_existing.stdout"
   vars:
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family != "Windows"
-  register: integration_unix_install
-  changed_when:
-    - 'integration_unix_install is defined'
-    - '"is already installed. Nothing to do." not in integration_unix_install.stdout'
+  register: "integration_unix_install"
+  when:
+    - "item.value.action == 'install'"
+    - "ansible_facts.os_family != 'Windows'"
+    - "integration_unix_existing.stdout is undefined or integration_unix_existing.stdout != item.value.version"
 
-- name: Install pinned version of integrations (Windows)
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
+- name: "Install pinned version of integrations (Windows)"
+  win_command: '"{{ datadog_agent_binary_path }}" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}'
   become: yes
+  become_user: "{{ integration_command_user }}"
+  changed_when: "integration_windows_existing.stdout is undefined or item.value.version not in integration_windows_existing.stdout"
+  loop: "{{ datadog_integration|dict2items }}"
+  register: "integration_windows_install"
   vars:
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family == "Windows"
-  register: integration_windows_install
-  changed_when:
-    - 'integration_windows_install is defined'
-    - '"is already installed. Nothing to do." not in integration_windows_install.stdout'
+  when:
+    - "item.value.action == 'install'"
+    - "ansible_facts.os_family == 'Windows'"
+    - "integration_windows_existing.stdout is undefined or integration_windows_existing.stdout != item.value.version"
