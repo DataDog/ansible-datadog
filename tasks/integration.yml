@@ -60,10 +60,6 @@
   become_user: "{{ integration_command_user }}"
   check_mode: no
   changed_when: no
-  #  integration_results.stderr is defined or
-  #  (integration_results.stdout is defined and integration_results.stdout is not search
-  #  integration_results.current_version )
-
   # Ignore command failure if integration is not already installed
   failed_when: no
   register: "integration_existing"
@@ -95,13 +91,6 @@
   debug:
     var: 'integration_existing'
 
-- name: 'debug json query'
-  loop: "{{ datadog_integration | dict2items }}"
-  loop_control:
-    loop_var: 'integration'
-  debug:
-    var: 'integration_results'
-
 # Install integrations
 
 - name: "Install pinned version of integrations (Unix)"
@@ -117,14 +106,14 @@
   changed_when: "integration.stdout is undefined or integration.stdout is not search ( integration.item.value.version )"
   vars:
     third_party: "{% if 'third_party' in integration.item.value and integration.item.value.third_party | bool %}--third-party{% endif %}"
-  loop: "{{ integration_unix_existing.results  }}"
+  loop: "{{ integration_existing.results  }}"
   loop_control:
-    loop_var: 'integration'
+    loop_var: 'check_result'
   register: "integration_unix_install"
   when:
-    - "integration.item.value.action | lower == 'install'"
+    - "check_result.integration.value.action | lower == 'install'"
+    - "check_result.rc != 0 or check_result.stdout is undefined or check_result.stdout != check_result.integration.value.version'
     - "ansible_facts.os_family != 'Windows'"
-    - "integration.stdout is undefined or integration.stdout is not search ( integration.item.value.version )"
 
 - name: "Install pinned version of integrations (Windows)"
   win_command: '"{{ datadog_agent_binary_path }}" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}'
