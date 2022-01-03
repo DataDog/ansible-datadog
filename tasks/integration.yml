@@ -54,24 +54,25 @@
       - "{{ datadog_agent_binary_path }}"
       - "integration"
       - "show"
-      - "{{ item.key }}"
+      - "{{ integration.key }}"
       - "-q"
   become: yes
   become_user: "{{ integration_command_user }}"
   check_mode: no
   changed_when: >-
-    integration_unix_existing.results[?item.key==integration.item.value].stderr is defined or
-    ( integration_unix_existing.results[?item.key==integration.item.value].stdout is defined and
-    integration_unix_existing.results[?item.key==integration.item.value].stdout is not search ( item.value.version ) )
+    integration_existing.results | jsonquery (datadog_integration_query).stderr is defined or
+    ( integration_existing.results | jsonquery (datadog_integration_query).stdout is defined and
+    integration_existing.results | jsonquery (datadog_integration_query).stdout is not search
+    ( integration_existing.results | jsonquery (datadog_integration_query) ).current_version )
 
   # Ignore command failure if integration is not already installed
   failed_when: no
-  register: "integration_unix_existing"
-  loop: "{{ datadog_integration|dict2items }}"
+  register: "integration_existing"
+  loop: "{{ datadog_integration | dict2items }}"
   loop_control:
     loop_var: 'integration'
   when:
-    - "item.value.action | lower == 'install'"
+    - "integration.value.action | lower == 'install'"
     - "ansible_facts.os_family != 'Windows'"
 
 - name: "Check for existing install / version of integrations (Windows)"
