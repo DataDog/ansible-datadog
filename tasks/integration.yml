@@ -98,8 +98,7 @@
 
 - name: 'debug json query'
   debug:
-    var: 'integration_existing.results | jsonquery (datadog_integration_query)'
-
+    var: 'integration_existing.results | json_query (datadog_integration_query)'
 
 # Install integrations
 
