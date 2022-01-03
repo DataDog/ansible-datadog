@@ -60,10 +60,9 @@
   become_user: "{{ integration_command_user }}"
   check_mode: no
   changed_when: no
-  #  (integration_existing.results | jsonquery (datadog_integration_query)).stderr is defined or
-  #  (( integration_existing.results | jsonquery (datadog_integration_query)).stdout is defined and
-  #  (integration_existing.results | jsonquery (datadog_integration_query)).stdout is not search
-  #  ( integration_existing.results | jsonquery (datadog_integration_query) ).current_version )
+  #  integration_results.stderr is defined or
+  #  (integration_results.stdout is defined and integration_results.stdout is not search
+  #  integration_results.current_version )
 
   # Ignore command failure if integration is not already installed
   failed_when: no
@@ -97,6 +96,9 @@
     var: 'integration_existing'
 
 - name: 'debug json query'
+  loop: "{{ datadog_integration | dict2items }}"
+  loop_control:
+    loop_var: 'integration'
   debug:
     var: 'integration_existing.results | json_query (datadog_integration_query)'
 
