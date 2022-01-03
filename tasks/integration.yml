@@ -100,7 +100,7 @@
   loop_control:
     loop_var: 'integration'
   debug:
-    var: 'integration_existing.results | json_query (datadog_integration_query)'
+    var: 'integration_results'
 
 # Install integrations
 
