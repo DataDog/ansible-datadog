@@ -60,8 +60,7 @@
   become_user: "{{ integration_command_user }}"
   check_mode: no
   changed_when: >-
-    integration_existing.results is undefined or integration_existing.results.rc != 0 or integration_existing.results.stdout is undefined or
-    integration_existing.results.stdout != integration_existing.results.integration.value.version
+    integration_results.rc != 0 or integration_results.stdout != integration.value.version
 
   # Ignore command failure if integration is not already installed
   failed_when: no
@@ -72,6 +71,8 @@
   when:
     - "integration.value.action | lower == 'install'"
     - "ansible_facts.os_family != 'Windows'"
+
+
 
 - name: "Check for existing install / version of integrations (Windows)"
   win_command: '"{{ datadog_agent_binary_path }}" integration show {{ item.key }}'
