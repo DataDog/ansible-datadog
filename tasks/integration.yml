@@ -100,19 +100,19 @@
       - "integration"
       - "install"
       - "{{ third_party }}"
-      - "{{ integration.item.key }}=={{ integration.item.value.version }}"
+      - "{{ check_result.integration.key }}=={{ check_result.integration.value.version }}"
   become: yes
   become_user: "{{ integration_command_user }}"
-  changed_when: "integration.stdout is undefined or integration.stdout is not search ( integration.item.value.version )"
+  changed_when: "check_result.stdout is undefined or check_result.stdout is not search ( check_result.integration.value.version )"
   vars:
-    third_party: "{% if 'third_party' in integration.item.value and integration.item.value.third_party | bool %}--third-party{% endif %}"
+    third_party: "{% if 'third_party' in check_result.integration.value and check_result.integration.value.third_party | bool %}--third-party{% endif %}"
   loop: "{{ integration_existing.results  }}"
   loop_control:
     loop_var: 'check_result'
   register: "integration_unix_install"
   when:
     - "check_result.integration.value.action | lower == 'install'"
-    - "check_result.rc != 0 or check_result.stdout is undefined or check_result.stdout != check_result.integration.value.version'
+    - "check_result.rc != 0 or check_result.stdout is undefined or check_result.stdout != check_result.integration.value.version"
     - "ansible_facts.os_family != 'Windows'"
 
 - name: "Install pinned version of integrations (Windows)"
