@@ -59,11 +59,11 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   check_mode: no
-  changed_when: >-
-    (integration_existing.results | jsonquery (datadog_integration_query)).stderr is defined or
-    (( integration_existing.results | jsonquery (datadog_integration_query)).stdout is defined and
-    (integration_existing.results | jsonquery (datadog_integration_query)).stdout is not search
-    ( integration_existing.results | jsonquery (datadog_integration_query) ).current_version )
+  changed_when: no
+  #  (integration_existing.results | jsonquery (datadog_integration_query)).stderr is defined or
+  #  (( integration_existing.results | jsonquery (datadog_integration_query)).stdout is defined and
+  #  (integration_existing.results | jsonquery (datadog_integration_query)).stdout is not search
+  #  ( integration_existing.results | jsonquery (datadog_integration_query) ).current_version )
 
   # Ignore command failure if integration is not already installed
   failed_when: no
@@ -94,7 +94,12 @@
 
 - name: 'debug integration check'
   debug:
-    var: 'integration_unix_existing'
+    var: 'integration_existing'
+
+- name: 'debug json query'
+  debug:
+    var: 'integration_existing.results | jsonquery (datadog_integration_query)'
+
 
 # Install integrations
 
