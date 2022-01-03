@@ -183,4 +183,4 @@ datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_facts
 datadog_agent6_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_facts.architecture }}"
 datadog_agent7_zypper_repo: "https://yum.datadoghq.com/suse/stable/7/{{ ansible_facts.architecture }}"
 
-integration_results: integration_existing.results |  jsonquery ("[?integration.key==integration_existing.item.value]" )
+integration_results: '{{ integration_existing.results |  jsonquery ("[?integration.key==integration_existing.item.value]" ) }}'
