@@ -60,7 +60,7 @@
   become_user: "{{ integration_command_user }}"
   check_mode: no
   changed_when: >-
-    integration_existing.results.rc != 0 or integration_existing.results.stdout is undefined or
+    integration_existing.results is undefined or integration_existing.results.rc != 0 or integration_existing.results.stdout is undefined or
     integration_existing.results.stdout != integration_existing.results.integration.value.version
 
   # Ignore command failure if integration is not already installed
