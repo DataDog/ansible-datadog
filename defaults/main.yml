@@ -187,4 +187,10 @@ datadog_integration_query: >-
   [[?integration.key==integration_existing.item.value]].{
   stderr: ( stderr | default ( omit ) ),
   stdout: (stdout | default (omit) ),
-  current_version: (item.value.version default ( omit) )}
+  current_version: (item.value.version | default ( omit) )}
+
+
+
+    integration_existing.results | jsonquery ([?integration.key==integration_existing.item.value].stderr is defined or
+    ( integration.results[?integration.key==integration_existing.item.value].stdout is defined and
+    integration.results[?integration.key==integration_existing.item.value].stdout is not search ( integration_existing.item.value.version ) )
