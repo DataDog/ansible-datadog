@@ -59,9 +59,10 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   check_mode: no
-  changed_when:
-    - "integration_unix_existing.results.stdout is defined"
-    - "integration_unix_existing.results.stdout is not search ( item.value.version )"
+  changed_when: >-
+    integration_unix_existing.results.stderr is defined or ( integration_unix_existing.results.stdout is defined and
+    integration_unix_existing.results.stdout is not search ( item.value.version ) )
+
   # Ignore command failure if integration is not already installed
   failed_when: no
   register: "integration_unix_existing"
@@ -75,9 +76,10 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   check_mode: no
-  changed_when:
-    - "integration_windows_existing.results.stdout is defined"
-    - "integration_windows_existing.results.stdout is not search ( item.value.version )"
+  changed_when: >-
+    integration_windows_existing.results.stderr is defined or ( integration_windows_existing.results.stdout is defined
+    and integration_windows_existing.results.stdout is not search ( item.value.version ) )
+
   # Ignore command failure if integration is not already installed
   failed_when: no
   loop: "{{ datadog_integration|dict2items }}"
