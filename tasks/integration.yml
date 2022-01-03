@@ -59,7 +59,10 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   check_mode: no
-  changed_when: no
+  changed_when: >-
+    integration_existing.results.rc != 0 or integration_existing.results.stdout is undefined or
+    integration_existing.results.stdout != integration_existing.results.integration.value.version
+
   # Ignore command failure if integration is not already installed
   failed_when: no
   register: "integration_existing"
@@ -103,6 +106,7 @@
       - "{{ check_result.integration.key }}=={{ check_result.integration.value.version }}"
   become: yes
   become_user: "{{ integration_command_user }}"
+
   changed_when: "check_result.stdout is undefined or check_result.stdout is not search ( check_result.integration.value.version )"
   vars:
     third_party: "{% if 'third_party' in check_result.integration.value and check_result.integration.value.third_party | bool %}--third-party{% endif %}"
@@ -119,6 +123,7 @@
   win_command: '"{{ datadog_agent_binary_path }}" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}'
   become: yes
   become_user: "{{ integration_command_user }}"
+
   changed_when: "integration_windows_existing.results.stdout is undefined or integration_windows_existing.results.stdout is not search ( item.value.version )"
   loop: "{{ datadog_integration|dict2items }}"
   register: "integration_windows_install"
