@@ -64,7 +64,7 @@
   changed_when: false
   failed_when: false
   check_mode: no
-  when: ansible_facts.system == "Linux"
+  when: ansible_facts.system is defined and ansible_facts.system == "Linux"
 
 # NOTE: This won't work with rc / beta builds.
 - name: Get Windows Agent version
@@ -88,7 +88,7 @@
 - name: Set skip install flag if version already installed (Linux)
   set_fact:
     datadog_skip_install: "{{ datadog_version_check_linux.stdout | trim == datadog_agent_os2version[ansible_facts.os_family] }}"
-  when: ansible_facts.system == "Linux"
+  when: ansible_facts.system is defined and  ansible_facts.system == "Linux"
 
 - name: Set skip install flag if version already installed (Windows)
   set_fact:
