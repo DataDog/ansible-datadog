@@ -15,6 +15,9 @@ datadog_config: {}
 # default checks enabled
 datadog_checks: {}
 
+# custom Python checks
+datadog_custom_checks: {}
+
 # set this to `true` to delete untracked checks
 datadog_disable_untracked_checks: false
 

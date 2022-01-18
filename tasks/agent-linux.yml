@@ -84,6 +84,16 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent
 
+- name: Create custom check file for each Custom check
+  copy:
+    src: "{{ datadog_custom_checks[item] }}"
+    dest: "/etc/datadog-agent/checks.d/{{ item }}.py"
+    mode: 0755
+    owner: "{{ datadog_user }}"
+    group: "{{ datadog_group }}"
+  with_items: "{{ datadog_custom_checks|list }}"
+  notify: restart datadog-agent
+
 - name: Create system-probe configuration file
   template:
     src: system-probe.yaml.j2

@@ -110,6 +110,25 @@ To configure a custom check use the configuration below. This creates the corres
           - some_data: true
 ```
 
+##### Custom Python Checks
+
+To configure a custom check and to pass a Python check to the Playbook, please use the configuration below.  
+This requires the Datadog play / role to be part of a larger Playbook, with the value passed in being the relative filepath 
+to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml). 
+This is only available for Datadog v6+.  
+
+The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`
+
+```yml
+    datadog_checks:
+      my_custom_check:
+        init_config:
+        instances:
+          - some_data: true
+    datadog_custom_checks:
+      my_custom_check: '../../../custom_checks/my_custom_check.py'
+```
+
 #### Autodiscovery
 
 When using Autodiscovery, there is no pre-processing nor post-processing on the YAML. This means every YAML section is added to the final configuration file, including `autodiscovery identifiers`.
