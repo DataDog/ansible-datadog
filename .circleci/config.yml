@@ -31,6 +31,17 @@ commands:
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: datadog-agent version
 
+  test_install_no_manage_config:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>> datadog_manage_config=false'
+      - run: datadog-agent version
+      - run: [ ! -f /etc/datadog-agent/datadog.yaml ] && [ ! -f /etc/datadog-agent/system-probe.yaml ] && [ ! -f /etc/datadog-agent/security-agent.yaml ] && [ ! -f /etc/dd-agent/datadog.conf ]
+
   downgrade_agent_5_23_0:
     parameters:
       python:
@@ -121,6 +132,24 @@ jobs:
           version: "<<parameters.agent_version>>"
           python: "<<parameters.python>>"
 
+  test_install_no_manage_config:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_install_no_manage_config:
+          version: "<<parameters.agent_version>>"
+          python: "<<parameters.python>>"
+
 workflows:
   version: 2
   test_datadog_role:
@@ -142,7 +171,16 @@ workflows:
               agent_version: ["5", "6", "7"]
               os: ["debian"]
               python: ["python3"]
-      
+
+      # Newer debian images only have Pythpn 3 installed
+      - test_install_no_manage_config:
+          matrix:
+            parameters:
+              ansible_version: ["2_10"]
+              agent_version: ["5", "7"]
+              os: ["debian"]
+              python: ["python3"]
+
       # centos = CentOS 7. CentOS <= 7 + Python3 is not supported,
       # as the yum module is Python2-only.
       - test_install_downgrade: 
