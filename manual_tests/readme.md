@@ -13,7 +13,7 @@ Run the Vagrantfile defined in `ansible-datadog/manual_tests`:
 
 - provision VM: `vagrant up`
 - connect to the VM to check the configuration: `vagrant ssh`
-- destroy VM when needed: `vagrant destroy -f`
+- when done, destroy VM when needed: `vagrant destroy -f`
 
 - From `ansible-datadog`'s parent directory, run:
 
@@ -22,6 +22,7 @@ ansible-playbook ansible-datadog/manual_tests/test_7_full.yml -i ansible-datadog
 ```
 
 Note: Replace `test_7_full.yml` with any of the other yaml files on this directory.
+Note: If getting access denied errors, make sure Vagrant is forwarding the VM port 22 to the local port 2222. If using a different port, update the 'inventory' file
 
 # Windows test setup from WSL
 
