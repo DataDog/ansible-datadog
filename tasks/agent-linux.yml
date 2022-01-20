@@ -23,6 +23,7 @@
     dest: /etc/datadog-agent
     state: directory
     mode: 0755
+  when: datadog_manage_config
 
 - name: Create main Datadog agent configuration file
   template:
@@ -41,7 +42,7 @@
     - "*.d"
     file_type: directory
   register: datadog_conf_directories
-  when: datadog_disable_untracked_checks or datadog_disable_default_checks
+  when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
 
 - name: Delete checks not present in datadog_tracked_checks
   file:
