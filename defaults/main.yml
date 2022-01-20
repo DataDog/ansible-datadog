@@ -1,16 +1,18 @@
 ---
 role_version: 4.12.0
 
-# default system-probe.yaml options
-system_probe_config: {}
-
-network_config: {}
-
 # define if the datadog-agent services should be enabled
 datadog_enabled: yes
 
+# Whether the datadog.conf / datadog.yaml, system-probe.yaml, security-agent.yaml and checks config under conf.d are managed by Ansible
+datadog_manage_config: yes
+
 # default datadog.conf / datadog.yaml options
 datadog_config: {}
+
+# default system-probe.yaml options
+system_probe_config: {}
+network_config: {}
 
 # default checks enabled
 datadog_checks: {}
