@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 4.13.0 / 2022-01-21
+
+* [FEATURE] Add datadog_manage_config to disable changing the Agent config files. See [#375].
+* [BUGFIX] Fix error: dict object has no attribute 'system'. See [#409]. Thanks [@stegar123].
+
 # 4.12.0 / 2021-11-03
 
 * [FEATURE] Add Cloud Workload Security Agent configuration. See [#375]. Thanks [@alsmola].
@@ -362,6 +367,7 @@ Initial release, compatible with Ansible v1 & v2
 [#384]: https://github.com/DataDog/ansible-datadog/issues/384
 [#396]: https://github.com/DataDog/ansible-datadog/issues/396
 [#399]: https://github.com/DataDog/ansible-datadog/issues/399
+[#409]: https://github.com/DataDog/ansible-datadog/issues/409
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -387,6 +393,7 @@ Initial release, compatible with Ansible v1 & v2
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
 [@soar]: https://github.com/soar
+[@stegar123]: https://github.com/stegar123
 [@tasktop-teho]: https://github.com/tasktop-teho
 [@the-real-cphillips]: https://github.com/the-real-cphillips
 [@tomgoren]: https://github.com/tomgoren
