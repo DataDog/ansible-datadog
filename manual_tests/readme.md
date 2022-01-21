@@ -9,20 +9,19 @@ This is an example setup, based on vagrant + virtualbox, that allows to easily r
 
 ## Setup
 
-Run the Vagrantfile defined in `ansible-datadog/manual_tests`:
+From `ansible-datadog/manual_tests` directory:
 
-- provision VM: `vagrant up`
-- connect to the VM to check the configuration: `vagrant ssh`
-- when done, destroy VM when needed: `vagrant destroy -f`
+- provision VM: `vagrant up ubuntu --provision --provision-with test_7_full.yml`
+- when done, destroy VM if needed: `vagrant destroy -f`
 
-- From `ansible-datadog`'s parent directory, run:
+To test with different agent versions or configurations, replace
+`--provision-with` argument `test_7_full.yml` with any of the other
+`test_*.yml` files in this directory.
 
-```shell
-ansible-playbook ansible-datadog/manual_tests/test_7_full.yml -i ansible-datadog/manual_tests/inventory
-```
+To test on different operating systems, replace `ubuntu` with `centos` or `amazonlinux`.
 
-Note: Replace `test_7_full.yml` with any of the other yaml files on this directory.
-Note: If getting access denied errors, make sure Vagrant is forwarding the VM port 22 to the local port 2222. If using a different port, update the 'inventory' file
+If `vagrant up --provision` is used without any other parameters, all the
+playbooks are applied one by one on an Ubuntu machine.
 
 # Windows test setup from WSL
 
