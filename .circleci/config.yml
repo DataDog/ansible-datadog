@@ -27,8 +27,11 @@ commands:
         type: string
       python:
         type: string
+      jinja2_native:
+        type: string
+        default: "false"
     steps:
-      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: datadog-agent version
 
   test_install_no_manage_config:
@@ -81,11 +84,15 @@ commands:
         type: string
       python:
         type: string
+      jinja2_native:
+        type: string
+        default: "false"
     steps:
       - checkout
       - install_agent:
           version: "<<parameters.version>>"
           python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
 
 jobs:
   ansible_lint:
@@ -124,6 +131,9 @@ jobs:
         type: string
       python:
         type: string
+      jinja2_native:
+        type: string
+        default: "false"
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -131,6 +141,7 @@ jobs:
       - test_agent_install:
           version: "<<parameters.agent_version>>"
           python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
 
   test_install_no_manage_config:
     parameters:
@@ -198,6 +209,7 @@ workflows:
             parameters:
               ansible_version: ["2_8", "2_9", "2_10"]
               agent_version: ["6", "7"]
+              jinja2_native: ["true", "false"]
               os: ["centos8"]
               python: ["python3"]
 

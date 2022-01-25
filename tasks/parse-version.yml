@@ -7,12 +7,12 @@
 
 - name: Set version vars
   set_fact:
-    datadog_epoch: "{{ agent_version.0 }}"
-    datadog_major: "{{ agent_version.1 }}"
-    datadog_minor: "{{ agent_version.2 }}"
-    datadog_bugfix: "{{ agent_version.3 }}"
-    datadog_suffix: "{{ agent_version.4 }}"
-    datadog_release: "{{ agent_version.5 }}"
+    datadog_epoch: "{{ agent_version.0 | default('', true) | string }}"
+    datadog_major: "{{ agent_version.1 | default('', true) | string }}"
+    datadog_minor: "{{ agent_version.2 | default('', true) | string }}"
+    datadog_bugfix: "{{ agent_version.3 | default('', true) | string }}"
+    datadog_suffix: "{{ agent_version.4 | default('', true) | string }}"
+    datadog_release: "{{ agent_version.5 | default('', true) | string }}"
 
 - name: Fill empty version epoch with default
   set_fact:
