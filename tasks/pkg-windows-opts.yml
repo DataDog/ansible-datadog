@@ -3,10 +3,8 @@
     win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
   when: datadog_windows_ddagentuser_name | default('', true) | length > 0
 
-- name: Set DD Password Arg
-  set_fact:
-    win_install_args: "{{ win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
-  when: datadog_windows_ddagentuser_password | default('', true) | length > 0
+# NOTE: We don't set DD Password Arg here to prevent it from being printed;
+# we set it right before using win_install_args
 
 # check the registry. On upgrade, the location of the config file root will 
 # be set here.  

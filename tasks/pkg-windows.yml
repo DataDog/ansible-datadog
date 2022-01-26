@@ -65,7 +65,13 @@
 
 - name: Show installation flags
   debug:
-    var: win_install_args
+    msg: "{{ win_install_args }}{% if datadog_windows_ddagentuser_password | default('', true) | length > 0 %} DDAGENTUSER_PASSWORD=<REDACTED>{% endif %}"
+
+# We set DD Password Arg here to prevent it from being printed in any kind of debug logs/messages prior usage
+- name: Set DD Password Arg
+  set_fact:
+    win_install_args: "{{ win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
+  when: datadog_windows_ddagentuser_password | default('', true) | length > 0
 
 - name: Install downloaded agent
   win_package:
