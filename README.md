@@ -114,7 +114,7 @@ To configure a custom check use the configuration below. This creates the corres
 
 To pass a Python check to the playbook, use the configuration below. 
 
-This configuration requires the Datadog play and role to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml). 
+This configuration requires the Datadog [play and role](https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html#playbook-keywords) to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml).
 
 This is only available for Agent v6+.  
 
