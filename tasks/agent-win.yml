@@ -55,6 +55,13 @@
   when: datadog_manage_config
   notify: restart datadog-agent-win
 
+- name: Create custom check file for each custom check
+  copy:
+    src: "{{ datadog_custom_checks[item] }}"
+    dest: "{{ datadog_windows_config_root }}\\checks.d\\{{ item }}.py"
+  with_items: "{{ datadog_custom_checks|list }}"
+  notify: restart datadog-agent-win
+
 - name: Ensure datadog-trace-agent and datadog-process-agent are not disabled
   win_service:
     name: "{{ item }}"
