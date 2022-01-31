@@ -112,12 +112,13 @@ To configure a custom check use the configuration below. This creates the corres
 
 ##### Custom Python Checks
 
-To configure a custom check and to pass a Python check to the Playbook, please use the configuration below.  
-This requires the Datadog play / role to be part of a larger Playbook, with the value passed in being the relative filepath 
-to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml). 
-This is only available for Datadog v6+.  
+To pass a Python check to the playbook, use the configuration below. 
 
-The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`
+This configuration requires the Datadog play and role to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml). 
+
+This is only available for Agent v6+.  
+
+The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`:
 
 ```yml
     datadog_checks:

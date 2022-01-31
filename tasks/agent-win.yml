@@ -51,7 +51,7 @@
   with_items: "{{ datadog_checks|list }}"
   notify: restart datadog-agent-win
 
-- name: Create custom check file for each Custom check
+- name: Create custom check file for each custom check
   copy:
     src: "{{ datadog_custom_checks[item] }}"
     dest: "{{ datadog_windows_config_root }}\\checks.d\\{{ item }}.py"
