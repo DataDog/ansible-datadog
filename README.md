@@ -114,7 +114,7 @@ To configure a custom check use the configuration below. This creates the corres
 
 To pass a Python check to the playbook, use the configuration below. 
 
-This configuration requires the Datadog [play and role](https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html#playbook-keywords) to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux](./tasks/agent-linux.yml) or [Windows](./tasks/agent-win.yml).
+This configuration requires the Datadog [play and role][12] to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux][13] or [Windows][14].
 
 This is only available for Agent v6+.  
 
@@ -316,7 +316,7 @@ Available actions:
 
 ##### Datadog Marketplace
 
-[Datadog Marketplace](https://www.datadoghq.com/blog/datadog-marketplace/) integrations can be installed with the `datadog_integration` resource. **Note**: Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
+[Datadog Marketplace][15] integrations can be installed with the `datadog_integration` resource. **Note**: Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
 
 ##### Syntax
 
@@ -600,3 +600,7 @@ For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 
 [9]: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent#setup
 [10]: https://docs.datadoghq.com/agent/guide/agent-commands/#restart-the-agent
 [11]: https://app.datadoghq.com/help/agent_fix
+[12]: https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html#playbook-keywords
+[13]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-linux.yml
+[14]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-win.yml
+[15]: https://www.datadoghq.com/blog/datadog-marketplace/
