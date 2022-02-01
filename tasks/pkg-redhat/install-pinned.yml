@@ -6,7 +6,7 @@
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
   register: datadog_agent_install
-  when: not ansible_check_mode and ansible_facts.python.version.major | int >= 3
+  when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
   notify: restart datadog-agent
 
 - name: Install pinned datadog-agent package (yum)
@@ -16,5 +16,5 @@
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
   register: datadog_agent_install
-  when: not ansible_check_mode and ansible_facts.python.version.major | int < 3
+  when: not ansible_check_mode and ansible_pkg_mgr == "yum"
   notify: restart datadog-agent

@@ -1,3 +1,19 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.define "ubuntu", primary: true do |c|
+    c.vm.box = "ubuntu/trusty64"
+  end
+
+  config.vm.define "centos", autostart: false do |c|
+    c.vm.box = "centos/8"
+  end
+
+  config.vm.define "amazonlinux", autostart: false do |c|
+    c.vm.box = "bento/amazonlinux-2"
+  end
+
+  Dir["test_*.yml"].sort.each do |playbook|
+    config.vm.provision playbook, type: "ansible" do |ansible|
+      ansible.playbook = playbook
+    end
+  end
 end

@@ -568,11 +568,13 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-### CentOS 6/7 with Python 3 interpreter
+### CentOS 6/7 with Python 3 interpreter and Ansible 2.10.x or below
 
-The `yum` Python module, which is used in this role to install the Agent on CentOS-based hosts, is only available on Python 2. When a Python 3 interpreter is detected on a target host, the `dnf` package manager and the `dnf` Python module are used instead.
+The `yum` Python module, which is used in this role to install the Agent on CentOS-based hosts, is only available on Python 2 if Ansible 2.10.x or below is used. In such cases, the `dnf` package manager would have to be used instead.
 
-However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used. This role fails early when this situation is detected to indicate that a Python 2 interpreter is needed when installing the Agent on CentOS / RHEL < 8.
+However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used.
+
+This role fails early when this situation is detected to indicate that Ansible 2.11+ or a Python 2 interpreter is needed when installing the Agent on CentOS / RHEL < 8.
 
 To bypass this early failure detection (for instance, if `dnf` and the `python3-dnf` package are available on your host), set the `datadog_ignore_old_centos_python3_error` variable to `true`.
 
