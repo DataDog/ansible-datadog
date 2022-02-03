@@ -48,6 +48,8 @@
     datadog_version_finding_cmds:
       Debian: "dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'"
       RedHat: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+      Rocky: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+      AlmaLinux: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
       Suse: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
 
 - name: Create OS-specific version dict
@@ -55,6 +57,8 @@
     datadog_agent_os2version:
       Debian: "{{ datadog_agent_debian_version }}"
       RedHat: "{{ datadog_agent_redhat_version }}"
+      Rocky: "{{ datadog_agent_redhat_version }}"
+      AlmaLinux: "{{ datadog_agent_redhat_version }}"
       Suse: "{{ datadog_agent_suse_version }}"
       Windows: "{{ datadog_agent_windows_version }}"
 

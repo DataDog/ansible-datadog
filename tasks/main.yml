@@ -21,9 +21,12 @@
   include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian" and not datadog_skip_install
 
+# Only Ansible >= 3.0 knows that AlmaLinux belongs to "RedHat" family
+# (and latest bugfix releases of some 2.X)
+# For Rocky it is some 4.X and >= 5.0
 - name: RedHat Install Tasks
   include_tasks: pkg-redhat.yml
-  when: ansible_facts.os_family == "RedHat" and not datadog_skip_install
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not datadog_skip_install
 
 - name: Suse Install Tasks
   include_tasks: pkg-suse.yml

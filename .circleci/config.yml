@@ -210,7 +210,7 @@ workflows:
               ansible_version: ["2_8", "2_9", "2_10"]
               agent_version: ["6", "7"]
               jinja2_native: ["true", "false"]
-              os: ["centos8"]
+              os: ["rocky8"]
               python: ["python3"]
 
       # Newer suse images only have Python 3 installed
