@@ -164,6 +164,9 @@ jobs:
 workflows:
   version: 2
   test_datadog_role:
+    # Note: Ansible 5.* requires Python >= 3.8, which for now we only have on Debian.
+    # Whenever newer major versions of RHEL and SUSE get released, they should have
+    # a new enough Python, so we will test on them as well
     jobs:
       - ansible_lint
       - test_install_downgrade:
@@ -178,7 +181,7 @@ workflows:
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_9", "2_10"]
+              ansible_version: ["2_9", "2_10", "3_4", "4_10", "5_3"]
               agent_version: ["5", "6", "7"]
               os: ["debian"]
               python: ["python3"]
@@ -187,7 +190,7 @@ workflows:
       - test_install_no_manage_config:
           matrix:
             parameters:
-              ansible_version: ["2_10"]
+              ansible_version: ["2_10", "3_4", "4_10"]
               agent_version: ["5", "7"]
               os: ["debian"]
               python: ["python3"]
@@ -197,7 +200,7 @@ workflows:
       - test_install_downgrade: 
           matrix:
             parameters:
-              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10"]
+              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["5", "6", "7"]
               os: ["centos"]
               python: ["python2"]
@@ -207,7 +210,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["2_8", "2_9", "2_10"]
+              ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               jinja2_native: ["true", "false"]
               os: ["rocky8"]
@@ -217,7 +220,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["2_8", "2_9", "2_10"]
+              ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               os: ["suse"]
               python: ["python3"]
