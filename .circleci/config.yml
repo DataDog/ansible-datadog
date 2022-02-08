@@ -225,10 +225,21 @@ workflows:
               os: ["suse"]
               python: ["python3"]
 
+      # Amazon Linux 2 has yum only by default => we only use Python 3 with Ansible >= 4.10
+      # because of the respawn_module functionality added to the yum module in 
+      # https://github.com/ansible/ansible/commit/4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6
       - test_install:
           matrix:
             parameters:
               ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2"]
-              python: ["python2", "python3"]
+              python: ["python2"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["4_10"]
+              agent_version: ["6", "7"]
+              os: ["amazonlinux2"]
+              python: ["python3"]
