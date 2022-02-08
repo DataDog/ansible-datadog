@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+# 4.14.0 / 2022-02-08
+
+* [FEATURE] Add tasks for creating custom Python checks. See [#408]. Thanks [@snorlaX-sleeps].
+* [FEATURE] Support Rocky Linux and AlmaLinux. See [#418].
+* [BUGFIX] Fix provisioning on Python 3 / Amazon Linux 2. See [#412]. Thanks [@moleskin-smile].
+* [BUGFIX] Prevent dependency on `ansible.windows` with non-Windows nodes. See [#416].
+* [BUGFIX] Don't display content of `DDAGENTUSER_PASSWORD` for Windows nodes. See [#415].
+* [BUGFIX] Additional fixes for `jinja2_native = True` setting. See [#414].
+
 # 4.13.0 / 2022-01-21
 
 * [FEATURE] Add datadog_manage_config to disable changing the Agent config files. See [#375].
