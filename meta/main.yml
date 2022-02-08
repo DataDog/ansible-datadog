@@ -14,17 +14,22 @@ galaxy_info:
         - xenial
         - artful
         - bionic
+        - focal
     - name: Debian
       versions:
         - wheezy
         - jessie
         - stretch
         - buster
+        - bullseye
     - name: EL
       versions:
         - 8
         - 7
         - 6
+    - name: Amazon Linux 2
+      versions:
+        - any
     - name: opensuse
       versions:
         - 12.1
@@ -32,6 +37,13 @@ galaxy_info:
         - 12.3
         - 13.1
         - 13.2
+        - 42.1
+        - 42.2
+        - 42.3
+        - 15.0
+        - 15.1
+        - 15.2
+        - 15.3
     - name: SLES
       versions:
         - 11SP3
