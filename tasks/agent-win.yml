@@ -82,7 +82,7 @@
   win_service:
     name: datadogagent
     state: started
-    start_mode: auto
+    start_mode: delayed
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent is disabled
