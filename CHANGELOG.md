@@ -12,7 +12,7 @@ CHANGELOG
 
 # 4.13.0 / 2022-01-21
 
-* [FEATURE] Add datadog_manage_config to disable changing the Agent config files. See [#375].
+* [FEATURE] Add datadog_manage_config to disable changing the Agent config files. See [#410].
 * [BUGFIX] Fix error: dict object has no attribute 'system'. See [#409]. Thanks [@stegar123].
 
 # 4.12.0 / 2021-11-03
@@ -376,7 +376,14 @@ Initial release, compatible with Ansible v1 & v2
 [#384]: https://github.com/DataDog/ansible-datadog/issues/384
 [#396]: https://github.com/DataDog/ansible-datadog/issues/396
 [#399]: https://github.com/DataDog/ansible-datadog/issues/399
+[#408]: https://github.com/DataDog/ansible-datadog/issues/408
 [#409]: https://github.com/DataDog/ansible-datadog/issues/409
+[#410]: https://github.com/DataDog/ansible-datadog/issues/410
+[#412]: https://github.com/DataDog/ansible-datadog/issues/412
+[#414]: https://github.com/DataDog/ansible-datadog/issues/414
+[#415]: https://github.com/DataDog/ansible-datadog/issues/415
+[#416]: https://github.com/DataDog/ansible-datadog/issues/416
+[#418]: https://github.com/DataDog/ansible-datadog/issues/418
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -396,11 +403,13 @@ Initial release, compatible with Ansible v1 & v2
 [@jstoja]: https://github.com/jstoja
 [@kanga333]: https://github.com/kanga333
 [@loliee]: https://github.com/loliee
+[@moleskin-smile]: https://github.com/moleskin-smile
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
 [@rossigee]: https://github.com/rossigee
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
+[@snorlaX-sleeps]: https://github.com/snorlaX-sleeps
 [@soar]: https://github.com/soar
 [@stegar123]: https://github.com/stegar123
 [@tasktop-teho]: https://github.com/tasktop-teho
