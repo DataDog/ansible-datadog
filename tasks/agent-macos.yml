@@ -1,0 +1,118 @@
+---
+- name: Create Datadog agent config directory
+  file:
+    dest: /opt/datadog-agent/etc
+    state: directory
+    mode: 0755
+  when: datadog_manage_config
+
+- name: Create main Datadog agent configuration file
+  template:
+    src: datadog.yaml.j2
+    dest: /opt/datadog-agent/etc/datadog.yaml
+    mode: 0640
+  become: yes
+  when: datadog_manage_config
+  notify: restart datadog-agent-macos
+
+- name: Register all checks directories present in datadog
+  find:
+    paths: /opt/datadog-agent/etc/conf.d/
+    patterns:
+    - "*.d"
+    file_type: directory
+  become: yes
+  register: datadog_conf_directories
+  when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
+
+- name: Delete checks not present in datadog_tracked_checks
+  file:
+    path: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml"
+    state: absent
+  become: yes
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
+  notify: restart datadog-agent-macos
+
+- name: Delete all default checks
+  file:
+    path: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml.default"
+    state: absent
+  become: yes
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
+  notify: restart datadog-agent-macos
+
+- name: Ensure configuration directories are present for each Datadog check
+  file:
+    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.d"
+    state: directory
+    mode: 0755
+  become: yes
+  with_items: '{{ datadog_checks|list }}'
+  when: datadog_manage_config
+
+- name: Create a configuration file for each Datadog check
+  template:
+    src: checks.yaml.j2
+    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml"
+    mode: 0640
+    owner: "{{ ansible_user }}"
+  become: yes
+  with_items: "{{ datadog_checks|list }}"
+  when: datadog_manage_config
+  notify: restart datadog-agent-macos
+
+- name: Remove old configuration file for each Datadog check
+  file:
+    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.yaml"
+    state: absent
+  become: yes
+  with_items: "{{ datadog_checks|list }}"
+  when: datadog_manage_config
+  notify: restart datadog-agent-macos
+
+- name: Create custom check file for each custom check
+  copy:
+    src: "{{ datadog_custom_checks[item] }}"
+    dest: "/opt/datadog-agent/etc/checks.d/{{ item }}.py"
+    mode: 0750
+    owner: "{{ ansible_user }}"
+  become: yes
+  with_items: "{{ datadog_custom_checks|list }}"
+  notify: restart datadog-agent-macos
+
+- name: Load user data
+  shell: "set -o pipefail && dscacheutil -q user -a name {{ ansible_user }} | grep -w uid | awk '{print $2}'"
+  changed_when: false
+  register: macos_user_id
+
+- name: Unload {{ datadog_macos_service_name }}.plist
+  command: "launchctl bootout gui/{{ macos_user_id.stdout }}/{{ datadog_macos_service_name }}"
+  changed_when: false
+  failed_when: false
+  check_mode: no
+  when: not datadog_skip_running_check and datadog_enabled
+
+- name: Create security-agent configuration file
+  template:
+    src: security-agent.yaml.j2
+    dest: /opt/datadog-agent/etc/security-agent.yaml
+    mode: 0640
+    owner: "{{ ansible_user }}"
+  become: yes
+  when: datadog_manage_config
+  notify: restart datadog-agent-macos
+
+- name: Create installation information file
+  template:
+    src: install_info.j2
+    dest: /opt/datadog-agent/etc/install_info
+    mode: 0644
+    owner: "{{ ansible_user }}"
+  become: yes
+
+- name: Bootstrap {{ datadog_macos_service_name }}.plist
+  command: "launchctl bootstrap gui/{{ macos_user_id.stdout }} {{ datadog_macos_plist_file_path }}"
+  check_mode: no
+  when: not datadog_skip_running_check and datadog_enabled

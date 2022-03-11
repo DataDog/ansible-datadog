@@ -36,8 +36,10 @@ datadog_group: dd-agent
 # agent integration variables
 integration_command_user_linux: "dd-agent"
 integration_command_user_windows: "administrator"
+integration_command_user_macos: "dd-agent"
 datadog_agent_binary_path_linux: /opt/datadog-agent/bin/agent/agent
 datadog_agent_binary_path_windows: "C:\\Program Files\\Datadog\\Datadog Agent\\bin\\agent.exe"
+datadog_agent_binary_path_macos: "/opt/datadog-agent/bin/agent/agent"
 
 # list of additional groups for datadog_user
 datadog_additional_groups: {}
@@ -56,7 +58,6 @@ datadog_agent_version: ""
 
 # Default Package name for APT and RPM installs - can override in playbook for IOT Agent
 datadog_agent_flavor: "datadog-agent"
-
 
 # Default apt repo and keyserver
 
@@ -189,3 +190,21 @@ datadog_agent7_yum_repo: "https://yum.datadoghq.com/stable/7/{{ ansible_facts.ar
 datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_facts.architecture }}"
 datadog_agent6_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_facts.architecture }}"
 datadog_agent7_zypper_repo: "https://yum.datadoghq.com/suse/stable/7/{{ ansible_facts.architecture }}"
+
+# Default macOS latest dmg package URL
+
+# By default, will use the official latest dmg package for the chosen major version.
+# Use the datadog_macos_download_url option to override the dmg package used.
+datadog_macos_download_url: ""
+
+# The default dmg package for each major Agent version is specified in the following variables.
+# These variables are for internal use only, do not modify them.
+datadog_macos_agent6_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agent-6-latest.dmg"
+datadog_macos_agent7_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agent-7-latest.dmg"
+
+# If datadog_agent_version is set, the role will use the following url prefix instead, and append the version number to it
+# in order to get the full url to the dmg package.
+datadog_macos_versioned_url: "https://s3.amazonaws.com/dd-agent/datadog-agent"
+
+datadog_macos_service_name: "com.datadoghq.agent"
+datadog_macos_plist_file_path: "Library/LaunchAgents/{{ datadog_macos_service_name }}.plist"

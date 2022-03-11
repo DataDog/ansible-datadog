@@ -38,17 +38,25 @@
   include_tasks: pkg-windows.yml
   when: ansible_facts.os_family == "Windows"
 
+- name: macOS Install Tasks
+  include_tasks: pkg-macos.yml
+  when: ansible_facts.os_family == "Darwin" and not datadog_skip_install
+
 - name: Linux Configuration Tasks (Agent 5)
   include_tasks: agent5-linux.yml
-  when: datadog_agent_major_version | int == 5 and ansible_facts.os_family != "Windows"
+  when: datadog_agent_major_version | int == 5 and ansible_facts.os_family != "Windows"  and ansible_facts.os_family != "Darwin"
 
 - name: Linux Configuration Tasks
   include_tasks: agent-linux.yml
-  when: datadog_agent_major_version | int > 5 and ansible_facts.os_family != "Windows"
+  when: datadog_agent_major_version | int > 5 and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
 
 - name: Windows Configuration Tasks
   include_tasks: agent-win.yml
   when: datadog_agent_major_version | int > 5 and ansible_facts.os_family == "Windows"
+
+- name: macOS Configuration Tasks
+  include_tasks: agent-macos.yml
+  when: ansible_facts.os_family == "Darwin"
 
 - name: Integrations Tasks
   include_tasks: integration.yml
