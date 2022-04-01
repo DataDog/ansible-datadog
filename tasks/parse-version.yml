@@ -35,22 +35,27 @@
   set_fact:
     datadog_agent_major_version: "{{ datadog_major }}"
 
+- name: Set helper variables
+  set_fact:
+    datadog_agent_linux_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
+    datadog_rpm_version_finding_cmd: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+
 - name: Set OS-specific versions
   # NOTE: if changing these, make sure the format correspond with values in datadog_version_finding_cmds below
   set_fact:
-    datadog_agent_debian_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
-    datadog_agent_redhat_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
-    datadog_agent_suse_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
+    datadog_agent_debian_version: "{{ datadog_agent_linux_version }}"
+    datadog_agent_redhat_version: "{{ datadog_agent_linux_version }}"
+    datadog_agent_suse_version: "{{ datadog_agent_linux_version }}"
     datadog_agent_windows_version: "{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}"
 
 - name: Construct commands to find Agent version
   set_fact:
     datadog_version_finding_cmds:
       Debian: "dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'"
-      RedHat: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
-      Rocky: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
-      AlmaLinux: "rpm -q --qf '%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
-      Suse: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+      RedHat: "{{ datadog_rpm_version_finding_cmd }}"
+      Rocky: "{{ datadog_rpm_version_finding_cmd }}"
+      AlmaLinux: "{{ datadog_rpm_version_finding_cmd }}"
+      Suse: "{{ datadog_rpm_version_finding_cmd }}"
 
 - name: Create OS-specific version dict
   set_fact:
