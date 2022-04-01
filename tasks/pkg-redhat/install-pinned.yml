@@ -11,7 +11,8 @@
 
 - name: Install pinned datadog-agent package (yum)
   yum:
-    name: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version }}"
+    # We have to add architecture, because yum only understands epoch when architecture is also specified
+    name: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version }}.{{ ansible_facts.architecture }}"
     update_cache: yes
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
