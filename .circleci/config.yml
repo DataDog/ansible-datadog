@@ -100,7 +100,8 @@ jobs:
       - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
-      - run: pip install ansible-lint
+      # TODO: upgrade ansible-lint to latest (will require updating the image for this task)
+      - run: pip install ansible-lint==5.4.0
       - run: ansible-lint -v .
 
   test_install_downgrade:
