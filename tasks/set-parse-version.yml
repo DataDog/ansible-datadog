@@ -5,7 +5,7 @@
 
 - name: Initialize skip install flag to false
   set_fact:
-    datadog_skip_install: no
+    datadog_skip_install: "{{ datadog_skip_install | default(false) }}"
 
 - include_tasks: parse-version.yml
   when: datadog_agent_version | default('', true) | length > 0

@@ -4,6 +4,9 @@ role_version: 4.14.0
 # define if the datadog-agent services should be enabled
 datadog_enabled: yes
 
+# Whether the play should skip the agent install as a whole.
+datadog_skip_install: no
+
 # Whether the datadog.conf / datadog.yaml, system-probe.yaml, security-agent.yaml and checks config under conf.d are managed by Ansible
 datadog_manage_config: yes
 
