@@ -43,7 +43,7 @@
       owner: 0
       group: 0
     become: yes
-  when: macos_system_plist_file_stat.stat.exists is defined and macos_system_plist_file_stat.stat.exists
+  when: macos_system_plist_file_stat.stat.exists is not defined or (macos_system_plist_file_stat.stat.exists is defined and not macos_system_plist_file_stat.stat.exists)
 
 - name: Create Datadog agent config directory
   file:
