@@ -13,24 +13,23 @@
 - name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks 
   include_tasks: sanitize-checks.yml
 
-# Also sets datadog_skip_install
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
-  when: ansible_facts.os_family == "Debian" and not datadog_skip_install
+  when: ansible_facts.os_family == "Debian" and (not datadog_skip_install|bool)
 
 # Only Ansible >= 3.0 knows that AlmaLinux belongs to "RedHat" family
 # (and latest bugfix releases of some 2.X)
 # For Rocky it is some 4.X and >= 5.0
 - name: RedHat Install Tasks
   include_tasks: pkg-redhat.yml
-  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not datadog_skip_install
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and (not datadog_skip_install|bool)
 
 - name: Suse Install Tasks
   include_tasks: pkg-suse.yml
-  when: ansible_facts.os_family == "Suse" and not datadog_skip_install
+  when: ansible_facts.os_family == "Suse" and (not datadog_skip_install|bool)
 
 # Note we don't check datadog_skip_install variable value for windows here,
 # because some tasks in pkg-windows.yml are carried out regardless of its value.
