@@ -5,7 +5,7 @@
 # included by a handler task in handlers/main.yml.
 
 - name: Restart datadog-agent service
-  command: "launchctl kickstart -k system/{{ macos_user_id.stdout }}/{{ datadog_macos_service_name }}"
+  command: "launchctl kickstart -k user/{{ macos_user_id.stdout }}/{{ datadog_macos_service_name }}"
   register: command_result
   check_mode: no
   when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
