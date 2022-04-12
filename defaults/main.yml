@@ -207,4 +207,8 @@ datadog_macos_agent7_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agen
 datadog_macos_versioned_url: "https://s3.amazonaws.com/dd-agent/datadog-agent"
 
 datadog_macos_service_name: "com.datadoghq.agent"
-datadog_macos_plist_file_path: "Library/LaunchAgents/{{ datadog_macos_service_name }}.plist"
+datadog_macos_user_plist_file_path: "Library/LaunchAgents/{{ datadog_macos_service_name }}.plist"
+datadog_macos_system_plist_file_path: "/Library/LaunchDaemons/{{ datadog_macos_service_name }}.plist"
+datadog_macos_etc_dir: "/opt/datadog-agent/etc"
+datadog_macos_logs_dir: "/opt/datadog-agent/logs"
+datadog_macos_run_dir: "/opt/datadog-agent/run"

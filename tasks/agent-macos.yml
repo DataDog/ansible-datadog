@@ -1,23 +1,72 @@
 ---
+- name: 'Load user data into JSON string {"uid": <number>, "gid": <number>}'
+  shell:
+    cmd: "dscacheutil -q user -a name {{ ansible_user }} | awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print \"\\\"gid\\\": \" $2 \" }\"}'"
+    executable: /bin/bash
+  changed_when: false
+  register: macos_user_output
+
+- name: Extract JSON user data as variable object
+  set_fact:
+    macos_user_data: "{{ macos_user_output.stdout }}"
+
+- name: Check if system plist file already exists
+  stat:
+    path: "{{ datadog_macos_system_plist_file_path }}"
+  register: macos_system_plist_file_stat
+
+- name: Execute Block when system plist file did not already exist
+  block:
+  - name: Move plist file to system location
+    command:
+      cmd: "mv /Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }} {{ datadog_macos_system_plist_file_path }}"
+      removes: "/Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}"
+      creates: "{{ datadog_macos_system_plist_file_path }}"
+    become: true
+
+  - name: Inject user and group data into system plist file
+    shell:
+      cmd: "cp -f {{ datadog_macos_system_plist_file_path }} /tmp/.plist.backup
+            && 
+            awk -v d=\"</dict>\"
+                -v lines=\"        <key>UID<\/key>\\n        <string>{{ macos_user_data.uid }}<\/string>\\n        <key>GID<\/key>\\n        <string>{{ macos_user_data.gid }}<\/string>\"
+                'NR==FNR{if ($0~d) nr=NR; next}; FNR==nr{print lines} 1'
+                /tmp/.plist.backup
+                /tmp/.plist.backup
+                > {{ datadog_macos_system_plist_file_path }}"
+      executable: /bin/bash
+    become: yes
+
+  - name: Set owner on system plist file
+    file:
+      path: "{{ datadog_macos_system_plist_file_path }}"
+      owner: 0
+      group: 0
+    become: yes
+  when: macos_system_plist_file_stat.stat.exists is defined and macos_system_plist_file_stat.stat.exists
+
 - name: Create Datadog agent config directory
   file:
-    dest: /opt/datadog-agent/etc
+    dest: "{{ datadog_macos_etc_dir }}"
     state: directory
-    mode: 0755
+    mode: 0750
+    group: "{{ macos_user_data.gid }}"
+  become: yes
   when: datadog_manage_config
 
 - name: Create main Datadog agent configuration file
   template:
     src: datadog.yaml.j2
-    dest: /opt/datadog-agent/etc/datadog.yaml
+    dest: "{{ datadog_macos_etc_dir }}/datadog.yaml"
     mode: 0640
+    group: "{{ macos_user_data.gid }}"
   become: yes
   when: datadog_manage_config
   notify: restart datadog-agent-macos
 
 - name: Register all checks directories present in datadog
   find:
-    paths: /opt/datadog-agent/etc/conf.d/
+    paths: "{{ datadog_macos_etc_dir }}/conf.d/"
     patterns:
     - "*.d"
     file_type: directory
@@ -27,7 +76,7 @@
 
 - name: Delete checks not present in datadog_tracked_checks
   file:
-    path: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml"
+    path: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml"
     state: absent
   become: yes
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
@@ -36,7 +85,7 @@
 
 - name: Delete all default checks
   file:
-    path: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml.default"
+    path: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
     state: absent
   become: yes
   loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
@@ -45,7 +94,7 @@
 
 - name: Ensure configuration directories are present for each Datadog check
   file:
-    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.d"
+    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d"
     state: directory
     mode: 0755
   become: yes
@@ -55,9 +104,9 @@
 - name: Create a configuration file for each Datadog check
   template:
     src: checks.yaml.j2
-    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.d/conf.yaml"
+    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml"
     mode: 0640
-    owner: "{{ ansible_user }}"
+    group: "{{ macos_user_data.gid }}"
   become: yes
   with_items: "{{ datadog_checks|list }}"
   when: datadog_manage_config
@@ -65,7 +114,7 @@
 
 - name: Remove old configuration file for each Datadog check
   file:
-    dest: "/opt/datadog-agent/etc/conf.d/{{ item }}.yaml"
+    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.yaml"
     state: absent
   become: yes
   with_items: "{{ datadog_checks|list }}"
@@ -75,20 +124,15 @@
 - name: Create custom check file for each custom check
   copy:
     src: "{{ datadog_custom_checks[item] }}"
-    dest: "/opt/datadog-agent/etc/checks.d/{{ item }}.py"
+    dest: "{{ datadog_macos_etc_dir }}/checks.d/{{ item }}.py"
     mode: 0750
-    owner: "{{ ansible_user }}"
+    group: "{{ macos_user_data.gid }}"
   become: yes
   with_items: "{{ datadog_custom_checks|list }}"
   notify: restart datadog-agent-macos
 
-- name: Load user data
-  shell: "set -o pipefail && dscacheutil -q user -a name {{ ansible_user }} | grep -w uid | awk '{print $2}'"
-  changed_when: false
-  register: macos_user_id
-
 - name: Unload {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootout gui/{{ macos_user_id.stdout }}/{{ datadog_macos_service_name }}"
+  command: "launchctl bootout system/{{ macos_user_data.uid }}/{{ datadog_macos_service_name }}"
   changed_when: false
   failed_when: false
   check_mode: no
@@ -97,9 +141,9 @@
 - name: Create security-agent configuration file
   template:
     src: security-agent.yaml.j2
-    dest: /opt/datadog-agent/etc/security-agent.yaml
+    dest: "{{ datadog_macos_etc_dir }}/security-agent.yaml"
     mode: 0640
-    owner: "{{ ansible_user }}"
+    group: "{{ macos_user_data.gid }}"
   become: yes
   when: datadog_manage_config
   notify: restart datadog-agent-macos
@@ -107,12 +151,23 @@
 - name: Create installation information file
   template:
     src: install_info.j2
-    dest: /opt/datadog-agent/etc/install_info
+    dest: "{{ datadog_macos_etc_dir }}/install_info"
     mode: 0644
-    owner: "{{ ansible_user }}"
+    group: "{{ macos_user_data.gid }}"
   become: yes
 
+- name: Set permissions for DataDog Directories
+  file:
+    path: "{{ item }}"
+    group: "{{ macos_user_data.gid }}"
+    recurse: yes
+  with_items:
+    - "datadog_macos_etc_dir"
+    - "datadog_macos_logs_dir"
+    - "datadog_macos_run_dir"
+
+
 - name: Bootstrap {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootstrap gui/{{ macos_user_id.stdout }} {{ datadog_macos_plist_file_path }}"
+  command: "launchctl bootstrap system/{{ macos_user_data.uid }} {{ datadog_macos_system_plist_file_path }}"
   check_mode: no
   when: not datadog_skip_running_check and datadog_enabled
