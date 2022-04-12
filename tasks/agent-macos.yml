@@ -35,6 +35,7 @@
                 /tmp/.plist.backup
                 > {{ datadog_macos_system_plist_file_path }}"
       executable: /bin/bash
+    changed_when: false
     become: yes
 
   - name: Set owner on system plist file
