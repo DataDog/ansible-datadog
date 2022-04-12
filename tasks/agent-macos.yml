@@ -132,8 +132,8 @@
   notify: restart datadog-agent-macos
 
 - name: Unload {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootout user/{{ macos_user_data.uid }}/{{ datadog_macos_service_name }}"
-  changed_when: false
+  command: "launchctl bootout system/{{ datadog_macos_service_name }}"
+  become: yes
   failed_when: false
   check_mode: no
   when: not datadog_skip_running_check and datadog_enabled
@@ -168,6 +168,7 @@
 
 
 - name: Bootstrap {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootstrap user/{{ macos_user_data.uid }} {{ datadog_macos_system_plist_file_path }}"
+  command: "launchctl bootstrap system {{ datadog_macos_system_plist_file_path }}"
+  become: yes
   check_mode: no
   when: not datadog_skip_running_check and datadog_enabled
