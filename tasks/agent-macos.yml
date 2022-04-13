@@ -6,6 +6,10 @@
   changed_when: false
   register: macos_user_output
 
+# this task is used to more cleanly format the variable contents
+# the ABOVE task's shell command returns a JSON object as a string but nested in `.stdout`
+# ansible has built in behavior that if it receives JSON data as a string it will automatically convert it to the corresponding object
+# this enables us to get multiple values out of the ABOVE task preventing us from having to run 2 similar commands
 - name: Extract JSON user data as variable object
   set_fact:
     macos_user_data: "{{ macos_user_output.stdout }}"
