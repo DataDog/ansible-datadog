@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 4.15.0 / 2022-04-20
+
+* [IMPROVEMENT] Switch Agent start mode to delayed on Windows. See [#422].
+* [BUGFIX] Fix installation of a newer pinned version by DNF. See [#429].
+
 # 4.14.0 / 2022-02-08
 
 * [FEATURE] Add tasks for creating custom Python checks. See [#408]. Thanks [@snorlaX-sleeps].
@@ -384,6 +389,8 @@ Initial release, compatible with Ansible v1 & v2
 [#415]: https://github.com/DataDog/ansible-datadog/issues/415
 [#416]: https://github.com/DataDog/ansible-datadog/issues/416
 [#418]: https://github.com/DataDog/ansible-datadog/issues/418
+[#422]: https://github.com/DataDog/ansible-datadog/issues/422
+[#429]: https://github.com/DataDog/ansible-datadog/issues/429
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
