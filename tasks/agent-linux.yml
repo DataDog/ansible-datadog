@@ -18,86 +18,13 @@
   when: datadog_additional_groups | default([], true) | length > 0
   notify: restart datadog-agent
 
-- name: Create Datadog agent config directory
-  file:
-    dest: /etc/datadog-agent
-    state: directory
-    mode: 0755
-  when: datadog_manage_config
-
-- name: Create main Datadog agent configuration file
-  template:
-    src: datadog.yaml.j2
-    dest: /etc/datadog-agent/datadog.yaml
-    mode: 0640
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-  when: datadog_manage_config
-  notify: restart datadog-agent
-
-- name: Register all checks directories present in datadog
-  find:
-    paths: /etc/datadog-agent/conf.d/
-    patterns:
-    - "*.d"
-    file_type: directory
-  register: datadog_conf_directories
-  when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
-
-- name: Delete checks not present in datadog_tracked_checks
-  file:
-    path: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
-    state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
-  notify: restart datadog-agent
-
-- name: Delete all default checks
-  file:
-    path: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml.default"
-    state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
-  notify: restart datadog-agent
-
-- name: Ensure configuration directories are present for each Datadog check
-  file:
-    dest: "/etc/datadog-agent/conf.d/{{ item }}.d"
-    state: directory
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-    mode: 0755
-  with_items: '{{ datadog_checks|list }}'
-  when: datadog_manage_config
-
-- name: Create a configuration file for each Datadog check
-  template:
-    src: checks.yaml.j2
-    dest: "/etc/datadog-agent/conf.d/{{ item }}.d/conf.yaml"
-    mode: 0640
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-  with_items: "{{ datadog_checks|list }}"
-  when: datadog_manage_config
-  notify: restart datadog-agent
-
-- name: Remove old configuration file for each Datadog check
-  file:
-    dest: "/etc/datadog-agent/conf.d/{{ item }}.yaml"
-    state: absent
-  with_items: "{{ datadog_checks|list }}"
-  when: datadog_manage_config
-  notify: restart datadog-agent
-
-- name: Create custom check file for each custom check
-  copy:
-    src: "{{ datadog_custom_checks[item] }}"
-    dest: "/etc/datadog-agent/checks.d/{{ item }}.py"
-    mode: 0755
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-  with_items: "{{ datadog_custom_checks|list }}"
-  notify: restart datadog-agent
+- name: Include configuration setup tasks
+  include_tasks: "_agent-linux-macos-shared.yml"
+  vars:
+    _dd_config_dir: /etc/datadog-agent
+    _dd_user: {{ datadog_user }}
+    _dd_group: {{ datadog_group }}
+    _dd_notify_agent: "restart datadog-agent"
 
 - name: Create system-probe configuration file
   template:
@@ -198,11 +125,3 @@
   when: datadog_manage_config
   notify:
     "{% if datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
-
-- name: Create installation information file
-  template:
-    src: install_info.j2
-    dest: /etc/datadog-agent/install_info
-    owner: "{{ datadog_user }}"
-    group: "{{ datadog_group }}"
-    mode: 0644

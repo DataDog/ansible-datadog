@@ -9,14 +9,9 @@ The Ansible Datadog role installs and configures the Datadog Agent and integrati
 - Requires Ansible v2.6+.
 - Supports most Debian and RHEL-based Linux distributions, macOS, and Windows.
 - When using Ansible 2.10+ on Windows, requires the `ansible.windows` collection to be installed:
-  
+
   ```shell
   ansible-galaxy collection install ansible.windows
-  ```
-- When using Ansible on macOS, you may require the `community.general`collection (not included in `ansible-core`) to be installed for access to `community.general.launchd`:
-  
-  ```shell
-  ansible-galaxy collection install community.general
   ```
 
 ### Installation
@@ -74,6 +69,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_windows_ddagentuser_name`         | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).                                                                                                                                                                                                                                                                            |
 | `datadog_windows_ddagentuser_password`     | The password used to create the user and/or register the service (Windows only).                                                                                                                                                                                                                                                                                   |
 | `datadog_apply_windows_614_fix`            | Whether or not to download and apply file referenced by `datadog_windows_614_fix_script_url` (Windows only). See https://dtdg.co/win-614-fix for more details. You can set this to `false` assuming your hosts aren't running Datadog Agent 6.14.\*.                                                                                                               |
+TODO: document macos
 
 ### Integrations
 

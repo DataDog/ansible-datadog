@@ -1,179 +1,78 @@
 ---
-- name: 'Load user data into JSON string {"uid": <number>, "gid": <number>}'
+# NOTE: the DMG gets installed as ansible_user, but we then configure it to run
+# under datadog_macos_user and remove the user-specific config for ansible_user
+- name: Load user data
   shell:
-    cmd: "dscacheutil -q user -a name {{ ansible_user }} | awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print \"\\\"gid\\\": \" $2 \" }\"}'"
+    cmd: "dscacheutil -q user -a name {{ datadog_macos_user }} | awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print \"\\\"gid\\\": \" $2 \" }\"}'"
     executable: /bin/bash
   changed_when: false
   register: macos_user_output
 
-# this task is used to more cleanly format the variable contents
-# the ABOVE task's shell command returns a JSON object as a string but nested in `.stdout`
-# ansible has built in behavior that if it receives JSON data as a string it will automatically convert it to the corresponding object
-# this enables us to get multiple values out of the ABOVE task preventing us from having to run 2 similar commands
+# This task is used to more cleanly format the variable contents.The ABOVE task's shell command returns a JSON
+# object as a string but nested in `.stdout`. Ansible has built in behavior that if it receives JSON data as
+# a string it will automatically convert it to the corresponding object. This enables us to get multiple values
+# out of the ABOVE task preventing us from having to run 2 similar commands.
 - name: Extract JSON user data as variable object
   set_fact:
     macos_user_data: "{{ macos_user_output.stdout }}"
 
-- name: Check if system plist file already exists
-  stat:
-    path: "{{ datadog_macos_system_plist_file_path }}"
-  register: macos_system_plist_file_stat
+- name: Load user group data
+  shell:
+    cmd: "dscacheutil -q group -a gid {{ macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
+  register: macos_user_group
 
-- name: Execute Block when system plist file did not already exist
-  block:
-  - name: Move plist file to system location
-    command:
-      cmd: "mv /Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }} {{ datadog_macos_system_plist_file_path }}"
-      removes: "/Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}"
-      creates: "{{ datadog_macos_system_plist_file_path }}"
-    become: true
-
-  - name: Inject user and group data into system plist file
-    shell:
-      cmd: "cp -f {{ datadog_macos_system_plist_file_path }} /tmp/.plist.backup
-            && 
-            awk -v d=\"</dict>\"
-                -v lines=\"        <key>UID<\/key>\\n        <string>{{ macos_user_data.uid }}<\/string>\\n        <key>GID<\/key>\\n        <string>{{ macos_user_data.gid }}<\/string>\"
-                'NR==FNR{if ($0~d) nr=NR; next}; FNR==nr{print lines} 1'
-                /tmp/.plist.backup
-                /tmp/.plist.backup
-                > {{ datadog_macos_system_plist_file_path }}"
-      executable: /bin/bash
-    changed_when: false
-    become: yes
-
-  - name: Set owner on system plist file
-    file:
-      path: "{{ datadog_macos_system_plist_file_path }}"
-      owner: 0
-      group: 0
-    become: yes
-  when: macos_system_plist_file_stat.stat.exists is not defined or (macos_system_plist_file_stat.stat.exists is defined and not macos_system_plist_file_stat.stat.exists)
-
-- name: Create Datadog agent config directory
+# TODO: ensure and document: datadog_macos_user is the one that runs this, but ansible_user is the one who install initially
+- name: Remove user LaunchAgent plist file
   file:
-    dest: "{{ datadog_macos_etc_dir }}"
-    state: directory
-    mode: 0750
-    group: "{{ macos_user_data.gid }}"
-  become: yes
-  when: datadog_manage_config
-
-- name: Create main Datadog agent configuration file
-  template:
-    src: datadog.yaml.j2
-    dest: "{{ datadog_macos_etc_dir }}/datadog.yaml"
-    mode: 0640
-    group: "{{ macos_user_data.gid }}"
-  become: yes
-  when: datadog_manage_config
-  notify: restart datadog-agent-macos
-
-- name: Register all checks directories present in datadog
-  find:
-    paths: "{{ datadog_macos_etc_dir }}/conf.d/"
-    patterns:
-    - "*.d"
-    file_type: directory
-  become: yes
-  register: datadog_conf_directories
-  when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
-
-- name: Delete checks not present in datadog_tracked_checks
-  file:
-    path: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml"
+    path: "/Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}"
     state: absent
-  become: yes
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
-  notify: restart datadog-agent-macos
 
-- name: Delete all default checks
-  file:
-    path: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
-    state: absent
-  become: yes
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
-  notify: restart datadog-agent-macos
-
-- name: Ensure configuration directories are present for each Datadog check
-  file:
-    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d"
-    state: directory
-    mode: 0755
-  become: yes
-  with_items: '{{ datadog_checks|list }}'
-  when: datadog_manage_config
-
-- name: Create a configuration file for each Datadog check
+# We could take the plist file from user LaunchAgent location and just add UID/GID,
+# but when the version is pinned and agent is already installed, that file had
+# already been removed and won't be recreated and so we won't be able to use it.
+#
+# The disadvantage of using a template obviously is that if we changed the plist
+# file in the .dmg, we would also have to update this. Fortunately this seems
+# to basically never happen, so I think it's an acceptable downside.
+- name: Add system LaunchDaemon plist file
   template:
-    src: checks.yaml.j2
-    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.d/conf.yaml"
-    mode: 0640
-    group: "{{ macos_user_data.gid }}"
-  become: yes
-  with_items: "{{ datadog_checks|list }}"
-  when: datadog_manage_config
+    src: com.datadoghq.agent.plist.j2
+    dest: "{{ datadog_macos_system_plist_file_path }}"
+    owner: 0
+    group: 0
+  become: true
   notify: restart datadog-agent-macos
+  vars:
+    # NOTE: while Apple docs say both UID/GID and UserName/GroupName work, only UserName/GroupName actually work
+    username: "{{ datadog_macos_user }}"
+    groupname: "{{ macos_user_group.stdout }}"
 
-- name: Remove old configuration file for each Datadog check
-  file:
-    dest: "{{ datadog_macos_etc_dir }}/conf.d/{{ item }}.yaml"
-    state: absent
-  become: yes
-  with_items: "{{ datadog_checks|list }}"
-  when: datadog_manage_config
-  notify: restart datadog-agent-macos
+- name: Include configuration setup tasks
+  import_tasks: "_agent-linux-macos-shared.yml"
+  vars:
+    _dd_config_dir: "{{ datadog_macos_etc_dir }}"
+    _dd_user: "{{ macos_user_data.uid }}"
+    _dd_group: "{{ macos_user_data.gid }}"
+    _dd_notify_agent: "restart datadog-agent-macos"
+  become: true
 
-- name: Create custom check file for each custom check
-  copy:
-    src: "{{ datadog_custom_checks[item] }}"
-    dest: "{{ datadog_macos_etc_dir }}/checks.d/{{ item }}.py"
-    mode: 0750
-    group: "{{ macos_user_data.gid }}"
-  become: yes
-  with_items: "{{ datadog_custom_checks|list }}"
-  notify: restart datadog-agent-macos
-
-- name: Unload {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootout system/{{ datadog_macos_service_name }}"
-  become: yes
-  failed_when: false
-  check_mode: no
-  when: not datadog_skip_running_check and datadog_enabled
-
-- name: Create security-agent configuration file
-  template:
-    src: security-agent.yaml.j2
-    dest: "{{ datadog_macos_etc_dir }}/security-agent.yaml"
-    mode: 0640
-    group: "{{ macos_user_data.gid }}"
-  become: yes
-  when: datadog_manage_config
-  notify: restart datadog-agent-macos
-
-- name: Create installation information file
-  template:
-    src: install_info.j2
-    dest: "{{ datadog_macos_etc_dir }}/install_info"
-    mode: 0644
-    group: "{{ macos_user_data.gid }}"
-  become: yes
+# TODO: also unload the user service when runnig for a logged-in user?
+#- name: Unload {{ datadog_macos_service_name }}.plist
+#  command: "launchctl bootout system/{{ datadog_macos_service_name }}"
+#  become: yes
+#  failed_when: false
+#  check_mode: no
+#  when: not datadog_skip_running_check and datadog_enabled
 
 - name: Set permissions for DataDog Directories
   file:
     path: "{{ item }}"
+    owner: "{{ macos_user_data.uid }}"
     group: "{{ macos_user_data.gid }}"
     recurse: yes
   with_items:
     - "datadog_macos_etc_dir"
     - "datadog_macos_logs_dir"
     - "datadog_macos_run_dir"
-
-
-- name: Bootstrap {{ datadog_macos_service_name }}.plist
-  command: "launchctl bootstrap system {{ datadog_macos_system_plist_file_path }}"
-  become: yes
-  check_mode: no
-  when: not datadog_skip_running_check and datadog_enabled
+  notify: restart datadog-agent-macos
+  become: true

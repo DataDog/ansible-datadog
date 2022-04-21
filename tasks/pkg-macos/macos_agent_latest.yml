@@ -1,6 +1,6 @@
 ---
 
-- name: (Custom) Set agent download filename to latest
+- name: Set agent download filename to custom URL
   set_fact:
     dd_download_url: "{{ datadog_macos_download_url }}"
   when: datadog_macos_download_url | default('', true) | length > 0

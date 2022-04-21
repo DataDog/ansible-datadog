@@ -206,6 +206,7 @@ datadog_macos_agent7_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agen
 # in order to get the full url to the dmg package.
 datadog_macos_versioned_url: "https://s3.amazonaws.com/dd-agent/datadog-agent"
 
+datadog_macos_user: "{{ ansible_user }}"
 datadog_macos_service_name: "com.datadoghq.agent"
 datadog_macos_user_plist_file_path: "Library/LaunchAgents/{{ datadog_macos_service_name }}.plist"
 datadog_macos_system_plist_file_path: "/Library/LaunchDaemons/{{ datadog_macos_service_name }}.plist"

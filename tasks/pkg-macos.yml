@@ -1,16 +1,18 @@
 ---
+# NOTE: the DMG gets installed as ansible_user, but we then configure it to run
+# under datadog_macos_user and remove the user-specific config for ansible_user
 - name: Fail if Agent 5
   fail:
     msg: "The Datadog ansible role does not currently support Agent 5 on macOS"
   when: datadog_agent_major_version|int == 5
 
-- include_tasks: macos_agent_latest.yml
+- include_tasks: pkg-macos/macos_agent_latest.yml
   when: (not datadog_skip_install) and (datadog_agent_macos_version is not defined)
 
-- include_tasks: macos_agent_version.yml
+- include_tasks: pkg-macos/macos_agent_version.yml
   when: (not datadog_skip_install) and (datadog_agent_macos_version is defined)
 
-- name: show URL var
+- name: Display macOS download URL
   debug:
     var: dd_download_url
   when: not datadog_skip_install
@@ -22,10 +24,10 @@
   become: yes
   when: not datadog_skip_install
 
-- name: Create temp datadog install user file
+- name: Create temporary datadog install user file
   copy:
     dest: "/tmp/datadog-install-user"
-    content: "{{ ansible_user }}"
+    content: "{{ datadog_macos_user }}"
     mode: 0554
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
@@ -37,11 +39,11 @@
   register: download_dmg_result
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
-- name: Detach any existing mounted dmg if able
+- name: Detach agent dmg if already mounted
   shell: 'hdiutil detach "/Volumes/datadog_agent" >/dev/null 2>&1 || true'
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
-- name: Attach dmg
+- name: Attach agent dmg
   command: 'hdiutil attach /tmp/datadog-agent.dmg -mountpoint "/Volumes/datadog_agent"'
   when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
 
@@ -65,7 +67,7 @@
   become: yes
   when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
 
-- name: Delete temp datadog install user file
+- name: Delete temporary datadog install user file
   file:
     path: "/tmp/datadog-install-user"
     state: absent
