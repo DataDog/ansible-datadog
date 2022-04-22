@@ -4,8 +4,6 @@
 # However, this is here because this is a "handler-like" task that is dynamically
 # included by a handler task in handlers/main.yml.
 
-# TODO: do we need enable/disable?
-
 # NOTE: We don't use bootout/bootstrap here, because bootout can't wait for the operation
 # to finish and if it's in progress for a longer time, bootstrap fails. We use the old
 # unload/load combo because they actually wait.
