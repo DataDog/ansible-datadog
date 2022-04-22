@@ -22,8 +22,8 @@
   include_tasks: "_agent-linux-macos-shared.yml"
   vars:
     _dd_config_dir: /etc/datadog-agent
-    _dd_user: {{ datadog_user }}
-    _dd_group: {{ datadog_group }}
+    _dd_user: "{{ datadog_user }}"
+    _dd_group: "{{ datadog_group }}"
     _dd_notify_agent: "restart datadog-agent"
 
 - name: Create system-probe configuration file
