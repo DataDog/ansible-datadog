@@ -113,7 +113,7 @@
     state: stopped
     enabled: no
   when: not datadog_skip_running_check and not datadog_enabled
-  ignore_errors: yes # Since older versions of the Agent don't include the security agent
+  failed_when: false # Since older versions of the Agent don't include the security agent
 
 - name: Create security-agent configuration file
   template:

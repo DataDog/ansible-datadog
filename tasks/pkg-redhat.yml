@@ -125,7 +125,7 @@
 
 - name: Clean repo metadata if repo changed # noqa 503
   command: yum clean metadata --disablerepo="*" --enablerepo=datadog
-  ignore_errors: yes # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
+  failed_when: false # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
   args:
     warn: no
   when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed

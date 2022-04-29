@@ -38,8 +38,7 @@
   when: user_service_created.rc == 0
 
 - name: Remove user login item
-  shell:
-    cmd: |-
+  command: |-
       osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
   when: user_service_created.rc == 0
 
@@ -61,6 +60,7 @@
     dest: "{{ datadog_macos_system_plist_file_path }}"
     owner: 0
     group: 0
+    mode: 0644
   become: true
   notify: restart datadog-agent-macos
   vars:
