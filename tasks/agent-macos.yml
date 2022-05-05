@@ -85,8 +85,8 @@
     group: "{{ macos_user_data.gid }}"
     recurse: yes
   with_items:
-    - "datadog_macos_etc_dir"
-    - "datadog_macos_logs_dir"
-    - "datadog_macos_run_dir"
+    - "{{ datadog_macos_etc_dir }}"
+    - "{{ datadog_macos_logs_dir }}"
+    - "{{ datadog_macos_run_dir }}"
   notify: restart datadog-agent-macos
   become: true
