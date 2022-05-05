@@ -30,8 +30,11 @@ commands:
       jinja2_native:
         type: string
         default: "false"
+      inventory:
+        type: string
+        default: "ci.ini"
     steps:
-      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: datadog-agent version
 
   test_install_no_manage_config:
@@ -93,6 +96,23 @@ commands:
           version: "<<parameters.version>>"
           python: "<<parameters.python>>"
           jinja2_native: "<<parameters.jinja2_native>>"
+
+  test_agent_install_macos:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    steps:
+      - checkout
+      - install_agent:
+          version: "<<parameters.version>>"
+          python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
+          inventory: "ci_macos.ini"
 
 jobs:
   ansible_lint:
@@ -161,6 +181,32 @@ jobs:
       - test_install_no_manage_config:
           version: "<<parameters.agent_version>>"
           python: "<<parameters.python>>"
+
+  test_install_macos:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    macos:
+      xcode: 13.3.0
+    steps:
+      - checkout
+      - run:
+          name: Install Python3
+          command: brew install python3
+      - run:
+          name: Install Ansible
+          command: pip3 install ansible~=<<parameters.ansible_version>>
+      - test_agent_install_macos:
+          version: "<<parameters.agent_version>>"
+          python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
 
 workflows:
   version: 2
@@ -243,4 +289,11 @@ workflows:
               ansible_version: ["4_10"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2"]
+              python: ["python3"]
+
+      - test_install_macos:
+          matrix:
+            parameters:
+              ansible_version: ["2.8", "2.9", "2.10", "3.4", "4.10"]
+              agent_version: ["6_macos", "7_macos"]
               python: ["python3"]

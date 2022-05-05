@@ -1,0 +1,27 @@
+---
+# This file doesn't actually contain "handlers" in the Ansible sense: when running
+# our role, Ansible only loads the contents of handlers/main.yml as handlers.
+# However, this is here because this is a "handler-like" task that is dynamically
+# included by a handler task in handlers/main.yml.
+
+# NOTE: We don't use bootout/bootstrap here, because bootout can't wait for the operation
+# to finish and if it's in progress for a longer time, bootstrap fails. We use the old
+# unload/load combo because they actually wait.
+- name: Unload datadog-agent service
+  command: "launchctl unload -wF {{ datadog_macos_system_plist_file_path }}"
+  become: yes
+  check_mode: no
+  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
+
+- name: Load datadog-agent service
+  command: "launchctl load -wF {{ datadog_macos_system_plist_file_path }}"
+  become: yes
+  check_mode: no
+  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
+
+- name: Restart datadog-agent service
+  command: "launchctl kickstart -k system/{{ datadog_macos_service_name }}"
+  become: yes
+  register: command_result
+  check_mode: no
+  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"

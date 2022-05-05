@@ -1,0 +1,12 @@
+---
+
+- name: Set agent download filename to custom URL
+  set_fact:
+    dd_download_url: "{{ datadog_macos_download_url }}"
+  when: datadog_macos_download_url | default('', true) | length > 0
+
+- name: Set agent download filename to latest
+  set_fact:
+    dd_download_url: "{% if datadog_agent_major_version|int == 7 %}{{ datadog_macos_agent7_latest_url }}
+      {% else %}{{ datadog_macos_agent6_latest_url }}{% endif %}"
+  when: datadog_macos_download_url | default('', true) | length == 0

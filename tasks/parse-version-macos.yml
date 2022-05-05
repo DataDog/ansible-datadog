@@ -1,0 +1,7 @@
+- name: Get macOS Agent version
+  shell: "set -o pipefail && {{ datadog_agent_binary_path_macos }} version | grep 'Agent ' | awk '{print $2}'"
+  register: datadog_version_check_macos
+  changed_when: false
+  failed_when: false
+  check_mode: no
+  when: ansible_facts.os_family == "Darwin"

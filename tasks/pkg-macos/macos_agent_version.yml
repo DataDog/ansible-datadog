@@ -1,0 +1,5 @@
+---
+
+- name: Set agent download filename to a specific version
+  set_fact:
+    dd_download_url: "{{ datadog_macos_versioned_url }}-{{ datadog_agent_macos_version }}-1.dmg"

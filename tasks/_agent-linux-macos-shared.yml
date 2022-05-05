@@ -1,0 +1,91 @@
+---
+- name: Create Datadog agent config directory
+  file:
+    dest: "{{ _dd_config_dir }}"
+    state: directory
+    mode: 0755
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+  when: datadog_manage_config
+
+- name: Create main Datadog agent configuration file
+  template:
+    src: datadog.yaml.j2
+    dest: "{{ _dd_config_dir }}/datadog.yaml"
+    mode: 0640
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+  when: datadog_manage_config
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Register all checks directories present in datadog
+  find:
+    paths: "{{ _dd_config_dir }}/conf.d/"
+    patterns:
+    - "*.d"
+    file_type: directory
+  register: datadog_conf_directories
+  when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
+
+- name: Delete checks not present in datadog_tracked_checks
+  file:
+    path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Delete all default checks
+  file:
+    path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Ensure configuration directories are present for each Datadog check
+  file:
+    dest: "{{ _dd_config_dir }}/conf.d/{{ item }}.d"
+    state: directory
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+    mode: 0755
+  with_items: '{{ datadog_checks|list }}'
+  when: datadog_manage_config
+
+- name: Create a configuration file for each Datadog check
+  template:
+    src: checks.yaml.j2
+    dest: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
+    mode: 0640
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+  with_items: "{{ datadog_checks|list }}"
+  when: datadog_manage_config
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Remove old configuration file for each Datadog check
+  file:
+    dest: "{{ _dd_config_dir }}/conf.d/{{ item }}.yaml"
+    state: absent
+  with_items: "{{ datadog_checks|list }}"
+  when: datadog_manage_config
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Create custom check file for each custom check
+  copy:
+    src: "{{ datadog_custom_checks[item] }}"
+    dest: "{{ _dd_config_dir }}/checks.d/{{ item }}.py"
+    mode: 0755
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+  with_items: "{{ datadog_custom_checks|list }}"
+  notify: "{{ _dd_notify_agent }}"
+
+- name: Create installation information file
+  template:
+    src: install_info.j2
+    dest: "{{ _dd_config_dir }}/install_info"
+    owner: "{{ _dd_user }}"
+    group: "{{ _dd_group }}"
+    mode: 0644
