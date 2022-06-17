@@ -7,6 +7,7 @@
     executable: /bin/bash
   changed_when: false
   register: macos_user_output
+  check_mode: no
 
 # This task is used to more cleanly format the variable contents.The ABOVE task's shell command returns a JSON
 # object as a string but nested in `.stdout`. Ansible has built in behavior that if it receives JSON data as
