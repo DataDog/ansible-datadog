@@ -55,6 +55,16 @@
     key: /tmp/DATADOG_RPM_KEY_20200908.public
     state: present
   when: not ansible_check_mode
+  
+- name: Set versioned includepkgs variable
+  set_fact:
+    datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}"
+  when: datadog_agent_redhat_version is defined
+
+- name: Set plain includepkgs variable
+  set_fact:
+    datadog_includepkgs: "{{ datadog_agent_flavor }}"
+  when: datadog_agent_redhat_version is not defined
 
 - name: Install Datadog Agent 5 yum repo
   yum_repository:
@@ -62,6 +72,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: yes
+    includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: no  # we don't sign Agent 5 repodata
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
@@ -79,6 +90,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent6_yum_repo }}"
     enabled: yes
+    includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
@@ -96,6 +108,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent7_yum_repo }}"
     enabled: yes
+    includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
@@ -112,6 +125,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_yum_repo }}"
     enabled: yes
+    includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
