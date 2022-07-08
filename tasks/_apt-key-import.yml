@@ -81,3 +81,10 @@
   when: key_needs_import
   register: key_import_result
   changed_when: '"imported: 1" in key_import_result.stderr'
+
+- name: "Remove temporary directory for key manipulation"
+  file:
+    path: "{{ tempdir.path }}"
+    state: absent
+  when: key_needs_import
+  changed_when: false
