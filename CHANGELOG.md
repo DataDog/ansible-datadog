@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 4.16.0 / 2022-07-11
+* [FEATURE] Add macOS support. See [#437]. Thanks [@lc-applause].
+* [BUGFIX] Remove temporary directory after APT key import. See [#442]. Thanks [@wisnij].
+* [BUGFIX] Prevent security-agent startup if it's not configured. See [#438].
+
 # 4.15.0 / 2022-04-20
 
 * [IMPROVEMENT] Switch Agent start mode to delayed on Windows. See [#422].
@@ -391,6 +396,9 @@ Initial release, compatible with Ansible v1 & v2
 [#418]: https://github.com/DataDog/ansible-datadog/issues/418
 [#422]: https://github.com/DataDog/ansible-datadog/issues/422
 [#429]: https://github.com/DataDog/ansible-datadog/issues/429
+[#437]: https://github.com/DataDog/ansible-datadog/issues/437
+[#438]: https://github.com/DataDog/ansible-datadog/issues/438
+[#442]: https://github.com/DataDog/ansible-datadog/issues/442
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -409,6 +417,7 @@ Initial release, compatible with Ansible v1 & v2
 [@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
 [@kanga333]: https://github.com/kanga333
+[@lc-applause]: https://github.com/lc-applause
 [@loliee]: https://github.com/loliee
 [@moleskin-smile]: https://github.com/moleskin-smile
 [@pdecat]: https://github.com/pdecat
@@ -422,4 +431,5 @@ Initial release, compatible with Ansible v1 & v2
 [@tasktop-teho]: https://github.com/tasktop-teho
 [@the-real-cphillips]: https://github.com/the-real-cphillips
 [@tomgoren]: https://github.com/tomgoren
+[@wisnij]: https://github.com/wisnij
 [@xp-1000]: https://github.com/xp-1000
