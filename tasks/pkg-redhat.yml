@@ -1,9 +1,4 @@
 ---
-
-- name: Print all available facts
-  ansible.builtin.debug:
-    var: ansible_version
-
 - name: Fail early if Python 3 is used on CentOS / RHEL < 8 with old Ansible
   fail:
     msg: "The installation of the Agent on RedHat family systems using yum is not compatible with Python 3 with older Ansible versions.
