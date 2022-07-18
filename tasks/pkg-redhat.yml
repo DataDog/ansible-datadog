@@ -9,7 +9,7 @@
   # is to explicitly use just major.minor for comparison with 2.11.
   # See https://github.com/ansible/ansible/issues/78288
   when: (not datadog_ignore_old_centos_python3_error)
-        and ("{}.{}".format(ansible_version.major, ansible_version.minor) is version("2.11", operator="lt", version_type="strict"))
+        and ("{}.{}".format(ansible_version.major, ansible_version.minor) is version("2.11", operator="lt", strict=True))
         and (ansible_pkg_mgr == "yum")
         and (ansible_facts.python.version.major | int >= 3)
 
