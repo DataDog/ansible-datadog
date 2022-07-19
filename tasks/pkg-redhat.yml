@@ -3,8 +3,13 @@
   fail:
     msg: "The installation of the Agent on RedHat family systems using yum is not compatible with Python 3 with older Ansible versions.
           To run this role, use a Python 2 interpreter on hosts running CentOS / RHEL < 8 or upgrade Ansible to version 2.11+"
+  # We can't compare ansible_version.full with 2.11 in the condition below, because ansible's
+  # `semver` and `strict` version_type don't recognize it as a valid version and the `loose`
+  # version_type considers it to be a post-release. It seems that the best course of action
+  # is to explicitly use just major.minor for comparison with 2.11.
+  # See https://github.com/ansible/ansible/issues/78288
   when: (not datadog_ignore_old_centos_python3_error)
-        and (ansible_version.full is version("2.11", operator="lt", strict=True))
+        and ("{}.{}".format(ansible_version.major, ansible_version.minor) is version("2.11", operator="lt", strict=True))
         and (ansible_pkg_mgr == "yum")
         and (ansible_facts.python.version.major | int >= 3)
 
