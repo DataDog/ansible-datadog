@@ -621,3 +621,16 @@ For more details, see [Critical Bug in Uninstaller for Datadog Agent 6.14.0 and 
 [13]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-linux.yml
 [14]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-win.yml
 [15]: https://www.datadoghq.com/blog/datadog-marketplace/
+
+### Ubuntu 20.04 broken by service_facts
+
+Running the `service_facts` module on Ubuntu 20.04 causes the following error:
+
+```
+localhost | FAILED! => {
+    "changed": false,
+    "msg": "Malformed output discovered from systemd list-unit-files: accounts-daemon.service                    enabled         enabled      "
+}
+```
+
+This can be fixed by [updating Ansible to `v2.9.8` or above](https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61).
