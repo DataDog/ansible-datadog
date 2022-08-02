@@ -617,7 +617,7 @@ localhost | FAILED! => {
 }
 ```
 
-This can be fixed by [updating Ansible to `v2.9.8` or above](https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61).
+To fix this, [update Ansible to `v2.9.8` or above][16].
 
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
@@ -634,3 +634,4 @@ This can be fixed by [updating Ansible to `v2.9.8` or above](https://github.com/
 [13]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-linux.yml
 [14]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-win.yml
 [15]: https://www.datadoghq.com/blog/datadog-marketplace/
+[16]: https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61
