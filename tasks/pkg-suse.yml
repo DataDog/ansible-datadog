@@ -118,6 +118,7 @@
     group: "root"
     mode: 0644
   register: datadog_zypper_repo
+  when: datadog_zypper_repo_enabled
 
 # refresh zypper repos only if the template changed
 - name: refresh Datadog zypper_repos  # noqa 503
