@@ -101,7 +101,7 @@ datadog_ignore_old_centos_python3_error: false
 datadog_zypper_repo: ""
 
 # Define if the official zypper Datadog repository services should be installed
-datadog_zypper_repo_enabled: yes
+datadog_manage_zypper_repofile: yes
 
 datadog_zypper_repo_gpgcheck: ""
 datadog_zypper_gpgcheck: yes
