@@ -117,13 +117,13 @@
     owner: "root"
     group: "root"
     mode: 0644
-  register: datadog_zypper_repo
+  register: datadog_zypper_repo_template
   when: datadog_manage_zypper_repofile
 
 # refresh zypper repos only if the template changed
 - name: refresh Datadog zypper_repos  # noqa 503
   command: zypper refresh datadog
-  when: datadog_zypper_repo.changed and not ansible_check_mode
+  when: datadog_zypper_repo_template.changed and not ansible_check_mode
   args:
     warn: false  # silence warning about using zypper directly
 
