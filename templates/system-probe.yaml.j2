@@ -1,4 +1,4 @@
-# Managed by Ansible
+# {{ ansible_managed }}
 
 {% if system_probe_config is defined and system_probe_config | default({}, true) | length > 0 -%}
 system_probe_config:

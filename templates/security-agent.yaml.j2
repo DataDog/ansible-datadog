@@ -1,4 +1,4 @@
-# Managed by Ansible
+# {{ ansible_managed }}
 
 {% if runtime_security_config is defined and runtime_security_config | default({}, true) | length > 0 -%}
 runtime_security_config:
