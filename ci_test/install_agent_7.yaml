@@ -22,6 +22,8 @@
       sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
     network_config:
       enabled: true
+    service_monitoring_config:
+      enabled: true
     runtime_security_config:
       enabled: true
     datadog_checks:

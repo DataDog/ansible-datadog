@@ -198,6 +198,8 @@ The system probe is configured under the `system_probe_config` variable. Any var
 
 [Cloud Workload Security][8] is configured under the `runtime_security_config` variable. Any variables nested underneath are written to the `system-probe.yaml` and `security-agent.yaml`, in the `runtime_security_config` section.
 
+[Universal Service Monitoring][17] (USM) is configured under the `service_monitoring_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `service_monitoring_config` section.
+
 **Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
 
 #### Example configuration
@@ -211,6 +213,8 @@ datadog_config:
 system_probe_config:
   sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
 network_config:
+  enabled: true
+service_monitoring_config:
   enabled: true
 runtime_security_config:
   enabled: true
@@ -635,3 +639,4 @@ To fix this, [update Ansible to `v2.9.8` or above][16].
 [14]: https://github.com/DataDog/ansible-datadog/blob/main/tasks/agent-win.yml
 [15]: https://www.datadoghq.com/blog/datadog-marketplace/
 [16]: https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61
+[17]: https://docs.datadoghq.com/tracing/universal_service_monitoring/?tab=configurationfiles#enabling-universal-service-monitoring
