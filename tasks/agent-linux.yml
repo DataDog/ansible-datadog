@@ -91,7 +91,7 @@
       and service_monitoring_config['enabled']))
       and datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check
-    and (not datadog_before_7180)
+    and (not datadog_before_7400)
 
 - name: Ensure datadog-agent is running
   service:
