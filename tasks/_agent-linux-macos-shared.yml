@@ -43,6 +43,14 @@
   when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
   notify: "{{ _dd_notify_agent }}"
 
+- name: Delete all example checks
+  file:
+    path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.example"
+    state: absent
+  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  when: datadog_manage_config and datadog_disable_example_checks and item not in datadog_tracked_checks
+  notify: "{{ _dd_notify_agent }}"
+
 - name: Ensure configuration directories are present for each Datadog check
   file:
     dest: "{{ _dd_config_dir }}/conf.d/{{ item }}.d"
