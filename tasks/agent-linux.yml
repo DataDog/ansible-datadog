@@ -2,6 +2,11 @@
 - name: Populate service facts
   service_facts:
 
+- name: Set before 6/7.40.0 flag
+  set_fact:
+    datadog_before_7400: "{{ datadog_major is defined and datadog_minor is defined
+      and datadog_major | int < 8 and datadog_minor | int < 40 }}"
+
 - name: Set before 6/7.24.1 flag
   set_fact:
     datadog_before_7241: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined
@@ -69,6 +74,24 @@
       and datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check
     and (not datadog_before_7241)
+
+# Since 6/7.40.0, setting enabled: true in service_monitoring_config is enough to start the system-probe service:
+# https://docs.datadoghq.com/tracing/universal_service_monitoring/?tab=configurationfiles#enabling-universal-service-monitoring
+- name: Set system probe enabled (since 6/7.40.0)
+  set_fact:
+    datadog_sysprobe_enabled: "{{
+      ((system_probe_config is defined
+      and 'enabled' in (system_probe_config | default({}, true))
+      and system_probe_config['enabled'])
+      or (network_config is defined
+      and 'enabled' in (network_config | default({}, true))
+      and network_config['enabled'])
+      or (service_monitoring_config is defined
+      and 'enabled' in (service_monitoring_config | default({}, true))
+      and service_monitoring_config['enabled']))
+      and datadog_sysprobe_installed }}"
+  when: not datadog_skip_running_check
+    and (not datadog_before_7400)
 
 - name: Ensure datadog-agent is running
   service:
