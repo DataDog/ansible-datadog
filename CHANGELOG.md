@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+# 4.17.0 / 2023-01-04
+
+* [FEATURE] Add support for Universal Service Monitoring sysprobe configuration. See [#458]. Thanks [@marcus-crane].
+* [IMPROVEMENT] Lock Agent version using `includepkgs` in repofiles on Red Hat compatible platforms. See [#443]. Thanks [@sspans-sbp].
+* [IMPROVEMENT] Prettify and fix yaml indentations. See [#448]. Thanks [@denzhel].
+* [IMPROVEMENT] Add the possibility to prevent the zypper repository installation. See [#452]. Thanks [@jb-mayer].
+* [IMPROVEMENT] Use `ansible_managed` instead of custom hardcoded message in managed files. See [#454]. Thanks [@jlosito].
+* [BUGFIX] Fix version comparison tasks when using ansible-core RC version. See [#446].
+* [BUGFIX] Fix running role multiple times in a row on SUSE compatible platforms. See [#453].
+* [DOCS] Add troubleshooting instructions about `service_facts` breaking Ubuntu 20.04. See [#449].
+* [DOCS] Clarify `datadog_config` behavior. See [#451]. Thanks [@hestonhoffman].
+
 # 4.16.0 / 2022-07-11
 * [FEATURE] Add macOS support. See [#437]. Thanks [@lc-applause].
 * [BUGFIX] Remove temporary directory after APT key import. See [#442]. Thanks [@wisnij].
@@ -399,6 +411,15 @@ Initial release, compatible with Ansible v1 & v2
 [#437]: https://github.com/DataDog/ansible-datadog/issues/437
 [#438]: https://github.com/DataDog/ansible-datadog/issues/438
 [#442]: https://github.com/DataDog/ansible-datadog/issues/442
+[#443]: https://github.com/DataDog/ansible-datadog/issues/443
+[#446]: https://github.com/DataDog/ansible-datadog/issues/446
+[#448]: https://github.com/DataDog/ansible-datadog/issues/448
+[#449]: https://github.com/DataDog/ansible-datadog/issues/449
+[#451]: https://github.com/DataDog/ansible-datadog/issues/451
+[#452]: https://github.com/DataDog/ansible-datadog/issues/452
+[#453]: https://github.com/DataDog/ansible-datadog/issues/453
+[#454]: https://github.com/DataDog/ansible-datadog/issues/454
+[#458]: https://github.com/DataDog/ansible-datadog/issues/458
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -406,19 +427,24 @@ Initial release, compatible with Ansible v1 & v2
 [@brendanlong]: https://github.com/brendanlong
 [@camjay]: https://github.com/camjay
 [@dbr1993]: https://github.com/dbr1993
+[@denzhel]: https://github.com/denzhel
 [@dv9io0o]: https://github.com/dv9io0o
 [@enarciso]: https://github.com/enarciso
 [@eplanet]: https://github.com/eplanet
 [@erikhjensen]: https://github.com/erikhjensen
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
+[@hestonhoffman]: https://github.com/hestonhoffman
+[@jb-mayer]: https://github.com/jb-mayer
 [@jeffwidman]: https://github.com/jeffwidman
 [@jharley]: https://github.com/jharley
+[@jlosito]: https://github.com/jlosito
 [@jpiron]: https://github.com/jpiron
 [@jstoja]: https://github.com/jstoja
 [@kanga333]: https://github.com/kanga333
 [@lc-applause]: https://github.com/lc-applause
 [@loliee]: https://github.com/loliee
+[@marcus-crane]: https://github.com/marcus-crane
 [@moleskin-smile]: https://github.com/moleskin-smile
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
@@ -427,6 +453,7 @@ Initial release, compatible with Ansible v1 & v2
 [@samasc30]: https://github.com/samasc30
 [@snorlaX-sleeps]: https://github.com/snorlaX-sleeps
 [@soar]: https://github.com/soar
+[@sspans-sbp]: https://github.com/sspans-sbp
 [@stegar123]: https://github.com/stegar123
 [@tasktop-teho]: https://github.com/tasktop-teho
 [@the-real-cphillips]: https://github.com/the-real-cphillips
