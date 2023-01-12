@@ -84,7 +84,6 @@
       "{{ datadog_yum_gpgkey_current }}",
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
-      "{{ datadog_yum_gpgkey }}",
     ]
   register: repofile5
   when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
@@ -102,7 +101,6 @@
       "{{ datadog_yum_gpgkey_current }}",
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
-      "{{ datadog_yum_gpgkey }}",
     ]
   register: repofile6
   when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
@@ -137,7 +135,6 @@
       "{{ datadog_yum_gpgkey_current }}",
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
-      "{{ datadog_yum_gpgkey }}",
     ]
   register: repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)

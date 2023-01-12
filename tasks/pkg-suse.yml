@@ -32,33 +32,6 @@
     state: present
   when: not ansible_check_mode
 
-# Do not import old key if installing Agent 7, as all Agent 7 packages are signed with the new key
-- block:  # Work around due to SNI check for SLES11
-  - name: Stat if RPM key already exists
-    stat:
-      path: /tmp/DATADOG_RPM_KEY.public
-    register: ddkey
-  - name: Download RPM key (SLES11)
-    get_url:
-      url: "{{ datadog_zypper_gpgkey }}"
-      dest: /tmp/DATADOG_RPM_KEY.public
-    when: not ddkey.stat.exists
-  when: datadog_agent_major_version|int < 7 and ansible_distribution_version|int == 11
-
-# Do not import old key if installing Agent 7, as all Agent 7 packages are signed with the new key
-- name: Download RPM key
-  get_url:
-    url: "{{ datadog_zypper_gpgkey }}"
-    dest: /tmp/DATADOG_RPM_KEY.public
-    checksum: "sha256:{{ datadog_zypper_gpgkey_sha256sum }}"
-  when: datadog_agent_major_version|int < 7 and ansible_distribution_version|int >= 12
-
-- name: Import RPM key
-  rpm_key:
-    key: /tmp/DATADOG_RPM_KEY.public
-    state: present
-  when: datadog_agent_major_version|int < 7 and not ansible_check_mode
-
 - block:  # Work around due to SNI check for SLES11
   - name: Stat if E09422B3 key (Expires 2022) RPM key already exists
     stat:

@@ -69,6 +69,10 @@ datadog_apt_repo: ""
 datadog_apt_cache_valid_time: 3600
 datadog_apt_key_retries: 5
 
+# DATADOG_RPM_KEY.public (4172A230) is only useful to install old (< 6.14) Agent packages.
+# We no longer add it and we explicitly remove it.
+datadog_rpm_remove_keys: [4172A230]
+
 # Default yum repo and keys
 
 # By default, the role uses the official yum Datadog repository for the chosen major version
@@ -79,7 +83,7 @@ datadog_yum_repo_gpgcheck: ""
 datadog_yum_gpgcheck: yes
 # NOTE: we don't use URLs starting with https://keys.datadoghq.com/, as Python
 # on older CentOS/RHEL/SUSE doesn't support SNI and get_url would fail on them
-datadog_yum_gpgkey: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY.public"
+
 # the CURRENT key always contains the key that is used to sign repodata and latest packages
 datadog_yum_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 # this key expires in 2022
@@ -106,8 +110,6 @@ datadog_manage_zypper_repofile: yes
 
 datadog_zypper_repo_gpgcheck: ""
 datadog_zypper_gpgcheck: yes
-datadog_zypper_gpgkey: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY.public"
-datadog_zypper_gpgkey_sha256sum: "00d6505c33fd95b56e54e7d91ad9bfb22d2af17e5480db25cba8fee500c80c46"
 datadog_zypper_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 datadog_zypper_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
