@@ -21,6 +21,14 @@
   include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian" and not datadog_skip_install
 
+- name: Include tasks to remove old GPG keys
+  include_tasks: "_remove_rpm_keys.yml"
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux", "Suse"]
+  loop: "{{ datadog_rpm_remove_keys }}"
+
+- name: Include tasks to check removed configuration value usage
+  include_tasks: check-removed-config.yml
+
 # Only Ansible >= 3.0 knows that AlmaLinux belongs to "RedHat" family
 # (and latest bugfix releases of some 2.X)
 # For Rocky it is some 4.X and >= 5.0
