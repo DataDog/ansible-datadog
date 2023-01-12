@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+# 4.18.0 / 2023-01-12
+
+* [DEPRECATION] Remove the old RPM GPG key 4172A230 from hosts that still trust it. This also removes the configuration variables `datadog_yum_gpgkey`, `datadog_zypper_gpgkey` and `datadog_zypper_gpgkey_sha256sum`. See [#466].
+
 # 4.17.0 / 2023-01-04
 
 * [FEATURE] Add support for Universal Service Monitoring sysprobe configuration. See [#458]. Thanks [@marcus-crane].
