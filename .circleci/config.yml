@@ -48,7 +48,7 @@ commands:
       - run: bash -c '[ -f /etc/datadog-agent/datadog.yaml.example ] || [ -f /etc/dd-agent/datadog.conf.example ]'
       - run: bash -c '[ ! -f /etc/datadog-agent/datadog.yaml ] && [ ! -f /etc/datadog-agent/system-probe.yaml ] && [ ! -f /etc/datadog-agent/security-agent.yaml ] && [ ! -f /etc/dd-agent/datadog.conf ]'
 
-  downgrade_agent_5_32_9:
+  downgrade_agent_5_32:
     parameters:
       python:
         type: string
@@ -78,7 +78,7 @@ commands:
             - install_agent:
                 version: "<<parameters.version>>"
                 python: "<<parameters.python>>"
-      - downgrade_agent_5_32_9:
+      - downgrade_agent_5_32:
           python: "<<parameters.python>>"
 
   test_agent_install:
