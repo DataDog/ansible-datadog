@@ -146,6 +146,10 @@
     warn: no
   when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed
 
+- name: Refresh Datadog repository cache
+  command: yum -y makecache --disablerepo="*" --enablerepo=datadog
+  when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed
+
 - name: Remove old yum repo files
   yum_repository:
     name: "ansible_datadog_{{ item }}"
