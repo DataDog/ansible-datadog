@@ -6,9 +6,10 @@
     msg: "The Datadog ansible role does not currently support Agent 5 on macOS"
   when: datadog_agent_major_version|int == 5
 
-- name: Check if user doesn't exist
+- name: Check if user exist
   command: id -u "{{ datadog_macos_user }}"
   register: mac_user_check
+  changed_when: false
   ignore_errors: true
 
 - name: Fail if user doesn't exist
@@ -19,12 +20,14 @@
 - name: Get user group data gid
   shell:
     cmd : 'dscacheutil -q user -a name "{{ datadog_macos_user }}" | grep "gid" | grep -oE "[0-9]+"'
+  changed_when: false
   register: macos_group_data_gid
 
-- name: Check if group doesn't exist
+- name: Check if group exist
   shell:
     cmd: "dscacheutil -q group -a gid {{ macos_group_data_gid }} | grep '^name: ' | awk '{ print $2 }'"
   register: mac_group_check
+  changed_when: false
   ignore_errors: true
 
 - name: Fail if group doesn't exist
