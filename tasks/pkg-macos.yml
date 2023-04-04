@@ -6,6 +6,26 @@
     msg: "The Datadog ansible role does not currently support Agent 5 on macOS"
   when: datadog_agent_major_version|int == 5
 
+- name: Check if user doesn't exist
+  command: id -u "{{ datadog_macos_user }}" >/dev/null 2>&1
+  register: mac_user_check
+  ignore_errors: true
+
+- name: Fail if user doesn't exist
+  fail:
+    msg: "The Datadog ansible role wasn't able to find the user : {{ datadog_macos_user }}"
+  when: mac_user_check|failed
+
+- name: Check if group doesn't exist
+  command: dscacheutil -q group | grep "name:" | awk '{print $2}' | grep -w "{{ macos_user_group.stdout }}" >/dev/null 2>&1
+  register: mac_group_check
+  ignore_errors: true
+
+- name: Fail if group doesn't exist
+  fail:
+    msg: "The Datadog ansible role wasn't able to find the group : {{ macos_user_group.stdout }}"
+  when: mac_group_check|failed
+
 - include_tasks: pkg-macos/macos_agent_latest.yml
   when: (not datadog_skip_install) and (datadog_agent_macos_version is not defined)
 
