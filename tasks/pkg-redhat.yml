@@ -146,7 +146,9 @@
     warn: no
   when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed
 
-# On certain version of dnf, gpg keys aren't imported into the local db. This rule assure that they are correctly imported into the local db.
+# On certain version of dnf, gpg keys aren't imported into the local db with the package install task.
+# This rule assures that they are correctly imported into the local db and users won't have to manually accept
+# them if running dnf commands on the hosts.
 - name: Refresh Datadog repository cache # noqa 503
   command: yum -y makecache --disablerepo="*" --enablerepo=datadog
   failed_when: false
