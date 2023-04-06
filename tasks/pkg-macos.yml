@@ -12,7 +12,7 @@
   changed_when: false
   ignore_errors: true
 
-- name: Fail if user doesn't exist
+- name: Fail if the macOS user for Agent service doesn't exist
   fail:
     msg: "The Datadog ansible role wasn't able to find the user : {{ datadog_macos_user }}"
   when: mac_user_check.rc != 0
