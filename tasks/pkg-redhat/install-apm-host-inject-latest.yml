@@ -1,0 +1,16 @@
+---
+# TODO
+- name: Install the APM inject library
+  apt:
+    name: datadog-apm-inject
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+
+- name: Install the APM inject language libraries
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+  with_items: "{{ datadog_apm_libraries }}"

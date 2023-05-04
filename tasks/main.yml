@@ -69,3 +69,7 @@
 - name: Integrations Tasks
   include_tasks: integration.yml
   when: datadog_integration is defined
+
+- name: APM Host injection tasks
+  include_tasks: apm-host-injection.yml
+  when: datadog_apm_host_injection_enabled

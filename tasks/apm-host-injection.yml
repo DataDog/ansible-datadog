@@ -1,0 +1,35 @@
+---
+- name: Check if platform is supported
+  fail:
+    msg: APM Injection is not supported in this platform
+  when: ansible_facts.os_family not in ["Debian", "RedHat", "Rocky", "AlmaLinux"]
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Ensure datadog-agent is running
+  service:
+    name: datadog-agent
+    state: started
+  register: datadog_agent_service
+  until: datadog_agent_service.status.ActiveState == "active"
+  retries: 3
+  delay: 10
+
+- name: Debian Install Tasks
+  include_tasks: pkg-debian/install-apm-host-inject-latest.yml
+  when: ansible_facts.os_family == "Debian"
+
+- name: RedHat Install Tasks
+  include_tasks: pkg-redhat/install-apm-host-inject-latest.yml
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"]
+
+# TODO: enable when flag is ready
+#- name: Check if dd-host-install needs to be run
+#  command: dd-host-install --dry-run
+#  register: dd_host_install_cmd_result
+#  ignore_errors: true
+
+- name: Run dd-host-install
+  command: dd-host-install
+  # when: dd_host_install_cmd_result.rc != 0
