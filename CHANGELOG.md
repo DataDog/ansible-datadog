@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 4.19.0 / 2023-05-10
+
+* [IMPROVEMENT] Ensure user selected for macOS systemwide installation actually exists. See [#479].
+* [BUGFIX] Refresh Datadog repository cache on Red Hat family systems to ensure DNF properly imports repodata signing keys to its cache. See [#478].
+
 # 4.18.0 / 2023-01-12
 
 * [DEPRECATION] Remove the old RPM GPG key 4172A230 from hosts that still trust it. This also removes the configuration variables `datadog_yum_gpgkey`, `datadog_zypper_gpgkey` and `datadog_zypper_gpgkey_sha256sum`. See [#466].
@@ -424,6 +429,9 @@ Initial release, compatible with Ansible v1 & v2
 [#453]: https://github.com/DataDog/ansible-datadog/issues/453
 [#454]: https://github.com/DataDog/ansible-datadog/issues/454
 [#458]: https://github.com/DataDog/ansible-datadog/issues/458
+[#466]: https://github.com/DataDog/ansible-datadog/issues/466
+[#478]: https://github.com/DataDog/ansible-datadog/issues/478
+[#479]: https://github.com/DataDog/ansible-datadog/issues/479
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
