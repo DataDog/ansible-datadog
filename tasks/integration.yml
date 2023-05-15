@@ -17,5 +17,5 @@
   when: ansible_facts.os_family == "Darwin"
 
 - name: Include Linux Integration Tasks
-  include_tasks: integration/macos.yml
+  include_tasks: integration/linux.yml
   when: ansible_facts.os_family != "Darwin" and ansible_facts.os_family != "Windows"

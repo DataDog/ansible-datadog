@@ -15,7 +15,7 @@
   become: yes
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove" and ansible_facts.os_family == "Windows"
+  when: item.value.action == "remove"
 
 # Install integrations
 - name: Installing pinned version of integrations
@@ -25,4 +25,4 @@
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
   become_user: "{{ integration_command_user }}"
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family == "Windows"
+  when: item.value.action == "install"
