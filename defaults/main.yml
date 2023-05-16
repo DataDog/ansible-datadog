@@ -30,6 +30,9 @@ datadog_additional_checks: []
 # set this to `true` to delete default checks
 datadog_disable_default_checks: false
 
+# set this to `true` to delete example checks
+datadog_disable_example_checks: false
+
 # default user/group
 datadog_user: dd-agent
 datadog_group: dd-agent
