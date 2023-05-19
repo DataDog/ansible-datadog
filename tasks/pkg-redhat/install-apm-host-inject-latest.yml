@@ -1,14 +1,15 @@
 ---
-# TODO
 - name: Install the APM inject library
   yum:
     name: datadog-apm-inject
     state: latest
     update_cache: yes
+  become: true
 
 - name: Install the APM inject language libraries
   yum:
-    name: "{{ item }}"
+    name: "datadog-apm-library-{{ item }}"
     state: latest
     update_cache: yes
   with_items: "{{ datadog_apm_libraries }}"
+  become: true
