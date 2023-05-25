@@ -1,0 +1,33 @@
+---
+- name: Include APM host injection Debian install tasks
+  include_tasks: pkg-debian/install-apm-host-inject-latest.yml
+  when: not ansible_check_mode and ansible_facts.os_family == "Debian"
+
+- name: Include APM host injection RedHat install tasks
+  include_tasks: pkg-redhat/install-apm-host-inject-latest.yml
+  when: not ansible_check_mode and ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"]
+
+# TODO: enable when flag is ready
+#- name: Check if dd-host-install needs to run
+#  command: dd-host-install --dry-run
+#  register: dd_host_install_cmd_result
+#  ignore_errors: true
+
+- name: Run APM host injection setup script
+  command: dd-host-install --no-config-change --no-agent-restart
+  notify: restart datadog-agent
+  when: not ansible_check_mode and datadog_apm_host_injection_enabled
+  # when: not ansible_check_mode and dd_host_install_cmd_result.rc != 0
+
+# TODO: enable when flag is ready
+#- name: Check if dd-host-container-install needs to run
+#  command: dd-host-container-install --dry-run
+#  register: dd_host_install_cmd_result
+#  ignore_errors: true
+
+- name: Run APM host injection (Docker) setup script
+  # dd-host-container-install will also reload docker as it changes /etc/docker/daemon.json
+  command: dd-host-container-install --no-config-change --no-agent-restart
+  notify: restart datadog-agent
+  when: not ansible_check_mode and datadog_apm_host_docker_injection_enabled
+  # when: not ansible_check_mode and dd_host_install_cmd_result.rc != 0

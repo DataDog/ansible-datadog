@@ -169,12 +169,12 @@ datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
 # arguments to supply to the windows installer.
 win_install_args: " "
 
-# A boolean to enable host injection.
+# A boolean to enable APM host injection.
 datadog_apm_host_injection_enabled: false
-# A boolean to enable docker injection.
-datadog_apm_docker_injection_enabled: false
+# A boolean to enable APM host injection with Docker support.
+datadog_apm_host_docker_injection_enabled: false
 # List of apm libraries to install if host or docker injection is enabled.
-# Valid values are: java, js, dotnet, all
+# You can see the available values in our official docs: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
 datadog_apm_libraries: ["all"]
 
 #

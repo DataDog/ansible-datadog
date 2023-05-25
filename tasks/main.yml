@@ -17,6 +17,10 @@
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
+- name: Check and resolve APM injection settings
+  include_tasks: apm-inject-check.yml
+  when: datadog_apm_host_injection_enabled or datadog_apm_host_docker_injection_enabled
+
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian" and not datadog_skip_install
@@ -71,5 +75,5 @@
   when: datadog_integration is defined
 
 - name: APM Host injection tasks
-  include_tasks: apm-host-injection.yml
-  when: datadog_apm_host_injection_enabled
+  include_tasks: apm-inject-install.yml
+  when: datadog_apm_host_injection_enabled or datadog_apm_host_docker_injection_enabled

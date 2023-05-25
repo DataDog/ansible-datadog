@@ -1,0 +1,48 @@
+---
+- name: Fail if the Datadog Agent version is not compatible with APM host injection
+  fail:
+    msg: APM Host Injection is not supported for this datadog-agent version.
+  when: datadog_agent_major_version | int < 7
+
+- name: Fail if APM Host injection is not supported on this host
+  fail:
+    msg: APM Host Injection is not supported in this platform.
+  when: ansible_facts.os_family not in ["Debian", "RedHat", "Rocky", "AlmaLinux"]
+
+- name: Check if docker daemon config dir exists
+  stat:
+    path: /etc/docker
+  register: docker_daemon_config_dir
+
+- name: Fail if APM Host container injection requirements are met (Docker installed)
+  fail:
+    msg: /etc/docker does not exist. Please ensure docker is installed or disable the datadog_apm_host_docker_injection_enabled flag.
+  when: datadog_apm_host_docker_injection_enabled and not docker_daemon_config_dir.stat.isdir
+
+- name: Fail if datadog_manage_config is not enabled
+  fail:
+    msg: "APM Host Injection requires datadog_manage_config: true"
+  when: not datadog_manage_config
+
+- name: Set internal values for APM host injection datadog_config
+  set_fact:
+    _dd_apm_host_inject_config:
+      apm_config:
+        receiver_socket: /opt/datadog/apm/inject/run/apm.socket
+      use_dogstatsd: true
+      dogstatsd_socket: /opt/datadog/apm/inject/run/dsd.socket
+
+- name: Fail if provided config is not compatible with APM host injection
+  fail:
+    msg: |
+      The provided config is not compatible with APM host injection. The expected config parameters to be included are:
+      "{{ _dd_apm_host_inject_config | to_nice_yaml }}"
+  when: item
+  loop:
+    - "{{ 'use_dogstatsd' in datadog_config and datadog_config['use_dogstatsd'] != _dd_apm_host_inject_config['use_dogstatsd'] }}"
+    - "{{ 'dogstatsd_socket' in datadog_config and datadog_config['dogstatsd_socket'] != _dd_apm_host_inject_config['dogstatsd_socket'] }}"
+    - "{{ 'apm_config' in datadog_config and 'receiver_socket' in datadog_config['apm_config'] and datadog_config['apm_config']['receiver_socket'] != _dd_apm_host_inject_config['apm_config']['receiver_socket'] }}"
+
+- name: Update datadog_config including config values needed for APM host injection
+  set_fact:
+    datadog_config: "{{ datadog_config | combine(_dd_apm_host_inject_config, list_merge='keep') }}"
