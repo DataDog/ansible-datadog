@@ -2,14 +2,14 @@
 - name: Install the APM inject library
   yum:
     name: datadog-apm-inject
-    state: latest
+    state: latest # noqa 403
     update_cache: yes
   become: true
 
 - name: Install the APM inject language libraries
   yum:
     name: "datadog-apm-library-{{ item }}"
-    state: latest
+    state: latest # noqa 403
     update_cache: yes
   with_items: "{{ datadog_apm_libraries }}"
   become: true
