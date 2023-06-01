@@ -37,7 +37,7 @@
   with_items:
     - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
       value: "{{ datadog_apt_key_url_new }}"
-    - key: D75CEA17048B9ACBF186794B32637D44F14F620E
+    - key: 5F1E256061D813B125E156E8E6266D4AC0962C7D
       value: "{{ datadog_apt_key_url_new }}"
   when: datadog_apt_key_url_new is defined and not ansible_check_mode
 
