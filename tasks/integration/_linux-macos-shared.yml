@@ -25,7 +25,7 @@
   become_user: "{{ integration_command_user }}"
   when: 
     - item.value.action == "remove"
-    - integration_version.stdout != ""
+    - integration_version.stdout | length > 0
 
 # Install integrations
 
