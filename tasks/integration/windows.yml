@@ -7,20 +7,7 @@
   set_fact:
     integration_command_user: "{{ integration_command_user_windows }}"
 
-# Remove integrations
-- name: Removing integrations
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
-  become: yes
-  become_user: "{{ integration_command_user }}"
+- name: Include integration installation and removal tasks
+  include_tasks: integration/_windows-integration-update.yml
   loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove"
 
-# Install integrations
-- name: Installing pinned version of integrations
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
-  become: yes
-  vars:
-    third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install"

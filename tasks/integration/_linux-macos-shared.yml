@@ -1,6 +1,20 @@
+# Check current state of the integrations
+
+- name: Check {{ item.key }} integration state
+  command:
+    argv:
+      - "{{ datadog_agent_binary_path }}"
+      - integration
+      - show
+      - -q
+      - "{{ item.key }}"
+  register: integration_version
+  failed_when: false # This task is supposed to fail when the integration is not installed
+  changed_when: false
+
 # Remove integrations
 
-- name: Removing integrations
+- name: Removing {{ item.key }} integration
   command:
     argv:
       - "{{ datadog_agent_binary_path }}"
@@ -9,16 +23,18 @@
       - "{{ item.key }}"
   become: yes
   become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove"
+  when: 
+    - item.value.action == "remove"
+    - integration_version.stdout != ""
 
 # Install integrations
 
-- name: Installing pinned version of integrations
+- name: Installing pinned version of {{ item.key }} integration
   command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
   become: yes
   become_user: "{{ integration_command_user }}"
   vars:
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install"
+  when:
+    - item.value.action == "install"
+    - integration_version.stdout | trim != item.value.version
