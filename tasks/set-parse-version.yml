@@ -5,9 +5,10 @@
 
 - name: Initialize skip install flag to false
   set_fact:
-    datadog_skip_install: no
+    datadog_skip_install: false
 
-- include_tasks: parse-version.yml
+- name: Include parse version tasks
+  include_tasks: parse-version.yml
   when: datadog_agent_version | default('', true) | length > 0
 
 - name: Set Agent default major version

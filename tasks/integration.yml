@@ -1,9 +1,9 @@
 ---
 - name: Validate integrations actions
   fail:
-    msg: "Unkown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'"
+    msg: Unkown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'
   when: item.value.action != "install" and item.value.action != "remove"
-  loop: "{{ datadog_integration|dict2items }}"
+  loop: "{{ datadog_integration | dict2items }}"
 
 # The Windows tasks use win_command, so if users don't have the "ansible.windows" collection
 # installed, parsing the task would fail even if the host is not Windows. By hiding the task

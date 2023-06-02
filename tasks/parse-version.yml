@@ -3,7 +3,7 @@
   set_fact:
     agent_version: "{{ datadog_agent_version | regex_search(regexp, '\\g<epoch>', '\\g<major>', '\\g<minor>', '\\g<bugfix>', '\\g<suffix>', '\\g<release>') }}"
   vars:
-    regexp: '(?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>(?:~|-)[^0-9\s-]+[^-\s]*)?(?:-(?P<release>[0-9]+))?'
+    regexp: (?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>(?:~|-)[^0-9\s-]+[^-\s]*)?(?:-(?P<release>[0-9]+))?
 
 - name: Set version vars
   set_fact:
@@ -26,9 +26,8 @@
 
 - name: Stop play if datadog_agent_version and datadog_agent_major_version are not compatible
   fail:
-    msg: "The provided major version {{ datadog_agent_major_version }} is not compatible with the
-      version {{ datadog_major }} deduced from datadog_agent_version ({{ datadog_agent_version }}).
-      Aborting play."
+    msg: The provided major version {{ datadog_agent_major_version }} is not compatible with the version {{ datadog_major }}
+      deduced from datadog_agent_version ({{ datadog_agent_version }}). Aborting play.
   when: datadog_agent_major_version | length > 0 and datadog_major != datadog_agent_major_version
 
 - name: Set datadog_agent_major_version to deduced value from datadog_agent_version
@@ -38,7 +37,7 @@
 - name: Set helper variables
   set_fact:
     datadog_agent_linux_version: "{{ datadog_epoch }}:{{ datadog_major }}.{{ datadog_minor }}.{{ datadog_bugfix }}{{ datadog_suffix }}-{{ datadog_release }}"
-    datadog_rpm_version_finding_cmd: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
+    datadog_rpm_version_finding_cmd: rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}
 
 - name: Set OS-specific versions
   # NOTE: if changing these, make sure the format correspond with values in datadog_version_finding_cmds below
@@ -52,7 +51,7 @@
 - name: Construct commands to find Agent version
   set_fact:
     datadog_version_finding_cmds:
-      Debian: "dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'"
+      Debian: dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'
       RedHat: "{{ datadog_rpm_version_finding_cmd }}"
       Rocky: "{{ datadog_rpm_version_finding_cmd }}"
       AlmaLinux: "{{ datadog_rpm_version_finding_cmd }}"
@@ -70,11 +69,11 @@
       Darwin: "{{ datadog_agent_macos_version }}"
 
 - name: Get Linux Agent version
-  shell: "{{ datadog_version_finding_cmds[ansible_facts.os_family] }}"  # noqa 305 - Ansible lint thinks we could use command, but we need shell because some of the cmds have pipes
+  shell: "{{ datadog_version_finding_cmds[ansible_facts.os_family] }}" # noqa command-instead-of-shell - We need shell because of pipes
   register: datadog_version_check_linux
   changed_when: false
   failed_when: false
-  check_mode: no
+  check_mode: false
   when: ansible_facts.system is defined and ansible_facts.system == "Linux"
 
 # The task is win_shell, so if users don't have the "ansible.windows" collection installed,

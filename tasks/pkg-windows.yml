@@ -1,13 +1,13 @@
 ---
 - name: Fail if Agent 5
   fail:
-    msg: "The Datadog ansible role does not currently support Agent 5"
+    msg: The Datadog ansible role does not currently support Agent 5
   when: datadog_agent_major_version|int == 5
 
 - name: Download windows datadog agent 614 fix script
   win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
-    dest: '%TEMP%\fix_6_14.ps1'
+    dest: "%TEMP%\\fix_6_14.ps1"
   when: not datadog_skip_install and datadog_apply_windows_614_fix
 
 - name: Run 6.14.0/1 PowerShell fix
@@ -16,13 +16,15 @@
     &$env:temp\fix_6_14.ps1
   when: not datadog_skip_install and datadog_apply_windows_614_fix
 
-- include_tasks: win_agent_latest.yml
+- name: Include Windows agent latest version install tasks
+  include_tasks: win_agent_latest.yml
   when: (not datadog_skip_install) and (datadog_agent_windows_version is not defined)
 
-- include_tasks: win_agent_version.yml
+- name: Include Windows agent pinned version install tasks
+  include_tasks: win_agent_version.yml
   when: (not datadog_skip_install) and (datadog_agent_windows_version is defined)
 
-- name: show URL var
+- name: Show URL var
   debug:
     var: dd_download_url
   when: not datadog_skip_install
@@ -31,18 +33,20 @@
 - name: Set windows NPM installed
   set_fact:
     datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
-- include_tasks: pkg-windows-opts.yml
 
-- name: pre-Delete temporary msi
+- name: Include Windows opts tasks
+  include_tasks: pkg-windows-opts.yml
+
+- name: Pre-Delete temporary msi
   win_file:
-    path: '%TEMP%\ddagent.msi'
+    path: "%TEMP%\\ddagent.msi"
     state: absent
   when: not datadog_skip_install
 
 - name: Download windows datadog agent
   win_get_url:
     url: "{{ dd_download_url }}"
-    dest: '%TEMP%\ddagent.msi'
+    dest: "%TEMP%\\ddagent.msi"
   register: download_msi_result
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
@@ -56,7 +60,7 @@
   win_acl:
     path: "{{ datadog_windows_program_files_dir }}"
     inherit: ContainerInherit,ObjectInherit
-    user: "BUILTIN\\USERS"
+    user: BUILTIN\USERS
     rights: ReadAndExecute
     type: allow
     state: present
