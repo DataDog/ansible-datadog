@@ -1,4 +1,4 @@
-# Check current state of the integrations
+# Check current state of the integration
 
 - name: Check {{ item.key }} integration state
   command:
@@ -12,7 +12,7 @@
   failed_when: false # This task is supposed to fail when the integration is not installed
   changed_when: false
 
-# Remove integrations
+# Remove integration
 
 - name: Removing {{ item.key }} integration
   command:
@@ -27,7 +27,7 @@
     - item.value.action == "remove"
     - integration_version.stdout | length > 0
 
-# Install integrations
+# Install integration
 
 - name: Installing pinned version of {{ item.key }} integration
   command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"

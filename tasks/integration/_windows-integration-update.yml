@@ -1,4 +1,4 @@
-# Check integration state
+# Check current state of the integrations
 
 - name: Check {{ item.key }} integration state
   win_command: "\"{{ datadog_agent_binary_path }}\" integration show -q {{ item.key }}"
