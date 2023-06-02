@@ -1,0 +1,3 @@
+# We ignore the FQCN rule on the role repository since FQCN is not compatible with older version of Ansible
+skip_list:
+    - fqcn
