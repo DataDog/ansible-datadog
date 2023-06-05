@@ -9,5 +9,4 @@
 
 - name: Include integration installation and removal tasks
   include_tasks: integration/_windows-integration-update.yml
-  loop: "{{ datadog_integration|dict2items }}"
-
+  loop: "{{ datadog_integration | dict2items }}"

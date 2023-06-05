@@ -9,4 +9,4 @@
 
 - name: Include shared integration installation and removal tasks
   include_tasks: integration/_linux-macos-shared.yml
-  loop: "{{ datadog_integration|dict2items }}"
+  loop: "{{ datadog_integration | dict2items }}"
