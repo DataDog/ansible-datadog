@@ -77,7 +77,7 @@
   win_package:
     path: "{{ download_msi_result.dest }}"
     arguments: "{{ win_install_args }}"
-    expected_return_code: [0, 1603, 3010]
+    expected_return_code: "{{ [0, 3010] + ([1603] if not (datadog_agent_version | default('', true)) else []) }}"
   register: datadog_agent_install
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
