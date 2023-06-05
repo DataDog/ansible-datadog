@@ -1,86 +1,21 @@
 ---
-- name: set agent binary path (windows)
-  set_fact:
-    datadog_agent_binary_path: "{{ datadog_agent_binary_path_windows }}"
-  when: ansible_facts.os_family == "Windows"
-
-- name: set agent binary path (unix)
-  set_fact:
-    datadog_agent_binary_path: "{{ datadog_agent_binary_path_linux }}"
-  when: ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
-
-- name: set agent binary path (macOS)
-  set_fact:
-    datadog_agent_binary_path: "{{ datadog_agent_binary_path_macos }}"
-  when: ansible_facts.os_family == "Darwin"
-
-- name: set agent user for integration commmand (windows)
-  set_fact:
-    integration_command_user: "{{ integration_command_user_windows }}"
-  when: ansible_facts.os_family == "Windows"
-
-- name: set agent user for integration commmand (unix)
-  set_fact:
-    integration_command_user: "{{ integration_command_user_linux }}"
-  when: ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
-
-- name: set agent user for integration commmand (macOS)
-  set_fact:
-    integration_command_user: "{{ integration_command_user_macos }}"
-  when: ansible_facts.os_family == "Darwin"
-
 - name: Validate integrations actions
   fail:
     msg: "Unkown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'"
   when: item.value.action != "install" and item.value.action != "remove"
   loop: "{{ datadog_integration|dict2items }}"
 
-# Remove Integrations
+# The Windows tasks use win_command, so if users don't have the "ansible.windows" collection
+# installed, parsing the task would fail even if the host is not Windows. By hiding the task
+# inside a conditionally included file, we can prevent this.
+- name: Include Windows Integration Tasks
+  include_tasks: integration/windows.yml
+  when: ansible_facts.os_family == "Windows"
 
-- name: Removing integrations (Unix, macOS)
-  command:
-    argv:
-      - "{{ datadog_agent_binary_path }}"
-      - integration
-      - remove
-      - "{{ item.key }}"
-  become: yes
-  become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove" and ansible_facts.os_family != "Windows"
+- name: Include macOS Integration Tasks
+  include_tasks: integration/macos.yml
+  when: ansible_facts.os_family == "Darwin"
 
-- name: Removing integrations (Windows)
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
-  become: yes
-  become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "remove" and ansible_facts.os_family == "Windows"
-
-# Install integrations
-
-- name: Install pinned version of integrations (Unix)
-  command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
-  become: yes
-  become_user: "{{ integration_command_user }}"
-  vars:
-    third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
-
-- name: Install pinned version of integrations (Windows)
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
-  become: yes
-  vars:
-    third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  become_user: "{{ integration_command_user }}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family == "Windows"
-
-- name: Install pinned version of integrations (macOS)
-  command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
-  become: yes
-  become_user: "{{ integration_command_user }}"
-  vars:
-    third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
-  loop: "{{ datadog_integration|dict2items }}"
-  when: item.value.action == "install" and ansible_facts.os_family == "Darwin"
+- name: Include Linux Integration Tasks
+  include_tasks: integration/linux.yml
+  when: ansible_facts.os_family != "Darwin" and ansible_facts.os_family != "Windows"

@@ -1,0 +1,11 @@
+---
+- name: Set Agent binary path
+  set_fact:
+    datadog_agent_binary_path: "{{ datadog_agent_binary_path_linux }}"
+
+- name: Set Agent user for integration commmand
+  set_fact:
+    integration_command_user: "{{ integration_command_user_linux }}"
+
+- name: Include shared integration installation and removal tasks
+  include_tasks: integration/_linux-macos-shared.yml

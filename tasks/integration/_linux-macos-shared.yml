@@ -1,0 +1,24 @@
+# Remove integrations
+
+- name: Removing integrations
+  command:
+    argv:
+      - "{{ datadog_agent_binary_path }}"
+      - integration
+      - remove
+      - "{{ item.key }}"
+  become: yes
+  become_user: "{{ integration_command_user }}"
+  loop: "{{ datadog_integration|dict2items }}"
+  when: item.value.action == "remove"
+
+# Install integrations
+
+- name: Installing pinned version of integrations
+  command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
+  become: yes
+  become_user: "{{ integration_command_user }}"
+  vars:
+    third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
+  loop: "{{ datadog_integration|dict2items }}"
+  when: item.value.action == "install"
