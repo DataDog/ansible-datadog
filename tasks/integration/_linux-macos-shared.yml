@@ -1,7 +1,7 @@
 ---
 # Remove integrations
 
-- name: Removing integrations
+- name: Removing integrations # noqa no-changed-when Will be fixed in another pending PR
   command:
     argv:
       - "{{ datadog_agent_binary_path }}"
@@ -15,7 +15,7 @@
 
 # Install integrations
 
-- name: Installing pinned version of integrations
+- name: Installing pinned version of integrations # noqa no-changed-when Will be fixed in another pending PR
   command: "{{ datadog_agent_binary_path }} integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
   become: true
   become_user: "{{ integration_command_user }}"
