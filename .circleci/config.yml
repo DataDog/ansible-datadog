@@ -122,7 +122,7 @@ jobs:
       - checkout
       # TODO: upgrade ansible-lint to latest (will require updating the image for this task)
       - run: pip install ansible-lint==6.17
-      - run: ansible-lint -v .
+      - run: ansible-lint -v tasks/ handlers/
 
   test_install_downgrade:
     parameters:

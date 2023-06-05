@@ -1,12 +1,12 @@
 ---
-
-- name: restart datadog-agent-sysprobe
+- name: Restart datadog-agent-sysprobe
   service:
     name: datadog-agent-sysprobe
     state: restarted
-  when: datadog_enabled and datadog_sysprobe_enabled and not ansible_check_mode and not ansible_facts.os_family == "Windows" and not ansible_facts.os_family == "Darwin"
+  when: datadog_enabled and datadog_sysprobe_enabled and not ansible_check_mode and not ansible_facts.os_family == "Windows"
+    and not ansible_facts.os_family == "Darwin"
 
-- name: restart datadog-agent
+- name: Restart datadog-agent
   service:
     name: datadog-agent
     state: restarted
@@ -19,7 +19,7 @@
 # When notified, the below handler is executed at the end of the playbook run.
 # The include_tasks loads the handlers/main-win.yml file, which contains the real service restart task
 # (which depends on ansible.windows), and runs it, triggering the Windows Agent restart.
-- name: restart datadog-agent-win
+- name: Restart datadog-agent-win
   include_tasks: handlers/main-win.yml
 
 # When needed, our macOS tasks call this handler to require a
@@ -27,5 +27,5 @@
 # When notified, the below handler is executed at the end of the playbook run.
 # The include_tasks loads the handlers/main-macos.yml file, which contains the real service restart task
 # and runs it, triggering the macOS Agent restart.
-- name: restart datadog-agent-macos
+- name: Restart datadog-agent-macos
   include_tasks: handlers/main-macos.yml
