@@ -8,24 +8,24 @@
   win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
     dest: '%TEMP%\fix_6_14.ps1'
-  when: not datadog_skip_install and datadog_apply_windows_614_fix
+  when: (not datadog_skip_install|bool) and datadog_apply_windows_614_fix
 
 - name: Run 6.14.0/1 PowerShell fix
   win_shell: |
     Set-ExecutionPolicy Bypass -Scope Process -Force
     &$env:temp\fix_6_14.ps1
-  when: not datadog_skip_install and datadog_apply_windows_614_fix
+  when: (not datadog_skip_install|bool) and datadog_apply_windows_614_fix
 
 - include_tasks: win_agent_latest.yml
-  when: (not datadog_skip_install) and (datadog_agent_windows_version is not defined)
+  when: (not datadog_skip_install|bool) and (datadog_agent_windows_version is not defined)
 
 - include_tasks: win_agent_version.yml
-  when: (not datadog_skip_install) and (datadog_agent_windows_version is defined)
+  when: (not datadog_skip_install|bool) and (datadog_agent_windows_version is defined)
 
 - name: show URL var
   debug:
     var: dd_download_url
-  when: not datadog_skip_install
+  when: not datadog_skip_install|bool
 
 ## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
 - name: Set windows NPM installed
@@ -37,14 +37,14 @@
   win_file:
     path: '%TEMP%\ddagent.msi'
     state: absent
-  when: not datadog_skip_install
+  when: not datadog_skip_install|bool
 
 - name: Download windows datadog agent
   win_get_url:
     url: "{{ dd_download_url }}"
     dest: '%TEMP%\ddagent.msi'
   register: download_msi_result
-  when: (not datadog_skip_install) and (not ansible_check_mode)
+  when: (not datadog_skip_install|bool) and (not ansible_check_mode)
 
 - name: Create Binary directory root (if not default)
   win_file:
@@ -78,10 +78,10 @@
     path: "{{ download_msi_result.dest }}"
     arguments: "{{ win_install_args }}"
   register: datadog_agent_install
-  when: (not datadog_skip_install) and (not ansible_check_mode)
+  when: (not datadog_skip_install|bool) and (not ansible_check_mode)
 
 - name: Delete temporary msi
   win_file:
     path: "{{ download_msi_result.dest }}"
     state: absent
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_msi_result.status_code == 200)
+  when: (not datadog_skip_install|bool) and (not ansible_check_mode) and (download_msi_result.status_code == 200)
