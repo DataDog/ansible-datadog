@@ -3,7 +3,7 @@
 # under datadog_macos_user and remove the user-specific config for ansible_user
 - name: Fail if Agent 5
   fail:
-    msg: The Datadog ansible role does not currently support Agent 5 on macOS
+    msg: "The Datadog ansible role does not currently support Agent 5 on macOS"
   when: datadog_agent_major_version|int == 5
 
 - name: Check if the macOS user for Agent service exists

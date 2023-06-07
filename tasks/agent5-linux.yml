@@ -50,7 +50,7 @@
 
 - name: Delete checks not present in datadog_tracked_checks
   file:
-    path: /etc/dd-agent/conf.d/{{ item }}.yaml
+    path: "/etc/dd-agent/conf.d/{{ item }}.yaml"
     state: absent
   loop: "{{ datadog_conf_files.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).yaml$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
@@ -58,7 +58,7 @@
 
 - name: Delete default checks
   file:
-    path: /etc/dd-agent/conf.d/{{ item }}.yaml.default
+    path: "/etc/dd-agent/conf.d/{{ item }}.yaml.default"
     state: absent
   loop: "{{ datadog_conf_files_default.files | map(attribute='path') | list | map('basename') | list |
     map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"

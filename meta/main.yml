@@ -24,6 +24,7 @@ galaxy_info:
         - bullseye
     - name: EL
       versions:
+        - '6'
         - '7'
         - '8'
         - '9'
@@ -59,12 +60,9 @@ galaxy_info:
         - 2012R2
         - '2016'
         - '2019'
-    # Playbook works on Darwin platform, but we need to comment this out
-    # since schema used by ansible-lint to make validation do not reference Darwin:
-    # https://github.com/ansible/ansible-lint/blob/main/src/ansiblelint/schemas/meta.json
-    # - name: Darwin
-    #   versions:
-    #     - any
+    - name: MacOSX
+      versions:
+        - all
   galaxy_tags:
     - monitoring
 dependencies: []

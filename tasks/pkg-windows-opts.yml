@@ -29,13 +29,13 @@
 ## root is different than what's already present.
 - name: Validate config path
   fail:
-    msg: Incompatible configuration option {{ config_root_from_registry.value }} != {{ datadog_windows_config_files_dir }}
+    msg: "Incompatible configuration option {{ config_root_from_registry.value }} != {{ datadog_windows_config_files_dir }}"
   when: ( (config_root_from_registry.exists) and (datadog_windows_config_files_dir | length > 0 ) and (config_root_from_registry.value
     | regex_replace('\\\\$','') | lower != datadog_windows_config_files_dir | lower ) )
 
 - name: Validated config path
   debug:
-    msg: Allowing configuration option {{ config_root_from_registry.value }} == {{ datadog_windows_config_files_dir }}
+    msg: "Allowing configuration option {{ config_root_from_registry.value }} == {{ datadog_windows_config_files_dir }}"
   when: ( (config_root_from_registry.exists) and (datadog_windows_config_files_dir | length > 0 ) and (config_root_from_registry.value
     | regex_replace('\\\\$','') | lower == datadog_windows_config_files_dir | lower ) )
 
@@ -44,13 +44,13 @@
 ## root is different than what's already present.
 - name: Validate install path
   fail:
-    msg: Incompatible configuration option {{ install_path_from_registry.value }} != {{ datadog_windows_program_files_dir }}
+    msg: "Incompatible configuration option {{ install_path_from_registry.value }} != {{ datadog_windows_program_files_dir }}"
   when: ( (install_path_from_registry.exists) and (datadog_windows_program_files_dir | length > 0 ) and (install_path_from_registry.value
     | regex_replace('\\\\$','') | lower != datadog_windows_program_files_dir | lower ) )
 
 - name: Validated install path
   debug:
-    msg: Allowing configuration option {{ install_path_from_registry.value }} == {{ datadog_windows_program_files_dir }}
+    msg: "Allowing configuration option {{ install_path_from_registry.value }} == {{ datadog_windows_program_files_dir }}"
   when: ( (install_path_from_registry.exists) and (datadog_windows_program_files_dir | length > 0 ) and (install_path_from_registry.value
     | regex_replace('\\\\$','') | lower == datadog_windows_program_files_dir | lower ) )
 

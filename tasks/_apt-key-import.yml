@@ -63,12 +63,12 @@
 
 # gpg --dearmor called on a binary keyring does nothing
 - name: Ensure downloaded file for key is a binary keyring, key={{ key_fingerprint }}
-  shell: cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg # noqa risky-shell-pipe
+  shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg" # noqa risky-shell-pipe
   when: key_needs_import
   changed_when: false
 
 - name: Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})
-  shell: gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path }}/single.gpg
+  shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path }}/single.gpg"
   when: key_fingerprint != datadog_apt_key_current_name and key_needs_import
   changed_when: false
 
