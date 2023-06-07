@@ -200,7 +200,7 @@ The system probe is configured under the `system_probe_config` variable. Any var
 
 [Universal Service Monitoring][17] (USM) is configured under the `service_monitoring_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `service_monitoring_config` section.
 
-[Compliance][] is configured under the `compliance_config` variable. Any variables nested underneath are written to the `security-agent.yaml`, in the `compliance_config` section.
+[Compliance][18] is configured under the `compliance_config` variable. Any variables nested underneath are written to the `security-agent.yaml`, in the `compliance_config` section.
 
 **Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
 
