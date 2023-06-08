@@ -114,11 +114,11 @@ To configure a custom check use the configuration below. This creates the corres
 
 ##### Custom Python Checks
 
-To pass a Python check to the playbook, use the configuration below. 
+To pass a Python check to the playbook, use the configuration below.
 
 This configuration requires the Datadog [play and role][12] to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux][13] or [Windows][14].
 
-This is only available for Agent v6+.  
+This is only available for Agent v6 or later.
 
 The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`:
 
@@ -199,6 +199,8 @@ The system probe is configured under the `system_probe_config` variable. Any var
 [Cloud Workload Security][8] is configured under the `runtime_security_config` variable. Any variables nested underneath are written to the `system-probe.yaml` and `security-agent.yaml`, in the `runtime_security_config` section.
 
 [Universal Service Monitoring][17] (USM) is configured under the `service_monitoring_config` variable. Any variables nested underneath are written to the `system-probe.yaml`, in the `service_monitoring_config` section.
+
+[Compliance][18] is configured under the `compliance_config` variable. Any variables nested underneath are written to the `security-agent.yaml`, in the `compliance_config` section.
 
 **Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
 
@@ -640,3 +642,4 @@ To fix this, [update Ansible to `v2.9.8` or above][16].
 [15]: https://www.datadoghq.com/blog/datadog-marketplace/
 [16]: https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61
 [17]: https://docs.datadoghq.com/tracing/universal_service_monitoring/?tab=configurationfiles#enabling-universal-service-monitoring
+[18]: https://docs.datadoghq.com/security/cspm/setup/?tab=docker
