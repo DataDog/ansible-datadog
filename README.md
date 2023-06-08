@@ -118,7 +118,7 @@ To pass a Python check to the playbook, use the configuration below.
 
 This configuration requires the Datadog [play and role][12] to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux][13] or [Windows][14].
 
-This is only available for Agent v6+.
+This is only available for Agent v6 or later.
 
 The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`:
 
