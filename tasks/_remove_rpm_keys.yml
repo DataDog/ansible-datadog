@@ -1,4 +1,5 @@
-- name: "Ensure GPG key {{ item }} is not present in the RPM db"
+---
+- name: Ensure GPG key is not present in the RPM db, key={{ item }}
   rpm_key:
     state: absent
     key: "{{ item }}"

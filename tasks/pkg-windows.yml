@@ -16,13 +16,15 @@
     &$env:temp\fix_6_14.ps1
   when: not datadog_skip_install and datadog_apply_windows_614_fix
 
-- include_tasks: win_agent_latest.yml
+- name: Include Windows agent latest version install tasks
+  include_tasks: win_agent_latest.yml
   when: (not datadog_skip_install) and (datadog_agent_windows_version is not defined)
 
-- include_tasks: win_agent_version.yml
+- name: Include Windows agent pinned version install tasks
+  include_tasks: win_agent_version.yml
   when: (not datadog_skip_install) and (datadog_agent_windows_version is defined)
 
-- name: show URL var
+- name: Show URL var
   debug:
     var: dd_download_url
   when: not datadog_skip_install
@@ -31,9 +33,11 @@
 - name: Set windows NPM installed
   set_fact:
     datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
-- include_tasks: pkg-windows-opts.yml
 
-- name: pre-Delete temporary msi
+- name: Include Windows opts tasks
+  include_tasks: pkg-windows-opts.yml
+
+- name: Pre-Delete temporary msi
   win_file:
     path: '%TEMP%\ddagent.msi'
     state: absent

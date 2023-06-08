@@ -9,19 +9,22 @@
 # unload/load combo because they actually wait.
 - name: Unload datadog-agent service
   command: "launchctl unload -wF {{ datadog_macos_system_plist_file_path }}"
-  become: yes
-  check_mode: no
+  become: true
+  check_mode: false
   when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
+  changed_when: true
 
 - name: Load datadog-agent service
   command: "launchctl load -wF {{ datadog_macos_system_plist_file_path }}"
-  become: yes
-  check_mode: no
+  become: true
+  check_mode: false
   when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
+  changed_when: true
 
 - name: Restart datadog-agent service
   command: "launchctl kickstart -k system/{{ datadog_macos_service_name }}"
-  become: yes
+  become: true
   register: command_result
-  check_mode: no
+  check_mode: false
   when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Darwin"
+  changed_when: true

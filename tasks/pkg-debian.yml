@@ -1,24 +1,24 @@
 ---
 - name: Install apt-transport-https
   apt:
-    update_cache: yes
+    update_cache: true
     name: apt-transport-https
     state: present
   when: not ansible_check_mode
 
 - name: Install gnupg
   apt:
-    update_cache: yes
+    update_cache: true
     name: gnupg
     state: present
   when: not ansible_check_mode
 
-- name: "Check if {{ datadog_apt_usr_share_keyring }} exists with correct mode"
+- name: Check if keyring exists with correct mode, keyring={{ datadog_apt_usr_share_keyring }}
   stat:
     path: "{{ datadog_apt_usr_share_keyring }}"
   register: apt_keyring_file
 
-- name: "Ensure {{ datadog_apt_usr_share_keyring }} exists"
+- name: Ensure keyring exists, keyring={{ datadog_apt_usr_share_keyring }}
   file:
     path: "{{ datadog_apt_usr_share_keyring }}"
     owner: root
@@ -29,8 +29,7 @@
 
 - name: Install apt keys from default URLs
   include_tasks: _apt-key-import.yml
-  with_items:
-    "{{ datadog_apt_default_keys }}"
+  with_items: "{{ datadog_apt_default_keys }}"
   when: datadog_apt_key_url_new is not defined and not ansible_check_mode
 
 - name: Install apt keys from custom URL
@@ -42,39 +41,41 @@
       value: "{{ datadog_apt_key_url_new }}"
   when: datadog_apt_key_url_new is defined and not ansible_check_mode
 
-- name: "Ensure {{ datadog_apt_trusted_d_keyring }} exists with same contents as {{ datadog_apt_usr_share_keyring }} for older distro versions"
+- name: Ensure keyring1 exists with same contents as keyring2 for older distro versions.
+    keyring1,keyring2= {{ datadog_apt_trusted_d_keyring, datadog_apt_usr_share_keyring }}
   copy:
     src: "{{ datadog_apt_usr_share_keyring }}"
     dest: "{{ datadog_apt_trusted_d_keyring }}"
     mode: "0644"
-    remote_src: yes
-  when: ((ansible_distribution == 'Debian' and ansible_distribution_major_version|int < 9) or (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 16)) and not ansible_check_mode
+    remote_src: true
+  when: ((ansible_distribution == 'Debian' and ansible_distribution_major_version|int < 9) or
+    (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version | int < 16)) and not ansible_check_mode
 
 - name: Ensure Datadog non-https repositories and repositories not using signed-by option are deprecated
   apt_repository:
     repo: "{{ item }}"
-    state: "absent"
-    update_cache: yes
+    state: absent
+    update_cache: true
   with_items:
-    - "deb http://apt.datadoghq.com/ stable main"
-    - "deb http://apt.datadoghq.com/ stable 6"
-    - "deb http://apt.datadoghq.com/ stable 7"
-    - "deb https://apt.datadoghq.com/ stable main"
-    - "deb https://apt.datadoghq.com/ stable 6"
-    - "deb https://apt.datadoghq.com/ stable 7"
+    - deb http://apt.datadoghq.com/ stable main
+    - deb http://apt.datadoghq.com/ stable 6
+    - deb http://apt.datadoghq.com/ stable 7
+    - deb https://apt.datadoghq.com/ stable main
+    - deb https://apt.datadoghq.com/ stable 6
+    - deb https://apt.datadoghq.com/ stable 7
   when: not ansible_check_mode
 
 - name: Ensure Datadog repository is up-to-date
   apt_repository:
-    filename: "ansible_datadog_{{ item.key }}"
+    filename: ansible_datadog_{{ item.key }}
     repo: "{{ item.value }}"
-    state: "{% if item.key == datadog_agent_major_version|int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
-    update_cache: yes
+    state: "{% if item.key == datadog_agent_major_version | int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
+    update_cache: true
   when: (not ansible_check_mode)
   with_dict:
-    5: '{{ datadog_agent5_apt_repo }}'
-    6: '{{ datadog_agent6_apt_repo }}'
-    7: '{{ datadog_agent7_apt_repo }}'
+    5: "{{ datadog_agent5_apt_repo }}"
+    6: "{{ datadog_agent6_apt_repo }}"
+    7: "{{ datadog_agent7_apt_repo }}"
 
 - name: Initialize custom repo file deletion flag to False
   set_fact:
@@ -109,19 +110,21 @@
     filename: ansible_datadog_custom
     repo: "{{ datadog_apt_repo }}"
     state: present
-    update_cache: yes
+    update_cache: true
   when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
-- include_tasks: pkg-debian/install-pinned.yml
+- name: Include debian pinned version install task
+  include_tasks: pkg-debian/install-pinned.yml
   when: datadog_agent_debian_version is defined
 
-- include_tasks: pkg-debian/install-latest.yml
+- name: Include debian latest version install task
+  include_tasks: pkg-debian/install-latest.yml
   when: datadog_agent_debian_version is not defined
 
 - name: Install latest datadog-signing-keys package
   apt:
     name: datadog-signing-keys
-    state: latest  # noqa 403
+    state: latest # noqa package-latest
     # we don't use update_cache: yes, as that was just done by the install-pinned/install-latest
   register: datadog_signing_keys_install
   when: not ansible_check_mode

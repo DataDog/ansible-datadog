@@ -1,3 +1,4 @@
+---
 # NOTE: This won't work with rc / beta builds.
 - name: Get Windows Agent version
   win_shell: |
@@ -14,5 +15,5 @@
   register: datadog_version_check_win
   changed_when: false
   failed_when: false
-  check_mode: no
+  check_mode: false
   when: ansible_facts.os_family == "Windows"

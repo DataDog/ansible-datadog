@@ -121,8 +121,8 @@ jobs:
     steps:
       - checkout
       # TODO: upgrade ansible-lint to latest (will require updating the image for this task)
-      - run: pip install ansible-lint==5.4.0
-      - run: ansible-lint -v .
+      - run: pip install ansible-lint==6.17
+      - run: ansible-lint -v --exclude=.circleci/config.yml .
 
   test_install_downgrade:
     parameters:

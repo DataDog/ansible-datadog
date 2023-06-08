@@ -1,3 +1,4 @@
+---
 - name: Set DD Username Arg
   set_fact:
     win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
@@ -6,8 +7,8 @@
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using win_install_args
 
-# check the registry. On upgrade, the location of the config file root will 
-# be set here.  
+# check the registry. On upgrade, the location of the config file root will
+# be set here.
 - name: Check existing config file Directory
   win_reg_stat:
     path: HKLM:\SOFTWARE\Datadog\Datadog Agent
@@ -15,7 +16,7 @@
   register: config_root_from_registry
 
 # check the registry. On upgrade, the location of the installation root directory will
-# be set here.  
+# be set here.
 
 - name: Check existing installPath Directory
   win_reg_stat:
@@ -29,16 +30,14 @@
 - name: Validate config path
   fail:
     msg: "Incompatible configuration option {{ config_root_from_registry.value }} != {{ datadog_windows_config_files_dir }}"
-  when: ( (config_root_from_registry.exists) and
-          (datadog_windows_config_files_dir | length > 0 ) and
-          (config_root_from_registry.value | regex_replace('\\\\$','') | lower != datadog_windows_config_files_dir | lower ) )
+  when: ( (config_root_from_registry.exists) and (datadog_windows_config_files_dir | length > 0 ) and (config_root_from_registry.value
+    | regex_replace('\\\\$','') | lower != datadog_windows_config_files_dir | lower ) )
 
 - name: Validated config path
   debug:
     msg: "Allowing configuration option {{ config_root_from_registry.value }} == {{ datadog_windows_config_files_dir }}"
-  when: ( (config_root_from_registry.exists) and
-          (datadog_windows_config_files_dir | length > 0 ) and
-          (config_root_from_registry.value | regex_replace('\\\\$','') | lower == datadog_windows_config_files_dir | lower ) )
+  when: ( (config_root_from_registry.exists) and (datadog_windows_config_files_dir | length > 0 ) and (config_root_from_registry.value
+    | regex_replace('\\\\$','') | lower == datadog_windows_config_files_dir | lower ) )
 
 ## validate the binary install path.  Only necessary if it's set in the registry alread (i.e. upgrade)
 ## Will fail the install if the caller has set the binary install path to a non-standard root, and that
@@ -46,26 +45,23 @@
 - name: Validate install path
   fail:
     msg: "Incompatible configuration option {{ install_path_from_registry.value }} != {{ datadog_windows_program_files_dir }}"
-  when: ( (install_path_from_registry.exists) and
-          (datadog_windows_program_files_dir | length > 0 ) and
-          (install_path_from_registry.value | regex_replace('\\\\$','') | lower != datadog_windows_program_files_dir | lower ) )
+  when: ( (install_path_from_registry.exists) and (datadog_windows_program_files_dir | length > 0 ) and (install_path_from_registry.value
+    | regex_replace('\\\\$','') | lower != datadog_windows_program_files_dir | lower ) )
 
 - name: Validated install path
   debug:
     msg: "Allowing configuration option {{ install_path_from_registry.value }} == {{ datadog_windows_program_files_dir }}"
-  when: ( (install_path_from_registry.exists) and
-          (datadog_windows_program_files_dir | length > 0 ) and
-          (install_path_from_registry.value | regex_replace('\\\\$','') | lower == datadog_windows_program_files_dir | lower ) )
-
+  when: ( (install_path_from_registry.exists) and (datadog_windows_program_files_dir | length > 0 ) and (install_path_from_registry.value
+    | regex_replace('\\\\$','') | lower == datadog_windows_program_files_dir | lower ) )
 
 - name: Set Program Files Target Directory
   set_fact:
-    win_install_args: "{{ win_install_args }} PROJECTLOCATION=\"{{ datadog_windows_program_files_dir }}\" "
+    win_install_args: '{{ win_install_args }} PROJECTLOCATION="{{ datadog_windows_program_files_dir }}" '
   when: datadog_windows_program_files_dir | length > 0
 
 - name: Set Config Files Target Directory
   set_fact:
-    win_install_args: "{{ win_install_args }} APPLICATIONDATADIRECTORY=\"{{ datadog_windows_config_files_dir }}\" "
+    win_install_args: '{{ win_install_args }} APPLICATIONDATADIRECTORY="{{ datadog_windows_config_files_dir }}" '
   when: datadog_windows_config_files_dir | length > 0
 
 # if the current installation was set to a non-standard config root, and that config root is not
@@ -78,7 +74,7 @@
 
 - name: Set config root for config files from current location
   set_fact:
-    datadog_windows_config_root: "{{ config_root_from_registry.value | regex_replace('\\\\$','') }}"
+    datadog_windows_config_root: "{{ config_root_from_registry.value | regex_replace('\\\\$', '') }}"
   when: config_root_from_registry.exists
 
 - name: Set Test

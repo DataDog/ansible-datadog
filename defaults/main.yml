@@ -2,10 +2,10 @@
 role_version: 4.19.0
 
 # define if the datadog-agent services should be enabled
-datadog_enabled: yes
+datadog_enabled: true
 
 # Whether the datadog.conf / datadog.yaml, system-probe.yaml, security-agent.yaml and checks config under conf.d are managed by Ansible
-datadog_manage_config: yes
+datadog_manage_config: true
 
 # default datadog.conf / datadog.yaml options
 datadog_config: {}
@@ -83,7 +83,7 @@ datadog_rpm_remove_keys: [4172A230]
 datadog_yum_repo: ""
 
 datadog_yum_repo_gpgcheck: ""
-datadog_yum_gpgcheck: yes
+datadog_yum_gpgcheck: true
 # NOTE: we don't use URLs starting with https://keys.datadoghq.com/, as Python
 # on older CentOS/RHEL/SUSE doesn't support SNI and get_url would fail on them
 
@@ -109,10 +109,10 @@ datadog_ignore_old_centos_python3_error: false
 datadog_zypper_repo: ""
 
 # Define if the official zypper Datadog repository services should be installed
-datadog_manage_zypper_repofile: yes
+datadog_manage_zypper_repofile: true
 
 datadog_zypper_repo_gpgcheck: ""
-datadog_zypper_gpgcheck: yes
+datadog_zypper_gpgcheck: true
 datadog_zypper_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 datadog_zypper_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
@@ -126,7 +126,7 @@ datadog_skip_running_check: false
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 # On centos this will only work with ansible 2.4 and up
-datadog_agent_allow_downgrade: no
+datadog_agent_allow_downgrade: false
 
 # Default windows latest msi package URL
 

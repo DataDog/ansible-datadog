@@ -3,11 +3,13 @@
 # under datadog_macos_user and remove the user-specific config for ansible_user
 - name: Load user data
   shell:
-    cmd: "dscacheutil -q user -a name {{ datadog_macos_user }} | awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print \"\\\"gid\\\": \" $2 \" }\"}'"
+    cmd: "set -o pipefail && dscacheutil -q user -a name {{ datadog_macos_user }} |
+      awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print
+      \"\\\"gid\\\": \" $2 \" }\"}'"
     executable: /bin/bash
   changed_when: false
   register: macos_user_output
-  check_mode: no
+  check_mode: false
 
 # This task is used to more cleanly format the variable contents.The ABOVE task's shell command returns a JSON
 # object as a string but nested in `.stdout`. Ansible has built in behavior that if it receives JSON data as
@@ -19,7 +21,7 @@
 
 - name: Load user group data
   shell:
-    cmd: "dscacheutil -q group -a gid {{ macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
+    cmd: "set -o pipefail && dscacheutil -q group -a gid {{ macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
   register: macos_user_group
   changed_when: false
 
@@ -37,15 +39,17 @@
   shell:
     cmd: "launchctl bootout gui/$(id -u)/{{ datadog_macos_service_name }}"
   when: user_service_created.rc == 0
+  changed_when: false
 
 - name: Remove user login item
   command: |-
-      osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
+    osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
   when: user_service_created.rc == 0
+  changed_when: false
 
 - name: Remove user LaunchAgent plist file
   file:
-    path: "/Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}"
+    path: /Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}
     state: absent
 
 # We could take the plist file from user LaunchAgent location and just add UID/GID,
@@ -61,7 +65,7 @@
     dest: "{{ datadog_macos_system_plist_file_path }}"
     owner: 0
     group: 0
-    mode: 0644
+    mode: "0644"
   become: true
   notify: restart datadog-agent-macos
   vars:
@@ -71,7 +75,7 @@
     groupname: "{{ macos_user_group.stdout }}"
 
 - name: Include configuration setup tasks
-  import_tasks: "_agent-linux-macos-shared.yml"
+  import_tasks: _agent-linux-macos-shared.yml
   vars:
     _dd_config_dir: "{{ datadog_macos_etc_dir }}"
     _dd_user: "{{ macos_user_data.uid }}"
@@ -84,7 +88,7 @@
     path: "{{ item }}"
     owner: "{{ macos_user_data.uid }}"
     group: "{{ macos_user_data.gid }}"
-    recurse: yes
+    recurse: true
   with_items:
     - "{{ datadog_macos_etc_dir }}"
     - "{{ datadog_macos_logs_dir }}"
