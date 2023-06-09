@@ -104,7 +104,7 @@
   register: repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
-- name: Clean repo metadata if repo changed # noqa no-handler
+- name: Clean repo metadata if repo changed # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: yum clean metadata --disablerepo="*" --enablerepo=datadog
   failed_when: false # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
   args:
@@ -115,7 +115,7 @@
 # On certain version of dnf, gpg keys aren't imported into the local db with the package install task.
 # This rule assures that they are correctly imported into the local db and users won't have to manually accept
 # them if running dnf commands on the hosts.
-- name: Refresh Datadog repository cache # noqa no-handler
+- name: Refresh Datadog repository cache # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: yum -y makecache --disablerepo="*" --enablerepo=datadog
   failed_when: false
   args:

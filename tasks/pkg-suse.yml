@@ -103,7 +103,7 @@
   when: datadog_manage_zypper_repofile
 
 # refresh zypper repos only if the template changed
-- name: Refresh Datadog zypper_repos # noqa no-handler
+- name: Refresh Datadog zypper_repos # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: zypper refresh datadog
   when: datadog_zypper_repo_template.changed and not ansible_check_mode
   args:
