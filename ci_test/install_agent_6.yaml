@@ -6,7 +6,7 @@
   vars:
     datadog_api_key: "11111111111111111111111111111111"
     datadog_enabled: false
-    datadog_agent_major_version: 6
+    agent_datadog_agent_major_version: 6
     # avoid checking that the agent is stopped for centos
     datadog_skip_running_check: true
     datadog_config:
@@ -24,7 +24,7 @@
       enabled: true
     service_monitoring_config:
       enabled: true
-    datadog_checks:
+    agent_datadog_checks:
       process:
         init_config:
         instances:
