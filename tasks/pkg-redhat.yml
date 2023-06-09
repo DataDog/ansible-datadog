@@ -63,7 +63,7 @@
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
   register: agent_repofile5
-  when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  when: (agent_datadog_agent_major_version | int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Agent 6 yum repo
   yum_repository:
@@ -76,7 +76,7 @@
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
   register: agent_repofile6
-  when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  when: (agent_datadog_agent_major_version | int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Agent 7 yum repo
   yum_repository:
@@ -89,7 +89,7 @@
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
   register: agent_repofile7
-  when: (datadog_agent_major_version|int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  when: (agent_datadog_agent_major_version | int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Custom yum repo
   yum_repository:

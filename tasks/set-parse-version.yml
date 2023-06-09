@@ -1,7 +1,7 @@
 ---
 - name: Convert agent_datadog_agent_major_version to string
   set_fact:
-    agent_datadog_agent_major_version: "{{ agent_datadog_agent_major_version | default('', true) | string }}"
+    agent_datadog_agent_major_version: "{{ datadog_agent_major_version | default('', true) | string }}"
 
 - name: Initialize skip install flag to false
   set_fact:

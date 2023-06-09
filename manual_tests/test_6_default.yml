@@ -3,4 +3,4 @@
   roles:
   - { role: ../../ansible-datadog, become: yes }
   vars:
-    agent_datadog_agent_major_version: 6
+    datadog_agent_major_version: 6

@@ -24,7 +24,7 @@
     agent_datadog_release: "1"
   when: agent_datadog_release | length == 0
 
-- name: Stop play if datadog_agent_version and agent_datadog_agent_major_version are not compatible
+- name: Stop play if datadog_agent_version and datadog_agent_major_version are not compatible
   fail:
     msg: "The provided major version {{ agent_datadog_agent_major_version }} is not compatible with the version {{ agent_datadog_major }}
       deduced from datadog_agent_version ({{ datadog_agent_version }}). Aborting play."

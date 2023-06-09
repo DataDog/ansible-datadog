@@ -5,7 +5,7 @@
     - { role: '/root/project/'}
   vars:
     datadog_api_key: "11111111111111111111111111111111"
-    agent_datadog_agent_major_version: 5
+    datadog_agent_major_version: 5
     datadog_agent_version: "{{ '1:5.32.9-1' if ansible_facts.os_family in ['RedHat', 'Rocky', 'AlmaLinux'] else '1:5.32.8-1' }}"
     datadog_agent_allow_downgrade: yes
     datadog_config:
