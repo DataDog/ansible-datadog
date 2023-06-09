@@ -1,7 +1,8 @@
 ---
 - name: Parse Agent version
   set_fact:
-    agent_version: "{{ datadog_agent_version | regex_search(agent_regexp, '\\g<epoch>', '\\g<major>', '\\g<minor>', '\\g<bugfix>', '\\g<suffix>', '\\g<release>') }}"
+    agent_version: "{{ datadog_agent_version
+      | regex_search(agent_regexp, '\\g<epoch>', '\\g<major>', '\\g<minor>', '\\g<bugfix>', '\\g<suffix>', '\\g<release>') }}"
   vars:
     agent_regexp: (?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>(?:~|-)[^0-9\s-]+[^-\s]*)?(?:-(?P<release>[0-9]+))?
 
@@ -36,7 +37,7 @@
 
 - name: Set helper variables
   set_fact:
-    agent_datadog_agent_linux_version: "{{ agent_datadog_epoch }}:{{ agent_datadog_major }}.{{ agent_datadog_minor }}.{{ agent_datadog_bugfix }}{{ agent_datadog_suffix }}-{{ agent_datadog_release }}"
+    agent_datadog_agent_linux_version: "{{ agent_datadog_epoch }}:{{ agent_datadog_major }}.{{ agent_datadog_minor }}.{{ agent_datadog_bugfix }}{{ agent_datadog_suffix }}-{{ agent_datadog_release }}" # noqa yaml[line-length]
     agent_datadog_rpm_version_finding_cmd: "rpm -q --qf '%{EPOCH}:%{VERSION}-%{RELEASE}' {{ datadog_agent_flavor }}"
 
 - name: Set OS-specific versions

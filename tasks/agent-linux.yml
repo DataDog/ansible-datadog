@@ -3,16 +3,18 @@
   service_facts:
 - name: Set before 6/7.40.0 flag
   set_fact:
-    agent_datadog_before_7400: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major | int < 8 and agent_datadog_minor | int < 40 }}"
+    agent_datadog_before_7400: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major
+      | int < 8 and agent_datadog_minor | int < 40 }}"
 
 - name: Set before 6/7.24.1 flag
   set_fact:
-    agent_datadog_before_7241: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_bugfix is defined and agent_datadog_major |
-      int < 8 and (datadog_minor | int < 24 or (datadog_minor | int == 24 and agent_datadog_bugfix | int < 1)) }}"
+    agent_datadog_before_7241: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_bugfix is defined
+      and agent_datadog_major | int < 8 and (datadog_minor | int < 24 or (datadog_minor | int == 24 and agent_datadog_bugfix | int < 1)) }}"
 
 - name: Set before 6/7.18.0 flag
   set_fact:
-    agent_datadog_before_7180: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major | int < 8 and agent_datadog_minor | int < 18 }}"
+    agent_datadog_before_7180: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major
+      | int < 8 and agent_datadog_minor | int < 18 }}"
 
 - name: Add user to additional groups, user="{{ datadog_user }}"
   user:
@@ -106,7 +108,8 @@
     name: datadog-agent-sysprobe
     state: stopped
     enabled: false
-  when: not datadog_skip_running_check and (not datadog_enabled or not agent_datadog_sysprobe_enabled) and agent_datadog_before_7180 and agent_datadog_sysprobe_installed
+  when: not datadog_skip_running_check and (not datadog_enabled or not agent_datadog_sysprobe_enabled)
+    and agent_datadog_before_7180 and agent_datadog_sysprobe_installed
 
 - name: Ensure datadog-agent-security is not running
   service:

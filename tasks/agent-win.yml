@@ -20,7 +20,8 @@
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename')
+    | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_untracked_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent-win
 
@@ -28,7 +29,8 @@
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.default"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list
+    | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_default_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent-win
 
@@ -36,7 +38,8 @@
   win_file:
     path: "{{ ansible_facts.env['ProgramData'] }}\\Datadog\\conf.d\\{{ item }}.d\\conf.yaml.example"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('win_basename') | list
+    | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_example_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent-win
 
