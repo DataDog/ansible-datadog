@@ -120,8 +120,13 @@ jobs:
       - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
-      # TODO: upgrade ansible-lint to latest (will require updating the image for this task)
       - run: pip install ansible-lint==6.17
+      - run: |
+        mkdir ansible_collections
+        cd ansible_collections
+        ansible-galaxy collection init datadog.dd
+        mkdir -p datadog/dd/role/agent/
+        cp -r $(find .. -not -path "*ansible_collections*") datadog/dd/role/agent/
       - run: ansible-lint -v --exclude=.circleci/config.yml .
 
   test_install_downgrade:
