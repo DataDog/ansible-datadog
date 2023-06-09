@@ -122,7 +122,7 @@ jobs:
       - checkout
       - run: pip install ansible-lint==6.17 galaxy-importer
       - run: mkdir ansible_collections
-      - run: cd ansible_collections && ansible-galaxy collection init datadog.dd && mkdir -p datadog/dd/role/agent/ && for file in $(find .. -not -path "*ansible_collections*" -not -path "*.*" -type f); do cp -r "$file" "datadog/dd/role/agent/${file:3}"; done
+      - run: cd ansible_collections && ansible-galaxy collection init datadog.dd && mkdir -p datadog/dd/roles/agent/ && for file in $(find .. -not -path "*ansible_collections*" -not -path "*.*" -type f); do cp -r "$file" "datadog/dd/role/agent/${file:3}"; done
       - run: cd ansible_collections/datadog/dd && find roles/agent/ -not -path '*defaults*' -not -path '*tasks*' -not -path '*templates*' -not -path '*handlers*' -not -name '.gitkeep' -not -path '*meta*' -not -name 'README.md' -type f -exec rm -r {} \;
       - run: ls -la ansible_collections/datadog/dd
       - run: cd ansible_collections/datadog/dd && ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/ 
