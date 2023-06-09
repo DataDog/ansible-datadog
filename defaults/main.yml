@@ -93,9 +93,11 @@ datadog_yum_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADO
 datadog_yum_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 # this key expires in 2024
-datadog_yum_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_yum_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
-# Default zypper repo and keys
+# this key expires in 2028
+datadog_yum_gpgkey_20280418: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_yum_gpgkey_20280418_sha256sum: "d309232f05bcfb5df7fce1a22b0920476254135083058206978aa57910698101"
 
 # By default, we fail early & print a helpful message if an older Ansible version and Python 3
 # interpreter is used on CentOS < 8. The 'yum' module is only available on Python 2, and the 'python3-dnf'
@@ -116,8 +118,10 @@ datadog_zypper_gpgcheck: true
 datadog_zypper_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 datadog_zypper_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
-datadog_zypper_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_zypper_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_zypper_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
+datadog_zypper_gpgkey_20280418: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_zypper_gpgkey_20280418_sha256sum: "d309232f05bcfb5df7fce1a22b0920476254135083058206978aa57910698101"
 
 # Avoid checking if the agent is running or not. This can be useful if you're
 # using sysvinit and providing your own init script.
@@ -182,6 +186,8 @@ datadog_apt_default_keys:
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public
   - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public
+  - key: D75CEA17048B9ACBF186794B32637D44F14F620E
+    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public
   - key: 5F1E256061D813B125E156E8E6266D4AC0962C7D
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_C0962C7D.public
 
