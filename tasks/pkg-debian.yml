@@ -69,7 +69,7 @@
   apt_repository:
     filename: ansible_datadog_{{ item.key }}
     repo: "{{ item.value }}"
-    state: "{% if item.key == datadog_agent_major_version | int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
+    state: "{% if item.key == agent_datadog_agent_major_version | int and datadog_apt_repo | length == 0 %}present{% else %}absent{% endif %}"
     update_cache: true
   when: (not ansible_check_mode)
   with_dict:
@@ -115,11 +115,11 @@
 
 - name: Include debian pinned version install task
   include_tasks: pkg-debian/install-pinned.yml
-  when: datadog_agent_debian_version is defined
+  when: agent_datadog_agent_debian_version is defined
 
 - name: Include debian latest version install task
   include_tasks: pkg-debian/install-latest.yml
-  when: datadog_agent_debian_version is not defined
+  when: agent_datadog_agent_debian_version is not defined
 
 - name: Install latest datadog-signing-keys package
   apt:

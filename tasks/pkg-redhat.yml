@@ -44,13 +44,13 @@
 
 - name: Set versioned includepkgs variable
   set_fact:
-    agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}"
-  when: datadog_agent_redhat_version is defined
+    agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}"
+  when: agent_datadog_agent_redhat_version is defined
 
 - name: Set plain includepkgs variable
   set_fact:
     agent_datadog_includepkgs: "{{ datadog_agent_flavor }}"
-  when: datadog_agent_redhat_version is not defined
+  when: agent_datadog_agent_redhat_version is not defined
 
 - name: Install Datadog Agent 5 yum repo
   yum_repository:
@@ -131,8 +131,8 @@
 
 - name: Include redhat agent pinned version install task
   include_tasks: pkg-redhat/install-pinned.yml
-  when: datadog_agent_redhat_version is defined
+  when: agent_datadog_agent_redhat_version is defined
 
 - name: Include redhat agent latest version install task
   include_tasks: pkg-redhat/install-latest.yml
-  when: datadog_agent_redhat_version is not defined
+  when: agent_datadog_agent_redhat_version is not defined

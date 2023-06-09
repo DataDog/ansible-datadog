@@ -85,4 +85,4 @@
 - name: Set Windows NPM flag
   set_fact:
     agent_win_install_args: "{{ agent_win_install_args }} ADDLOCAL=MainApplication,NPM"
-  when: datadog_sysprobe_enabled
+  when: agent_datadog_sysprobe_enabled

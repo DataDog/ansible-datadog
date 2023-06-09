@@ -3,16 +3,16 @@
   service_facts:
 - name: Set before 6/7.40.0 flag
   set_fact:
-    agent_datadog_before_7400: "{{ datadog_major is defined and datadog_minor is defined and datadog_major | int < 8 and datadog_minor | int < 40 }}"
+    agent_datadog_before_7400: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major | int < 8 and agent_datadog_minor | int < 40 }}"
 
 - name: Set before 6/7.24.1 flag
   set_fact:
-    agent_datadog_before_7241: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined and datadog_major |
-      int < 8 and (datadog_minor | int < 24 or (datadog_minor | int == 24 and datadog_bugfix | int < 1)) }}"
+    agent_datadog_before_7241: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_bugfix is defined and agent_datadog_major |
+      int < 8 and (datadog_minor | int < 24 or (datadog_minor | int == 24 and agent_datadog_bugfix | int < 1)) }}"
 
 - name: Set before 6/7.18.0 flag
   set_fact:
-    agent_datadog_before_7180: "{{ datadog_major is defined and datadog_minor is defined and datadog_major | int < 8 and datadog_minor | int < 18 }}"
+    agent_datadog_before_7180: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major | int < 8 and agent_datadog_minor | int < 18 }}"
 
 - name: Add user to additional groups, user="{{ datadog_user }}"
   user:
@@ -47,7 +47,7 @@
   when: not datadog_skip_running_check
 
 # Before 6/7.24.1, system_probe_config controls the system-probe service
-# datadog_minor is only defined when a specific Agent version is given
+# agent_datadog_minor is only defined when a specific Agent version is given
 # (see tasks/parse-version.yml)
 - name: Set system probe enabled (before 6/7.24.1)
   set_fact:

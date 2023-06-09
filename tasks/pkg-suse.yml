@@ -3,7 +3,7 @@
   set_fact:
     agent_do_zypper_repo_gpgcheck: >-
       {{ datadog_zypper_repo_gpgcheck if datadog_zypper_repo_gpgcheck != '' else (
-        'yes' if datadog_zypper_repo == '' and datadog_agent_major_version|int != 5 else 'no'
+        'yes' if datadog_zypper_repo == '' and agent_datadog_agent_major_version|int != 5 else 'no'
       ) }}
 
 - name: Check and download RPM Key(SLES11) # Work around due to SNI check for SLES11
@@ -112,8 +112,8 @@
 
 - name: Include Suse agent pinned version install task
   include_tasks: pkg-suse/install-pinned.yml
-  when: datadog_agent_suse_version is defined
+  when: agent_datadog_agent_suse_version is defined
 
 - name: Include Suse agent latest version install task
   include_tasks: pkg-suse/install-latest.yml
-  when: datadog_agent_suse_version is not defined
+  when: agent_datadog_agent_suse_version is not defined

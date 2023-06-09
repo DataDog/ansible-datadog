@@ -48,12 +48,12 @@
   register: agent_agent_datadog_conf_files_default
   when: datadog_manage_config and datadog_disable_default_checks
 
-- name: Delete checks not present in datadog_tracked_checks
+- name: Delete checks not present in agent_datadog_tracked_checks
   file:
     path: "/etc/dd-agent/conf.d/{{ item }}.yaml"
     state: absent
   loop: "{{ agent_datadog_conf_files.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).yaml$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
+  when: datadog_manage_config and datadog_disable_untracked_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent
 
 - name: Delete default checks
@@ -62,7 +62,7 @@
     state: absent
   loop: "{{ agent_agent_datadog_conf_files_default.files | map(attribute='path') | list | map('basename') | list |
     map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"
-  when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
+  when: datadog_manage_config and datadog_disable_default_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent
 
 - name: (agent5) Create a configuration file for each Datadog check
@@ -72,6 +72,6 @@
     owner: "{{ datadog_user }}"
     group: "{{ datadog_group }}"
     mode: "0644" # FIXME: should have permissions set to only be readable by owner
-  with_items: "{{ datadog_checks | list }}"
+  with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
   notify: restart datadog-agent

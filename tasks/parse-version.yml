@@ -94,10 +94,10 @@
 
 - name: Set skip install flag if version already installed (Windows)
   set_fact:
-    agent_datadog_skip_install: "{{ datadog_version_check_win.stdout | trim == agent_datadog_agent_os2version[ansible_facts.os_family] }}"
+    agent_datadog_skip_install: "{{ agent_datadog_version_check_win.stdout | trim == agent_datadog_agent_os2version[ansible_facts.os_family] }}"
   when: ansible_facts.os_family == "Windows"
 
 - name: Set skip install flag if version already installed (macOS)
   set_fact:
-    agent_datadog_skip_install: "{{ datadog_version_check_macos.stdout | trim == agent_datadog_agent_os2version[ansible_facts.os_family] }}"
+    agent_datadog_skip_install: "{{ agent_datadog_version_check_macos.stdout | trim == agent_datadog_agent_os2version[ansible_facts.os_family] }}"
   when: ansible_facts.os_family == "Darwin"
