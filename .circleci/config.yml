@@ -125,7 +125,7 @@ jobs:
       - run: cd ansible_collections
       - run: ansible-galaxy collection init datadog.dd
       - run: mkdir -p datadog/dd/role/agent/
-      - run: cp -r $(find .. -not -path "*ansible_collections*") datadog/dd/role/agent/
+      - run: cp -r $(find .. -not -path "*ansible_collections*" -not -path "*.git*" -type f) datadog/dd/role/agent/
       - run: ansible-lint -v --exclude=.circleci/config.yml .
 
   test_install_downgrade:
