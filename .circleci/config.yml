@@ -123,7 +123,7 @@ jobs:
       - run: pip install ansible-lint==6.17 galaxy-importer
       - run: mkdir ansible_collections
       - run: cd ansible_collections && ansible-galaxy collection init datadog.dd && mkdir -p datadog/dd/role/agent/ && for file in $(find .. -not -path "*ansible_collections*" -not -path "*.*" -type f); do cp -r "$file" "datadog/dd/role/agent/${file:3}"; done
-      - run: cd ansible_collections && ansible-lint -v --profile=production --exclude=datadog/dd/galaxy.yml --exclude=datadog/dd/meta/ 
+      - run: cd ansible_collections/datadog/dd && ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/ 
 
   test_install_downgrade:
     parameters:
