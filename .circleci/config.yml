@@ -122,8 +122,7 @@ jobs:
       - checkout
       - run: pip install ansible-lint==6.17
       - run: mkdir ansible_collections
-      - run: cd ansible_collections && ansible-galaxy collection init datadog.dd \
-        && mkdir -p datadog/dd/role/agent/ && for file in $(find .. -not -path "*ansible_collections*" -not -path "*.*" -type f); do cp -r "$file" "datadog/dd/role/agent/${file:3}"; done
+      - run: cd ansible_collections && ansible-galaxy collection init datadog.dd && mkdir -p datadog/dd/role/agent/ && for file in $(find .. -not -path "*ansible_collections*" -not -path "*.*" -type f); do cp -r "$file" "datadog/dd/role/agent/${file:3}"; done
       - run: ansible-lint -v ansible_collections/
 
   test_install_downgrade:
