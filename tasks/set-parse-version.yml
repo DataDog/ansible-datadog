@@ -1,11 +1,11 @@
 ---
-- name: Convert datadog_agent_major_version to string
+- name: Convert agent_datadog_agent_major_version to string
   set_fact:
-    datadog_agent_major_version: "{{ datadog_agent_major_version | default('', true) | string }}"
+    agent_datadog_agent_major_version: "{{ agent_datadog_agent_major_version | default('', true) | string }}"
 
 - name: Initialize skip install flag to false
   set_fact:
-    datadog_skip_install: false
+    agent_datadog_skip_install: false
 
 - name: Include parse version tasks
   include_tasks: parse-version.yml
@@ -13,5 +13,5 @@
 
 - name: Set Agent default major version
   set_fact:
-    datadog_agent_major_version: "7"
-  when: datadog_agent_major_version | length == 0
+    agent_datadog_agent_major_version: "7"
+  when: agent_datadog_agent_major_version | length == 0

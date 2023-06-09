@@ -24,14 +24,14 @@
     patterns:
       - "*.d"
     file_type: directory
-  register: datadog_conf_directories
+  register: agent_datadog_conf_directories
   when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
 
 - name: Delete checks not present in datadog_tracked_checks
   file:
     path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
     state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_untracked_checks and item not in datadog_tracked_checks
   notify: "{{ _dd_notify_agent }}"
 
@@ -39,7 +39,7 @@
   file:
     path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
     state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_default_checks and item not in datadog_tracked_checks
   notify: "{{ _dd_notify_agent }}"
 
@@ -47,7 +47,7 @@
   file:
     path: "{{ _dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.example"
     state: absent
-  loop: "{{ datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_example_checks and item not in datadog_tracked_checks
   notify: "{{ _dd_notify_agent }}"
 

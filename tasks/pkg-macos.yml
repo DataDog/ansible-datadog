@@ -8,14 +8,14 @@
 
 - name: Check if the macOS user for Agent service exists
   command: id -u "{{ datadog_macos_user }}"
-  register: mac_user_check
+  register: agent_mac_user_check
   changed_when: false
   ignore_errors: true
 
 - name: Fail if the macOS user for Agent service doesn't exist
   fail:
     msg: "The Datadog ansible role wasn't able to find the user : {{ datadog_macos_user }}"
-  when: mac_user_check.rc != 0
+  when: agent_mac_user_check.rc != 0
 
 - name: Include macos agent latest version install task
   include_tasks: pkg-macos/macos_agent_latest.yml
@@ -49,7 +49,7 @@
     url: "{{ dd_download_url }}"
     dest: /tmp/datadog-agent.dmg
     mode: "0750"
-  register: download_dmg_result
+  register: agent_download_dmg_result
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
 - name: Detach agent dmg if already mounted
@@ -59,7 +59,7 @@
 
 - name: Attach agent dmg
   command: hdiutil attach /tmp/datadog-agent.dmg -mountpoint "/Volumes/datadog_agent"
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
+  when: (not datadog_skip_install) and (not ansible_check_mode) and (agent_download_dmg_result.status_code == 200)
   changed_when: true
 
 - name: Unpack and copy Datadog Agent files
@@ -67,22 +67,22 @@
     cmd: /usr/sbin/installer -pkg "`find "/Volumes/datadog_agent" -name \*.pkg 2>/dev/null`" -target /
     chdir: /
   become: true
-  register: datadog_agent_install
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
+  register: agent_datadog_agent_install
+  when: (not datadog_skip_install) and (not ansible_check_mode) and (agent_download_dmg_result.status_code == 200)
   changed_when: true
   notify: restart datadog-agent-macos
 
 - name: Detach mounted dmg
   command: hdiutil detach "/Volumes/datadog_agent"
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
+  when: (not datadog_skip_install) and (not ansible_check_mode) and (agent_download_dmg_result.status_code == 200)
   changed_when: true
 
 - name: Delete temporary dmg
   file:
-    path: "{{ download_dmg_result.dest }}"
+    path: "{{ agent_download_dmg_result.dest }}"
     state: absent
   become: true
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_dmg_result.status_code == 200)
+  when: (not datadog_skip_install) and (not ansible_check_mode) and (agent_download_dmg_result.status_code == 200)
 
 - name: Delete temporary datadog install user file
   file:

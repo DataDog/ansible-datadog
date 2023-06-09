@@ -32,7 +32,7 @@
 ## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
 - name: Set windows NPM installed
   set_fact:
-    datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
+    agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
 
 - name: Include Windows opts tasks
   include_tasks: pkg-windows-opts.yml
@@ -47,7 +47,7 @@
   win_get_url:
     url: "{{ dd_download_url }}"
     dest: '%TEMP%\ddagent.msi'
-  register: download_msi_result
+  register: agent_download_msi_result
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
 - name: Create Binary directory root (if not default)
@@ -69,23 +69,23 @@
 
 - name: Show installation flags
   debug:
-    msg: "{{ win_install_args }}{% if datadog_windows_ddagentuser_password | default('', true) | length > 0 %} DDAGENTUSER_PASSWORD=<REDACTED>{% endif %}"
+    msg: "{{ agent_win_install_args }}{% if datadog_windows_ddagentuser_password | default('', true) | length > 0 %} DDAGENTUSER_PASSWORD=<REDACTED>{% endif %}"
 
 # We set DD Password Arg here to prevent it from being printed in any kind of debug logs/messages prior usage
 - name: Set DD Password Arg
   set_fact:
-    win_install_args: "{{ win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
+    agent_win_install_args: "{{ agent_win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
   when: datadog_windows_ddagentuser_password | default('', true) | length > 0
 
 - name: Install downloaded agent
   win_package:
-    path: "{{ download_msi_result.dest }}"
-    arguments: "{{ win_install_args }}"
-  register: datadog_agent_install
+    path: "{{ agent_download_msi_result.dest }}"
+    arguments: "{{ agent_win_install_args }}"
+  register: agent_datadog_agent_install
   when: (not datadog_skip_install) and (not ansible_check_mode)
 
 - name: Delete temporary msi
   win_file:
-    path: "{{ download_msi_result.dest }}"
+    path: "{{ agent_download_msi_result.dest }}"
     state: absent
-  when: (not datadog_skip_install) and (not ansible_check_mode) and (download_msi_result.status_code == 200)
+  when: (not datadog_skip_install) and (not ansible_check_mode) and (agent_download_msi_result.status_code == 200)

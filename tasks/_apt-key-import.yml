@@ -21,75 +21,75 @@
 
 - name: Set local variables for processed key {{ item.key }}
   set_fact:
-    key_fingerprint: "{{ item.key }}"
-    keyring_url: "{{ item.value }}"
+    agent_key_fingerprint: "{{ item.key }}"
+    agent_keyring_url: "{{ item.value }}"
 
-- name: Find out whether key is already imported, key = {{ key_fingerprint }}
+- name: Find out whether key is already imported, key = {{ agent_key_fingerprint }}
   shell: >
     set -o pipefail &&
     gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }}
-    --list-keys --with-fingerprint --with-colons | grep {{ key_fingerprint }}
-  register: key_exists_result
+    --list-keys --with-fingerprint --with-colons | grep {{ agent_key_fingerprint }}
+  register: agent_key_exists_result
   failed_when: false # we expect the command to fail when the key is not found; we never want this task to fail
-  changed_when: key_exists_result.rc != 0
-  when: key_fingerprint != datadog_apt_key_current_name # we always want to import the CURRENT key
+  changed_when: agent_key_exists_result.rc != 0
+  when: agent_key_fingerprint != datadog_apt_key_current_name # we always want to import the CURRENT key
 
 - name: Set local helper variable for determining key import (when not {{ datadog_apt_key_current_name }})
   set_fact:
-    key_needs_import: "{{ 'false' if key_exists_result.rc == 0 else 'true' }}"
-  when: key_fingerprint != datadog_apt_key_current_name
+    agent_key_needs_import: "{{ 'false' if agent_key_exists_result.rc == 0 else 'true' }}"
+  when: agent_key_fingerprint != datadog_apt_key_current_name
 
 - name: Set local helper variable for determining key import (when {{ datadog_apt_key_current_name }})
   set_fact:
-    key_needs_import: "true"
-  when: key_fingerprint == datadog_apt_key_current_name
+    agent_key_needs_import: "true"
+  when: agent_key_fingerprint == datadog_apt_key_current_name
 
 - name: Create temporary directory for key manipulation
   tempfile:
     state: directory
     suffix: keys
-  register: tempdir
-  when: key_needs_import
+  register: agent_tempdir
+  when: agent_key_needs_import
   changed_when: false
 
-- name: Download url to import key. url,key = {{ keyring_url, key_fingerprint }}
+- name: Download url to import key. url,key = {{ agent_keyring_url, agent_key_fingerprint }}
   get_url:
-    url: "{{ keyring_url }}"
-    dest: "{{ tempdir.path }}/{{ key_fingerprint }}"
+    url: "{{ agent_keyring_url }}"
+    dest: "{{ agent_tempdir.path }}/{{ agent_key_fingerprint }}"
     force: true
     mode: 600
-  when: key_needs_import
+  when: agent_key_needs_import
   changed_when: false
 
 # gpg --dearmor called on a binary keyring does nothing
-- name: Ensure downloaded file for key is a binary keyring, key={{ key_fingerprint }}
-  shell: "cat {{ tempdir.path }}/{{ key_fingerprint }} | gpg --dearmor > {{ tempdir.path }}/binary.gpg" # noqa risky-shell-pipe
-  when: key_needs_import
+- name: Ensure downloaded file for key is a binary keyring, key={{ agent_key_fingerprint }}
+  shell: "cat {{ agent_tempdir.path }}/{{ agent_key_fingerprint }} | gpg --dearmor > {{ agent_tempdir.path }}/binary.gpg" # noqa risky-shell-pipe
+  when: agent_key_needs_import
   changed_when: false
 
 - name: Extract the required key from the binary keyring (when not {{ datadog_apt_key_current_name }})
-  shell: "gpg --no-default-keyring --keyring {{ tempdir.path }}/binary.gpg --export {{ key_fingerprint }} > {{ tempdir.path }}/single.gpg"
-  when: key_fingerprint != datadog_apt_key_current_name and key_needs_import
+  shell: "gpg --no-default-keyring --keyring {{ agent_tempdir.path }}/binary.gpg --export {{ agent_key_fingerprint }} > {{ agent_tempdir.path }}/single.gpg"
+  when: agent_key_fingerprint != datadog_apt_key_current_name and agent_key_needs_import
   changed_when: false
 
 - name: Extract the required key from the binary keyring (when {{ datadog_apt_key_current_name }})
   copy:
-    src: "{{ tempdir.path }}/binary.gpg"
-    dest: "{{ tempdir.path }}/single.gpg"
+    src: "{{ agent_tempdir.path }}/binary.gpg"
+    dest: "{{ agent_tempdir.path }}/single.gpg"
     mode: "0600"
     remote_src: true
-  when: key_fingerprint == datadog_apt_key_current_name and key_needs_import
+  when: agent_key_fingerprint == datadog_apt_key_current_name and agent_key_needs_import
   changed_when: false
 
-- name: Import key to keyring, key,keyring={{ key_fingerprint, datadog_apt_usr_share_keyring }}
-  shell: cat {{ tempdir.path }}/single.gpg | gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch # noqa risky-shell-pipe
-  when: key_needs_import
-  register: key_import_result
-  changed_when: '"imported: 1" in key_import_result.stderr'
+- name: Import key to keyring, key,keyring={{ agent_key_fingerprint, datadog_apt_usr_share_keyring }}
+  shell: cat {{ agent_tempdir.path }}/single.gpg | gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch # noqa risky-shell-pipe
+  when: agent_key_needs_import
+  register: agent_key_import_result
+  changed_when: '"imported: 1" in agent_key_import_result.stderr'
 
 - name: Remove temporary directory for key manipulation
   file:
-    path: "{{ tempdir.path }}"
+    path: "{{ agent_tempdir.path }}"
     state: absent
-  when: key_needs_import
+  when: agent_key_needs_import
   changed_when: false

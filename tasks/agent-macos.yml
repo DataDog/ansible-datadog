@@ -8,7 +8,7 @@
       \"\\\"gid\\\": \" $2 \" }\"}'"
     executable: /bin/bash
   changed_when: false
-  register: macos_user_output
+  register: agent_macos_user_output
   check_mode: false
 
 # This task is used to more cleanly format the variable contents.The ABOVE task's shell command returns a JSON
@@ -17,12 +17,12 @@
 # out of the ABOVE task preventing us from having to run 2 similar commands.
 - name: Extract JSON user data as variable object
   set_fact:
-    macos_user_data: "{{ macos_user_output.stdout }}"
+    agent_macos_user_data: "{{ agent_macos_user_output.stdout }}"
 
 - name: Load user group data
   shell:
-    cmd: "set -o pipefail && dscacheutil -q group -a gid {{ macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
-  register: macos_user_group
+    cmd: "set -o pipefail && dscacheutil -q group -a gid {{ agent_macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
+  register: agent_macos_user_group
   changed_when: false
 
 # If the ansible_user was logged in via GUI during installation, the postinstall package script
@@ -31,20 +31,20 @@
 - name: Find out if user LaunchAgent is running
   shell:
     cmd: "launchctl print gui/$(id -u)/{{ datadog_macos_service_name }}"
-  register: user_service_created
+  register: agent_user_service_created
   changed_when: false
   failed_when: false
 
 - name: Unload and stop user LaunchAgent
   shell:
     cmd: "launchctl bootout gui/$(id -u)/{{ datadog_macos_service_name }}"
-  when: user_service_created.rc == 0
+  when: agent_user_service_created.rc == 0
   changed_when: false
 
 - name: Remove user login item
   command: |-
     osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
-  when: user_service_created.rc == 0
+  when: agent_user_service_created.rc == 0
   changed_when: false
 
 - name: Remove user LaunchAgent plist file
@@ -71,23 +71,23 @@
   vars:
     # NOTE: https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html
     # docs say both UID/GID and UserName/GroupName work, but only UserName/GroupName actually work.
-    username: "{{ datadog_macos_user }}"
-    groupname: "{{ macos_user_group.stdout }}"
+    agent_username: "{{ datadog_macos_user }}"
+    agent_groupname: "{{ agent_macos_user_group.stdout }}"
 
 - name: Include configuration setup tasks
   import_tasks: _agent-linux-macos-shared.yml
   vars:
-    _dd_config_dir: "{{ datadog_macos_etc_dir }}"
-    _dd_user: "{{ macos_user_data.uid }}"
-    _dd_group: "{{ macos_user_data.gid }}"
-    _dd_notify_agent: "restart datadog-agent-macos"
+    agent__dd_config_dir: "{{ datadog_macos_etc_dir }}"
+    agent__dd_user: "{{ agent_macos_user_data.uid }}"
+    agent__dd_group: "{{ agent_macos_user_data.gid }}"
+    agent__dd_notify_agent: "restart datadog-agent-macos"
   become: true
 
 - name: Set permissions for DataDog Directories
   file:
     path: "{{ item }}"
-    owner: "{{ macos_user_data.uid }}"
-    group: "{{ macos_user_data.gid }}"
+    owner: "{{ agent_macos_user_data.uid }}"
+    group: "{{ agent_macos_user_data.gid }}"
     recurse: true
   with_items:
     - "{{ datadog_macos_etc_dir }}"
