@@ -3,7 +3,7 @@
   service:
     name: datadog-agent-sysprobe
     state: restarted
-  when: datadog_enabled and datadog_sysprobe_enabled and not ansible_check_mode and
+  when: datadog_enabled and agent_datadog_sysprobe_enabled and not ansible_check_mode and
     not ansible_facts.os_family == "Windows" and not ansible_facts.os_family == "Darwin"
 
 - name: restart datadog-agent # noqa name[casing]
