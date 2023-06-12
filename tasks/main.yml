@@ -19,7 +19,7 @@
 
 - name: Check and resolve APM injection settings
   include_tasks: apm-inject-check.yml
-  when: datadog_apm_host_injection_enabled or datadog_apm_host_docker_injection_enabled
+  when: datadog_apm_instrumentation_enabled != ""
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
@@ -76,4 +76,4 @@
 
 - name: APM Host injection tasks
   include_tasks: apm-inject-install.yml
-  when: datadog_apm_host_injection_enabled or datadog_apm_host_docker_injection_enabled
+  when: datadog_apm_instrumentation_enabled != ""

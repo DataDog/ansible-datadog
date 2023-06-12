@@ -12,4 +12,4 @@
     state: latest # noqa 403
     update_cache: yes
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  with_items: "{{ datadog_apm_libraries }}"
+  with_items: "{{ datadog_apm_instrumentation_languages }}"

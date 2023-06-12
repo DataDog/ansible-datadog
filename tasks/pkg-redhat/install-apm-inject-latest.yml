@@ -11,5 +11,5 @@
     name: "datadog-apm-library-{{ item }}"
     state: latest # noqa 403
     update_cache: yes
-  with_items: "{{ datadog_apm_libraries }}"
+  with_items: "{{ datadog_apm_instrumentation_languages }}"
   become: true
