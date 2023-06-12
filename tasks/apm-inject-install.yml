@@ -15,7 +15,7 @@
 - name: Run APM host injection setup script
   command: dd-host-install --no-config-change --no-agent-restart
   notify: restart datadog-agent
-  when: not ansible_check_mode and datadog_apm_instrumentation_rc != 0 and datadog_apm_instrumentation_enabled == "host"
+  when: not ansible_check_mode and datadog_apm_instrumentation_rc == 1 and datadog_apm_instrumentation_enabled == "host"
 
 #- name: Check if dd-host-container-install needs to run
 #  command: dd-host-install --dry-run && dd-container-install --dry-run
@@ -26,7 +26,7 @@
   # dd-host-container-install will also reload docker as it changes /etc/docker/daemon.json
   command: dd-host-install --no-agent-config-change --no-agent-restart && dd-container-install --no-config-change --no-agent-restart
   notify: restart datadog-agent
-  when: not ansible_check_mode and datadog_apm_instrumentation_rc != 0 and datadog_apm_instrumentation_enabled == "all"
+  when: not ansible_check_mode and datadog_apm_instrumentation_rc == 1 and datadog_apm_instrumentation_enabled == "all"
 
 #- name: Check if dd-container-install needs to run
 #  command: dd-container-install --dry-run
@@ -36,4 +36,4 @@
 - name: Run APM docker injection setup script
   # dd-container-install will also reload docker as it changes /etc/docker/daemon.json
   command: dd-container-install
-  when: not ansible_check_mode and datadog_apm_instrumentation_rc != 0 and datadog_apm_instrumentation_enabled == "docker"
+  when: not ansible_check_mode and datadog_apm_instrumentation_rc == 1 and datadog_apm_instrumentation_enabled == "docker"

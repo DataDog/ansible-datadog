@@ -178,7 +178,7 @@ datadog_apm_instrumentation_languages: ["all"]
 # Internal variables
 # The following variables are for internal use only, do not modify them.
 #
-datadog_apm_instrumentation_rc: 0
+datadog_apm_instrumentation_rc: 1
 
 datadog_apt_trusted_d_keyring: "/etc/apt/trusted.gpg.d/datadog-archive-keyring.gpg"
 datadog_apt_usr_share_keyring: "/usr/share/keyrings/datadog-archive-keyring.gpg"
