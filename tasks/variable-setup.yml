@@ -1,20 +1,12 @@
 ---
 - name: Set datadog_checks variable
   set_fact:
-    agent_datadog_checks: datadog_checks
+    agent_datadog_checks: "{{ datadog_checks | default({}, true) }}"
 
 - name: Set datadog_agent_major_version variable
   set_fact:
-    agent_datadog_agent_major_version: datadog_agent_major_version
+    agent_datadog_agent_major_version:  "{{ datadog_agent_major_version | default('', true) | string }}"
 
 - name: Set datadog_zypper_repo variable
   set_fact:
-    agent_datadog_zypper_repo: datadog_zypper_repo
-
-- name: Set datadog_windows_config_root variable
-  set_fact:
-    agent_datadog_windows_config_root: datadog_windows_config_root
-
-- name: Set win_install_args variable
-  set_fact:
-    agent_win_install_args: win_install_args
+    agent_datadog_zypper_repo: "{{ datadog_zypper_repo }}"
