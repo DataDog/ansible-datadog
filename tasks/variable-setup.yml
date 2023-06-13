@@ -5,7 +5,7 @@
 
 - name: Set datadog_agent_major_version variable
   set_fact:
-    agent_datadog_agent_major_version:  "{{ datadog_agent_major_version | default('', true) | string }}"
+    agent_datadog_agent_major_version: "{{ datadog_agent_major_version | default('', true) | string }}"
 
 - name: Set datadog_zypper_repo variable
   set_fact:
