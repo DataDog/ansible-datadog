@@ -77,10 +77,10 @@
 - name: Include configuration setup tasks
   import_tasks: _agent-linux-macos-shared.yml
   vars:
-    agent__dd_config_dir: "{{ datadog_macos_etc_dir }}"
-    agent__dd_user: "{{ agent_macos_user_data.uid }}"
-    agent__dd_group: "{{ agent_macos_user_data.gid }}"
-    agent__dd_notify_agent: "restart datadog-agent-macos"
+    agent_dd_config_dir: "{{ datadog_macos_etc_dir }}"
+    agent_dd_user: "{{ agent_macos_user_data.uid }}"
+    agent_dd_group: "{{ agent_macos_user_data.gid }}"
+    agent_dd_notify_agent: "restart datadog-agent-macos"
   become: true
 
 - name: Set permissions for DataDog Directories
