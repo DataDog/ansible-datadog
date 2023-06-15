@@ -24,7 +24,7 @@
       enabled: true
     service_monitoring_config:
       enabled: true
-    agent_datadog_checks:
+    datadog_checks:
       process:
         init_config:
         instances:

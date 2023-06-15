@@ -31,7 +31,7 @@
         action: 'install'
         version: '1.0.0'
         third_party: true
-    agent_datadog_checks:
+    datadog_checks:
       process:
         init_config:
         instances:
@@ -47,7 +47,7 @@
         instances:
           - host: localhost
             port: 22
-            agent_username: root
+            username: root
             password: changeme
             sftp_check: True
             private_key_file:

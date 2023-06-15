@@ -55,9 +55,9 @@ datadog_additional_groups: {}
 datadog_agent_major_version: ""
 
 # Pin agent to a version. Highly recommended.
-# Defaults to the latest version of the major version chosen in agent_datadog_agent_major_version
-# If both agent_datadog_agent_major_version and datadog_agent_version are set, they must be
-# compatible (ie. the major version in datadog_agent_version must be agent_datadog_agent_major_version)
+# Defaults to the latest version of the major version chosen in datadog_agent_major_version
+# If both datadog_agent_major_version and datadog_agent_version are set, they must be
+# compatible (ie. the major version in datadog_agent_version must be datadog_agent_major_version)
 datadog_agent_version: ""
 
 # Default Package name for APT and RPM installs - can override in playbook for IOT Agent

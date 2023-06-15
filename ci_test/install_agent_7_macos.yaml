@@ -20,7 +20,7 @@
         extra_aggregators: version
     runtime_security_config:
       enabled: true
-    agent_datadog_checks:
+    datadog_checks:
       process:
         init_config:
         instances:
