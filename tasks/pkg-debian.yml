@@ -89,14 +89,14 @@
 - name: Fetch custom repository file
   slurp:
     src: /etc/apt/sources.list.d/ansible_datadog_custom.list
-  register: agent_agent_datadog_custom_repo_file_contents
+  register: agent_datadog_custom_repo_file_contents
   when: agent_datadog_custom_repo_file.stat.exists
 
 - name: Flag custom repository file for deletion if different from current repository config
   set_fact:
     agent_datadog_remove_custom_repo_file: "{{ agent_datadog_repo_file_contents != datadog_apt_repo }}"
   vars:
-    agent_datadog_repo_file_contents: "{{ agent_agent_datadog_custom_repo_file_contents['content'] | b64decode | trim }}"
+    agent_datadog_repo_file_contents: "{{ agent_datadog_custom_repo_file_contents['content'] | b64decode | trim }}"
   when: agent_datadog_custom_repo_file.stat.exists
 
 - name: (Custom) Remove Datadog custom repository file when not set or updated

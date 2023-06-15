@@ -1,7 +1,7 @@
 ---
-- name: Defend against defined but null agent_datadog_checks variable
+- name: Defend against defined but null datadog_checks variable
   set_fact:
-    agent_datadog_checks: "{{ agent_datadog_checks | default({}, true) }}"
+    agent_datadog_checks: "{{ datadog_checks | default({}, true) }}"
 
 - name: Resolve agent_datadog_tracked_checks
   set_fact:

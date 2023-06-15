@@ -45,7 +45,7 @@
     patterns:
       - "*.yaml.default"
     file_type: file
-  register: agent_agent_datadog_conf_files_default
+  register: agent_datadog_conf_files_default
   when: datadog_manage_config and datadog_disable_default_checks
 
 - name: Delete checks not present in agent_datadog_tracked_checks
@@ -60,7 +60,7 @@
   file:
     path: "/etc/dd-agent/conf.d/{{ item }}.yaml.default"
     state: absent
-  loop: "{{ agent_agent_datadog_conf_files_default.files | map(attribute='path') | list | map('basename') | list |
+  loop: "{{ agent_datadog_conf_files_default.files | map(attribute='path') | list | map('basename') | list |
     map('regex_replace', '^(.*).yaml.default$', '\\1') | list }}"
   when: datadog_manage_config and datadog_disable_default_checks and item not in agent_datadog_tracked_checks
   notify: restart datadog-agent
