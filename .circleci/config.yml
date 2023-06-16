@@ -121,11 +121,8 @@ jobs:
     steps:
       - checkout
       - run: pip install ansible-lint==6.17 galaxy-importer
-      - run: mkdir ansible_collections
-      - run: cd ansible_collections && ansible-galaxy collection init datadog.dd && mkdir -p datadog/dd/roles/agent/
-      - run: for file in $(find . -type f -and \( -path '*defaults*' -or -path '*tasks*' -or -path '*templates*' -or -path '*handlers*' -or -name '.gitkeep' -or -path '*meta*' -or -name 'README.md' \)); do echo "Create ansible_collections/datadog/dd/roles/agent/${file:2}" && mkdir -p $(dirname "ansible_collections/datadog/dd/roles/agent/${file:2}") && cp -r "$file" "ansible_collections/datadog/dd/roles/agent/${file:2}"; done
-      - run: ls -la ansible_collections/datadog/dd/roles/agent/
-      - run: cd ansible_collections/datadog/dd && ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/ 
+      - run: .circleci/collection-structure-setup.sh
+      - run: cd ansible_collections/datadog/dd && ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/
 
   test_install_downgrade:
     parameters:
