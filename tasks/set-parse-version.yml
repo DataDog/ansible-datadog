@@ -1,5 +1,5 @@
 ---
-- name: Convert agent_datadog_agent_major_version to string
+- name: Convert datadog_agent_major_version to string
   set_fact:
     agent_datadog_agent_major_version: "{{ datadog_agent_major_version | default('', true) | string }}"
 

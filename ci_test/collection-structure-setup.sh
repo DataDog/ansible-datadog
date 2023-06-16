@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pip install ansible-lint==6.17 galaxy-importer
+
 mkdir ansible_collections
 cd ansible_collections
 
@@ -15,4 +17,7 @@ do
     cp -r "$file" "ansible_collections/datadog/dd/roles/agent/${file:2}"
 done
 
-ls -la ansible_collections/datadog/dd/roles/agent/
+cd ansible_collections/datadog/dd/
+
+ls -la roles/agent/
+ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/

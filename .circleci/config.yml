@@ -120,9 +120,7 @@ jobs:
       - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
-      - run: pip install ansible-lint==6.17 galaxy-importer
-      - run: .circleci/collection-structure-setup.sh
-      - run: cd ansible_collections/datadog/dd && ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/
+      - run: ci_test/collection-structure-setup.sh
 
   test_install_downgrade:
     parameters:
