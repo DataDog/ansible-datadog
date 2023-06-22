@@ -42,6 +42,12 @@
     state: present
   when: not ansible_check_mode
 
+- name: Import new RPM key (Expires in 2028)
+  rpm_key:
+    key: "{{ datadog_yum_gpgkey_20280418 }}"
+    state: present
+  when: not ansible_check_mode
+
 - name: Set versioned includepkgs variable
   set_fact:
     datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version | regex_replace('^\\d+:', '') }} {{ datadog_inject_apm_flavor }}"
@@ -61,7 +67,12 @@
     includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: false # we don't sign Agent 5 repodata
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: repofile5
   when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -74,7 +85,12 @@
     includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: repofile6
   when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -87,7 +103,12 @@
     includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: repofile7
   when: (datadog_agent_major_version|int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -100,7 +121,12 @@
     includepkgs: "{{ datadog_includepkgs }}"
     repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
