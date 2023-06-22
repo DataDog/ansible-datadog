@@ -19,12 +19,17 @@
     path: /etc/docker
   register: docker_daemon_config_dir
 
-- name: Fail if APM Host container injection requirements are met (Docker installed)
+- name: Fail if APM Host container injection requirements aren't met (Docker installed)
   fail:
     msg: >
       /etc/docker does not exist. Please ensure docker is installed or disable the
        datadog_apm_instrumentation_enabled="docker" flag.
-  when: datadog_apm_instrumentation_enabled in ["all", "docker"] and not docker_daemon_config_dir.stat.isdir
+  when: >-
+    datadog_apm_instrumentation_enabled in ["all", "docker"]
+    and (
+      docker_daemon_config_dir.stat.isdir is not defined
+      or not docker_daemon_config_dir.stat.isdir
+    )
 
 - name: Fail if datadog_manage_config is not enabled
   fail:
