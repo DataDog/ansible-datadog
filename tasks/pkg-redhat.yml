@@ -16,7 +16,7 @@
   # We turn off repo_gpgcheck on custom repos and on RHEL/CentOS 8.1 because
   # of https://bugzilla.redhat.com/show_bug.cgi?id=1792506
   set_fact:
-    do_yum_repo_gpgcheck: >-
+    agent_do_yum_repo_gpgcheck: >-
       {{ datadog_yum_repo_gpgcheck if datadog_yum_repo_gpgcheck != '' else (
         'no' if (
           ansible_facts.distribution_version.startswith('8.1.') or ansible_facts.distribution_version == '8.1' or
@@ -50,13 +50,13 @@
 
 - name: Set versioned includepkgs variable
   set_fact:
-    datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ datadog_agent_redhat_version | regex_replace('^\\d+:', '') }} {{ datadog_inject_apm_flavor }}"
-  when: datadog_agent_redhat_version is defined
+    agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }} {{ datadog_inject_apm_flavor }}"
+  when: agent_datadog_agent_redhat_version is defined
 
 - name: Set plain includepkgs variable
   set_fact:
-    datadog_includepkgs: "{{ datadog_agent_flavor }} {{ datadog_inject_apm_flavor }}"
-  when: datadog_agent_redhat_version is not defined
+    agent_datadog_includepkgs: "{{ datadog_agent_flavor }} {{ datadog_inject_apm_flavor }}"
+  when: agent_datadog_agent_redhat_version is not defined
 
 - name: Install Datadog Agent 5 yum repo
   yum_repository:
@@ -64,7 +64,7 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent5_yum_repo }}"
     enabled: true
-    includepkgs: "{{ datadog_includepkgs }}"
+    includepkgs: "{{ agent_datadog_includepkgs }}"
     repo_gpgcheck: false # we don't sign Agent 5 repodata
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
@@ -73,8 +73,8 @@
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
     ]
-  register: repofile5
-  when: (datadog_agent_major_version|int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  register: agent_repofile5
+  when: (agent_datadog_agent_major_version | int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Agent 6 yum repo
   yum_repository:
@@ -82,8 +82,8 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent6_yum_repo }}"
     enabled: true
-    includepkgs: "{{ datadog_includepkgs }}"
-    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
+    includepkgs: "{{ agent_datadog_includepkgs }}"
+    repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",
@@ -91,8 +91,8 @@
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
     ]
-  register: repofile6
-  when: (datadog_agent_major_version|int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  register: agent_repofile6
+  when: (agent_datadog_agent_major_version | int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Agent 7 yum repo
   yum_repository:
@@ -100,8 +100,8 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_agent7_yum_repo }}"
     enabled: true
-    includepkgs: "{{ datadog_includepkgs }}"
-    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
+    includepkgs: "{{ agent_datadog_includepkgs }}"
+    repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",
@@ -109,8 +109,8 @@
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
     ]
-  register: repofile7
-  when: (datadog_agent_major_version|int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
+  register: agent_repofile7
+  when: (agent_datadog_agent_major_version | int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
 - name: Install Datadog Custom yum repo
   yum_repository:
@@ -118,8 +118,8 @@
     description: Datadog, Inc.
     baseurl: "{{ datadog_yum_repo }}"
     enabled: true
-    includepkgs: "{{ datadog_includepkgs }}"
-    repo_gpgcheck: "{{ do_yum_repo_gpgcheck }}"
+    includepkgs: "{{ agent_datadog_includepkgs }}"
+    repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
     gpgkey: [
       "{{ datadog_yum_gpgkey_current }}",
@@ -127,7 +127,7 @@
       "{{ datadog_yum_gpgkey_20200908 }}",
       "{{ datadog_yum_gpgkey_e09422b3 }}",
     ]
-  register: repofilecustom
+  register: agent_repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
 - name: Clean repo metadata if repo changed # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
@@ -135,7 +135,7 @@
   failed_when: false # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
   args:
     warn: false
-  when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed
+  when: agent_repofile5.changed or agent_repofile6.changed or agent_repofile7.changed or agent_repofilecustom.changed
   changed_when: true
 
 # On certain version of dnf, gpg keys aren't imported into the local db with the package install task.
@@ -146,7 +146,7 @@
   failed_when: false
   args:
     warn: false
-  when: repofile5.changed or repofile6.changed or repofile7.changed or repofilecustom.changed
+  when: agent_repofile5.changed or agent_repofile6.changed or agent_repofile7.changed or agent_repofilecustom.changed
   changed_when: true
 
 - name: Remove old yum repo files
@@ -157,8 +157,8 @@
 
 - name: Include redhat agent pinned version install task
   include_tasks: pkg-redhat/install-pinned.yml
-  when: datadog_agent_redhat_version is defined
+  when: agent_datadog_agent_redhat_version is defined
 
 - name: Include redhat agent latest version install task
   include_tasks: pkg-redhat/install-latest.yml
-  when: datadog_agent_redhat_version is not defined
+  when: agent_datadog_agent_redhat_version is not defined
