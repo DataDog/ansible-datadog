@@ -22,6 +22,7 @@ repo_gpgcheck={{ agent_do_zypper_repo_gpgcheck|int }}
 gpgkey={{ datadog_zypper_gpgkey_current }}
 {% else %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
+       {{ datadog_zypper_gpgkey_20280418 }}
        {{ datadog_zypper_gpgkey_20200908 }}
        {{ datadog_zypper_gpgkey_e09422b3 }}
 {% endif %}

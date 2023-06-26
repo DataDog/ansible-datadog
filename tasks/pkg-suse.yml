@@ -91,6 +91,34 @@
     state: present
   when: not ansible_check_mode
 
+- name: Check and download 20280418 key # Work around due to SNI check for SLES11
+  when: ansible_distribution_version|int == 11
+  block:
+    - name: Stat if 20280418 key (Expires 2028) RPM key already exists
+      stat:
+        path: /tmp/DATADOG_RPM_KEY_20280418.public
+      register: ddnewkey_20280418
+    - name: Download 20280418 key (Expires 2028) RPM key (SLES11)
+      get_url:
+        url: "{{ datadog_zypper_gpgkey_20280418 }}"
+        dest: /tmp/DATADOG_RPM_KEY_20280418.public
+        mode: 600
+      when: not  ddnewkey_20280418.stat.exists
+
+- name: Download 20280418 key (Expires 2028) RPM key
+  get_url:
+    url: "{{ datadog_zypper_gpgkey_20280418 }}"
+    dest: /tmp/DATADOG_RPM_KEY_20280418.public
+    checksum: "sha256:{{ datadog_zypper_gpgkey_20280418_sha256sum }}"
+    mode: 600
+  when: ansible_distribution_version|int >= 12
+
+- name: Import 20280418 key (Expires 2028) RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_20280418.public
+    state: present
+  when: not ansible_check_mode
+
 # ansible don't allow repo_gpgcheck to be set, we have to create the repo file manually
 - name: Install DataDog zypper repo
   template:
@@ -103,7 +131,7 @@
   when: datadog_manage_zypper_repofile
 
 # refresh zypper repos only if the template changed
-- name: Refresh Datadog zypper_repos # noqa no-handler
+- name: Refresh Datadog zypper_repos # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: zypper refresh datadog
   when: agent_datadog_zypper_repo_template.changed and not ansible_check_mode
   args:

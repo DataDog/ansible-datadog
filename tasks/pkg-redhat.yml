@@ -42,6 +42,12 @@
     state: present
   when: not ansible_check_mode
 
+- name: Import new RPM key (Expires in 2028)
+  rpm_key:
+    key: "{{ datadog_yum_gpgkey_20280418 }}"
+    state: present
+  when: not ansible_check_mode
+
 - name: Set versioned includepkgs variable
   set_fact:
     agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}"
@@ -61,7 +67,12 @@
     includepkgs: "{{ agent_datadog_includepkgs }}"
     repo_gpgcheck: false # we don't sign Agent 5 repodata
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: agent_repofile5
   when: (agent_datadog_agent_major_version | int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -74,7 +85,12 @@
     includepkgs: "{{ agent_datadog_includepkgs }}"
     repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: agent_repofile6
   when: (agent_datadog_agent_major_version | int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -87,7 +103,12 @@
     includepkgs: "{{ agent_datadog_includepkgs }}"
     repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: agent_repofile7
   when: (agent_datadog_agent_major_version | int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -100,11 +121,16 @@
     includepkgs: "{{ agent_datadog_includepkgs }}"
     repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
     gpgcheck: "{{ datadog_yum_gpgcheck }}"
-    gpgkey: ["{{ datadog_yum_gpgkey_current }}", "{{ datadog_yum_gpgkey_20200908 }}", "{{ datadog_yum_gpgkey_e09422b3 }}"]
+    gpgkey: [
+      "{{ datadog_yum_gpgkey_current }}",
+      "{{ datadog_yum_gpgkey_20280418 }}",
+      "{{ datadog_yum_gpgkey_20200908 }}",
+      "{{ datadog_yum_gpgkey_e09422b3 }}",
+    ]
   register: agent_repofilecustom
   when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
-- name: Clean repo metadata if repo changed # noqa no-handler
+- name: Clean repo metadata if repo changed # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: yum clean metadata --disablerepo="*" --enablerepo=datadog
   failed_when: false # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
   args:
@@ -115,7 +141,7 @@
 # On certain version of dnf, gpg keys aren't imported into the local db with the package install task.
 # This rule assures that they are correctly imported into the local db and users won't have to manually accept
 # them if running dnf commands on the hosts.
-- name: Refresh Datadog repository cache # noqa no-handler
+- name: Refresh Datadog repository cache # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: yum -y makecache --disablerepo="*" --enablerepo=datadog
   failed_when: false
   args:
