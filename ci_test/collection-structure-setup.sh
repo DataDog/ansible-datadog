@@ -3,7 +3,7 @@
 pip install ansible-lint==6.17 galaxy-importer
 
 # lint the ansible-role alone
-ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/
+ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/ --exclude=ci_test/ --exclude=manual_tests/
 
 mkdir ansible_collections
 cd ansible_collections
