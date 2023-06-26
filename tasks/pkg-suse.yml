@@ -97,13 +97,13 @@
     - name: Stat if 20280418 key (Expires 2028) RPM key already exists
       stat:
         path: /tmp/DATADOG_RPM_KEY_20280418.public
-      register: ddnewkey_20280418
+      register: agent_ddnewkey_20280418
     - name: Download 20280418 key (Expires 2028) RPM key (SLES11)
       get_url:
         url: "{{ datadog_zypper_gpgkey_20280418 }}"
         dest: /tmp/DATADOG_RPM_KEY_20280418.public
         mode: 600
-      when: not  ddnewkey_20280418.stat.exists
+      when: not agent_ddnewkey_20280418.stat.exists
 
 - name: Download 20280418 key (Expires 2028) RPM key
   get_url:
