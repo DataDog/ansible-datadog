@@ -12,7 +12,7 @@
       $ddmaj, $ddmin, $ddpatch, $ddbuild = $installs.Version.split(".")
       Write-Host "$($ddmaj).$($ddmin).$($ddpatch)"
     }
-  register: datadog_version_check_win
+  register: agent_datadog_version_check_win
   changed_when: false
   failed_when: false
   check_mode: false

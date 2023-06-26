@@ -3,6 +3,6 @@
   zypper:
     name: datadog-agent
     state: latest # noqa package-latest
-  register: datadog_agent_install
+  register: agent_datadog_agent_install
   when: not ansible_check_mode
   notify: restart datadog-agent

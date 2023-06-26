@@ -52,6 +52,8 @@ To contribute, follow the contributing guidelines above.
 
 To test the roles provided by this project, you can follow the instructions in the manual tests [readme.md][tests].
 
+You can also check locally if your changes still validate the ansible collection linter by executing ``ci_test/collection-structure-setup.sh``.
+
 ## Author Information
 
 brian@akins.org

@@ -13,13 +13,13 @@
 - name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks
   include_tasks: sanitize-checks.yml
 
-# Also sets datadog_skip_install
+# Also sets agent_datadog_skip_install
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
-  when: ansible_facts.os_family == "Debian" and not datadog_skip_install
+  when: ansible_facts.os_family == "Debian" and not agent_datadog_skip_install
 
 - name: Include tasks to remove old GPG keys
   include_tasks: _remove_rpm_keys.yml
@@ -34,13 +34,13 @@
 # For Rocky it is some 4.X and >= 5.0
 - name: RedHat Install Tasks
   include_tasks: pkg-redhat.yml
-  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not datadog_skip_install
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not agent_datadog_skip_install
 
 - name: Suse Install Tasks
   include_tasks: pkg-suse.yml
-  when: ansible_facts.os_family == "Suse" and not datadog_skip_install
+  when: ansible_facts.os_family == "Suse" and not agent_datadog_skip_install
 
-# Note we don't check datadog_skip_install variable value for windows here,
+# Note we don't check agent_datadog_skip_install variable value for windows here,
 # because some tasks in pkg-windows.yml are carried out regardless of its value.
 - name: Windows Install Tasks
   include_tasks: pkg-windows.yml
@@ -48,19 +48,19 @@
 
 - name: MacOS Install Tasks
   include_tasks: pkg-macos.yml
-  when: ansible_facts.os_family == "Darwin" and not datadog_skip_install
+  when: ansible_facts.os_family == "Darwin" and not agent_datadog_skip_install
 
 - name: Linux Configuration Tasks (Agent 5)
   include_tasks: agent5-linux.yml
-  when: datadog_agent_major_version | int == 5 and ansible_facts.os_family != "Windows"  and ansible_facts.os_family != "Darwin"
+  when: agent_datadog_agent_major_version | int == 5 and ansible_facts.os_family != "Windows"  and ansible_facts.os_family != "Darwin"
 
 - name: Linux Configuration Tasks
   include_tasks: agent-linux.yml
-  when: datadog_agent_major_version | int > 5 and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
+  when: agent_datadog_agent_major_version | int > 5 and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
 
 - name: Windows Configuration Tasks
   include_tasks: agent-win.yml
-  when: datadog_agent_major_version | int > 5 and ansible_facts.os_family == "Windows"
+  when: agent_datadog_agent_major_version | int > 5 and ansible_facts.os_family == "Windows"
 
 - name: MacOS Configuration Tasks
   include_tasks: agent-macos.yml
