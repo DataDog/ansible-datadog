@@ -7,6 +7,10 @@
   include_tasks: facts-ansible9.yml
   when: ansible_version.major == 2 and ansible_version.minor < 10
 
+- name: Initialize internal datadog_config variable
+  set_fact:
+    agent_datadog_config: datadog_config
+
 - name: Check if OS is supported
   include_tasks: os-check.yml
 
