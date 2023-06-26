@@ -9,7 +9,7 @@
 
 - name: Initialize internal datadog_config variable
   set_fact:
-    agent_datadog_config: datadog_config
+    agent_datadog_config: "{{ datadog_config }}"
 
 - name: Check if OS is supported
   include_tasks: os-check.yml
