@@ -22,6 +22,7 @@
 - name: Load user group data
   shell:
     cmd: "set -o pipefail && dscacheutil -q group -a gid {{ agent_macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
+    executable: /bin/bash
   register: agent_macos_user_group
   changed_when: false
 
