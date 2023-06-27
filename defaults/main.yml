@@ -63,6 +63,9 @@ datadog_agent_version: ""
 # Default Package name for APT and RPM installs - can override in playbook for IOT Agent
 datadog_agent_flavor: "datadog-agent"
 
+# Default Package name for APM Library Injection APT and RPM installs.
+datadog_inject_apm_flavor: "datadog-apm*"
+
 # Default apt repo and keyserver
 
 # By default, the role uses the official apt Datadog repository for the chosen major version
@@ -170,6 +173,21 @@ datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
 # arguments to supply to the windows installer.
 win_install_args: " "
 
+# Configure APM host injection. Possible values are: "all", "host" or "docker".
+datadog_apm_instrumentation_enabled: ""
+
+# List of APM libraries to install if host or Docker injection is enabled.
+# You can see the available values in our official docs: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
+datadog_apm_instrumentation_languages: ["all"]
+
+# Configure Docker APM injection.
+# See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
+datadog_apm_instrumentation_docker_config:
+  library_inject: true
+  log_level: info
+  output_paths:
+    - stderr
+  config_sources: BASIC
 
 #
 # Internal variables

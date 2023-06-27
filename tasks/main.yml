@@ -7,6 +7,10 @@
   include_tasks: facts-ansible9.yml
   when: ansible_version.major == 2 and ansible_version.minor < 10
 
+- name: Initialize internal datadog_config variable
+  set_fact:
+    agent_datadog_config: "{{ datadog_config }}"
+
 - name: Check if OS is supported
   include_tasks: os-check.yml
 
@@ -16,6 +20,10 @@
 # Also sets agent_datadog_skip_install
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
+
+- name: Check and resolve APM injection settings
+  include_tasks: apm-inject-check.yml
+  when: datadog_apm_instrumentation_enabled != ""
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
@@ -69,3 +77,7 @@
 - name: Integrations Tasks
   include_tasks: integration.yml
   when: datadog_integration is defined
+
+- name: APM Host injection tasks
+  include_tasks: apm-inject-install.yml
+  when: datadog_apm_instrumentation_enabled != ""

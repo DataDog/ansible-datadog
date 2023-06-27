@@ -2,21 +2,21 @@
 
 [Main]
 
-{% if datadog_config["dd_url"] is not defined -%}
+{% if agent_datadog_config["dd_url"] is not defined -%}
   dd_url: {{ datadog_url | default('https://app.datadoghq.com') }}
 {% endif %}
 
-{% if datadog_config["api_key"] is not defined -%}
+{% if agent_datadog_config["api_key"] is not defined -%}
   api_key: {{ datadog_api_key | default('youshouldsetthis') }}
 {% endif %}
 
-{% if datadog_config["use_mount"] is not defined -%}
+{% if agent_datadog_config["use_mount"] is not defined -%}
   use_mount: {{ datadog_use_mount | default('no') }}
 {% endif %}
 
 {# These variables are free-style, passed through a hash -#}
-{% if datadog_config -%}
-{% for key, value in datadog_config | dictsort -%}
+{% if agent_datadog_config -%}
+{% for key, value in agent_datadog_config | dictsort -%}
 {{ key }}: {{ value }}
 {% endfor -%}
 {% endif %}

@@ -1,0 +1,12 @@
+---
+- name: Set APM injection install packages
+  set_fact:
+    agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs | default([], true)) + ['datadog-apm-library-' + item] }}"
+  with_items: "{{ datadog_apm_instrumentation_languages }}"
+
+- name: Install APM inject libraries
+  apt:
+    name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
+    state: latest # noqa package-latest
+    update_cache: true
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
