@@ -9,7 +9,7 @@
 - name: Set before 6/7.24.1 flag
   set_fact:
     agent_datadog_before_7241: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_bugfix is defined
-      and agent_datadog_major | int < 8 and (datadog_minor | int < 24 or (datadog_minor | int == 24 and agent_datadog_bugfix | int < 1)) }}"
+      and agent_datadog_major | int < 8 and (agent_datadog_minor | int < 24 or (agent_datadog_minor | int == 24 and agent_datadog_bugfix | int < 1)) }}"
 
 - name: Set before 6/7.18.0 flag
   set_fact:
