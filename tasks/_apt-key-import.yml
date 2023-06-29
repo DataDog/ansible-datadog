@@ -25,10 +25,12 @@
     agent_keyring_url: "{{ item.value }}"
 
 - name: Find out whether key is already imported, key = {{ agent_key_fingerprint }}
-  shell: >
-    set -o pipefail &&
-    gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }}
-    --list-keys --with-fingerprint --with-colons | grep {{ agent_key_fingerprint }}
+  shell:
+    cmd: >
+      set -o pipefail &&
+      gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }}
+      --list-keys --with-fingerprint --with-colons | grep {{ agent_key_fingerprint }}
+    executable: /bin/bash
   register: agent_key_exists_result
   failed_when: false # we expect the command to fail when the key is not found; we never want this task to fail
   changed_when: agent_key_exists_result.rc != 0
