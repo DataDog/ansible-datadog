@@ -3,6 +3,10 @@
   set_fact:
     agent_datadog_windows_config_root: "{{ datadog_windows_config_root }}"
 
+- name: Initialize internal agent_win_install_args variable
+  set_fact:
+    agent_win_install_args: "{{ win_install_args }}"
+
 - name: Set DD Username Arg
   set_fact:
     agent_win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
@@ -80,10 +84,6 @@
   set_fact:
     agent_datadog_windows_config_root: "{{ agent_config_root_from_registry.value | regex_replace('\\\\$', '') }}"
   when: agent_config_root_from_registry.exists
-
-- name: Set Test
-  set_fact:
-    agent_win_install_args: "{{ agent_win_install_args }}"
 
 # Add the installation arguments to install Windows NPM.
 - name: Set Windows NPM flag
