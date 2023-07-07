@@ -18,11 +18,11 @@
 
 - name: Include Windows agent latest version install tasks
   include_tasks: win_agent_latest.yml
-  when: (not agent_datadog_skip_install) and (datadog_agent_windows_version is not defined)
+  when: (not agent_datadog_skip_install) and (agent_datadog_agent_windows_version is not defined)
 
 - name: Include Windows agent pinned version install tasks
   include_tasks: win_agent_version.yml
-  when: (not agent_datadog_skip_install) and (datadog_agent_windows_version is defined)
+  when: (not agent_datadog_skip_install) and (agent_datadog_agent_windows_version is defined)
 
 - name: Show URL var
   debug:
