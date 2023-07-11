@@ -19,11 +19,11 @@
 
 - name: Include macos agent latest version install task
   include_tasks: pkg-macos/macos_agent_latest.yml
-  when: (not agent_datadog_skip_install) and (datadog_agent_macos_version is not defined)
+  when: (not agent_datadog_skip_install) and (agent_datadog_agent_macos_version is not defined)
 
 - name: Include macos agent pinned version install task
   include_tasks: pkg-macos/macos_agent_version.yml
-  when: (not agent_datadog_skip_install) and (datadog_agent_macos_version is defined)
+  when: (not agent_datadog_skip_install) and (agent_datadog_agent_macos_version is defined)
 
 - name: Display macOS download URL
   debug:
