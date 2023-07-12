@@ -39,7 +39,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_api_key`                           | Your Datadog API key.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `datadog_site`                              | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.                                                                                                                                                                                                                                                  |
 | `datadog_agent_flavor`                      | Override the default Debian / RedHat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.                                                                                                                                                                                                                                                                                                         |
-| `datadog_agent_version`                     | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used. **Note**: Downgrades are not supported on Windows platforms.                                                                                                                                                                                               |
+| `datadog_agent_version`                     | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used.|
 | `datadog_agent_major_version`               | The major version of the Agent to install. The possible values are 5, 6, or 7 (default). If `datadog_agent_version` is set, it takes precedence otherwise the latest version of the specified major is installed. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used.                                                                                                                                         |
 | `datadog_checks`                            | YAML configuration for Agent checks to drop into: <br> - `/etc/datadog-agent/conf.d/<check_name>.d/conf.yaml` for Agent v6 and v7, <br> - `/etc/dd-agent/conf.d` for Agent v5.                                                                                                                                                                                                                                                                    |
 | `datadog_disable_untracked_checks`          | Set to `true` to remove all checks not present in `datadog_checks` and `datadog_additional_checks`.                                                                                                                                                                                                                                                                                                                                               |
@@ -63,7 +63,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_zypper_gpgkey_sha256sum`           | **Removed in version 4.18.0** Override the default checksum of the `datadog_zypper_gpgkey` key.                                                                                                                                                                                                                                                                                                                                                   |
 | `datadog_zypper_gpgkey_e09422b3`            | Override the default URL to the Datadog `zypper` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                                                                                                                                                                    |
 | `datadog_zypper_gpgkey_e09422b3_sha256sum`  | Override the default checksum of the `datadog_zypper_gpgkey_e09422b3` key.                                                                                                                                                                                                                                                                                                                                                                        |
-| `datadog_agent_allow_downgrade`             | Set to `yes` to allow Agent downgrades on apt-based platforms (use with caution, see `defaults/main.yml` for details). **Note**: On Centos this only works with Ansible 2.4+.                                                                                                                                                                                                                                                                     |
+| `datadog_agent_allow_downgrade`             | Set to `yes` to allow Agent downgrade (use with caution, see `defaults/main.yml` for details). **Note**: Downgrades are not supported on Windows platforms. On Centos it only works with Ansible 2.4+.|
 | `datadog_enabled`                           | Set to `false` to prevent `datadog-agent` service from starting (defaults to `true`).                                                                                                                                                                                                                                                                                                                                                             |
 | `datadog_additional_groups`                 | Either a list, or a string containing a comma-separated list of additional groups for the `datadog_user` (Linux only).                                                                                                                                                                                                                                                                                                                            |
 | `datadog_windows_ddagentuser_name`          | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).                                                                                                                                                                                                                                                                                                                                                           |
@@ -77,7 +77,9 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 ### Integrations
 
-To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
+To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below. 
+
+To install or remove an integration, please refer to the `datadog_integrations` [paragraph][22]
 
 #### Process check
 
@@ -327,20 +329,22 @@ To override the default behavior, set this variable to something other than an e
 
 To upgrade from Agent v6 to v7, use `datadog_agent_major_version: 7` to install the latest version or set `datadog_agent_version` to a specific version of Agent v7. Use similar logic to upgrade from Agent v5 to v6.
 
-#### Integrations
+#### Integrations installation
 
 **Available for Agent v6.8+**
 
-Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with all the integrations already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [Integration Management][4].
+Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with all the integrations ([core integrations][19]) already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [Integration Management][4].
+
+If you want to configure an integration, please refer to the `datadog_checks` [paragraph][21]
 
 Available actions:
 
 - `install`: Installs a specific version of the integration.
 - `remove`: Removes an integration.
 
-##### Datadog Marketplace
+##### Third party integrations
 
-[Datadog Marketplace][15] integrations can be installed with the `datadog_integration` resource. **Note**: Marketplace integrations are considered to be "third party" and thus have to have `third_party: true` set - see the example below.
+[Datadog Community][20] and [Datadog Marketplace][15] integrations can be installed with the `datadog_integration` resource. **Note**: These integrations are considered to be "third party" and thus need `third_party: true` to be set - see the example below.
 
 ##### Syntax
 
@@ -385,7 +389,7 @@ To downgrade to a prior version of the Agent:
 
 **Notes:**
 
-- Downgrades are not supported for Windows platforms.
+- Downgrades are not supported for Windows platforms. On CentOS it requires Ansible 2.4+
 
 ## Playbooks
 
@@ -646,3 +650,7 @@ To fix this, [update Ansible to `v2.9.8` or above][16].
 [16]: https://github.com/ansible/ansible/blob/stable-2.9/changelogs/CHANGELOG-v2.9.rst#id61
 [17]: https://docs.datadoghq.com/tracing/universal_service_monitoring/?tab=configurationfiles#enabling-universal-service-monitoring
 [18]: https://docs.datadoghq.com/security/cspm/setup/?tab=docker
+[19]: https://github.com/DataDog/integrations-core
+[20]: https://github.com/DataDog/integrations-extras
+[21]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations
+[22]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations-installation
