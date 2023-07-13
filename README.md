@@ -63,7 +63,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_zypper_gpgkey_sha256sum`           | **Removed in version 4.18.0** Override the default checksum of the `datadog_zypper_gpgkey` key.                                                                                                                                                                                                                                                                                                                                                   |
 | `datadog_zypper_gpgkey_e09422b3`            | Override the default URL to the Datadog `zypper` key used to verify Agent v6.14+ packages (key ID `E09422B3`).                                                                                                                                                                                                                                                                                                                                    |
 | `datadog_zypper_gpgkey_e09422b3_sha256sum`  | Override the default checksum of the `datadog_zypper_gpgkey_e09422b3` key.                                                                                                                                                                                                                                                                                                                                                                        |
-| `datadog_agent_allow_downgrade`             | Set to `yes` to allow Agent downgrade (use with caution, see `defaults/main.yml` for details). **Note**: Downgrades are not supported on Windows platforms. On Centos it only works with Ansible 2.4+.|
+| `datadog_agent_allow_downgrade`             | Set to `yes` to allow Agent downgrade (use with caution, see `defaults/main.yml` for details). **Note**: Downgrades are not supported on Windows platforms. On CentOS, Agent downgrade only works with Ansible 2.4+.|
 | `datadog_enabled`                           | Set to `false` to prevent `datadog-agent` service from starting (defaults to `true`).                                                                                                                                                                                                                                                                                                                                                             |
 | `datadog_additional_groups`                 | Either a list, or a string containing a comma-separated list of additional groups for the `datadog_user` (Linux only).                                                                                                                                                                                                                                                                                                                            |
 | `datadog_windows_ddagentuser_name`          | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).                                                                                                                                                                                                                                                                                                                                                           |
@@ -79,7 +79,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below. 
 
-To install or remove an integration, please refer to the `datadog_integrations` [paragraph][22]
+To install or remove an integration, refer to the `datadog_integrations` [paragraph][22]
 
 #### Process check
 
@@ -329,13 +329,13 @@ To override the default behavior, set this variable to something other than an e
 
 To upgrade from Agent v6 to v7, use `datadog_agent_major_version: 7` to install the latest version or set `datadog_agent_version` to a specific version of Agent v7. Use similar logic to upgrade from Agent v5 to v6.
 
-#### Integrations installation
+#### Integration installation
 
 **Available for Agent v6.8+**
 
-Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with all the integrations ([core integrations][19]) already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [Integration Management][4].
+Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with the [core integrations][19] already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [integration management][4].
 
-If you want to configure an integration, please refer to the `datadog_checks` [paragraph][21]
+If you want to configure an integration, refer to the `datadog_checks` [paragraph][21]
 
 Available actions:
 
@@ -344,7 +344,7 @@ Available actions:
 
 ##### Third party integrations
 
-[Datadog Community][20] and [Datadog Marketplace][15] integrations can be installed with the `datadog_integration` resource. **Note**: These integrations are considered to be "third party" and thus need `third_party: true` to be set - see the example below.
+[Datadog community][20] and [Datadog Marketplace][15] integrations can be installed with the `datadog_integration` resource. **Note**: These integrations are considered to be "third party" and thus need `third_party: true` to be set—see the example below.
 
 ##### Syntax
 
@@ -389,7 +389,7 @@ To downgrade to a prior version of the Agent:
 
 **Notes:**
 
-- Downgrades are not supported for Windows platforms. On CentOS it requires Ansible 2.4+
+- Downgrades are not supported for Windows platforms. On CentOS, downgrades require Ansible 2.4+
 
 ## Playbooks
 
