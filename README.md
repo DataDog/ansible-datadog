@@ -2,7 +2,7 @@
 
 The Datadog Agent Ansible role installs and configures the Datadog Agent and integrations.
 
-## Ansible Role versus Ansible Collection
+## Ansible role versus Ansible collection
 
 The Datadog Agent Ansible role is available through 2 different channels:
 
