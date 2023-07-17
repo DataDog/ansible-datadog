@@ -28,7 +28,8 @@
   get_url:
     url: "{{ datadog_yum_gpgkey_current }}"
     dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
-    force: yes
+    mode: 600
+    force: true
 
 - name: Import current RPM key
   rpm_key:
@@ -40,6 +41,7 @@
   get_url:
     url: "{{ datadog_yum_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
+    mode: 600
     checksum: "sha256:{{ datadog_yum_gpgkey_e09422b3_sha256sum }}"
 
 - name: Import new RPM key (Expires in 2022)
@@ -52,6 +54,7 @@
   get_url:
     url: "{{ datadog_yum_gpgkey_20200908 }}"
     dest: /tmp/DATADOG_RPM_KEY_20200908.public
+    mode: 600
     checksum: "sha256:{{ datadog_yum_gpgkey_20200908_sha256sum }}"
 
 - name: Import new RPM key (Expires in 2024)
@@ -60,9 +63,16 @@
     state: present
   when: not ansible_check_mode
 
+- name: Download new RPM key (Expires in 2028)
+  get_url:
+    url: "{{ datadog_yum_gpgkey_20280418 }}"
+    dest: /tmp/DATADOG_RPM_KEY_20280418.public
+    mode: 600
+    checksum: "sha256:{{ datadog_yum_gpgkey_20280418_sha256sum }}"
+
 - name: Import new RPM key (Expires in 2028)
   rpm_key:
-    key: "{{ datadog_yum_gpgkey_20280418 }}"
+    key: /tmp/DATADOG_RPM_KEY_20280418.public
     state: present
   when: not ansible_check_mode
 
