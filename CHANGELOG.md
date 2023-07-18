@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+# 4.20.0 / 2023-07-18
+
+* [FEATURE] Add support for configuring APM injection. See [#481].
+* [FEATURE] Add support for `compliance_config`. See [#488].
+* [IMPROVEMENT] Add an option to delete example check configs. See [#459]. Thanks [@rockaut].
+* [IMPROVEMENT] Add new APT and RPM signing keys for the 2024 key rotation. See [#485].
+* [BUGFIX] Make the `ansible.windows` collection optional again by refactoring integration-related tasks. See [#483].
+* [BUGFIX] Modify integration updates task to prevent always changed status. See [#486].
+* [DOCS] Clarifications on downgrade and integrations configuration. See [#501].
+
 # 4.19.0 / 2023-05-10
 
 * [IMPROVEMENT] Ensure user selected for macOS systemwide installation actually exists. See [#479].
