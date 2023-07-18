@@ -1,14 +1,25 @@
-# Ansible Datadog Role
+# Datadog Agent Ansible Role
 
-The Ansible Datadog role installs and configures the Datadog Agent and integrations. Version `4` of the role installs the Datadog Agent v7 by default.
+The Datadog Agent Ansible role installs and configures the Datadog Agent and integrations.
+
+## Ansible role versus Ansible collection
+
+The Datadog Agent Ansible role is available through 2 different channels:
+
+* As part of the Datadog collection, accessible under the [datadog.dd](https://galaxy.ansible.com/DataDog/dd) name on Ansible Galaxy (recommended).
+* As a standalone role, accessible under the [datadog.datadog](https://galaxy.ansible.com/DataDog/datadog) name on Ansible Galaxy (legacy).
+
+Version `4` of the role and version `5` of the collection install the Datadog Agent v7 by default.
 
 ## Setup
+
+Note that the install instructions in this document describe installation of the standalone Datadog role. For installation instructions of the Datadog collection, please refer to [the collection README file](https://github.com/ansible-collections/Datadog/blob/main/README.md). The configuration variables are the same for both the standalone role as well as the role accessed through the collection.
 
 ### Requirements
 
 - Requires Ansible v2.6+.
 - Supports most Debian and RHEL-based Linux distributions, macOS, and Windows.
-- When using Ansible 2.10+ on Windows, requires the `ansible.windows` collection to be installed:
+- When using with Ansible 2.10+ to manage Windows hosts, requires the `ansible.windows` collection to be installed:
 
   ```shell
   ansible-galaxy collection install ansible.windows
@@ -32,7 +43,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-#### Role variables
+## Role variables
 
 | Variable                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
