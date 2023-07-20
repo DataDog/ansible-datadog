@@ -1,5 +1,7 @@
 CHANGELOG
 =========
+# 4.20.1 / 2023-07-20
+* [CI] Add `empty-string-compare` rule to ansible-lint [#506]
 
 # 4.20.0 / 2023-07-18
 
