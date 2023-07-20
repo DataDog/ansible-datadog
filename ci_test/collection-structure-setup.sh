@@ -3,7 +3,7 @@
 pip install ansible-lint==6.17 galaxy-importer
 
 # lint the ansible-role alone
-ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/ --exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/
+ansible-lint -v --exclude=galaxy.yml --exclude=meta/ --exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/
 
 mkdir ansible_collections
 cd ansible_collections
@@ -23,4 +23,4 @@ done
 cd ansible_collections/datadog/dd/
 
 ls -la roles/agent/
-ansible-lint -v --profile=production --exclude=galaxy.yml --exclude=meta/
+ansible-lint -v --exclude=galaxy.yml --exclude=meta/
