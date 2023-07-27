@@ -110,3 +110,16 @@
   set_fact:
     agent_win_install_args: "{{ agent_win_install_args }} ADDLOCAL=MainApplication,NPM"
   when: agent_datadog_sysprobe_enabled
+
+# Check for potential config changes that require a reinstall:
+- name: Check NPM config change
+  set_fact:
+    agent_datadog_skip_install: false
+    agent_datadog_force_reinstall: true
+  # Starting from agent 7.45 the NPM driver is installed by default and gets
+  # reported as such regardless of the provided parameters. Since we don't
+  # want to force the install for nothing in those version, we skip the step
+  # when the agent is 7.45+
+  when: >-
+    (agent_datadog_skip_install and (agent_datadog_major | int <= 7) and (agent_datadog_minor | int < 45)) and
+    (("NPM" in datadog_windows_agent_active_config.stdout_lines) != agent_datadog_sysprobe_enabled)
