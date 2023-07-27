@@ -78,6 +78,12 @@
     agent_win_install_args: "{{ agent_win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
   when: datadog_windows_ddagentuser_password | default('', true) | length > 0
 
+- name: Uninstall agent to update optional features
+  win_package:
+    path: "{{ agent_download_msi_result.dest }}"
+    state: absent
+  when: not agent_datadog_skip_install and agent_datadog_force_reinstall
+
 - name: Install downloaded agent
   win_package:
     path: "{{ agent_download_msi_result.dest }}"

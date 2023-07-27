@@ -3,6 +3,10 @@
   set_fact:
     agent_datadog_windows_config_root: "{{ datadog_windows_config_root }}"
 
+- name: Initialize force reinstall value
+  set_fact:
+    agent_datadog_force_reinstall: false
+
 - name: Initialize internal agent_win_install_args variable
   set_fact:
     agent_win_install_args: "{{ win_install_args }}"
