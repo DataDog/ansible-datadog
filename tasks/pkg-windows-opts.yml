@@ -48,7 +48,7 @@
     name: InstallPath
   register: agent_install_path_from_registry
 
-## validate the config path.  Only necessary if it's set in the registry alread (i.e. upgrade)
+## validate the config path.  Only necessary if it's set in the registry already (i.e. upgrade)
 ## Will fail the install if the caller has set the config root to a non-standard root, and that
 ## root is different than what's already present.
 - name: Validate config path
