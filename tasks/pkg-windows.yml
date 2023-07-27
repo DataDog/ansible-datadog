@@ -4,6 +4,15 @@
     msg: "The Datadog ansible role does not currently support Agent 5"
   when: agent_datadog_agent_major_version|int == 5
 
+## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
+- name: Set windows NPM installed
+  set_fact:
+    agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
+
+## Might override agent_datadog_skip_install
+- name: Include Windows opts tasks
+  include_tasks: pkg-windows-opts.yml
+
 - name: Download windows datadog agent 614 fix script
   win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
@@ -28,14 +37,6 @@
   debug:
     var: agent_dd_download_url
   when: not agent_datadog_skip_install
-
-## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
-- name: Set windows NPM installed
-  set_fact:
-    agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
-
-- name: Include Windows opts tasks
-  include_tasks: pkg-windows-opts.yml
 
 - name: Pre-Delete temporary msi
   win_file:
