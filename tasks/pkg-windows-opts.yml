@@ -12,6 +12,22 @@
     agent_win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
   when: datadog_windows_ddagentuser_name | default('', true) | length > 0
 
+- name: Get Windows Agent config
+  win_shell: |
+    $installer = new-object -comobject WindowsInstaller.Installer
+    $agent_item = (Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" -EA 0 | Where { $_.DisplayName -like "Datadog Agent*" }).PSChildName
+    if (!$agent_item) {
+      return
+    }
+    $features = $installer.features($agent_item)
+    ForEach ($f in $features) {
+      if (($f -ieq 'MainApplication') -or ($installer.FeatureState($agent_item, $f) -ne 3)) {
+        continue
+      }
+      Write-Host $f
+    }
+  register: datadog_windows_agent_active_config
+
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using agent_win_install_args
 
