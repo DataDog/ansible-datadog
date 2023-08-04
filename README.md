@@ -331,8 +331,8 @@ When the variable `datadog_macos_download_url` is not set, the official macOS DM
 
 | Agent version | Default macOS DMG package URL                                |
 |---------------|--------------------------------------------------------------|
-| 6             | https://s3.amazonaws.com/dd-agent/datadog-agent-6-latest.dmg |
-| 7             | https://s3.amazonaws.com/dd-agent/datadog-agent-7-latest.dmg |
+| 6             | https://install.datadoghq.com/datadog-agent-6-latest.dmg |
+| 7             | https://install.datadoghq.com/datadog-agent-7-latest.dmg |
 
 To override the default behavior, set this variable to something other than an empty string.
 
