@@ -320,8 +320,8 @@ When the variable `datadog_windows_download_url` is not set, the official Window
 
 | Agent version | Default Windows MSI package URL                                                  |
 |---------------|----------------------------------------------------------------------------------|
-| 6             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi |
-| 7             | https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi |
+| 6             | https://windows-agent.datadoghq.com/datadog-agent-6-latest.amd64.msi |
+| 7             | https://windows-agent.datadoghq.com/datadog-agent-7-latest.amd64.msi |
 
 To override the default behavior, set this variable to something other than an empty string.
 

@@ -143,15 +143,15 @@ datadog_windows_download_url: ""
 
 # The default msi package for each major Agent version is specified in the following variables.
 # These variables are for internal use only, do not modify them.
-datadog_windows_agent6_latest_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-6-latest.amd64.msi"
-datadog_windows_agent7_latest_url: "https://s3.amazonaws.com/ddagent-windows-stable/datadog-agent-7-latest.amd64.msi"
+datadog_windows_agent6_latest_url: "https://windows-agent.datadoghq.com/datadog-agent-6-latest.amd64.msi"
+datadog_windows_agent7_latest_url: "https://windows-agent.datadoghq.com/datadog-agent-7-latest.amd64.msi"
 
 # If datadog_agent_version is set, the role will use the following url prefix instead, and append the version number to it
 # in order to get the full url to the msi package.
-datadog_windows_versioned_url: "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli"
+datadog_windows_versioned_url: "https://windows-agent.datadoghq.com/ddagent-cli"
 
 # url of the 6.14 fix script. See https://dtdg.co/win-614-fix for more details.
-datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-stable/scripts/fix_6_14.ps1"
+datadog_windows_614_fix_script_url: "https://windows-agent.datadoghq.com/scripts/fix_6_14.ps1"
 # whether or not to download and apply the above fix
 datadog_apply_windows_614_fix: true
 
