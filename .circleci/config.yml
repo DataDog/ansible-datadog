@@ -192,7 +192,7 @@ jobs:
         type: string
         default: "false"
     macos:
-      xcode: 13.3.0
+      xcode: 13.4.1
     steps:
       - checkout
       - run:
