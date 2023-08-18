@@ -19,7 +19,8 @@
 - name: Get Windows Agent config
   win_shell: |
     $installer = new-object -comobject WindowsInstaller.Installer
-    $agent_item = (Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" -EA 0 | Where { $_.DisplayName -like "Datadog Agent*" }).PSChildName
+    $uninstall_key = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    $agent_item = (Get-ItemProperty $uninstall_key -EA 0 | Where { $_.DisplayName -like "Datadog Agent*" }).PSChildName
     if (!$agent_item) {
       return
     }
@@ -30,7 +31,7 @@
       }
       Write-Host $f
     }
-  register: datadog_windows_agent_active_config
+  register: agent_windows_active_config
 
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using agent_win_install_args
@@ -122,4 +123,4 @@
   # when the agent is 7.45+
   when: >-
     (agent_datadog_skip_install and (agent_datadog_major | int <= 7) and (agent_datadog_minor | int < 45)) and
-    (("NPM" in datadog_windows_agent_active_config.stdout_lines) != agent_datadog_sysprobe_enabled)
+    (("NPM" in agent_windows_active_config.stdout_lines) != agent_datadog_sysprobe_enabled)
