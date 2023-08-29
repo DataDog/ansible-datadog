@@ -7,7 +7,7 @@
 {% endif %}
 
 {% if agent_datadog_config["api_key"] is not defined -%}
-  api_key: {{ datadog_api_key | default('youshouldsetthis') }}
+  api_key: {{ datadog_api_key }}
 {% endif %}
 
 {% if agent_datadog_config["use_mount"] is not defined -%}
