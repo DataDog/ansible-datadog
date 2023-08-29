@@ -14,6 +14,11 @@
 - name: Check if OS is supported
   include_tasks: os-check.yml
 
+- name: Fail if API key is missing
+  fail:
+    msg: "datadog_api_key is mandatory when using managed config"
+  when: datadog_api_key is not defined and datadog_manage_config
+
 - name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks
   include_tasks: sanitize-checks.yml
 
