@@ -24,7 +24,7 @@ Note that the install instructions in this document describe installation of the
   ```shell
   ansible-galaxy collection install ansible.windows
   ```
-- When using with Ansible 2.10 to manage openSUSE/SLES hosts, requires the `community.general` collection to be installed:
+- When using with Ansible 2.10+ to manage openSUSE/SLES hosts, requires the `community.general` collection to be installed:
 
   ```shell
   ansible-galaxy collection install community.general
