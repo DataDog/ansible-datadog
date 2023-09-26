@@ -11,7 +11,7 @@ This document provides some basic guidelines for contributing to this repository
 
 ## Submitting issues
 
-* If you think you've found an issue, search the issue list to see if there's an existing issue.
+* If you think you've found an issue, search the issue list to see if there's an already existing issue.
 * Then, if you find nothing, open a Github issue.
 
 ## Pull Requests
