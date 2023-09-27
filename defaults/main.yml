@@ -89,6 +89,11 @@ datadog_yum_repo_config_enabled: true
 # Use the datadog_yum_repo variable to override the repository used.
 datadog_yum_repo: ""
 
+# Set these variables if the Datadog yum repo should be accessed via proxy
+datadog_yum_repo_proxy: ""
+datadog_yum_repo_proxy_username: ""
+datadog_yum_repo_proxy_password: ""
+
 datadog_yum_repo_gpgcheck: ""
 datadog_yum_gpgcheck: true
 # NOTE: we don't use URLs starting with https://keys.datadoghq.com/, as Python

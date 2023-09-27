@@ -105,6 +105,9 @@
           "{{ datadog_yum_gpgkey_20200908 }}",
           "{{ datadog_yum_gpgkey_e09422b3 }}",
         ]
+        proxy: "{{ datadog_yum_repo_proxy if datadog_yum_repo_proxy != '' else omit }}"
+        proxy_username: "{{ datadog_yum_repo_proxy_username if datadog_yum_repo_proxy_username != '' else omit }}"
+        proxy_password: "{{ datadog_yum_repo_proxy_password if datadog_yum_repo_proxy_password != '' else omit }}"
       register: agent_repofile5
       when: (agent_datadog_agent_major_version | int == 5) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -123,6 +126,9 @@
           "{{ datadog_yum_gpgkey_20200908 }}",
           "{{ datadog_yum_gpgkey_e09422b3 }}",
         ]
+        proxy: "{{ datadog_yum_repo_proxy if datadog_yum_repo_proxy != '' else omit }}"
+        proxy_username: "{{ datadog_yum_repo_proxy_username if datadog_yum_repo_proxy_username != '' else omit }}"
+        proxy_password: "{{ datadog_yum_repo_proxy_password if datadog_yum_repo_proxy_password != '' else omit }}"
       register: agent_repofile6
       when: (agent_datadog_agent_major_version | int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -141,6 +147,9 @@
           "{{ datadog_yum_gpgkey_20200908 }}",
           "{{ datadog_yum_gpgkey_e09422b3 }}",
         ]
+        proxy: "{{ datadog_yum_repo_proxy if datadog_yum_repo_proxy != '' else omit }}"
+        proxy_username: "{{ datadog_yum_repo_proxy_username if datadog_yum_repo_proxy_username != '' else omit }}"
+        proxy_password: "{{ datadog_yum_repo_proxy_password if datadog_yum_repo_proxy_password != '' else omit }}"
       register: agent_repofile7
       when: (agent_datadog_agent_major_version | int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
@@ -159,6 +168,9 @@
           "{{ datadog_yum_gpgkey_20200908 }}",
           "{{ datadog_yum_gpgkey_e09422b3 }}",
         ]
+        proxy: "{{ datadog_yum_repo_proxy if datadog_yum_repo_proxy != '' else omit }}"
+        proxy_username: "{{ datadog_yum_repo_proxy_username if datadog_yum_repo_proxy_username != '' else omit }}"
+        proxy_password: "{{ datadog_yum_repo_proxy_password if datadog_yum_repo_proxy_password != '' else omit }}"
       register: agent_repofilecustom
       when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
