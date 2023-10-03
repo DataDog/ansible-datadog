@@ -16,7 +16,7 @@
     agent_win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
   when: datadog_windows_ddagentuser_name | default('', true) | length > 0
 
-- name: Get Windows Agent config
+- name: Get Windows Agent features
   win_shell: |
     $installer = new-object -comobject WindowsInstaller.Installer
     $uninstall_key = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
@@ -31,7 +31,7 @@
       }
       Write-Host $f
     }
-  register: agent_windows_active_config
+  register: agent_windows_active_features
 
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using agent_win_install_args
@@ -113,14 +113,16 @@
   when: agent_datadog_sysprobe_enabled
 
 # Check for potential config changes that require a reinstall:
-- name: Check NPM config change
+- name: Check NPM feature change
   set_fact:
     agent_datadog_skip_install: false
     agent_datadog_force_reinstall: true
+  debug:
+    msg: "Forcing a reinstallation since enabled features have changed"
   # Starting from agent 7.45 the NPM driver is installed by default and gets
   # reported as such regardless of the provided parameters. Since we don't
   # want to force the install for nothing in those version, we skip the step
   # when the agent is 7.45+
   when: >-
     (agent_datadog_skip_install and (agent_datadog_major | int <= 7) and (agent_datadog_minor | int < 45)) and
-    (("NPM" in agent_windows_active_config.stdout_lines) != agent_datadog_sysprobe_enabled)
+    (("NPM" in agent_windows_active_features.stdout_lines) != agent_datadog_sysprobe_enabled)
