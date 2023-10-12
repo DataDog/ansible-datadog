@@ -1,10 +1,10 @@
 {% if datadog_zypper_repo | length > 0 %}
   {% set baseurl = datadog_zypper_repo %}
-{% elif datadog_agent_major_version|int == 5 %}
+{% elif agent_datadog_agent_major_version|int == 5 %}
   {% set baseurl = datadog_agent5_zypper_repo %}
-{% elif datadog_agent_major_version|int == 6 %}
+{% elif agent_datadog_agent_major_version|int == 6 %}
   {% set baseurl = datadog_agent6_zypper_repo %}
-{% elif datadog_agent_major_version|int == 7 %}
+{% elif agent_datadog_agent_major_version|int == 7 %}
   {% set baseurl = datadog_agent7_zypper_repo %}
 {% endif %}
 
@@ -16,12 +16,13 @@ baseurl={{ baseurl }}
 
 type=rpm-md
 gpgcheck={{ datadog_zypper_gpgcheck|int }}
-repo_gpgcheck={{ do_zypper_repo_gpgcheck|int }}
+repo_gpgcheck={{ agent_do_zypper_repo_gpgcheck|int }}
 {# zypper in SUSE < 15 will not parse (SUSE 11) or respect (SUSE 12 - 14) mutliple entries in gpgkey #}
 {% if ansible_distribution_version|int < 15 %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
 {% else %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
+       {{ datadog_zypper_gpgkey_20280418 }}
        {{ datadog_zypper_gpgkey_20200908 }}
        {{ datadog_zypper_gpgkey_e09422b3 }}
 {% endif %}

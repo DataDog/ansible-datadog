@@ -1,0 +1,7 @@
+---
+# We ignore the FQCN rule on the role repository since FQCN is not compatible with older version of Ansible (Ansible =< 2.9)
+skip_list:
+  - fqcn
+
+enable_list:
+  - empty-string-compare

@@ -1,0 +1,43 @@
+---
+- name: Include APM host injection Debian install tasks
+  include_tasks: pkg-debian/install-apm-inject-latest.yml
+  when: not ansible_check_mode and ansible_facts.os_family == "Debian"
+
+- name: Include APM host injection RedHat install tasks
+  include_tasks: pkg-redhat/install-apm-inject-latest.yml
+  when: not ansible_check_mode and ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"]
+
+- name: Check if dd-host-install needs to run
+  command: dd-host-install --no-config-change --no-agent-restart --dry-run
+  register: agent_dd_host_install_cmd
+  changed_when: false
+  when: not ansible_check_mode and datadog_apm_instrumentation_enabled in ["all", "host"]
+  failed_when: agent_dd_host_install_cmd.rc >= 2
+
+- name: Run APM host injection setup script
+  command: dd-host-install --no-config-change --no-agent-restart
+  notify: restart datadog-agent
+  when: not ansible_check_mode and datadog_apm_instrumentation_enabled in ["all", "host"] and agent_dd_host_install_cmd.rc == 1
+  changed_when: true
+
+- name: Check if dd-container-install needs to run
+  command: dd-container-install --dry-run
+  register: agent_dd_container_install_cmd
+  changed_when: false
+  when: not ansible_check_mode and datadog_apm_instrumentation_enabled in ["all", "docker"]
+  failed_when: agent_dd_container_install_cmd.rc >= 2
+
+- name: Create Docker APM injection config file
+  template:
+    src: apm-inject-docker-config.yaml.j2
+    dest: /etc/datadog-agent/inject/docker_config.yaml
+    mode: "0640"
+    owner: root
+    group: "{{ datadog_group }}"
+  when: datadog_apm_instrumentation_docker_config
+
+- name: Run APM host-docker injection (Docker) setup script
+  # this command will change /etc/docker/daemon.json and reload docker if changes are made.
+  command: dd-container-install
+  when: not ansible_check_mode and datadog_apm_instrumentation_enabled in ["all", "docker"] and agent_dd_container_install_cmd.rc == 1
+  changed_when: true

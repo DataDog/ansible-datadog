@@ -10,3 +10,13 @@ runtime_security_config:
 {{ runtime_security_config | to_nice_yaml }}
 {% endfilter %}
 {% endif %}
+{% if compliance_config is defined and compliance_config | default({}, true) | length > 0 -%}
+compliance_config:
+{# The "first" option in indent() is only supported by jinja 2.10+
+  while the old equivalent option "indentfirst" is removed in jinja 3.
+  Using non-keyword argument in indent() to be backward compatible.
+#}
+{% filter indent(2, True) %}
+{{ compliance_config | to_nice_yaml }}
+{% endfilter %}
+{% endif %}

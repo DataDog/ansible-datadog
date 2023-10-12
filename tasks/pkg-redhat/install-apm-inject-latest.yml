@@ -1,0 +1,19 @@
+---
+- name: Set APM injection install packages
+  set_fact:
+    agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs | default([], true)) + ['datadog-apm-library-' + item] }}"
+  with_items: "{{ datadog_apm_instrumentation_languages }}"
+
+- name: Install APM inject libraries (dnf)
+  dnf:
+    name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
+    update_cache: true
+    state: latest # noqa package-latest
+  when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
+
+- name: Install APM inject libraries (yum)
+  yum:
+    name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
+    update_cache: true
+    state: latest # noqa package-latest
+  when: not ansible_check_mode and ansible_pkg_mgr == "yum"

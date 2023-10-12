@@ -1,29 +1,32 @@
 ---
 - name: Find out whether to set repo_gpgcheck or not
   set_fact:
-    do_zypper_repo_gpgcheck: >-
+    agent_do_zypper_repo_gpgcheck: >-
       {{ datadog_zypper_repo_gpgcheck if datadog_zypper_repo_gpgcheck != '' else (
-        'yes' if datadog_zypper_repo == '' and datadog_agent_major_version|int != 5 else 'no'
+        'yes' if datadog_zypper_repo == '' and agent_datadog_agent_major_version|int != 5 else 'no'
       ) }}
 
-- block:  # Work around due to SNI check for SLES11
-  - name: Stat if current RPM key already exists
-    stat:
-      path: /tmp/DATADOG_RPM_KEY_CURRENT.public
-    register: ddkeycurrent
-  - name: Download current RPM key (SLES11)
-    get_url:
-      url: "{{ datadog_zypper_gpgkey_current }}"
-      dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
-      force: yes
-    when: not ddkeycurrent.stat.exists
+- name: Check and download RPM Key(SLES11) # Work around due to SNI check for SLES11
   when: ansible_distribution_version|int == 11
+  block:
+    - name: Stat if current RPM key already exists
+      stat:
+        path: /tmp/DATADOG_RPM_KEY_CURRENT.public
+      register: agent_ddkeycurrent
+    - name: Download current RPM key (SLES11)
+      get_url:
+        url: "{{ datadog_zypper_gpgkey_current }}"
+        dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
+        mode: 600
+        force: true
+      when: not agent_ddkeycurrent.stat.exists
 
 - name: Download current RPM key
   get_url:
     url: "{{ datadog_zypper_gpgkey_current }}"
     dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
-    force: yes
+    force: true
+    mode: 600
   when: ansible_distribution_version|int >= 12
 
 - name: Import current RPM key
@@ -32,23 +35,26 @@
     state: present
   when: not ansible_check_mode
 
-- block:  # Work around due to SNI check for SLES11
-  - name: Stat if E09422B3 key (Expires 2022) RPM key already exists
-    stat:
-      path: /tmp/DATADOG_RPM_KEY_E09422B3.public
-    register: ddnewkey
-  - name: Download E09422B3 key (Expires 2022) RPM key (SLES11)
-    get_url:
-      url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
-      dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
-    when: not ddnewkey.stat.exists
+- name: Check and download E09422B3 key # Work around due to SNI check for SLES11
   when: ansible_distribution_version|int == 11
+  block:
+    - name: Stat if E09422B3 key (Expires 2022) RPM key already exists
+      stat:
+        path: /tmp/DATADOG_RPM_KEY_E09422B3.public
+      register: agent_ddnewkey
+    - name: Download E09422B3 key (Expires 2022) RPM key (SLES11)
+      get_url:
+        url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
+        dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
+        mode: 600
+      when: not agent_ddnewkey.stat.exists
 
 - name: Download E09422B3 key (Expires 2022) RPM key
   get_url:
     url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
-    checksum: "sha256:{{ datadog_zypper_gpgkey_e09422b3_sha256sum }}"
+    checksum: sha256:{{ datadog_zypper_gpgkey_e09422b3_sha256sum }}
+    mode: 600
   when: ansible_distribution_version|int >= 12
 
 - name: Import E09422B3 key (Expires 2022) RPM key
@@ -57,23 +63,26 @@
     state: present
   when: not ansible_check_mode
 
-- block:  # Work around due to SNI check for SLES11
-  - name: Stat if 20200908 key (Expires 2024) RPM key already exists
-    stat:
-      path: /tmp/DATADOG_RPM_KEY_20200908.public
-    register: ddnewkey_20200908
-  - name: Download 20200908 key (Expires 2024) RPM key (SLES11)
-    get_url:
-      url: "{{ datadog_zypper_gpgkey_20200908 }}"
-      dest: /tmp/DATADOG_RPM_KEY_20200908.public
-    when: not  ddnewkey_20200908.stat.exists
+- name: Check and download 20200908 key # Work around due to SNI check for SLES11
   when: ansible_distribution_version|int == 11
+  block:
+    - name: Stat if 20200908 key (Expires 2024) RPM key already exists
+      stat:
+        path: /tmp/DATADOG_RPM_KEY_20200908.public
+      register: agent_ddnewkey_20200908
+    - name: Download 20200908 key (Expires 2024) RPM key (SLES11)
+      get_url:
+        url: "{{ datadog_zypper_gpgkey_20200908 }}"
+        dest: /tmp/DATADOG_RPM_KEY_20200908.public
+        mode: 600
+      when: not  agent_ddnewkey_20200908.stat.exists
 
 - name: Download 20200908 key (Expires 2024) RPM key
   get_url:
     url: "{{ datadog_zypper_gpgkey_20200908 }}"
     dest: /tmp/DATADOG_RPM_KEY_20200908.public
-    checksum: "sha256:{{ datadog_zypper_gpgkey_20200908_sha256sum }}"
+    checksum: sha256:{{ datadog_zypper_gpgkey_20200908_sha256sum }}
+    mode: 600
   when: ansible_distribution_version|int >= 12
 
 - name: Import 20200908 key (Expires 2024) RPM key
@@ -82,26 +91,57 @@
     state: present
   when: not ansible_check_mode
 
+- name: Check and download 20280418 key # Work around due to SNI check for SLES11
+  when: ansible_distribution_version|int == 11
+  block:
+    - name: Stat if 20280418 key (Expires 2028) RPM key already exists
+      stat:
+        path: /tmp/DATADOG_RPM_KEY_20280418.public
+      register: agent_ddnewkey_20280418
+    - name: Download 20280418 key (Expires 2028) RPM key (SLES11)
+      get_url:
+        url: "{{ datadog_zypper_gpgkey_20280418 }}"
+        dest: /tmp/DATADOG_RPM_KEY_20280418.public
+        mode: 600
+      when: not agent_ddnewkey_20280418.stat.exists
+
+- name: Download 20280418 key (Expires 2028) RPM key
+  get_url:
+    url: "{{ datadog_zypper_gpgkey_20280418 }}"
+    dest: /tmp/DATADOG_RPM_KEY_20280418.public
+    checksum: "sha256:{{ datadog_zypper_gpgkey_20280418_sha256sum }}"
+    mode: 600
+  when: ansible_distribution_version|int >= 12
+
+- name: Import 20280418 key (Expires 2028) RPM key
+  rpm_key:
+    key: /tmp/DATADOG_RPM_KEY_20280418.public
+    state: present
+  when: not ansible_check_mode
+
 # ansible don't allow repo_gpgcheck to be set, we have to create the repo file manually
 - name: Install DataDog zypper repo
   template:
     src: zypper.repo.j2
     dest: /etc/zypp/repos.d/datadog.repo
-    owner: "root"
-    group: "root"
-    mode: 0644
-  register: datadog_zypper_repo_template
+    owner: root
+    group: root
+    mode: "0644"
+  register: agent_datadog_zypper_repo_template
   when: datadog_manage_zypper_repofile
 
 # refresh zypper repos only if the template changed
-- name: refresh Datadog zypper_repos  # noqa 503
+- name: Refresh Datadog zypper_repos # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
   command: zypper refresh datadog
-  when: datadog_zypper_repo_template.changed and not ansible_check_mode
+  when: agent_datadog_zypper_repo_template.changed and not ansible_check_mode
   args:
-    warn: false  # silence warning about using zypper directly
+    warn: false # silence warning about using zypper directly
+  changed_when: true
 
-- include_tasks: pkg-suse/install-pinned.yml
-  when: datadog_agent_suse_version is defined
+- name: Include Suse agent pinned version install task
+  include_tasks: pkg-suse/install-pinned.yml
+  when: agent_datadog_agent_suse_version is defined
 
-- include_tasks: pkg-suse/install-latest.yml
-  when: datadog_agent_suse_version is not defined
+- name: Include Suse agent latest version install task
+  include_tasks: pkg-suse/install-latest.yml
+  when: agent_datadog_agent_suse_version is not defined

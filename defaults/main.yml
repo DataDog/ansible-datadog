@@ -1,11 +1,11 @@
 ---
-role_version: 4.19.0
+role_version: 4.20.1
 
 # define if the datadog-agent services should be enabled
-datadog_enabled: yes
+datadog_enabled: true
 
 # Whether the datadog.conf / datadog.yaml, system-probe.yaml, security-agent.yaml and checks config under conf.d are managed by Ansible
-datadog_manage_config: yes
+datadog_manage_config: true
 
 # default datadog.conf / datadog.yaml options
 datadog_config: {}
@@ -63,6 +63,9 @@ datadog_agent_version: ""
 # Default Package name for APT and RPM installs - can override in playbook for IOT Agent
 datadog_agent_flavor: "datadog-agent"
 
+# Default Package name for APM Library Injection APT and RPM installs.
+datadog_inject_apm_flavor: "datadog-apm*"
+
 # Default apt repo and keyserver
 
 # By default, the role uses the official apt Datadog repository for the chosen major version
@@ -83,7 +86,7 @@ datadog_rpm_remove_keys: [4172A230]
 datadog_yum_repo: ""
 
 datadog_yum_repo_gpgcheck: ""
-datadog_yum_gpgcheck: yes
+datadog_yum_gpgcheck: true
 # NOTE: we don't use URLs starting with https://keys.datadoghq.com/, as Python
 # on older CentOS/RHEL/SUSE doesn't support SNI and get_url would fail on them
 
@@ -95,7 +98,9 @@ datadog_yum_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a59131
 # this key expires in 2024
 datadog_yum_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_yum_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
-# Default zypper repo and keys
+# this key expires in 2028
+datadog_yum_gpgkey_20280418: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_yum_gpgkey_20280418_sha256sum: "d309232f05bcfb5df7fce1a22b0920476254135083058206978aa57910698101"
 
 # By default, we fail early & print a helpful message if an older Ansible version and Python 3
 # interpreter is used on CentOS < 8. The 'yum' module is only available on Python 2, and the 'python3-dnf'
@@ -109,15 +114,17 @@ datadog_ignore_old_centos_python3_error: false
 datadog_zypper_repo: ""
 
 # Define if the official zypper Datadog repository services should be installed
-datadog_manage_zypper_repofile: yes
+datadog_manage_zypper_repofile: true
 
 datadog_zypper_repo_gpgcheck: ""
-datadog_zypper_gpgcheck: yes
+datadog_zypper_gpgcheck: true
 datadog_zypper_gpgkey_current: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_CURRENT.public"
 datadog_zypper_gpgkey_e09422b3: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_E09422B3.public"
 datadog_zypper_gpgkey_e09422b3_sha256sum: "694a2ffecff85326cc08e5f1a619937999a5913171e42f166e13ec802c812085"
 datadog_zypper_gpgkey_20200908: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_FD4BF915.public"
 datadog_zypper_gpgkey_20200908_sha256sum: "4d16c598d3635086762bd086074140d947370077607db6d6395b8523d5c23a7d"
+datadog_zypper_gpgkey_20280418: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_B01082D3.public"
+datadog_zypper_gpgkey_20280418_sha256sum: "d309232f05bcfb5df7fce1a22b0920476254135083058206978aa57910698101"
 
 # Avoid checking if the agent is running or not. This can be useful if you're
 # using sysvinit and providing your own init script.
@@ -126,7 +133,7 @@ datadog_skip_running_check: false
 # Set this to `yes` to allow agent downgrades on apt-based platforms.
 # Internally, this uses `apt-get`'s `--force-yes` option. Use with caution.
 # On centos this will only work with ansible 2.4 and up
-datadog_agent_allow_downgrade: no
+datadog_agent_allow_downgrade: false
 
 # Default windows latest msi package URL
 
@@ -166,6 +173,21 @@ datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
 # arguments to supply to the windows installer.
 win_install_args: " "
 
+# Configure APM host injection. Possible values are: "all", "host" or "docker".
+datadog_apm_instrumentation_enabled: ""
+
+# List of APM libraries to install if host or Docker injection is enabled.
+# You can see the available values in our official docs: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
+datadog_apm_instrumentation_languages: ["all"]
+
+# Configure Docker APM injection.
+# See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
+datadog_apm_instrumentation_docker_config:
+  library_inject: true
+  log_level: info
+  output_paths:
+    - stderr
+  config_sources: BASIC
 
 #
 # Internal variables
@@ -184,6 +206,8 @@ datadog_apt_default_keys:
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public
   - key: D75CEA17048B9ACBF186794B32637D44F14F620E
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public
+  - key: 5F1E256061D813B125E156E8E6266D4AC0962C7D
+    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_C0962C7D.public
 
 # The default apt repository for each major Agent version is specified in the following variables.
 datadog_agent5_apt_repo: "deb [signed-by={{ datadog_apt_usr_share_keyring }}] https://apt.datadoghq.com/ stable main"

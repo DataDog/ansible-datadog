@@ -1,3 +1,4 @@
+---
 - name: Ensure datadog_yum_gpgkey is not used
   fail:
     msg: datadog_yum_gpgkey configuration value was removed.

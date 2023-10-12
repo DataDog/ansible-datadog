@@ -5,7 +5,7 @@ galaxy_info:
   author: 'Brian Akins, Dustin Brown & Datadog'
   description: Install Datadog agent and configure checks
   license: Apache2
-  min_ansible_version: 2.6
+  min_ansible_version: '2.6'
   github_branch: main
   platforms:
     - name: Ubuntu
@@ -24,44 +24,45 @@ galaxy_info:
         - bullseye
     - name: EL
       versions:
-        - 8
-        - 7
-        - 6
-    - name: Amazon Linux 2
+        - '6'
+        - '7'
+        - '8'
+        - '9'
+    - name: Amazon Linux
       versions:
-        - any
+        - all
     - name: opensuse
       versions:
-        - 12.1
-        - 12.2
-        - 12.3
-        - 13.1
-        - 13.2
-        - 42.1
-        - 42.2
-        - 42.3
-        - 15.0
-        - 15.1
-        - 15.2
-        - 15.3
+        - '12.1'
+        - '12.2'
+        - '12.3'
+        - '13.1'
+        - '13.2'
+        - '42.1'
+        - '42.2'
+        - '42.3'
+        - '15.0'
+        - '15.1'
+        - '15.2'
+        - '15.3'
     - name: SLES
       versions:
         - 11SP3
         - 11SP4
-        - 12
+        - '12'
         - 12SP1
-        - 15
+        - '15'
     - name: Windows
       versions:
         - 2008x64
         - 2008R2
-        - 2012
+        - '2012'
         - 2012R2
-        - 2016
-        - 2019
-    - name: Darwin
+        - '2016'
+        - '2019'
+    - name: MacOSX
       versions:
-        - any
+        - all
   galaxy_tags:
     - monitoring
 dependencies: []
