@@ -83,6 +83,7 @@ datadog_rpm_remove_keys: [4172A230]
 
 # By default, the role configures a yum repository for installing the Datadog agent package
 # Use the datadog_yum_repo_setup_enabled toggle to disable this configuration
+# WARNING: if you use this option, you will have to manually maintain the list of GPG signing keys used to sign the packages and update it as necessary by yourself
 datadog_yum_repo_config_enabled: true
 
 # By default, the role uses the official yum Datadog repository for the chosen major version
