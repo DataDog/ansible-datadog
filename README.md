@@ -1,5 +1,3 @@
-# Datadog Agent Ansible Role
-
 The Datadog Agent Ansible role installs and configures the Datadog Agent and integrations.
 
 ## Ansible role versus Ansible collection
@@ -87,9 +85,9 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_apply_windows_614_fix`             | Whether or not to download and apply file referenced by `datadog_windows_614_fix_script_url` (Windows only). See https://dtdg.co/win-614-fix for more details. You can set this to `false` assuming your hosts aren't running Datadog Agent 6.14.\*.|
 | `datadog_macos_user`                        | The name of the user to run Agent under. The user has to exist, it won't be created automatically. Defaults to `ansible_user` (macOS only).|
 | `datadog_macos_download_url`                | Override the URL to download the DMG installer from (macOS only).|
-| `datadog_apm_instrumentation_enabled`       | Configure APM host injection. Possible values are: <br/> - `host`: use it when both the Agent and your services are running on a host <br/> - `docker`: use it when the Agent and your services are running in separate Docker containers on the same Host.<br/>- `all`: configures APM injection to support all the previous scenarios at the same time.|
-| `datadog_apm_instrumentation_languages`     | List of apm libraries to install if host or docker injection is enabled (defaults to `["all"]`). You can see the available values in our official docs https://docs.datadoghq.com/tracing/trace_collection/library_injection_local|
-| `datadog_apm_instrumentation_docker_config` | Configure Docker APM injection. See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection|
+| `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
+| `datadog_apm_instrumentation_languages`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["all"]`). You can find the available values in [Inject Libraries Locally][24].|
+| `datadog_apm_instrumentation_docker_config` | Override Docker APM configuration. Read [configure Docker injection][23] for more details.|
 
 ### Integrations
 
@@ -670,3 +668,5 @@ To fix this, [update Ansible to `v2.9.8` or above][16].
 [20]: https://github.com/DataDog/integrations-extras
 [21]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations
 [22]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations-installation
+[23]: https://docs.datadog.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
+[24]: https://docs.datadog.com//tracing/trace_collection/library_injection_local
