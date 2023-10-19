@@ -674,5 +674,5 @@ To fix this, [update Ansible to `v2.9.8` or above][16].
 [20]: https://github.com/DataDog/integrations-extras
 [21]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations
 [22]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations-installation
-[23]: https://docs.datadog.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
-[24]: https://docs.datadog.com//tracing/trace_collection/library_injection_local
+[23]: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
+[24]: https://docs.datadog.com/tracing/trace_collection/library_injection_local
