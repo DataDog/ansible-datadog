@@ -28,7 +28,7 @@ galaxy_info:
         - '7'
         - '8'
         - '9'
-    - name: Amazon Linux
+    - name: Amazon Linux 2
       versions:
         - all
     - name: opensuse
