@@ -5,11 +5,10 @@ pip install -r requirements.txt
 # Dry-run of galaxy-importer on legacy-role.
 repo_dir=$(pwd) # use of importer must be done from parent repository
 pushd ..
-python3 -m galaxy_importer.main --legacy-role "$repo_dir" --namespace datadog > tmp_importer.log 2>&1
+python3 -m galaxy_importer.main --legacy-role "$repo_dir" --namespace datadog 2>&1 | tee tmp_importer.log
 # Filter out warnings for roles not found because location differs for macos or manual tests
-grep -v "^WARNING:.*the role '.*' was not found in .*" tmp_importer.log > importer.log
+grep -vq "^WARNING:.*the role '.*' was not found in .*" tmp_importer.log > importer.log
 if grep -Eqi "(error|warning)" importer.log; then
-    cat importer.log
     exit 1
 fi
 popd || exit
