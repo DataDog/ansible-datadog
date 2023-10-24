@@ -3,6 +3,10 @@
   set_fact:
     agent_datadog_windows_config_root: "{{ datadog_windows_config_root }}"
 
+- name: Initialize force reinstall value
+  set_fact:
+    agent_datadog_force_reinstall: false
+
 - name: Initialize internal agent_win_install_args variable
   set_fact:
     agent_win_install_args: "{{ win_install_args }}"
@@ -11,6 +15,23 @@
   set_fact:
     agent_win_install_args: "{{ win_install_args }} DDAGENTUSER_NAME={{ datadog_windows_ddagentuser_name }}"
   when: datadog_windows_ddagentuser_name | default('', true) | length > 0
+
+- name: Get Windows Agent features
+  win_shell: |
+    $installer = new-object -comobject WindowsInstaller.Installer
+    $uninstall_key = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    $agent_item = (Get-ItemProperty $uninstall_key -EA 0 | Where { $_.DisplayName -like "Datadog Agent*" }).PSChildName
+    if (!$agent_item) {
+      return
+    }
+    $features = $installer.features($agent_item)
+    ForEach ($f in $features) {
+      if (($f -ieq 'MainApplication') -or ($installer.FeatureState($agent_item, $f) -ne 3)) {
+        continue
+      }
+      Write-Host $f
+    }
+  register: agent_windows_active_features
 
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using agent_win_install_args
@@ -32,7 +53,7 @@
     name: InstallPath
   register: agent_install_path_from_registry
 
-## validate the config path.  Only necessary if it's set in the registry alread (i.e. upgrade)
+## validate the config path.  Only necessary if it's set in the registry already (i.e. upgrade)
 ## Will fail the install if the caller has set the config root to a non-standard root, and that
 ## root is different than what's already present.
 - name: Validate config path
@@ -90,3 +111,18 @@
   set_fact:
     agent_win_install_args: "{{ agent_win_install_args }} ADDLOCAL=MainApplication,NPM"
   when: agent_datadog_sysprobe_enabled
+
+# Check for potential config changes that require a reinstall:
+- name: Check NPM feature change
+  set_fact:
+    agent_datadog_skip_install: false
+    agent_datadog_force_reinstall: true
+  debug:
+    msg: "Forcing a reinstallation since enabled features have changed"
+  # Starting from agent 7.45 the NPM driver is installed by default and gets
+  # reported as such regardless of the provided parameters. Since we don't
+  # want to force the install for nothing in those version, we skip the step
+  # when the agent is 7.45+
+  when: >-
+    (agent_datadog_skip_install and (agent_datadog_major | int <= 7) and (agent_datadog_minor | int < 45)) and
+    (("NPM" in agent_windows_active_features.stdout_lines) != agent_datadog_sysprobe_enabled)
