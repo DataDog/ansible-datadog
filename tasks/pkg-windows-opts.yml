@@ -113,12 +113,10 @@
   when: agent_datadog_sysprobe_enabled
 
 # Check for potential config changes that require a reinstall:
-- name: Check NPM feature change
+- name: Check NPM feature change to force a reinstallation if enabled features have changed
   set_fact:
     agent_datadog_skip_install: false
     agent_datadog_force_reinstall: true
-  debug:
-    msg: "Forcing a reinstallation since enabled features have changed"
   # Starting from agent 7.45 the NPM driver is installed by default and gets
   # reported as such regardless of the provided parameters. Since we don't
   # want to force the install for nothing in those version, we skip the step
