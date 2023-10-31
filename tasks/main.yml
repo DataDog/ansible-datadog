@@ -83,5 +83,5 @@
   when: datadog_apm_instrumentation_enabled | length > 0
 
 - name: Datadog Custom Check for Greenplum Master Instances
-  include_tasks: gpssh-datadog-custom-check.yml.yml
+  include_tasks: pfx-datadog-custom-check.yml.yml
   when: "'greenplum_master_instances' in group_names"
