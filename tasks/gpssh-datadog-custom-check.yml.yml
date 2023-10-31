@@ -1,0 +1,15 @@
+- name: Create custom Datadog check script
+  copy:
+    content: "{{ datadog_checks_master_instances.gpssh_check.script }}"
+    dest: /etc/datadog-agent/checks.d/gpssh_check.py
+    owner: dd-agent
+    group: dd-agent
+    mode: 0644
+
+- name: Create configuration for custom Datadog check
+  copy:
+    content: "{{ datadog_checks_master_instances.gpssh_check.init_config }}"
+    dest: /etc/datadog-agent/conf.d/gpssh_check.yaml
+    owner: dd-agent
+    group: dd-agent
+    mode: 0644

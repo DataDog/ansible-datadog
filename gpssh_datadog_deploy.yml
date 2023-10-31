@@ -1,0 +1,5 @@
+---
+- hosts: greenplum_masters
+  tasks:
+    - name: Deploy Datadog checks
+      include_tasks: tasks/gpssh_datadog_check.yml
