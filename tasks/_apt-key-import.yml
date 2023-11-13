@@ -59,7 +59,7 @@
     url: "{{ agent_keyring_url }}"
     dest: "{{ agent_tempdir.path }}/{{ agent_key_fingerprint }}"
     force: true
-    mode: 600
+    mode: '600'
   when: agent_key_needs_import
   changed_when: false
 
