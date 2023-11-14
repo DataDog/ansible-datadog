@@ -93,6 +93,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_macos_download_url`                | Override the URL to download the DMG installer from (macOS only).|
 | `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
 | `datadog_apm_instrumentation_languages`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["all"]`). You can find the available values in [Inject Libraries Locally][24].|
+| `datadog_apm_instrumentation_lib_versions`     | List of APM libraries and versions to install if `host` or `docker` injection is enable. If `latest` is desired, use `datadog_apm_instrumentation_languages` to specify the languages needed.|
 | `datadog_apm_instrumentation_docker_config` | Override Docker APM configuration. Read [configure Docker injection][23] for more details.|
 
 ### Integrations
