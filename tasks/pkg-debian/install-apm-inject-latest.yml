@@ -2,7 +2,7 @@
 - name: Set APM injection languages and versions for Debian
   set fact:
     agent_dd_apm_install_pkg_versions: "{{ (agent_dd_apm_install_pkg_versions |
-      default([], true)) + ['datadog-apm-library-' + (item[0] + '=' + item[1] | split(':'))] }}"
+      default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[^\\w+:]', '='))] }}"
   loop: "{{ datadog_apm_instrumentation_lib_versions }}"
   when: datadog_apm_instrumentation_lib_versions or
     datadog_apm_instrumentation_lib_versions != ["all"]
