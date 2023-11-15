@@ -18,10 +18,11 @@
       tags: "mytag0, mytag1"
       log_level: INFO
       apm_enabled: "true" # has to be set as a string
-      datadog_apm_instrumentation_lib_versions: ["java:1.23.0", "python:2.1.7"]
       # logs related config
       logs_enabled: true
       logset: main
+    datadog_apm_instrumentation_lib_versions: ["java:1.23.0", "python:2.1.7"]
+    datadog_apm_instrumentation_enabled: "host"
     datadog_config_ex:
       trace.config:
         env: dev
