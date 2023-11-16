@@ -21,7 +21,7 @@
       # logs related config
       logs_enabled: true
       logset: main
-    datadog_apm_instrumentation_lib_versions: ["java:1.24.1-1", "python:2.1.7-1"]
+    datadog_apm_instrumentation_lib_versions: ["java:1.23.0-1", "python:2.0.9-1"]
     datadog_apm_instrumentation_enabled: "host"
     datadog_config_ex:
       trace.config:
