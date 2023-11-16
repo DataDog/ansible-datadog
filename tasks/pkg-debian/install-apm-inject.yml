@@ -15,13 +15,13 @@
   with_items: "{{ datadog_apm_instrumentation_languages }}"
   when: not datadog_apm_instrumentation_lib_versions
 
-- name: Show tracers to install
-  debug:
-    msg: "Installed tracers: \n{{ agent_dd_apm_install_pkgs }}"
-
 - name: Install APM inject libraries
   apt:
     name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
     state: "{{ (package_state | default('latest')) }}"
     update_cache: true
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+
+- name: Show tracers to install
+  debug:
+    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
