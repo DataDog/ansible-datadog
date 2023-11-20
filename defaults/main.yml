@@ -189,7 +189,7 @@ datadog_apm_instrumentation_enabled: ""
 
 # List of APM libraries to install if host or Docker injection is enabled.
 # You can see the available values in our official docs: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
-datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
+datadog_apm_instrumentation_languages: ["all"]
 
 # Configure Docker APM injection.
 # See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection

@@ -14,6 +14,11 @@
     msg: The provided value for datadog_apm_instrumentation_enabled is not valid. Valid values are "all", "host" and "docker"
   when: datadog_apm_instrumentation_enabled not in ["all", "host", "docker"]
 
+- name: Default to list of packages rather than "all"
+  set_fact:
+    datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
+  when: datadog_apm_instrumentation_languages == ["all"]
+
 - name: Check if docker daemon config dir exists
   stat:
     path: /etc/docker
