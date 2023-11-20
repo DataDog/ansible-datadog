@@ -5,7 +5,7 @@
     state: absent
 
 - name: Override "all" to explicitly specify each tracer
-  set_fact: 
+  set_fact:
     datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
   when: datadog_apm_instrumentation_languages == ["all"] or
     datadog_apm_instrumentation_lib_versions == ["all"]

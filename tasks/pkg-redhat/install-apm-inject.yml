@@ -12,7 +12,7 @@
   when: not ansible_check_mode and ansible_pkg_mgr == "yum"
 
 - name: Override "all" to explicitly specify each tracer
-  set_fact: 
+  set_fact:
     datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
   when: datadog_apm_instrumentation_languages == ["all"] or
     datadog_apm_instrumentation_lib_versions == ["all"]
