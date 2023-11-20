@@ -95,7 +95,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_apm_instrumentation_languages`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to the latest version of all languages). You can find the available values in [Inject Libraries Locally][24].|
 | `datadog_apm_instrumentation_lib_versions`     | List of APM libraries and versions to install if `host` or `docker` injection is enable. Example: `["java:1.23.0-1", "python:2.0.9-1"]`.
 If `latest` is desired, use `datadog_apm_instrumentation_languages` to specify the languages needed. `["all"]` is not allowed here.
-NOTE: If this is set, `datadog_apm_instrumentation_languages`` will be ignored. |
+NOTE: If this is set, `datadog_apm_instrumentation_languages` will be ignored. |
 | `datadog_apm_instrumentation_docker_config` | Override Docker APM configuration. Read [configure Docker injection][23] for more details.|
 
 ### Integrations
