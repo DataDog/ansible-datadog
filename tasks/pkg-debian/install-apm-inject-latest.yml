@@ -1,9 +1,4 @@
 ---
-- name: Remove "all" tracer package if installed
-  apt:
-    name: datadog-apm-inject-all
-    state: absent
-
 - name: Override "all" to explicitly specify each tracer
   set_fact:
     datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
