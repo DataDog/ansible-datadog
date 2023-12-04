@@ -1,5 +1,16 @@
 CHANGELOG
 =========
+# 4.21.0 / 2023-12-04
+* [FEATURE] [Windows] Force reinstall if configuration changed [AP-1946] [#509]
+* [FEATURE] Adding yum repo configuration options [#517] thanks [@chipselden]
+* [IMPROVEMENT] Remove usage of datadog-apm-library-all meta package, to make sure Ansible keeps updating the tracer packages if "all" is used in Ansible configuration [#532]
+* [IMPROVEMENT] [CI] add call to importer in the role [#515]
+* [IMPROVEMENT] Hard fail if api_key is not provided [AP-2380] [#512] [#505] thanks [@gopivalleru]
+* [IMPROVEMENT] Bump XCode version from 13.3.0 to 13.4.1 [#511]
+* [BUGFIX] correct syntax when checking for config changes [#523] thanks [@TomFromTA]
+* [DOCS] [DOCS-6354] Update descriptions for APM role values [#520]
+* [DOCS] [README] Add openSUSE/SLES `community.general` install instruction [#513]
+
 # 4.20.1 / 2023-07-20
 * [CI] Add `empty-string-compare` rule to ansible-lint [#506]
 
@@ -484,3 +495,6 @@ Initial release, compatible with Ansible v1 & v2
 [@tomgoren]: https://github.com/tomgoren
 [@wisnij]: https://github.com/wisnij
 [@xp-1000]: https://github.com/xp-1000
+[@TomFromTA]: https://github.com/TomFromTA
+[@chipselden]: https://github.com/chipselden
+[@gopivalleru]: https://github.com/gopivalleru
