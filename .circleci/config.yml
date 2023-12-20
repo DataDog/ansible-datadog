@@ -120,7 +120,7 @@ jobs:
       - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
-      - run: ci_test/collection-structure-setup.sh
+      - run: ci_test/ansible_lint.sh
 
   test_install_downgrade:
     parameters:
