@@ -1,39 +1,40 @@
 ---
-- name: Remove "all" tracers if installed
-  apt:
-    name: datadog-apm-inject-all
-    state: absent
-
-- name: Override "all" to explicitly specify each tracer
-  set_fact:
-    datadog_apm_instrumentation_languages: ["java", "node", "dotnet", "python", "ruby"]
-  when: datadog_apm_instrumentation_languages == ["all"] or
-    datadog_apm_instrumentation_lib_versions == ["all"]
-
+# - name: Set APM injection languages and versions for Debian
+#   set_fact:
+#     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
+#       default([], true)) + [{'package': 'datadog-apm-library-' + (item | regex_replace('[:]', '=')), 'package_state': 'present' if ':' in item else 'latest'}] }}"
+#   loop: "{{ datadog_apm_instrumentation_libraries }}"
 
 - name: Set APM injection languages and versions for Debian
   set_fact:
     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
       default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '='))] }}"
-    package_state: present
-  loop: "{{ datadog_apm_instrumentation_lib_versions }}"
-  when: datadog_apm_instrumentation_lib_versions and
-    datadog_apm_instrumentation_lib_versions != ["all"]
+  loop: "{{ datadog_apm_instrumentation_libraries }}"
 
-- name: Set APM injection install packages
-  set_fact:
-    agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs | default([], true)) +
-      ['datadog-apm-library-' + item] }}"
-    package_state: latest
-  with_items: "{{ datadog_apm_instrumentation_languages }}"
-  when: not datadog_apm_instrumentation_lib_versions or
-    datadog_apm_instrumentation_lib_versions == ["all"]
+# - name: Set APM injection install packages
+#   set_fact:
+#     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs | default([], true)) +
+#       ['datadog-apm-library-' + item] }}"
+#     package_state: latest
+#   with_items: "{{ datadog_apm_instrumentation_languages }}"
+#   when: not datadog_apm_instrumentation_libraries or
+#     datadog_apm_instrumentation_libraries == ["all"]
+
+- name: Update apt cache
+  apt:
+    update_cache: true
+
+# - name: Install APM inject libraries
+#   apt:
+#     name: "{{ ['datadog-apm-inject'] + (item.package | default([], true)) }}"
+#     state: "{{ (item.package_state | default('latest')) }}"
+#     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+#   loop: "{{ agent_dd_apm_install_pkgs }}"
 
 - name: Install APM inject libraries
   apt:
     name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
-    state: "{{ (package_state | default('latest')) }}"
-    update_cache: true
+    state: "{{ (item.package_state | default('latest')) }}"
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
 
 - name: Show tracers to install
