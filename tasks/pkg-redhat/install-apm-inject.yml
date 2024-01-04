@@ -14,7 +14,7 @@
   when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
 
 - name: Install APM inject libraries (dnf)
-  apt:
+  dnf:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '-' in item else 'latest' }}" # noqa package-latest
   loop: "{{ agent_dd_apm_install_pkgs }}" # noqa package-latest
@@ -30,9 +30,9 @@
   when: not ansible_check_mode and ansible_pkg_mgr == "yum"
 
 - name: Install APM inject libraries (yum)
-  apt:
+  yum:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '-' in item else 'latest' }}" # noqa package-latest
   loop: "{{ agent_dd_apm_install_pkgs }}" # noqa package-latest
-  when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
+  when: not ansible_check_mode and ansible_pkg_mgr == "yum"
 # End Yum Handlers ----------------------------------
