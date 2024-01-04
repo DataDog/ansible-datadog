@@ -15,15 +15,17 @@
 #   when: not datadog_apm_instrumentation_libraries or
 #     datadog_apm_instrumentation_libraries == ["all"]
 
-- name: Update apt cache
+- name: Install APM Injection Library
   apt:
+    name: 'datadog-apm-inject'
+    state: latest
     update_cache: true
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
 
 - name: Install APM inject libraries
   apt:
-    name: "{{ ['datadog-apm-inject'] + (item.package | default([], true)) }}"
+    name: "{{ (item.package | default([], true)) }}"
     state: "{{ (item.package_state | default('latest')) }}"
-    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   loop: "{{ agent_dd_apm_install_pkgs }}"
 
 - name: Show tracers to install
