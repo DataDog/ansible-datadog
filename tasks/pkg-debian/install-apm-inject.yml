@@ -2,32 +2,18 @@
 - name: Set APM injection languages and versions for Debian
   set_fact:
     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
-      default([], true)) + [{'package': 'datadog-apm-library-' + (item | regex_replace('[:]', '=')), 'package_state': 'present' if ':' in item else 'latest'}] }}"
+      default([], true)) + [datadog-apm-library-' +
+      (item | regex_replace('[:]', '='))] }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
-
-
-# - name: Set APM injection install packages
-#   set_fact:
-#     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs | default([], true)) +
-#       ['datadog-apm-library-' + item] }}"
-#     package_state: latest
-#   with_items: "{{ datadog_apm_instrumentation_languages }}"
-#   when: not datadog_apm_instrumentation_libraries or
-#     datadog_apm_instrumentation_libraries == ["all"]
-
-- name: Install APM Injection Library
-  apt:
-    name: 'datadog-apm-inject'
-    state: latest
-    update_cache: true
-    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
 
 - name: Install APM inject libraries
   apt:
-    name: "{{ (item.package | default([], true)) }}"
-    state: "{{ (item.package_state | default('latest')) }}"
+    name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
+    state: "{{ ('present' if '=' in item else 'latest' }}"
+    update_cache: true
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   loop: "{{ agent_dd_apm_install_pkgs }}"
 
-- name: Show tracers to install
+- name: Show installed
   debug:
     msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
