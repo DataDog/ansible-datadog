@@ -5,12 +5,17 @@
       default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '='))] }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
 
-- name: Install APM inject libraries
+- name: Install APM Inject Library
   apt:
-    name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
-    state: "{{ 'present' if '=' in item else 'latest' }}"
+    name: 'datadog-apm-inject'
+    state: latest
     update_cache: true
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+
+- name: Install APM inject libraries
+  apt:
+    name: "{{ (item | default([], true)) }}"
+    state: "{{ 'present' if '=' in item else 'latest' }}"
   loop: "{{ agent_dd_apm_install_pkgs }}"
 
 - name: Show installed tracers
