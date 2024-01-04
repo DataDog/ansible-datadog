@@ -9,11 +9,11 @@
 - name: Install APM inject libraries
   apt:
     name: "{{ ['datadog-apm-inject'] + (agent_dd_apm_install_pkgs | default([], true)) }}"
-    state: "{{ ('present' if '=' in item else 'latest' }}"
+    state: "{{ 'present' if '=' in item else 'latest' }}"
     update_cache: true
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   loop: "{{ agent_dd_apm_install_pkgs }}"
 
-- name: Show installed
+- name: Show installed tracers
   debug:
     msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
