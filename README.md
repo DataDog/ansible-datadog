@@ -65,7 +65,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_config_ex`                         | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).|
 | `datadog_apt_repo`                          | Override the default Datadog `apt` repository. Make sure to use the `signed-by` option if repository metadata is signed using Datadog's signing keys: `deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://yourrepo`.|
 | `datadog_apt_cache_valid_time`              | Override the default apt cache expiration time (defaults to 1 hour).|
-| `datadog_apt_key_url_new`                   | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE`, `F14F620E` and `C0962C7D`.| 
+| `datadog_apt_key_url_new`                   | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE`, `F14F620E` and `C0962C7D`.|
 | `datadog_yum_repo_config_enabled`           | Set to `false` to prevent the configuration of a Datadog `yum` repository (defaults to `true`). WARNING: it deactivates the automatic update of GPG keys.|
 | `datadog_yum_repo`                          | Override the default Datadog `yum` repository.|
 | `datadog_yum_repo_proxy`                    | Set a proxy URL to use in the Datadog `yum` repo configuration.|
@@ -97,7 +97,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 ### Integrations
 
-To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below. 
+To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
 
 To install or remove an integration, refer to the `datadog_integrations` [paragraph][22]
 
