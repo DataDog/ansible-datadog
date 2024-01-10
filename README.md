@@ -48,7 +48,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a dummy key and substitute the key at a later point.
+The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a placeholder key and substitute the key at a later point.
 
 ## Role variables
 
