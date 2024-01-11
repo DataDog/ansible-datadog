@@ -48,13 +48,13 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
-The API key is required and its absence would cause the role to fail. If you want to provide it through another way, outside of Ansible's control, you'll still need to specify a dummy key and substitute it at a later point.
+The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a placeholder key and substitute the key at a later point.
 
 ## Role variables
 
 | Variable                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `datadog_api_key`                           | Your Datadog API key. This variable is mandatory.|
+| `datadog_api_key`                           | Your Datadog API key. **This variable is mandatory starting from 4.21**.|
 | `datadog_site`                              | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.|
 | `datadog_agent_flavor`                      | Override the default Debian / RedHat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.|
 | `datadog_agent_version`                     | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used.|
