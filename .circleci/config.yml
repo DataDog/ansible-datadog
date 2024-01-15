@@ -216,7 +216,7 @@ jobs:
 
     steps:
       - checkout
-      - run: pip3 install ansible~=<<parameters.ansible_version>>
+      - run: pip3 install ansible==<<parameters.ansible_version>>
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
