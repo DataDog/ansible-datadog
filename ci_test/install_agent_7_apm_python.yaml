@@ -2,18 +2,7 @@
 
 - hosts: all
   roles:
-    - role: ansible-datadog
-  post_tasks:
-    - shell:
-        cmd: git -C /tmp clone https://github.com/DataDog/system-tests.git
-    - shell:
-        chdir: /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django
-        cmd: docker build -t system-tests/local .
-    - shell:
-        chdir: /tmp//system-tests/tests/onboarding/weblog/python/test-app-python-django
-        cmd: docker-compose up --detach
-    - shell:
-        cmd: curl localhost:5985
+    - { role: "/home/circleci/project/" }
   vars:
     datadog_api_key: "11111111111111111111111111111111"
     datadog_agent_major_version: 7
