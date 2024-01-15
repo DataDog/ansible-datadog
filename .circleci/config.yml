@@ -217,12 +217,12 @@ jobs:
     steps:
       - checkout
       - run: pip3 install ansible==<<parameters.ansible_version>>
-      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
+      - run: ansible-playbook --become-user root -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
       - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
-      - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && docker build -t system-tests/local .
-      - run: cd /tmp//system-tests/tests/onboarding/weblog/python/test-app-python-django && docker-compose up --detach
+      - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
+      - run: cd /tmp/system-tests/tests/onboarding/weblog/python/test-app-python-django && sudo docker-compose up --detach
       - run: curl localhost:5985
       # verify that the emitted trace is in trace-agent log
       - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
