@@ -216,9 +216,11 @@ jobs:
 
     steps:
       - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
       - run: pip3 install ansible==<<parameters.ansible_version>>
-      - run: ansible-playbook --become-user root -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
-      - run: dd-agent info || true
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
+      - run: sudo datadog-agent status || true
       - run: ps aux | grep -v grep | grep datadog-agent
       - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
