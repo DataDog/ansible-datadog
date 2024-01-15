@@ -320,4 +320,4 @@ workflows:
       - test_apm_injection:
           matrix:
             parameters:
-              ansible_version: ["4_10"]
+              ansible_version: ["6.7.0"]
