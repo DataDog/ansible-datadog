@@ -212,7 +212,7 @@ jobs:
         type: string
 
     machine:
-      image: ubuntu-2004:202010-01 # includes docker 19.03.13, docker-compose 1.27.4
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
 
     steps:
       - checkout
