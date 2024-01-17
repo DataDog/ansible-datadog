@@ -29,3 +29,7 @@
 # and runs it, triggering the macOS Agent restart.
 - name: restart datadog-agent-macos # noqa name[casing]
   include_tasks: handlers/main-macos.yml
+
+- name: send telemetry
+  include_tasks: handlers/telemetry.yml
+  when: datadog_apm_instrumentation_enabled | length > 0
