@@ -17,8 +17,7 @@
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
   loop: "{{ agent_dd_apm_install_pkgs }}"
-  notify:
-    - send telemetry
+  notify: send telemetry
 
 - name: Show installed tracers
   debug:

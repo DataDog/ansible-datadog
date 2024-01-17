@@ -33,3 +33,4 @@
 - name: send telemetry
   include_tasks: handlers/telemetry.yml
   when: datadog_apm_instrumentation_enabled | length > 0
+  changed_when: true

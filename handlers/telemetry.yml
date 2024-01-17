@@ -1,8 +1,5 @@
 ---
 # TODO: @adam.schneider - Make this generic
-# Reference telemetry batching at 
-# https://docs.google.com/document/d/1Fai2gZlkvfa_WQs_yJsmi3nUwiOsMtNu2LFBnbTHJRA/edit?pli=1#heading=h.t149qka3tnw5
-
 - name: Build APM library installation payloads
   set_fact:
     telemetry_payload: 
@@ -11,30 +8,26 @@
               item.split(':')[1] | default('default')
           }] }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
-     
-- name: Send installation telemetry to Datadog
-  uri:
-    url: "{{ datadog_apm_telemetry_endpoint }}"
-    method: POST
-    return_content: true
-    body: "{{ {
-      'request_type': 'apm-onboarding-event',
-      'api_version': 'v2',
-      'payload': 
-        {'event_name': 'documentation.apm.click',
-          'tags': {
-            'env': 'testing'} |
-            combine(telemetry_payload)},
-        'tracer_time': ansible_date_time.epoch,
-        'runtime_id': '20338dfd-f700-4e5c-b3f6-0d470f054ae8'
-        } }}" 
-    body_format: json
-    headers:
-      DD-Api-Key: "{{ datadog_api_key }}"
-  register: telemetry_response
 
-- name: Print telemetry telemetry_response
-  debug:
-    msg: telemetry_response.json
+- name: Build APM library installation payloads for telemetry
+  set_fact:
+    telemetry_payload: 
+      "{{ telemetry_payload | default([]) + 
+          [{'specified_' + item.split(':')[0] + '_lib_version':
+              item.split(':')[1] | default('default')
+          }] }}"
+  loop: "{{ datadog_apm_instrumentation_libraries }}"
 
-
+- name: Build telemetry request
+  set_fact:
+    telemetry_request:
+      request_type: 'apm-onboarding-event'
+      api_version: 'v2'
+      payload:
+        event_name: 'agent.injection.success'
+        tags: "{{ telemetry_payload }}"
+      host:
+        hostname: "{{ ansible_hostname }}"
+        os: 'GNU/Linux'
+        os_version: "{{ ansible_facts.os_family }}"
+        architecture: "{{ ansible_facts.architecture }}"
