@@ -32,7 +32,3 @@
       DD-API-KEY: "{{ datadog_api_key }}"
     status_code: 202
   register: telemetry_response
-
-- name: Print telemetry telemetry_response
-  debug:
-    msg: "{{ telemetry_response }}"
