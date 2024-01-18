@@ -31,3 +31,19 @@
         os: 'GNU/Linux'
         os_version: "{{ ansible_facts.os_family }}"
         architecture: "{{ ansible_facts.architecture }}"
+
+- name: Send installation telemetry to Datadog
+  uri:
+    url: "{{ datadog_apm_telemetry_endpoint }}"
+    method: POST
+    return_content: true
+    body_format: json
+    body: "{{ telemetry_request }}"
+    headers:
+      DD-API-KEY: "{{ datadog_api_key }}"
+    status_code: 202
+  register: telemetry_response
+
+- name: Print telemetry telemetry_response
+  debug:
+    msg: "{{ telemetry_response }}"
