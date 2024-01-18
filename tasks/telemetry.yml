@@ -2,25 +2,24 @@
 # TODO: @adam.schneider - Make this generic
 - name: Build APM library installation payloads for telemetry
   set_fact:
-    telemetry_payload: 
-      "{{ telemetry_payload | default([]) | 
-          combine({'specified_' + item.split(':')[0] + '_lib_version':
-              item.split(':')[1] | default('default')
-          }) }}"
+    telemetry_payload: "{{ telemetry_payload | default([]) |
+      combine({'specified_' + item.split(':')[0] + '_lib_version':
+      item.split(':')[1] | default('default')
+      }) }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
 
 - name: Build telemetry request
   set_fact:
     telemetry_request:
-      request_type: 'apm-onboarding-event'
-      api_version: 'v2'
+      request_type: "apm-onboarding-event"
+      api_version: "v2"
       application:
         service_name: "{{ ansible_hostname }}"
       payload:
-        event_name: 'agent.injection.success'
+        event_name: "agent.injection.success"
         tags: "{{ {'install_time': ansible_date_time.epoch | int,
-                   'install_type': 'ansible'} |
-                   combine(telemetry_payload) }}"
+          'install_type': 'ansible'} |
+          combine(telemetry_payload) }}"
 
 - name: Send installation telemetry to Datadog
   uri:
