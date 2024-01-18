@@ -88,5 +88,5 @@
   when: datadog_apm_instrumentation_enabled | length > 0
 
 - name: Send telemetry
-  include_tasks: handlers/telemetry.yml
+  include_tasks: telemetry.yml
   when: datadog_apm_instrumentation_enabled | length > 0
