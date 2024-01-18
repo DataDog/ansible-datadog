@@ -14,6 +14,8 @@
     telemetry_request:
       request_type: 'apm-onboarding-event'
       api_version: 'v2'
+      application:
+        service_name: 'ansible'
       payload:
         event_name: 'agent.injection.success'
         tags: "{{ { 'agent_hostname': ansible_hostname } | combine(telemetry_payload) }}"
