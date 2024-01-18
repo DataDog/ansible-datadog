@@ -16,10 +16,9 @@
       api_version: 'v2'
       payload:
         event_name: 'agent.injection.success'
-        tags: "{{ {'install_type': 'ansible'} | combine(telemetry_payload) }}"
+        tags: "{{ {'env': 'ansible'} | combine(telemetry_payload) }}"
       host:
         hostname: "{{ ansible_hostname }}"
-        os: 'GNU/Linux'
         os_version: "{{ ansible_facts.os_family }}"
         architecture: "{{ ansible_facts.architecture }}"
 
