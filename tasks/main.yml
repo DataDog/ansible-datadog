@@ -86,5 +86,7 @@
 - name: APM Host injection tasks
   include_tasks: apm-inject-install.yml
   when: datadog_apm_instrumentation_enabled | length > 0
-  changed_when: datadog_apm_instrumentation_enabled | length > 0
-  notify: send telemetry
+
+- name: Send telemetry
+  include_tasks: handlers/telemetry.yml
+  when: datadog_apm_instrumentation_enabled | length > 0
