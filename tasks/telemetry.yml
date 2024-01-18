@@ -3,10 +3,10 @@
 - name: Build APM library installation payloads for telemetry
   set_fact:
     telemetry_payload: 
-      "{{ telemetry_payload | default([]) + 
-          [{'specified_' + item.split(':')[0] + '_lib_version':
+      "{{ telemetry_payload | default([]) | 
+          combine({'specified_' + item.split(':')[0] + '_lib_version':
               item.split(':')[1] | default('default')
-          }] }}"
+          }) }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
 
 - name: Build telemetry request
@@ -14,14 +14,13 @@
     telemetry_request:
       request_type: 'apm-onboarding-event'
       api_version: 'v2'
-      debug: true
+      application:
+        service_name: "{{ ansible_hostname }}"
       payload:
         event_name: 'agent.injection.success'
-        tags: "{{ { 'agent_hostname': ansible_hostname } | combine(telemetry_payload) }}"
-      host:
-        hostname: "{{ ansible_hostname }}"
-        os_version: "{{ ansible_facts.os_family }}"
-        architecture: "{{ ansible_facts.architecture }}"
+        tags: "{{ {'install_time': ansible_date_time.epoch | int,
+                   'install_type': 'ansible'} |
+                   combine(telemetry_payload) }}"
 
 - name: Send installation telemetry to Datadog
   uri:
@@ -34,10 +33,6 @@
       DD-API-KEY: "{{ datadog_api_key }}"
     status_code: 202
   register: telemetry_response
-
-- name: Print telemetry request
-  debug:
-    msg: "{{ telemetry_request }}"
 
 - name: Print telemetry telemetry_response
   debug:
