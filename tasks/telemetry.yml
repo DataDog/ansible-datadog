@@ -35,6 +35,10 @@
     status_code: 202
   register: telemetry_response
 
+- name: Print telemetry request
+  debug:
+    msg: "{{ telemetry_request }}"
+
 - name: Print telemetry telemetry_response
   debug:
     msg: "{{ telemetry_response }}"
