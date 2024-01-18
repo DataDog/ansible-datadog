@@ -18,10 +18,10 @@
       payload:
         event_name: 'agent.injection.success'
         tags: "{{ { 'agent_hostname': ansible_hostname } | combine(telemetry_payload) }}"
-      # host:
-      #   hostname: "{{ ansible_hostname }}"
-      #   os_version: "{{ ansible_facts.os_family }}"
-      #   architecture: "{{ ansible_facts.architecture }}"
+      host:
+        hostname: "{{ ansible_hostname }}"
+        os_version: "{{ ansible_facts.os_family }}"
+        architecture: "{{ ansible_facts.architecture }}"
 
 - name: Send installation telemetry to Datadog
   uri:
