@@ -2,8 +2,8 @@
 # TODO: @adam.schneider - Make this generic
 - name: Build APM library installation payloads for telemetry
   set_fact:
-    telemetry_payload: 
-      "{{ telemetry_payload | default([]) | 
+    telemetry_payload:
+      "{{ telemetry_payload | default([]) |
           combine({'specified_' + item.split(':')[0] + '_lib_version':
             item.split(':')[1] | default('default')}) }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"

@@ -16,8 +16,8 @@
 
 - name: Default to list of packages rather than "all"
   set_fact:
-    datadog_apm_instrumentation_libraries: ["java", "js", "dotnet", "python", "ruby"]
-  when: datadog_apm_instrumentation_libraries == ["all"]
+    datadog_apm_instrumentation_languages: ["java", "js", "dotnet", "python", "ruby"]
+  when: datadog_apm_instrumentation_languages == ["all"]
 
 - name: Check if docker daemon config dir exists
   stat:
