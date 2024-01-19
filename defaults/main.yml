@@ -193,6 +193,7 @@ datadog_apm_instrumentation_enabled: ""
 # https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
 datadog_apm_instrumentation_libraries: ["java", "js", "dotnet", "python", "ruby"]
 
+# Used to send telemetry data to datadog on installation
 datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
 
 # Configure Docker APM injection.
