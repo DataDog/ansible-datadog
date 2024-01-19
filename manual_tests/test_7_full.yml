@@ -21,6 +21,8 @@
       # logs related config
       logs_enabled: true
       logset: main
+    datadog_apm_instrumentation_libraries: ["java:1.23.0-1", "python:2.0.9-1", "js"]
+    datadog_apm_instrumentation_enabled: "host"
     datadog_config_ex:
       trace.config:
         env: dev

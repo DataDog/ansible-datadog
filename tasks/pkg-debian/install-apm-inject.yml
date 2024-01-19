@@ -1,0 +1,24 @@
+---
+- name: Set APM injection languages and versions for Debian
+  set_fact:
+    agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
+      default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '='))] }}"
+  loop: "{{ datadog_apm_instrumentation_libraries }}"
+
+- name: Install APM Inject Library
+  apt:
+    name: 'datadog-apm-inject'
+    state: latest # noqa package-latest
+    update_cache: true
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+
+- name: Install APM inject libraries
+  apt:
+    name: "{{ (item | default([], true)) }}"
+    state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
+  loop: "{{ agent_dd_apm_install_pkgs }}"
+  notify: send telemetry
+
+- name: Show installed tracers
+  debug:
+    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
