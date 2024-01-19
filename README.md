@@ -48,11 +48,13 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
 
+The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a placeholder key and substitute the key at a later point.
+
 ## Role variables
 
 | Variable                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `datadog_api_key`                           | Your Datadog API key.|
+| `datadog_api_key`                           | Your Datadog API key. **This variable is mandatory starting from 4.21**.|
 | `datadog_site`                              | The site of the Datadog intake to send Agent data to. Defaults to `datadoghq.com`, set to `datadoghq.eu` to send data to the EU site. This option is only available with Agent version >= 6.6.0.|
 | `datadog_agent_flavor`                      | Override the default Debian / RedHat Package for IOT Installations on RPI. Defaults to "datadog-agent" - use "datadog-iot-agent" for RPI.|
 | `datadog_agent_version`                     | The pinned version of the Agent to install (optional, but recommended), for example: `7.16.0`. Setting `datadog_agent_major_version` is not needed if `datadog_agent_version` is used.|
@@ -65,7 +67,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 | `datadog_config_ex`                         | (Optional) Extra INI sections to go in `/etc/dd-agent/datadog.conf` (Agent v5 only).|
 | `datadog_apt_repo`                          | Override the default Datadog `apt` repository. Make sure to use the `signed-by` option if repository metadata is signed using Datadog's signing keys: `deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://yourrepo`.|
 | `datadog_apt_cache_valid_time`              | Override the default apt cache expiration time (defaults to 1 hour).|
-| `datadog_apt_key_url_new`                   | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE`, `F14F620E` and `C0962C7D`.| 
+| `datadog_apt_key_url_new`                   | Override the location from which to obtain Datadog `apt` key (the deprecated `datadog_apt_key_url` variable refers to an expired key that's been removed from the role). The URL is expected to be a GPG keyring containing keys `382E94DE`, `F14F620E` and `C0962C7D`.|
 | `datadog_yum_repo_config_enabled`           | Set to `false` to prevent the configuration of a Datadog `yum` repository (defaults to `true`). WARNING: it deactivates the automatic update of GPG keys.|
 | `datadog_yum_repo`                          | Override the default Datadog `yum` repository.|
 | `datadog_yum_repo_proxy`                    | Set a proxy URL to use in the Datadog `yum` repo configuration.|
@@ -97,7 +99,7 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 ### Integrations
 
-To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below. 
+To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
 
 To install or remove an integration, refer to the `datadog_integrations` [paragraph][22]
 
@@ -651,6 +653,14 @@ localhost | FAILED! => {
 ```
 
 To fix this, [update Ansible to `v2.9.8` or above][16].
+
+### Missing API key
+
+Starting from role `4.21` the API key is mandatory for the role to proceed.
+
+If you need to install the agent through Ansible but don't want to specify an API key (if you are baking it into a container/VM image for instance) you can:
+* Specify a dummy API key and replace it afterward
+* Disable managed_config (`datadog_manage_config: false`)
 
 [1]: https://galaxy.ansible.com/Datadog/datadog
 [2]: https://github.com/DataDog/ansible-datadog
