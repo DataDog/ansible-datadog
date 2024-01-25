@@ -1,7 +1,5 @@
 CHANGELOG
-
 =========
-
 
 # 4.22.0 / 2024-01-25
 * [IMPROVEMENT] Use Get-ItemProperty to retrieve Windows Agent version [#536]
