@@ -1,5 +1,12 @@
 CHANGELOG
+
 =========
+
+
+# 4.22.0 / 2024-01-25
+* [IMPROVEMENT] Use Get-ItemProperty to retrieve Windows Agent version [#536]
+* [DOCS] Add a note about required API Key since 4.21 [#538]
+
 # 4.21.0 / 2023-12-04
 * [FEATURE] [Windows] Force reinstall if configuration changed [AP-1946] [#509]
 * [FEATURE] Adding yum repo configuration options [#517] thanks [@chipselden]
@@ -455,6 +462,8 @@ Initial release, compatible with Ansible v1 & v2
 [#466]: https://github.com/DataDog/ansible-datadog/issues/466
 [#478]: https://github.com/DataDog/ansible-datadog/issues/478
 [#479]: https://github.com/DataDog/ansible-datadog/issues/479
+[#536]: https://github.com/DataDog/ansible-datadog/issues/536
+[#538]: https://github.com/DataDog/ansible-datadog/issues/538
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
