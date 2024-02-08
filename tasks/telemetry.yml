@@ -7,7 +7,7 @@
       dotnet: specified_dotnet_lib_version
       python: specified_python_lib_version
       ruby: specified_ruby_lib_version
-    
+
 - name: Build APM library installation payloads for telemetry
   set_fact:
     telemetry_payload:
