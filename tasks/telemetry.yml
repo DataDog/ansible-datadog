@@ -1,10 +1,18 @@
 ---
-# TODO: @adam.schneider - Make this generic
+- name: Build language telemetry map
+  set_fact:
+    telemetry_library_key:
+      java: specified_java_lib_version
+      js: specified_nodejs_lib_version
+      dotnet: specified_dotnet_lib_version
+      python: specified_python_lib_version
+      ruby: specified_ruby_lib_version
+    
 - name: Build APM library installation payloads for telemetry
   set_fact:
     telemetry_payload:
       "{{ telemetry_payload | default([]) |
-          combine({'specified_' + item.split(':')[0] + '_lib_version':
+          combine({telemetry_library_key[item.split(':')[0]]:
             item.split(':')[1] | default('default')}) }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
 
