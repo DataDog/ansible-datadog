@@ -1,4 +1,10 @@
 ---
+- name: Remove latest tag from pinned APM tracer libraries
+  set_fact:
+    pre_processed_datadog_apm_libraries: "{{ (pre_processed_datadog_apm_libraries |
+      default([], true)) + (item | regex_replace(':latest', '')) + ('-1' if item.split(':')[1])] }}"
+  loop: "{{ datadog_apm_instrumentation_libraries }}"
+
 - name: Include APM host injection Debian install tasks
   include_tasks: pkg-debian/install-apm-inject.yml
   when: not ansible_check_mode and ansible_facts.os_family == "Debian"
