@@ -1,7 +1,7 @@
 ---
 - name: Deprecation variable - datadog_apm_instrumentation_languages
   set_fact:
-    datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_languages}}"
+    datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_languages }}"
   when: datadog_apm_instrumentation_libraries is undefined and
     datadog_apm_instrumentation_libraries is defined
 

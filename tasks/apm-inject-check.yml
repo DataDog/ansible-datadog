@@ -79,5 +79,7 @@
 
 - name: Alert for deprecated injection variable
   debug:
-    msg: "'datadog_apm_instrumentation_languages' is deprecated. In the future, please use 'datadog_apm_instrumentation_libraries' to set apm tracer languages and versions"
+    msg: >
+      "'datadog_apm_instrumentation_languages' is deprecated. In the future, please use
+      'datadog_apm_instrumentation_libraries' to set apm tracer languages and versions"
   when: datadog_apm_instrumentation_languages is defined
