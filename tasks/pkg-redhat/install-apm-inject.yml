@@ -36,3 +36,9 @@
   loop: "{{ agent_dd_apm_install_pkgs }}" # noqa package-latest
   when: not ansible_check_mode and ansible_pkg_mgr == "yum"
 # End Yum Handlers ----------------------------------
+
+- name: Prevent libraries from being upgraded
+  dpkg_selections:
+    name: "{{ item.split(':')[0] }}"
+    selection: hold
+  loop: "{{ agent_dd_apm_install_pkgs }}"

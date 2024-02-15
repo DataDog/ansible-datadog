@@ -76,3 +76,8 @@
 - name: Update datadog_config including config values needed for APM host injection
   set_fact:
     agent_datadog_config: "{{ agent_datadog_config | combine(agent_dd_apm_host_inject_config, list_merge='keep') }}"
+
+- name: Alert for deprecated injection variable
+  debug:
+    msg: "'datadog_apm_instrumentation_languages' is deprecated. In the future, please use 'datadog_apm_instrumentation_libraries' to set apm tracer languages and versions"
+  when: datadog_apm_instrumentation_languages is defined

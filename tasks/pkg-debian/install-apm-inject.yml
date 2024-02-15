@@ -17,7 +17,14 @@
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
   loop: "{{ agent_dd_apm_install_pkgs }}"
+  when: not ansible_check_mode
 
 - name: Show installed tracers
   debug:
     msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
+
+- name: Prevent libraries from being upgraded
+  dpkg_selections:
+    name: "{{ item.split(':')[0] }}"
+    selection: hold
+  loop: "{{ agent_dd_apm_install_pkgs }}"

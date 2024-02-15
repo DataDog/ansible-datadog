@@ -11,7 +11,7 @@
 - name: Build APM library installation payloads for telemetry
   set_fact:
     telemetry_payload:
-      "{{ telemetry_payload | default([]) |
+      "{{ telemetry_payload | default({}) |
           combine({telemetry_library_key[item.split(':')[0]]:
             item.split(':')[1] | default('default')}) }}"
   loop: "{{ pre_processed_datadog_apm_libraries }}"
@@ -39,4 +39,6 @@
     headers:
       DD-API-KEY: "{{ datadog_api_key }}"
     status_code: 202
-  register: telemetry_response
+  failed_when: false
+  changed_when: false
+  when: not ansible_check_mode
