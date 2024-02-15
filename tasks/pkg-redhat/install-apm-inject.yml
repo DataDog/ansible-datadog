@@ -41,4 +41,4 @@
   dpkg_selections:
     name: "{{ item.split(':')[0] }}"
     selection: hold
-  loop: "{{ agent_dd_apm_install_pkgs }}"
+  loop: "{{ pre_processed_datadog_apm_libraries }}"
