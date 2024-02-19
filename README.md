@@ -52,6 +52,8 @@ The API key is required and its absence causes the role to fail. If you want to 
 
 ## Role variables
 
+These variables provide additional configuration during the installation of the Datadog Agent. They should be specified in the `vars` section of your playbook.
+
 | Variable                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                           | Your Datadog API key. **This variable is mandatory starting from 4.21**.|
