@@ -78,8 +78,9 @@
     agent_datadog_config: "{{ agent_datadog_config | combine(agent_dd_apm_host_inject_config, list_merge='keep') }}"
 
 - name: Alert for deprecated injection variable
-  debug:
+  fail:
     msg: >
       "'datadog_apm_instrumentation_languages' is deprecated. In the future, please use
       'datadog_apm_instrumentation_libraries' to set apm tracer languages and versions"
+  ignore_errors: true
   when: datadog_apm_instrumentation_languages is defined

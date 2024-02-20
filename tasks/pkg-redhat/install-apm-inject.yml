@@ -1,11 +1,12 @@
 ---
+# DNF Handlers -------------------------------------
 - name: Set APM injection languages and versions for Redhat
   set_fact:
     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
       default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '-'))] }}"
   loop: "{{ pre_processed_datadog_apm_libraries }}"
+  when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
 
-# DNF Handlers -------------------------------------
 - name: Install APM inject library (dnf)
   dnf:
     name: 'datadog-apm-inject'
@@ -17,7 +18,7 @@
   dnf:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '-' in item else 'latest' }}" # noqa package-latest
-  loop: "{{ agent_dd_apm_install_pkgs }}" # noqa package-latest
+  loop: "{{ agent_dd_apm_install_pkgs }}"
   when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
 # End DNF Handlers ----------------------------------
 
@@ -36,9 +37,3 @@
   loop: "{{ agent_dd_apm_install_pkgs }}" # noqa package-latest
   when: not ansible_check_mode and ansible_pkg_mgr == "yum"
 # End Yum Handlers ----------------------------------
-
-- name: Prevent libraries from being upgraded
-  dpkg_selections:
-    name: "{{ item.split(':')[0] }}"
-    selection: hold
-  loop: "{{ pre_processed_datadog_apm_libraries }}"
