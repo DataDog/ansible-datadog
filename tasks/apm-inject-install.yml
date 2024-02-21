@@ -1,20 +1,4 @@
 ---
-- name: Deprecation variable - datadog_apm_instrumentation_languages
-  set_fact:
-    datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_languages }}"
-  when: datadog_apm_instrumentation_libraries is undefined and
-    datadog_apm_instrumentation_libraries is defined
-
-- name: Remove latest tag and append -1 when version number specified in pinned APM tracer libraries
-  set_fact:
-    pre_processed_datadog_apm_libraries: "{{
-      (pre_processed_datadog_apm_libraries |
-      default([], true)) + [(item | regex_replace('[:]latest', '')) +
-      ('-1' if (item.split(':')  | length > 1 and
-      item.split(':')[1] != 'latest') else '')] }}"
-  loop: "{{ datadog_apm_instrumentation_libraries }}"
-  when: not ansible_check_mode
-
 - name: Include APM host injection Debian install tasks
   include_tasks: pkg-debian/install-apm-inject.yml
   when: not ansible_check_mode and ansible_facts.os_family == "Debian"
