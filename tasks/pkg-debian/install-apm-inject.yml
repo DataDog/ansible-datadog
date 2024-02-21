@@ -27,6 +27,6 @@
 
 - name: Prevent libraries from being upgraded
   dpkg_selections:
-    name: "{{ item.split('=')[0] }}" 
+    name: "{{ item.split('=')[0] }}"
     selection: hold
   loop: "{{ agent_dd_apm_install_pkgs | select('match', '^.*=.*$') | list  }}"

@@ -89,8 +89,8 @@
     - name: Set versioned includepkgs variable
       set_fact:
         agent_datadog_includepkgs:
-          "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }} {{ datadog_inject_apm_flavor }} {{ 
-            agent_dd_apm_install_pkgs | join(' ') }}"
+          "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version |
+          regex_replace('^\\d+:', '') }} {{ datadog_inject_apm_flavor }} {{ agent_dd_apm_install_pkgs | join(' ') }}"
       when: agent_datadog_agent_redhat_version is defined
 
     - name: Set plain includepkgs variable
