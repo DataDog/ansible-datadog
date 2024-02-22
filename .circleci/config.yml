@@ -200,7 +200,7 @@ jobs:
           command: brew install python3
       - run:
           name: Install Ansible
-          command: pip3 install ansible~=<<parameters.ansible_version>>
+          command: pip3 install --break-system-packages ansible~=<<parameters.ansible_version>>
       - test_agent_install_macos:
           version: "<<parameters.agent_version>>"
           python: "<<parameters.python>>"
