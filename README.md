@@ -52,6 +52,8 @@ The API key is required and its absence causes the role to fail. If you want to 
 
 ## Role variables
 
+These variables provide additional configuration during the installation of the Datadog Agent. They should be specified in the `vars` section of your playbook.
+
 | Variable                                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `datadog_api_key`                           | Your Datadog API key. **This variable is mandatory starting from 4.21**.|
@@ -101,7 +103,7 @@ The API key is required and its absence causes the role to fail. If you want to 
 
 To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
 
-To install or remove an integration, refer to the `datadog_integrations` [paragraph][22]
+To install or remove an integration, refer to the `datadog_integration` [paragraph](#integration-installation)
 
 #### Process check
 
@@ -357,7 +359,7 @@ To upgrade from Agent v6 to v7, use `datadog_agent_major_version: 7` to install 
 
 Use the `datadog_integration` resource to install a specific version of a Datadog integration. Keep in mind, the Agent comes with the [core integrations][19] already installed. This command is useful for upgrading a specific integration without upgrading the whole Agent. For more details, see [integration management][4].
 
-If you want to configure an integration, refer to the `datadog_checks` [paragraph][21]
+If you want to configure an integration, refer to the `datadog_checks` [paragraph](#integrations)
 
 Available actions:
 
@@ -682,7 +684,5 @@ If you need to install the agent through Ansible but don't want to specify an AP
 [18]: https://docs.datadoghq.com/security/cspm/setup/?tab=docker
 [19]: https://github.com/DataDog/integrations-core
 [20]: https://github.com/DataDog/integrations-extras
-[21]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations
-[22]: https://github.com/DataDog/ansible-datadog/tree/nschweitzer/readme#integrations-installation
 [23]: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
 [24]: https://docs.datadog.com/tracing/trace_collection/library_injection_local

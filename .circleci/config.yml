@@ -197,7 +197,7 @@ jobs:
       - checkout
       - run:
           name: Install Python3
-          command: brew install python3
+          command: brew install python@3.11
       - run:
           name: Install Ansible
           command: pip3 install ansible~=<<parameters.ansible_version>>
@@ -205,6 +205,29 @@ jobs:
           version: "<<parameters.agent_version>>"
           python: "<<parameters.python>>"
           jinja2_native: "<<parameters.jinja2_native>>"
+
+  test_apm_injection:
+    parameters:
+      ansible_version:
+        type: string
+
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
+      - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
+      - run: cd /tmp/system-tests/utils/build/virtual_machine/weblogs/python/test-app-python-container/ && sudo docker-compose up --detach
+      - run: curl localhost:5985
+      # verify that the emitted trace is in trace-agent log
+      - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
 
 workflows:
   version: 2
@@ -295,3 +318,8 @@ workflows:
               ansible_version: ["2.8", "2.9", "2.10", "3.4", "4.10"]
               agent_version: ["6_macos", "7_macos"]
               python: ["python3"]
+
+      - test_apm_injection:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0"]

@@ -52,7 +52,7 @@
 - name: Construct commands to find Agent version
   set_fact:
     agent_datadog_version_finding_cmds:
-      Debian: "dpkg -s {{ datadog_agent_flavor }} | grep '^Version:' | awk '{print $2}'"
+      Debian: "dpkg-query --showformat '${Status} ${Version}\n' --show {{ datadog_agent_flavor }} | grep installed | awk '{print $NF}'"
       RedHat: "{{ agent_datadog_rpm_version_finding_cmd }}"
       Rocky: "{{ agent_datadog_rpm_version_finding_cmd }}"
       AlmaLinux: "{{ agent_datadog_rpm_version_finding_cmd }}"

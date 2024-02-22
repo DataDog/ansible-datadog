@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  roles:
+    - { role: "/home/circleci/project/" }
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_agent_major_version: 7
+    datadog_apm_instrumentation_enabled: "all"
+    datadog_apm_instrumentation_languages: ["python"]
