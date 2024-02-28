@@ -82,7 +82,7 @@
     msg: >
       "'datadog_apm_instrumentation_languages' is deprecated. In the future, please use
       'datadog_apm_instrumentation_libraries' to set apm tracer languages and versions"
-  ignore_errors: true
+  failed_when: false
   when: datadog_apm_instrumentation_languages is defined
 
 - name: Deprecation variable - datadog_apm_instrumentation_languages
