@@ -95,7 +95,7 @@
 
     - name: Set plain includepkgs variable
       set_fact:
-        agent_datadog_includepkgs: "{{ datadog_agent_flavor }} {{ datadog_inject_apm_flavor }} {{ agent_dd_apm_install_pkgs | join(' ') }}"
+        agent_datadog_includepkgs: "{{ datadog_agent_flavor }} {{ datadog_inject_apm_flavor }} {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       when: agent_datadog_agent_redhat_version is not defined
 
     - name: Install Datadog Agent 5 yum repo
