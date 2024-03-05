@@ -6,6 +6,12 @@
   loop: "{{ pre_processed_datadog_apm_libraries }}"
   when: not ansible_check_mode
 
+- name: Unpin tracer libraries for install
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: install
+  loop: "{{ agent_dd_apm_install_pkgs | reject('match', '^.*=.*$') | list  }}"
+
 - name: Install APM Inject Library
   apt:
     name: 'datadog-apm-inject'
@@ -14,7 +20,7 @@
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   when: not ansible_check_mode
 
-- name: Install APM inject libraries
+- name: Install APM tracer libraries
   apt:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
