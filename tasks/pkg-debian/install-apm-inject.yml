@@ -11,6 +11,7 @@
     name: "{{ item }}"
     selection: install
   loop: "{{ agent_dd_apm_install_pkgs | reject('match', '^.*=.*$') | list  }}"
+  failed_when: false
 
 - name: Install APM Inject Library
   apt:
@@ -36,4 +37,3 @@
     name: "{{ item.split('=')[0] }}"
     selection: hold
   loop: "{{ agent_dd_apm_install_pkgs | select('match', '^.*=.*$') | list  }}"
-  failed_when: false
