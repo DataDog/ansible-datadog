@@ -30,3 +30,4 @@
     name: "{{ item.split('=')[0] }}"
     selection: hold
   loop: "{{ agent_dd_apm_install_pkgs | select('match', '^.*=.*$') | list  }}"
+  failed_when: false
