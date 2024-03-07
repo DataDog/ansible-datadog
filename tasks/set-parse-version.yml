@@ -7,9 +7,19 @@
   set_fact:
     agent_datadog_skip_install: false
 
+- name: Upper bound for last supported Agent version in older RedHat version when latest version is expected
+  set_fact:
+    datadog_agent_version: "{{ datadog_agent_major_version | default('7', true) }}.51.1"
+  when: ansible_facts.os_family == "RedHat" and (ansible_facts.distribution_major_version | int) < 7 and datadog_agent_version | length == 0
+
 - name: Include parse version tasks
   include_tasks: parse-version.yml
   when: datadog_agent_version | default('', true) | length > 0
+
+- name: Fail if specified agent full version is not supported by OS (Centos < 7)
+  fail:
+    msg: "Agent versions {{ agent_datadog_major }}.52 and above require Centos >= 7 or equivalent"
+  when: ansible_facts.os_family == "RedHat" and (ansible_facts.distribution_major_version | int) < 7 and (agent_datadog_minor | int) >= 52
 
 - name: Set Agent default major version
   set_fact:
