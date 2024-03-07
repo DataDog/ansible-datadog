@@ -3,3 +3,10 @@
   fail:
     msg: "The Datadog Ansible role does not support your OS yet. Please email support@datadoghq.com to open a feature request."
   when: ansible_facts.os_family not in ["RedHat", "Rocky", "AlmaLinux", "Debian", "Suse", "Windows", "Darwin"]
+
+- name: Upper bound last supported Agent version for Centos < 7
+  set_fact:
+    datadog_agent_max_version:
+      full: "{{ datadog_agent_major_version | default('7', true) }}.51.1"
+      minor: 51
+  when: ansible_facts.os_family == "RedHat" and (ansible_facts.distribution_major_version | int) < 7
