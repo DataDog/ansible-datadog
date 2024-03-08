@@ -96,7 +96,7 @@ These variables provide additional configuration during the installation of the 
 | `datadog_macos_user`                        | The name of the user to run Agent under. The user has to exist, it won't be created automatically. Defaults to `ansible_user` (macOS only).|
 | `datadog_macos_download_url`                | Override the URL to download the DMG installer from (macOS only).|
 | `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
-| `datadog_apm_instrumentation_languages`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["all"]`). You can find the available values in [Inject Libraries Locally][24].|
+| `datadog_apm_instrumentation_libraries`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["java", "js", "dotnet", "python", "ruby"]`). You can find the available values in [Inject Libraries Locally][24].|
 | `datadog_apm_instrumentation_docker_config` | Override Docker APM configuration. Read [configure Docker injection][23] for more details.|
 
 ### Integrations

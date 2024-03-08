@@ -64,7 +64,7 @@ datadog_agent_version: ""
 datadog_agent_flavor: "datadog-agent"
 
 # Default Package name for APM Library Injection APT and RPM installs.
-datadog_inject_apm_flavor: "datadog-apm*"
+datadog_inject_apm_flavor: "datadog-apm-inject"
 
 # Default apt repo and keyserver
 
@@ -187,9 +187,14 @@ win_install_args: " "
 # Configure APM host injection. Possible values are: "all", "host" or "docker".
 datadog_apm_instrumentation_enabled: ""
 
-# List of APM libraries to install if host or Docker injection is enabled.
-# You can see the available values in our official docs: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
-datadog_apm_instrumentation_languages: ["all"]
+# List of APM libraries with pinned versions to install if host or Docker injection is enabled.
+# Example: `["java:1.23.0", "python:2.0.9"]`
+# You can see the available values in our official docs:
+# https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
+datadog_apm_instrumentation_libraries: ["java", "js", "dotnet", "python", "ruby"]
+
+# Used to send telemetry data to datadog on installation
+datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
 
 # Configure Docker APM injection.
 # See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
