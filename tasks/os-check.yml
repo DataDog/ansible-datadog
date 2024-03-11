@@ -15,6 +15,5 @@
     - name: Set upper agent version bound as ansible fact
       set_fact:
         datadog_agent_max_version:
-          full: "{{ datadog_agent_major_version | default('7', true) }}.51.1"
           minor: 51
       when: rhel_version.stdout | int < 7

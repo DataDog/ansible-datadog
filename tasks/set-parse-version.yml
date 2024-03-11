@@ -7,11 +7,6 @@
   set_fact:
     agent_datadog_skip_install: false
 
-- name: Apply upper bound for last supported Agent version when latest version is expected
-  set_fact:
-    datadog_agent_version: "{{ datadog_agent_max_version.full }}"
-  when: datadog_agent_max_version is defined and datadog_agent_version | length == 0
-
 - name: Include parse version tasks
   include_tasks: parse-version.yml
   when: datadog_agent_version | default('', true) | length > 0
@@ -19,7 +14,7 @@
 - name: Fail if specified agent version is above maximum supported by OS
   fail:
     msg: "Agent versions {{ agent_datadog_major }}.{{ datadog_agent_max_version.minor + 1 }} and above not supported by current OS."
-  when: datadog_agent_max_version is defined and agent_datadog_minor | int > datadog_agent_max_version.minor
+  when: datadog_agent_max_version is defined and agent_datadog_minor is defined and agent_datadog_minor | int > datadog_agent_max_version.minor
 
 - name: Set Agent default major version
   set_fact:
