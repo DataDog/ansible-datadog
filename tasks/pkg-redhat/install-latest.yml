@@ -1,7 +1,16 @@
 ---
+- name: Set installation target for latest
+  set_fact:
+    # Apply a version cap if required, otherwise just target the agent package
+    datadog_agent_target: >-
+      {{ datadog_agent_flavor }}
+      {% if datadog_agent_max_minor_version is defined %}
+       < 1:{{ agent_datadog_agent_major_version }}.{{ datadog_agent_max_minor_version + 1 }}.0-1
+      {% endif %}
+
 - name: Install latest datadog-agent package (dnf)
   dnf:
-    name: "{{ datadog_agent_flavor }}"
+    name: "{{ datadog_agent_target }}"
     update_cache: true
     state: latest # noqa package-latest
   register: agent_datadog_agent_install
@@ -10,7 +19,7 @@
 
 - name: Install latest datadog-agent package (yum)
   yum:
-    name: "{{ datadog_agent_flavor }}"
+    name: "{{ datadog_agent_target }}"
     update_cache: true
     state: latest # noqa package-latest
   register: agent_datadog_agent_install

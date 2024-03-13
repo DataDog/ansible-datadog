@@ -1,4 +1,22 @@
 ---
+- name: Set upper bound last supported Agent version for Centos < 7
+  when: ansible_facts.os_family == "RedHat"
+  block:
+    - name: Get RHEL major version equivalent
+      command: "rpm -E %{rhel}"  # noqa: command-instead-of-module
+      register: rhel_version
+      changed_when: false
+      check_mode: false
+    - name: Set upper agent version bound as ansible fact
+      set_fact:
+        datadog_agent_max_minor_version: 51
+      when: rhel_version.stdout | int < 7
+
+- name: Fail if specified agent version is above maximum supported by Centos < 7 and equivalent
+  fail:
+    msg: "Agent versions {{ agent_datadog_major }}.{{ datadog_agent_max_minor_version + 1 }} and above not supported by current OS (RHEL < 7 equivalent)."
+  when: datadog_agent_max_minor_version is defined and agent_datadog_minor is defined and agent_datadog_minor | int > datadog_agent_max_minor_version
+
 - name: Fail early if Python 3 is used on CentOS / RHEL < 8 with old Ansible
   fail:
     msg: "The installation of the Agent on RedHat family systems using yum is not compatible with Python 3 with older Ansible versions.
