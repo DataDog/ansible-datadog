@@ -572,7 +572,7 @@ On Windows it's possible to uninstall the Agent by using the following code in y
 ```yml
 - name: Check If Datadog Agent is installed
   win_shell: |
-    (get-wmiobject win32_product -Filter "Name LIKE '%datadog%'").IdentifyingNumber
+    (@(Get-ChildItem -Path "HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" -Recurse) | Where {$_.GetValue("DisplayName") -like "Datadog Agent" }).PSChildName
   register: agent_installed_result
 - name: Set Datadog Agent installed fact
   set_fact:
@@ -582,19 +582,6 @@ On Windows it's possible to uninstall the Agent by using the following code in y
     product_id: "{{ agent_installed }}"
     state: absent
   when: agent_installed != ""
-```
-
-However for more control over the uninstall parameters, the following code can be used.
-In this example, the '/norestart' flag is added and a custom location for the uninstallation logs is specified:
-
-```yml
-- name: Check If Datadog Agent is installed
-  win_stat:
-  path: 'c:\Program Files\Datadog\Datadog Agent\bin\agent.exe'
-  register: stat_file
-- name: Uninstall the Datadog Agent
-  win_shell: start-process msiexec -Wait -ArgumentList ('/log', 'C:\\uninst.log', '/norestart', '/q', '/x', (Get-WmiObject -Class Win32_Product -Filter "Name='Datadog Agent'" -ComputerName .).IdentifyingNumber)
-  when: stat_file.stat.exists == True
 ```
 
 ## Troubleshooting
