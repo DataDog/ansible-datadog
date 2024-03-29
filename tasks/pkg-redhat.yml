@@ -64,12 +64,13 @@
         dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
         mode: '600'
         checksum: "sha256:{{ datadog_yum_gpgkey_e09422b3_sha256sum }}"
+      when: agent_datadog_minor | int < 36
 
     - name: Import new RPM key (Expires in 2022)
       rpm_key:
         key: /tmp/DATADOG_RPM_KEY_E09422B3.public
         state: present
-      when: not ansible_check_mode
+      when: not ansible_check_mode and agent_datadog_minor | int < 36
 
     - name: Download new RPM key (Expires in 2024)
       get_url:
