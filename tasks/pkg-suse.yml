@@ -47,7 +47,7 @@
         url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
         dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
         mode: '600'
-      when: not agent_ddnewkey.stat.exists
+      when: not agent_ddnewkey.stat.exists and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
 - name: Download E09422B3 key (Expires 2022) RPM key
   get_url:
@@ -55,13 +55,13 @@
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
     checksum: sha256:{{ datadog_zypper_gpgkey_e09422b3_sha256sum }}
     mode: '600'
-  when: ansible_distribution_version|int >= 12
+  when: ansible_distribution_version|int >= 12 and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
 - name: Import E09422B3 key (Expires 2022) RPM key
   rpm_key:
     key: /tmp/DATADOG_RPM_KEY_E09422B3.public
     state: present
-  when: not ansible_check_mode
+  when: not ansible_check_mode and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
 - name: Check and download 20200908 key # Work around due to SNI check for SLES11
   when: ansible_distribution_version|int == 11
