@@ -58,7 +58,7 @@
         state: present
       when: not ansible_check_mode
 
-    - name: Download new RPM key (Expires in 2022)
+    - name: Download old RPM key (Expires in 2022)
       get_url:
         url: "{{ datadog_yum_gpgkey_e09422b3 }}"
         dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
@@ -66,7 +66,7 @@
         checksum: "sha256:{{ datadog_yum_gpgkey_e09422b3_sha256sum }}"
       when: agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
-    - name: Import new RPM key (Expires in 2022)
+    - name: Import old RPM key (Expires in 2022)
       rpm_key:
         key: /tmp/DATADOG_RPM_KEY_E09422B3.public
         state: present
