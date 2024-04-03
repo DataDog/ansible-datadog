@@ -32,6 +32,7 @@
       Write-Host $f
     }
   register: agent_windows_active_features
+  changed_when: false
 
 # NOTE: We don't set DD Password Arg here to prevent it from being printed;
 # we set it right before using agent_win_install_args
