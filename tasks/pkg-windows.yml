@@ -79,6 +79,7 @@
   set_fact:
     agent_win_install_args: "{{ agent_win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
   when: datadog_windows_ddagentuser_password | default('', true) | length > 0
+  no_log: true
 
 - name: Uninstall agent to update optional features
   win_package:
