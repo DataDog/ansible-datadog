@@ -131,11 +131,9 @@
   when: datadog_manage_zypper_repofile
 
 # refresh zypper repos only if the template changed
-- name: Refresh Datadog zypper_repos # noqa no-handler args[module] (args.warn is deprecated since Ansible 2.11)
+- name: Refresh Datadog zypper_repos # noqa: command-instead-of-module
   command: zypper refresh datadog
   when: agent_datadog_zypper_repo_template.changed and not ansible_check_mode
-  args:
-    warn: false # silence warning about using zypper directly
   changed_when: true
 
 - name: Include Suse agent pinned version install task
