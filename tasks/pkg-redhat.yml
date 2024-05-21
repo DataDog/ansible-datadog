@@ -98,6 +98,19 @@
         state: present
       when: not ansible_check_mode
 
+    - name: Download future RPM key (Expires in 2033)
+      get_url:
+        url: "{{ datadog_yum_gpgkey_4f09d16b }}"
+        dest: /tmp/DATADOG_RPM_KEY_4FA09D16B.public
+        mode: '600'
+        checksum: "sha256:{{ datadog_yum_gpgkey_4f09d16b_sha256sum }}"
+
+    - name: Import future RPM key (Expires in 2033)
+      rpm_key:
+        key: /tmp/DATADOG_RPM_KEY_4FA09D16B.public
+        state: present
+      when: not ansible_check_mode
+
     - name: Set APM injection languages and versions for Redhat
       set_fact:
         agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
