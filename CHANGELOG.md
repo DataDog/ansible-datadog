@@ -1,16 +1,30 @@
 CHANGELOG
 =========
 
+# 4.23.0 / 2024-06-04
+* [FEATURE] Add version pinning and telemetry for APM tracer libraries [#541]
+* [FEATURE] Allow using proxy for Windows downloads [#553]
+* [IMPROVEMENT] Restrict the Agent version that can be installed on RHEL (and derivatives) < 7 [#556]
+* [IMPROVEMENT] Install old RPM GPG key only when needed on Agent <= 7.35 [#561]
+* [BUGFIX] Change `mode` to use string parameters [#528], thanks [@janorn]
+* [BUGFIX] Allow 160 character long lines before wrapping [#529], thanks [@janorn]
+* [BUGFIX] Properly detect when DEB package is installed [#551]
+* [BUGFIX] Fix idempotency molecule test on Windows [#560]
+* [BUGFIX] Remove `warn` argument that is not supported in newer Ansible versions [#566]
+* [DOCS] Fix inter-readme links for integrations [#546], thanks [@valscion]
+* [DOCS] Clarify that role variables are set in the `vars` section of the playbook [#550]
+* [DOCS] [DOCS-7475] Replace install command for Windows [#559] 
+
 # 4.22.0 / 2024-01-25
 * [IMPROVEMENT] Use Get-ItemProperty to retrieve Windows Agent version [#536]
 * [DOCS] Add a note about required API Key since 4.21 [#538]
 
 # 4.21.0 / 2023-12-04
-* [FEATURE] [Windows] Force reinstall if configuration changed [AP-1946] [#509]
+* [FEATURE] [Windows] [AP-1946] Force reinstall if configuration changed [#509]
 * [FEATURE] Adding yum repo configuration options [#517] thanks [@chipselden]
 * [IMPROVEMENT] Remove usage of datadog-apm-library-all meta package, to make sure Ansible keeps updating the tracer packages if "all" is used in Ansible configuration [#532]
 * [IMPROVEMENT] [CI] add call to importer in the role [#515]
-* [IMPROVEMENT] Hard fail if api_key is not provided [AP-2380] [#512] [#505] thanks [@gopivalleru]
+* [IMPROVEMENT] [AP-2380] Hard fail if api_key is not provided [#512], [#505] thanks [@gopivalleru]
 * [IMPROVEMENT] Bump XCode version from 13.3.0 to 13.4.1 [#511]
 * [BUGFIX] correct syntax when checking for config changes [#523] thanks [@TomFromTA]
 * [DOCS] [DOCS-6354] Update descriptions for APM role values [#520]
@@ -457,11 +471,40 @@ Initial release, compatible with Ansible v1 & v2
 [#453]: https://github.com/DataDog/ansible-datadog/issues/453
 [#454]: https://github.com/DataDog/ansible-datadog/issues/454
 [#458]: https://github.com/DataDog/ansible-datadog/issues/458
+[#459]: https://github.com/DataDog/ansible-datadog/pull/459
 [#466]: https://github.com/DataDog/ansible-datadog/issues/466
 [#478]: https://github.com/DataDog/ansible-datadog/issues/478
 [#479]: https://github.com/DataDog/ansible-datadog/issues/479
+[#481]: https://github.com/DataDog/ansible-datadog/pull/481
+[#483]: https://github.com/DataDog/ansible-datadog/pull/483
+[#485]: https://github.com/DataDog/ansible-datadog/pull/485
+[#486]: https://github.com/DataDog/ansible-datadog/pull/486
+[#488]: https://github.com/DataDog/ansible-datadog/pull/488
+[#501]: https://github.com/DataDog/ansible-datadog/pull/501
+[#505]: https://github.com/DataDog/ansible-datadog/pull/505
+[#509]: https://github.com/DataDog/ansible-datadog/pull/509
+[#511]: https://github.com/DataDog/ansible-datadog/pull/511
+[#512]: https://github.com/DataDog/ansible-datadog/pull/512
+[#513]: https://github.com/DataDog/ansible-datadog/pull/513
+[#515]: https://github.com/DataDog/ansible-datadog/pull/515
+[#517]: https://github.com/DataDog/ansible-datadog/pull/517
+[#520]: https://github.com/DataDog/ansible-datadog/pull/520
+[#523]: https://github.com/DataDog/ansible-datadog/pull/523
+[#528]: https://github.com/DataDog/ansible-datadog/pull/528
+[#529]: https://github.com/DataDog/ansible-datadog/pull/529
+[#532]: https://github.com/DataDog/ansible-datadog/pull/532
 [#536]: https://github.com/DataDog/ansible-datadog/issues/536
 [#538]: https://github.com/DataDog/ansible-datadog/issues/538
+[#541]: https://github.com/DataDog/ansible-datadog/pull/541
+[#546]: https://github.com/DataDog/ansible-datadog/pull/546
+[#550]: https://github.com/DataDog/ansible-datadog/pull/550
+[#551]: https://github.com/DataDog/ansible-datadog/pull/551
+[#553]: https://github.com/DataDog/ansible-datadog/pull/553
+[#556]: https://github.com/DataDog/ansible-datadog/pull/556
+[#559]: https://github.com/DataDog/ansible-datadog/pull/559
+[#560]: https://github.com/DataDog/ansible-datadog/pull/560
+[#561]: https://github.com/DataDog/ansible-datadog/pull/561
+[#566]: https://github.com/DataDog/ansible-datadog/pull/566
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -477,6 +520,7 @@ Initial release, compatible with Ansible v1 & v2
 [@geoffwright]: https://github.com/geoffwright
 [@gtrummell]: https://github.com/gtrummell
 [@hestonhoffman]: https://github.com/hestonhoffman
+[@janorn]: https://github.com/janorn
 [@jb-mayer]: https://github.com/jb-mayer
 [@jeffwidman]: https://github.com/jeffwidman
 [@jharley]: https://github.com/jharley
@@ -490,6 +534,7 @@ Initial release, compatible with Ansible v1 & v2
 [@moleskin-smile]: https://github.com/moleskin-smile
 [@pdecat]: https://github.com/pdecat
 [@pmbauer]: https://github.com/pmbauer
+[@rockaut]: https://github.com/rockaut
 [@rossigee]: https://github.com/rossigee
 [@rouge8]: https://github.com/rouge8
 [@samasc30]: https://github.com/samasc30
@@ -505,3 +550,4 @@ Initial release, compatible with Ansible v1 & v2
 [@TomFromTA]: https://github.com/TomFromTA
 [@chipselden]: https://github.com/chipselden
 [@gopivalleru]: https://github.com/gopivalleru
+[@valscion]: https://gitub.com/valscion
