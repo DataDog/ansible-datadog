@@ -109,6 +109,7 @@
   when: install_file.stat.exists
 
 - name: Generate uuid
+  when: not install_file.stat.exists
   check_mode: false
   block:
     - name: Generate uuid based on /proc/sys/kernel/random/uuid
@@ -121,11 +122,6 @@
       command: uuidgen
       register: uuid_cmd
       changed_when: false
-  when: not install_file.stat.exists
-
-- name: Show me the variable
-  debug:
-    msg: "{{ uuid_cmd }}"
 
 - name: Set install signature from file if it exists
   set_fact:
