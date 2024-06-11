@@ -1,0 +1,1 @@
+{"install_id": "{{ install_signature.install_id }}", "install_type": {% if datadog_apm_instrumentation_enabled | length > 0 %}"ansible_single_step"{% else %}"ansible_manual"{% endif %}, "install_time": {{ install_signature.install_time }}}
