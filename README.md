@@ -6,8 +6,8 @@ The Datadog Agent Ansible role installs and configures the Datadog Agent and int
 
 The Datadog Agent Ansible role is available through 2 different channels:
 
-* As part of the Datadog collection, accessible under the [datadog.dd](https://galaxy.ansible.com/DataDog/dd) name on Ansible Galaxy (recommended).
-* As a standalone role, accessible under the [datadog.datadog](https://galaxy.ansible.com/DataDog/datadog) name on Ansible Galaxy (legacy).
+* As part of the Datadog collection, accessible under the [datadog.dd](https://galaxy.ansible.com/ui/repo/published/datadog/dd/) name on Ansible Galaxy (recommended).
+* As a standalone role, accessible under the [datadog.datadog](https://galaxy.ansible.com/ui/repo/published/datadog/dd/content/role/agent/) name on Ansible Galaxy (legacy).
 
 Version `4` of the role and version `5` of the collection install the Datadog Agent v7 by default.
 
