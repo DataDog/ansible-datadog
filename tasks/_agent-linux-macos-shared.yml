@@ -126,7 +126,6 @@
       install_id: "{{ install_info.install_id }}"
       install_time: "{{ install_info.install_time }}"
   when: install_file.stat.exists
-  failed_when: false
       
 - name: Generate install signature
   set_fact:
@@ -134,6 +133,7 @@
       install_id: "{{ uuid_cmd.stdout }}"
       install_time: "{{ ansible_date_time.epoch }}"
   when: not install_file.stat.exists
+  ignore_errors: true
 
 - name: Create installation information file
   template:
