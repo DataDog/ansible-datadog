@@ -105,21 +105,23 @@
 
 - name: Parse install.json file if it exists
   set_fact:
-    install_info: "{{ lookup(
-      'file', install_file.stat.path) | from_json }}"
+    install_info: "{{ lookup('file', install_file.stat.path) | from_json }}"
   when: install_file.stat.exists
 
 - name: Generate uuid
+  check_mode: false
   block:
     - name: Generate uuid based on /proc/sys/kernel/random/uuid
       command: cat /proc/sys/kernel/random/uuid
       register: uuid_cmd
+      changed_when: false
 
   rescue:
     - name: Generate uuid using uuidgen
       command: uuidgen
       register: uuid_cmd
-  check_mode: false
+      changed_when: false
+  when: not install_file.stat.exists
 
 - name: Show me the variable
   debug:
@@ -131,7 +133,7 @@
       install_id: "{{ install_info.install_id }}"
       install_time: "{{ install_info.install_time }}"
   when: install_file.stat.exists
-      
+
 - name: Generate install signature
   set_fact:
     install_signature:
