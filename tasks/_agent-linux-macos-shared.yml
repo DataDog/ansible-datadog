@@ -117,13 +117,13 @@
 
   rescue:
     - name: Generate uuid using uuidgen
-      command: uuidgen > /dev/null
+      command: uuidgen
       register: uuid_cmd
   when: not install_file.stat.exists
 
 - name: Set install_id as variable
   set_fact:
-    install_id: "{{ uuid_cmd }}"
+    install_id: "{{ uuid_cmd.stdout }}"
 
 - name: Set install signature from file if it exists
   set_fact:
