@@ -137,7 +137,7 @@
       install_time: "{{ ansible_date_time.epoch }}"
   when: not install_file.stat.exists
 
-- name: Create installation information file
+- name: Create installation json file
   template:
     src: install.json.j2
     dest: "{{ agent_dd_config_dir }}/install.json"
