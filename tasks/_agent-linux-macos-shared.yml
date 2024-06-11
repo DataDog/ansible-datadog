@@ -121,10 +121,6 @@
       register: uuid_cmd
   when: not install_file.stat.exists
 
-- name: Set install_id as variable
-  set_fact:
-    install_id: "{{ uuid_cmd.stdout }}"
-
 - name: Set install signature from file if it exists
   set_fact:
     install_signature:
@@ -135,7 +131,7 @@
 - name: Generate install signature
   set_fact:
     install_signature:
-      install_id: "{{ install_id }}"
+      install_id: "{{ uuid_cmd.stdout }}"
       install_time: "{{ ansible_date_time.epoch }}"
   when: not install_file.stat.exists
 
