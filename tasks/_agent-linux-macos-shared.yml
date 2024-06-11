@@ -120,7 +120,8 @@
       command: uuidgen
       register: uuid_cmd
 
-- debug:
+- name: Show me the variable
+  debug:
     msg: "{{ uuid_cmd }}"
 
 - name: Set install signature from file if it exists
