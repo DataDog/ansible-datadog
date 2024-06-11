@@ -113,13 +113,17 @@
   block:
     - name: Generate uuid based on /proc/sys/kernel/random/uuid
       command: cat /proc/sys/kernel/random/uuid
-      register: install_id
+      register: uuid_cmd
 
   rescue:
     - name: Generate uuid using uuidgen
       command: uuidgen > /dev/null
-      register: install_id
+      register: uuid_cmd
   when: not install_file.stat.exists
+
+- name: Set install_id as variable
+  set_fact:
+    install_id: "{{ uuid_cmd.stdout }}"
 
 - name: Set install signature from file if it exists
   set_fact:
