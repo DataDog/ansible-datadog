@@ -119,6 +119,7 @@
     - name: Generate uuid using uuidgen
       command: uuidgen
       register: uuid_cmd
+  check_mode: false
 
 - name: Show me the variable
   debug:
@@ -137,7 +138,6 @@
       install_id: "{{ uuid_cmd.stdout }}"
       install_time: "{{ ansible_date_time.epoch }}"
   when: not install_file.stat.exists
-  ignore_errors: true
 
 - name: Create installation information file
   template:
