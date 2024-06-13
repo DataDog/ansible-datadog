@@ -236,6 +236,10 @@
         state: absent
       with_items: [5, 6, 7, custom]
 
+- name: Include installer setup
+  include_tasks: installer-setup.yml
+  when: datadog_installer_enabled
+
 - name: Include redhat agent pinned version install task
   include_tasks: pkg-redhat/install-pinned.yml
   when: agent_datadog_agent_redhat_version is defined

@@ -1,0 +1,148 @@
+---
+- name: Generate installer trace ID
+  set_fact:
+    datadog_installer_trace_id: "{{ 9999999999999999999 | random }}"
+  when: datadog_installer_enabled
+
+- name: Start duration measurements
+  command: "date +%s%N"
+  register: datadog_installer_start_time
+
+- name: Install datadog-installer package (dnf)
+  dnf:
+    name: "datadog-installer"
+    update_cache: true
+    state: latest # noqa package-latest
+  register: datadog_installer_install_result
+  # Since we want to send telemetry including when the installation failed,
+  # we need to explicitely ignore failures and skip dependent task when one
+  # of its depedency failed
+  # By default ansible will stop on the first error
+  ignore_errors: true
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "dnf"
+
+- name: Install latest datadog-agent package (yum)
+  yum:
+    name: "datadog-installer"
+    update_cache: true
+    state: latest # noqa package-latest
+  register: datadog_installer_install_result
+  ignore_errors: true
+  when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "yum"
+
+- name: Install Datadog installer (apt)
+  apt:
+    name: "datadog-installer"
+    state: latest # noqa package-latest
+    update_cache: true
+    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
+  register: datadog_installer_install_result
+  ignore_errors: true
+  when: ansible_facts.os_family == "Debian" and not ansible_check_mode
+
+- name: Bootstrap the installer
+  command: /usr/bin/datadog-bootstrap bootstrap
+  register: datadog_installer_bootstrap_result
+  environment:
+    DATADOG_TRACE_ID: "{{ datadog_installer_trace_id }}"
+    DATADOG_PARENT_ID: "{{ datadog_installer_trace_id }}"
+    DD_SITE: "{{ datadog_site | default('datadoghq.com') }}"
+    DD_API_KEY: "{{ datadog_api_key }}"
+    DD_REMOTE_UPDATES: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates else '' }}"
+    DD_APM_INSTRUMENTATION_ENABLED: "{{ datadog_apm_instrumentation_enabled }}"
+    DD_APM_INSTRUMENTATION_LANGUAGES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
+  ignore_errors: true
+  when: not datadog_installer_install_result.failed
+
+- name: Check if installer owns datadog-agent package
+  shell: datadog-installer is-installed "{{ datadog_agent_flavor }}"
+  failed_when: datadog_installer_owns_agent.rc != 0 and datadog_installer_owns_agent.rc != 10
+  register: datadog_installer_owns_agent
+  when: not datadog_installer_bootstrap_result.failed
+
+- name: Disable agent install if owned by installer
+  set_fact:
+    agent_datadog_skip_install: true
+  when: datadog_installer_owns_agent.rc == 0
+
+- name: Query APM packages owned by installer
+  shell: datadog-installer is-installed "datadog-apm-library-{{ item }}"
+  register: datadog_installer_owned_apm_packages
+  loop: "{{ datadog_apm_instrumentation_libraries }}"
+  when: not datadog_installer_bootstrap_result.failed
+  failed_when: datadog_installer_owned_apm_packages.rc != 0 and datadog_installer_owned_apm_packages.rc != 10
+  environment:
+    DD_API_KEY: "{{ datadog_api_key }}"
+
+- name: Save APM packages before filtering
+  set_fact:
+    datadog_apm_instrumentation_libraries_unfiltered: "{{ datadog_apm_instrumentation_libraries }}"
+
+- name: Filter APM packages owned by the installer
+  set_fact:
+    datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_libraries | difference([item.item]) }}"
+  when: item.rc == 0
+  loop: "{{ datadog_installer_owned_apm_packages.results }}"
+
+- name: Stop duration measurements
+  command: "date +%s%N"
+  register: datadog_installer_stop_time
+
+- name: Setup telemetry body
+  set_fact:
+    telemetry_body: "{{ lookup('template', 'templates/installer-telemetry.j2',
+      template_vars=dict(
+        trace_id=datadog_installer_trace_id,
+        hostname=ansible_hostname,
+        system=ansible_facts.system,
+        os_family=ansible_facts.os_family,
+        arch=ansible_facts.machine,
+        kernel=ansible_facts.kernel,
+        kernel_version=ansible_facts.kernel_version,
+        role_version=role_version,
+        rc=datadog_installer_bootstrap_result.rc if datadog_installer_bootstrap_result is defined else datadog_installer_install_result.rc,
+        stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),
+        start_time=datadog_installer_start_time.stdout | int,
+        stop_time=datadog_installer_stop_time.stdout | int,
+        packages_to_install=datadog_apm_instrumentation_libraries_unfiltered,
+        packages_to_install_filtered=datadog_apm_instrumentation_libraries,
+      )) }}"
+
+- name: Send Installer telemetry traces
+  uri:
+    url: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
+    body: "{{ telemetry_body }}"
+    method: POST
+    status_code: [202]
+    headers:
+      DD-Api-Key: "{{ datadog_api_key }}"
+    body_format: json
+
+- name: Setup logs body
+  set_fact:
+    logs_body: "{{ lookup('template', 'templates/installer-logs.j2',
+      template_vars=dict(
+        stop_time=datadog_installer_stop_time.stdout,
+        trace_id=datadog_installer_trace_id,
+        hostname=ansible_hostname,
+        system=ansible_facts.system,
+        os_family=ansible_facts.os_family,
+        arch=ansible_facts.machine,
+        kernel=ansible_facts.kernel,
+        kernel_version=ansible_facts.kernel_version,
+        role_version=role_version,
+        stdout=datadog_installer_install_result.stdout | default('') + datadog_installer_bootstrap_result.stdout | default(''),
+        stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),
+      )
+      )}}"
+
+- name: Send Installer telemetry logs
+  uri:
+    url: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
+    body: "{{ logs_body }}"
+    method: POST
+    status_code: [202]
+    headers:
+      DD-Api-Key: "{{ datadog_api_key }}"
+    body_format: json
+

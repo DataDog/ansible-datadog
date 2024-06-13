@@ -1,0 +1,36 @@
+{
+    "api_version": "v2",
+    "request_type": "logs",
+    "tracer_time": "{{ stop_time }}",
+    "runtime_id": "{{ trace_id }}",
+    "seq_id": 2,
+    "origin": "ansible",
+    "host": {
+        "hostname": "{{ hostname }}",
+        "os": "{{ system }}",
+        "distribution": "{{ os_family }}",
+        "architecture": "{{ arch }}",
+        "kernel_version": "{{ kernel }}",
+        "kernel_release": "{{ kernel_version }}"
+    },
+    "application": {
+        "service_name": "datadog-ansible",
+        "service_version": "{{ role_version }}",
+        "language_name": "UNKNOWN",
+        "language_version": "n/a",
+        "tracer_version": "n/a"
+    },
+    "payload": {
+        "logs": [{
+            "message": "{{ stdout }}",
+            "level": "DEBUG",
+            "trace_id": {{ datadog_installer_trace_id }},
+            "span_id": {{ datadog_installer_trace_id }}
+        },{
+            "message": "{{ stderr }}",
+            "level": "ERROR",
+            "trace_id": {{ datadog_installer_trace_id }},
+            "span_id": {{ datadog_installer_trace_id }}
+        }]
+    }
+}
