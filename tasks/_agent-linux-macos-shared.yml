@@ -97,3 +97,50 @@
     owner: "{{ agent_dd_user }}"
     group: "{{ agent_dd_group }}"
     mode: "0644"
+
+- name: Check if install.json exists
+  stat:
+    path: "{{ agent_dd_config_dir }}/install.json"
+  register: install_file
+
+- name: Parse install.json file if it exists
+  set_fact:
+    install_info: "{{ lookup('file', install_file.stat.path) | from_json }}"
+  when: install_file.stat.exists
+
+- name: Generate uuid
+  when: not install_file.stat.exists
+  check_mode: false
+  block:
+    - name: Generate uuid based on /proc/sys/kernel/random/uuid
+      command: cat /proc/sys/kernel/random/uuid
+      register: uuid_cmd
+      changed_when: false
+
+  rescue:
+    - name: Generate uuid using uuidgen
+      command: uuidgen
+      register: uuid_cmd
+      changed_when: false
+
+- name: Set install signature from file if it exists
+  set_fact:
+    install_signature:
+      install_id: "{{ install_info.install_id }}"
+      install_time: "{{ install_info.install_time }}"
+  when: install_file.stat.exists
+
+- name: Generate install signature
+  set_fact:
+    install_signature:
+      install_id: "{{ uuid_cmd.stdout }}"
+      install_time: "{{ ansible_date_time.epoch }}"
+  when: not install_file.stat.exists
+
+- name: Create installation json file
+  template:
+    src: install.json.j2
+    dest: "{{ agent_dd_config_dir }}/install.json"
+    owner: "{{ agent_dd_user }}"
+    group: "{{ agent_dd_group }}"
+    mode: "0644"
