@@ -1,4 +1,6 @@
 #!/bin/bash -e
+
+python3 -m pip install --upgrade pip
 # galaxy-importer requires ansible-lint https://github.com/ansible/galaxy-importer/blob/master/setup.cfg#L22
 pip install -r requirements.txt
 
