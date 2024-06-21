@@ -7,6 +7,7 @@
 - name: Start duration measurements
   command: "date +%s%N"
   register: datadog_installer_start_time
+  changed_when: True
 
 - name: Install datadog-installer package (dnf)
   dnf:
@@ -53,12 +54,14 @@
     DD_APM_INSTRUMENTATION_LANGUAGES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
   ignore_errors: true
   when: not datadog_installer_install_result.failed
+  changed_when: True
 
 - name: Check if installer owns datadog-agent package
-  shell: datadog-installer is-installed "{{ datadog_agent_flavor }}"
+  command: datadog-installer is-installed "{{ datadog_agent_flavor }}"
   failed_when: datadog_installer_owns_agent.rc != 0 and datadog_installer_owns_agent.rc != 10
   register: datadog_installer_owns_agent
   when: not datadog_installer_bootstrap_result.failed
+  changed_when: True
 
 - name: Disable agent install if owned by installer
   set_fact:
@@ -66,11 +69,12 @@
   when: datadog_installer_owns_agent.rc == 0
 
 - name: Query APM packages owned by installer
-  shell: datadog-installer is-installed "datadog-apm-library-{{ item }}"
+  command: datadog-installer is-installed "datadog-apm-library-{{ item }}"
   register: datadog_installer_owned_apm_packages
   loop: "{{ datadog_apm_instrumentation_libraries }}"
   when: not datadog_installer_bootstrap_result.failed
   failed_when: datadog_installer_owned_apm_packages.rc != 0 and datadog_installer_owned_apm_packages.rc != 10
+  changed_when: True
   environment:
     DD_API_KEY: "{{ datadog_api_key }}"
 
