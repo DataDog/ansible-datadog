@@ -232,6 +232,25 @@ jobs:
       # verify that the emitted trace is in trace-agent log
       - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
 
+  test_installer:
+    parameters:
+      ansible_version:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+      os:
+        type: string
+      inventory:
+        type: string
+        default: "ci.ini"
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
+      - run: datadog-installer version
+
 workflows:
   version: 2
   test_datadog_role:
@@ -326,3 +345,11 @@ workflows:
           matrix:
             parameters:
               ansible_version: ["6.7.0"]
+
+      - test_installer:
+         matrix:
+           parameters:
+              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
+              # There is no stable release of the installer on RHEL derivatives yet
+              # but we should include it as soon as possible
+              os: ["debian"]
