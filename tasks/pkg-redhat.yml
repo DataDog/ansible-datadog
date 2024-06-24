@@ -1,5 +1,5 @@
 ---
-- name: Set upper bound last supported Agent version for Centos < 7
+- name: Check for Centos < 7 and adjust features
   when: ansible_facts.os_family == "RedHat"
   block:
     - name: Get RHEL major version equivalent
@@ -11,6 +11,10 @@
       set_fact:
         datadog_agent_max_minor_version: 51
       when: rhel_version.stdout | int < 7
+    - name: Disable datadog installer
+      set_fact:
+        datadog_installer_enabled: false
+      when: datadog_installer_enabled and rhel_version.stdout | int < 7
 
 - name: Fail if specified agent version is above maximum supported by Centos < 7 and equivalent
   fail:

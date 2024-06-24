@@ -85,7 +85,9 @@
 - name: Filter APM packages owned by the installer
   set_fact:
     datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_libraries | difference([item.item]) }}"
-  when: item.rc == 0
+  when:
+    - item.rc == 0
+    - not datadog_installer_bootstrap_result.failed
   loop: "{{ datadog_installer_owned_apm_packages.results }}"
 
 - name: Stop duration measurements
