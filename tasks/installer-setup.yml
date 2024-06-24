@@ -124,7 +124,7 @@
     headers:
       DD-Api-Key: "{{ datadog_api_key }}"
     body_format: json
-  ignore_errors: true
+  failed_when: false
 
 - name: Setup logs body
   set_fact:
@@ -155,4 +155,4 @@
     headers:
       DD-Api-Key: "{{ datadog_api_key }}"
     body_format: json
-  ignore_errors: true
+  failed_when: false
