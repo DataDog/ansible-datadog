@@ -7,7 +7,7 @@
 - name: Start duration measurements
   command: "date +%s%N"
   register: datadog_installer_start_time
-  changed_when: True
+  changed_when: true
 
 - name: Install datadog-installer package (dnf)
   dnf:
@@ -54,14 +54,14 @@
     DD_APM_INSTRUMENTATION_LANGUAGES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
   ignore_errors: true
   when: not datadog_installer_install_result.failed
-  changed_when: True
+  changed_when: true
 
 - name: Check if installer owns datadog-agent package
   command: datadog-installer is-installed "{{ datadog_agent_flavor }}"
   failed_when: datadog_installer_owns_agent.rc != 0 and datadog_installer_owns_agent.rc != 10
   register: datadog_installer_owns_agent
   when: not datadog_installer_bootstrap_result.failed
-  changed_when: True
+  changed_when: true
 
 - name: Disable agent install if owned by installer
   set_fact:
@@ -74,7 +74,7 @@
   loop: "{{ datadog_apm_instrumentation_libraries }}"
   when: not datadog_installer_bootstrap_result.failed
   failed_when: datadog_installer_owned_apm_packages.rc != 0 and datadog_installer_owned_apm_packages.rc != 10
-  changed_when: True
+  changed_when: true
   environment:
     DD_API_KEY: "{{ datadog_api_key }}"
 
@@ -91,10 +91,13 @@
 - name: Stop duration measurements
   command: "date +%s%N"
   register: datadog_installer_stop_time
+  changed_when: true
 
 - name: Setup telemetry body
   set_fact:
-    telemetry_body: "{{ lookup('template', 'templates/installer-telemetry.j2',
+    telemetry_body: "{{ lookup(
+      'template',
+      'templates/installer-telemetry.j2',
       template_vars=dict(
         trace_id=datadog_installer_trace_id,
         hostname=ansible_hostname,
@@ -124,7 +127,9 @@
 
 - name: Setup logs body
   set_fact:
-    logs_body: "{{ lookup('template', 'templates/installer-logs.j2',
+    logs_body: "{{ lookup(
+      'template',
+      'templates/installer-logs.j2',
       template_vars=dict(
         stop_time=datadog_installer_stop_time.stdout,
         trace_id=datadog_installer_trace_id,
@@ -149,4 +154,3 @@
     headers:
       DD-Api-Key: "{{ datadog_api_key }}"
     body_format: json
-
