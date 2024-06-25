@@ -51,7 +51,7 @@
     DD_API_KEY: "{{ datadog_api_key }}"
     DD_REMOTE_UPDATES: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates else '' }}"
     DD_APM_INSTRUMENTATION_ENABLED: "{{ datadog_apm_instrumentation_enabled }}"
-    DD_APM_INSTRUMENTATION_LANGUAGES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
+    DD_APM_INSTRUMENTATION_LIBRARIES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
   ignore_errors: true
   when: not datadog_installer_install_result.failed
   changed_when: true
