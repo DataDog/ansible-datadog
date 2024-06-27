@@ -111,12 +111,12 @@
 
 - name: Debug print install.json content
   debug:
-    msg: "install.json content :\n{{ install_json_value.content }}"
+    msg: "install.json content : {{ install_json_value.content }}"
   when: install_file.stat.exists
 
 - name: Parse install.json file if it exists
   set_fact:
-    install_info: "{{ install_json_value.content | from_json }}"
+    install_info: "{{ install_json_value.content | b64decode | from_json }}"
   when: install_file.stat.exists
 
 - name: Generate uuid
