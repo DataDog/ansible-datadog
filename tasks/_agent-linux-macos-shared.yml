@@ -103,7 +103,7 @@
     path: "{{ agent_dd_config_dir }}/install.json"
   register: install_file
 
-- name: read remote install.json
+- name: Read remote install.json
   register: install_json_value
   ansible.builtin.slurp:
     src: "{{ agent_dd_config_dir }}/install.json"
