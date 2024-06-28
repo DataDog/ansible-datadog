@@ -197,7 +197,7 @@ jobs:
       - checkout
       - run:
           name: Install Rosetta 2
-          command: sudo softwareupdate --install-rosetta
+          command: printf 'A\n' | sudo softwareupdate --install-rosetta
       - run:
           name: Install Python3
           command: brew install python@3.11
