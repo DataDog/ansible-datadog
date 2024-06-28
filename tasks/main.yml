@@ -32,7 +32,6 @@
 
 - name: Configure Datadog Installer
   include_tasks: installer-config.yml
-  when: datadog_apm_instrumentation_enabled | length > 0
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
