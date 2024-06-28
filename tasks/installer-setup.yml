@@ -2,7 +2,6 @@
 - name: Generate installer trace ID
   set_fact:
     datadog_installer_trace_id: "{{ 9999999999999999999 | random }}"
-  when: datadog_installer_enabled
 
 - name: Start duration measurements
   command: "date +%s%N"
