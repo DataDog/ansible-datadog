@@ -62,6 +62,13 @@
   when: not datadog_installer_bootstrap_result.failed
   changed_when: true
 
+- name: Check if installer owns apm injector package
+  command: datadog-installer is-installed "{{ datadog_inject_apm_flavor }}"
+  failed_when: datadog_installer_owns_injector.rc != 0 and datadog_installer_owns_injector.rc != 10
+  register: datadog_installer_owns_injector
+  when: not datadog_installer_bootstrap_result.failed
+  changed_when: true
+
 - name: Disable agent install if owned by installer
   set_fact:
     agent_datadog_skip_install: true
