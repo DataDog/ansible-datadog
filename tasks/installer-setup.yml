@@ -157,3 +157,8 @@
       DD-Api-Key: "{{ datadog_api_key }}"
     body_format: json
   failed_when: false
+
+- name: Propagate failures after telemetry
+  fail:
+    msg: "Installer bootstrap failed: {{ datadog_installer_bootstrap_result.stderr }}"
+  when: datadog_installer_bootstrap_result.failed
