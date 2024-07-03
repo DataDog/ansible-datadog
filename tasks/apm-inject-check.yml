@@ -93,10 +93,8 @@
 
 - name: Remove latest tag and append -1 when version number specified in pinned APM tracer libraries
   set_fact:
-    pre_processed_datadog_apm_libraries: "{{
-      (pre_processed_datadog_apm_libraries |
-      default([], true)) + [(item | regex_replace('[:]latest', '')) +
-      ('-1' if (item.split(':')  | length > 1 and
-      item.split(':')[1] != 'latest') else '')] }}"
+    pre_processed_datadog_apm_libraries: "{{ (pre_processed_datadog_apm_libraries | default([], true))
+    + [(item | regex_replace('[:]latest', ''))
+    + ('-1' if (item.split(':') | length > 1 and item.split(':')[1] != 'latest') else '')] }}"
   loop: "{{ datadog_apm_instrumentation_libraries }}"
   when: not ansible_check_mode
