@@ -119,6 +119,11 @@
       when: not ansible_check_mode and datadog_apm_instrumentation_enabled | length > 0
 
     - name: Set versioned includepkgs variable
+      ansible.builtin.debug:
+        msg: "{{ datadog_agent_flavor }}-
+        {{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}
+         {{ datadog_inject_apm_flavor }}
+         {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       set_fact:
         agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-
         {{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}
