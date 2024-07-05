@@ -136,6 +136,10 @@
          {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       when: agent_datadog_agent_redhat_version is not defined
 
+    - name: Debug print
+      ansible.builtin.debug:
+        msg: "DEBUG: {{ agent_datadog_includepkgs }}"
+
     - name: Install Datadog Agent 5 yum repo
       yum_repository:
         name: datadog
