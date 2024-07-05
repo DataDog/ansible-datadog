@@ -1,0 +1,52 @@
+{
+    "api_version": "v2",
+    "request_type": "traces",
+    "tracer_time": {{ stop_time }},
+    "runtime_id": "{{ trace_id }}",
+    "seq_id": 1,
+    "origin": "ansible",
+    "host": {
+        "hostname": "{{ hostname }}",
+        "os": "{{ system }}",
+        "distribution": "{{ os_family }}",
+        "architecture": "{{ arch }}",
+        "kernel_version": "{{ kernel }}",
+        "kernel_release": "{{ kernel_version }}"
+    },
+    "application": {
+        "service_name": "datadog-ansible",
+        "service_version": "{{ role_version }}",
+        "language_name": "UNKNOWN",
+        "language_version": "n/a",
+        "tracer_version": "n/a"
+    },
+    "payload": {
+        "traces": [[{
+            "service": "datadog-ansible",
+            "name": "install_installer",
+            "resource": "install_installer",
+            "trace_id": {{ trace_id }},
+            "span_id": {{ trace_id }},
+            "parent_id": 0,
+            "start": {{ start_time }},
+            "duration": {{ stop_time - start_time }},
+            "error": {{ rc }},
+            "meta": {
+                "language": "yaml",
+                "exit_code": {{ rc }},
+                "error": {
+                    "message": "{{ stderr }}"
+                },
+                "version": "{{ role_version }}",
+                "packages_to_install": "{{ packages_to_install }}",
+                "packages_to_install_after_installer": "{{ packages_to_install_filtered }}"
+            },
+            "metrics": {
+                "_trace_root": 1,
+                "_top_level": 1,
+                "_dd.top_level": 1,
+                "_sampling_priority_v1": 2
+            }
+        }]]
+    }
+}

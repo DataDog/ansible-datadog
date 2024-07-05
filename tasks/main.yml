@@ -30,6 +30,9 @@
   include_tasks: apm-inject-check.yml
   when: datadog_apm_instrumentation_enabled | length > 0
 
+- name: Configure Datadog Installer
+  include_tasks: installer-config.yml
+
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian" and not agent_datadog_skip_install

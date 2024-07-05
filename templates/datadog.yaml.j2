@@ -14,6 +14,10 @@ dd_url: {{ datadog_url }}
 api_key: {{ datadog_api_key }}
 {% endif %}
 
+{% if datadog_remote_updates is defined -%}
+remote_updates: {{ datadog_remote_updates }}
+{% endif -%}
+
 {% if agent_datadog_config | default({}, true) | length > 0 -%}
 {{ agent_datadog_config | to_nice_yaml }}
 {% endif %}

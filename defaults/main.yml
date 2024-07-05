@@ -254,12 +254,12 @@ datadog_macos_download_url: ""
 
 # The default dmg package for each major Agent version is specified in the following variables.
 # These variables are for internal use only, do not modify them.
-datadog_macos_agent6_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agent-6-latest.dmg"
-datadog_macos_agent7_latest_url: "https://s3.amazonaws.com/dd-agent/datadog-agent-7-latest.dmg"
+datadog_macos_agent6_latest_url: "https://install.datadoghq.com/datadog-agent-6-latest.dmg"
+datadog_macos_agent7_latest_url: "https://install.datadoghq.com/datadog-agent-7-latest.dmg"
 
 # If datadog_agent_version is set, the role will use the following url prefix instead, and append the version number to it
 # in order to get the full url to the dmg package.
-datadog_macos_versioned_url: "https://s3.amazonaws.com/dd-agent/datadog-agent"
+datadog_macos_versioned_url: "https://install.datadoghq.com/datadog-agent"
 
 datadog_macos_user: "{{ ansible_user }}"
 datadog_macos_service_name: "com.datadoghq.agent"
@@ -268,3 +268,5 @@ datadog_macos_system_plist_file_path: "/Library/LaunchDaemons/{{ datadog_macos_s
 datadog_macos_etc_dir: "/opt/datadog-agent/etc"
 datadog_macos_logs_dir: "/opt/datadog-agent/logs"
 datadog_macos_run_dir: "/opt/datadog-agent/run"
+
+datadog_installer_enabled: false
