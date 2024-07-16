@@ -116,7 +116,7 @@
           kernel_version=ansible_facts.kernel_version,
           role_version=role_version,
           rc=datadog_installer_bootstrap_result.rc if datadog_installer_bootstrap_result is defined else datadog_installer_install_result.rc,
-          stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),
+          stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),\n
           start_time=datadog_installer_start_time.stdout | int,
           stop_time=datadog_installer_stop_time.stdout | int,
           packages_to_install=datadog_apm_instrumentation_libraries_unfiltered,
@@ -150,7 +150,7 @@
           kernel_version=ansible_facts.kernel_version,
           role_version=role_version,
           stdout=datadog_installer_install_result.stdout | default('') + datadog_installer_bootstrap_result.stdout | default(''),
-          stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),
+          stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),\n
       )
       )}}"
 
