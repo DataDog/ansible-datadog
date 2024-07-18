@@ -18,20 +18,26 @@
   when: datadog_manage_config
   notify: "{{ agent_dd_notify_agent }}"
 
-- name: Register all checks directories present in datadog
+- name: Register all check configs present in datadog
   find:
     paths: "{{ agent_dd_config_dir }}/conf.d/"
     patterns:
-      - "*.d"
-    file_type: directory
-  register: agent_datadog_conf_directories
+      - "conf.yaml*"
+    recurse: true
+    depth: 2
+    file_type: file
+  register: agent_datadog_conf_paths
   when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
 
 - name: Delete checks not present in agent_datadog_tracked_checks
   file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: >-
+    {{
+      agent_datadog_conf_paths.files | map(attribute='path') | select('match', '.*\/conf\.yaml$') | list
+      | map('dirname') | map('basename') | list | map('regex_replace', '^(.*).d$', '\1') | list
+    }}
   when: datadog_manage_config and datadog_disable_untracked_checks and item not in agent_datadog_tracked_checks
   notify: "{{ agent_dd_notify_agent }}"
 
@@ -39,7 +45,11 @@
   file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: >-
+    {{
+      agent_datadog_conf_paths.files | map(attribute='path') | select('match', '.*\/conf\.yaml\.default$') | list
+      | map('dirname') | map('basename') | list | map('regex_replace', '^(.*).d$', '\1') | list
+    }}
   when: datadog_manage_config and datadog_disable_default_checks and item not in agent_datadog_tracked_checks
   notify: "{{ agent_dd_notify_agent }}"
 
@@ -47,7 +57,11 @@
   file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.example"
     state: absent
-  loop: "{{ agent_datadog_conf_directories.files | map(attribute='path') | list | map('basename') | list | map('regex_replace', '^(.*).d$', '\\1') | list }}"
+  loop: >-
+    {{
+      agent_datadog_conf_paths.files | map(attribute='path') | select('match', '.*\/conf\.yaml\.example$') | list
+      | map('dirname') | map('basename') | list | map('regex_replace', '^(.*).d$', '\1') | list
+    }}
   when: datadog_manage_config and datadog_disable_example_checks and item not in agent_datadog_tracked_checks
   notify: "{{ agent_dd_notify_agent }}"
 
