@@ -1,5 +1,15 @@
 CHANGELOG
 =========
+# 4.24.0 / 2024-07-18
+* [FEATURE] creating install.json file related to apm single step instrumation [#572]
+* [FEATURE] add support for datadog-installer [#573]
+* [FEATURE] add new future GPG key following 2024 GPG key rotation [#568]
+* [BUGFIX] Correctly read install.json on remote computer [#575]
+* [BUGFIX] Disable logging of datadog_windows_ddagentuser_password [#563]. Thanks [@a-rhodes]
+* [BUGFIX] Use install.datadoghq.com instead of the dd-agent bucket link [#576]
+* [BUGFIX] Fix ansible-lint warnings on latest version [#578]
+* [DOCS] Update broken Ansible Galaxy URLs [#580] Thanks [@kaveet]
+* [DOCS] README: fix broken links to ansible-galaxy [#571]
 
 # 4.23.0 / 2024-06-04
 * [FEATURE] Add version pinning and telemetry for APM tracer libraries [#541]
@@ -504,7 +514,16 @@ Initial release, compatible with Ansible v1 & v2
 [#559]: https://github.com/DataDog/ansible-datadog/pull/559
 [#560]: https://github.com/DataDog/ansible-datadog/pull/560
 [#561]: https://github.com/DataDog/ansible-datadog/pull/561
+[#563]: https://github.com/DataDog/ansible-datadog/pull/563
 [#566]: https://github.com/DataDog/ansible-datadog/pull/566
+[#568]: https://github.com/DataDog/ansible-datadog/pull/568
+[#571]: https://github.com/DataDog/ansible-datadog/pull/571
+[#572]: https://github.com/DataDog/ansible-datadog/pull/572
+[#573]: https://github.com/DataDog/ansible-datadog/pull/573
+[#575]: https://github.com/DataDog/ansible-datadog/pull/575
+[#576]: https://github.com/DataDog/ansible-datadog/pull/576
+[#578]: https://github.com/DataDog/ansible-datadog/pull/578
+[#580]: https://github.com/DataDog/ansible-datadog/pull/580
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -550,4 +569,6 @@ Initial release, compatible with Ansible v1 & v2
 [@TomFromTA]: https://github.com/TomFromTA
 [@chipselden]: https://github.com/chipselden
 [@gopivalleru]: https://github.com/gopivalleru
-[@valscion]: https://gitub.com/valscion
+[@valscion]: https://github.com/valscion
+[@a-rhodes]: https://github.com/a-rhodes
+[@kaveet]: https://github.com/kaveet
