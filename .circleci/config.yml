@@ -350,6 +350,4 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
-              # There is no stable release of the installer on RHEL derivatives yet
-              # but we should include it as soon as possible
-              os: ["debian"]
+              os: ["debian", "centos"]
