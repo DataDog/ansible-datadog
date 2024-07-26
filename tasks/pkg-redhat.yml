@@ -136,6 +136,13 @@
          {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       when: agent_datadog_agent_redhat_version is not defined
 
+    - name: Include datadog-installer to includepgks
+      set_fact:
+        agent_datadog_includepkgs:
+          "{{ agent_datadog_includepkgs }} datadog-installer"
+      when: datadog_installer_enabled
+
+
     - name: Install Datadog Agent 5 yum repo
       yum_repository:
         name: datadog
