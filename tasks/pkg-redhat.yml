@@ -139,7 +139,7 @@
     - name: Include datadog-installer to includepgks
       set_fact:
         agent_datadog_includepkgs:
-          "{{ agent_datadog_includepkgs }} datadog-installer"
+          "{{ agent_datadog_includepkgs }} {{ datadog_installer_flavor }}"
       when: datadog_installer_enabled
 
 

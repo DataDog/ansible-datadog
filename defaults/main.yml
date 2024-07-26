@@ -66,6 +66,8 @@ datadog_agent_flavor: "datadog-agent"
 # Default Package name for APM Library Injection APT and RPM installs.
 datadog_inject_apm_flavor: "datadog-apm-inject"
 
+datadog_installer_flavor: "datadog-installer"
+
 # Default apt repo and keyserver
 
 # By default, the role uses the official apt Datadog repository for the chosen major version
