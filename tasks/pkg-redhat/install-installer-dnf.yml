@@ -10,4 +10,3 @@
   # of its depedency failed
   # By default ansible will stop on the first error
   ignore_errors: true
-
