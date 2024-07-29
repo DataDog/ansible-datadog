@@ -350,4 +350,4 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["debian", "centos", "amazonlinux2", "suse"]
+              os: ["debian", "centos", "amazonlinux2"]

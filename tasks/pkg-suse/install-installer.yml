@@ -1,7 +1,0 @@
----
-- name: Install datadog-installer (SUSE)
-  zypper:
-    name: "{{ datadog_installer_flavor }}"
-    state: latest # noqa package-latest
-  register: agent_datadog_agent_install
-
