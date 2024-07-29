@@ -24,10 +24,6 @@
   include_tasks: pkg-debian/install-installer.yml
   when: ansible_facts.os_family == "Debian" and not ansible_check_mode
 
-- name: debug
-  debug:
-    msg: "{{ datadog_installer_install_result }}"
-
 - name: Bootstrap the installer
   command: /usr/bin/datadog-bootstrap bootstrap
   register: datadog_installer_bootstrap_result
