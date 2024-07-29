@@ -8,36 +8,20 @@
   register: datadog_installer_start_time
   changed_when: true
 
-- name: Install datadog-installer package (dnf)
-  dnf:
-    name: "datadog-installer"
-    update_cache: true
-    state: latest # noqa package-latest
-  register: datadog_installer_install_result
-  # Since we want to send telemetry including when the installation failed,
-  # we need to explicitely ignore failures and skip dependent task when one
-  # of its depedency failed
-  # By default ansible will stop on the first error
-  ignore_errors: true
+# Dispatch through an include_tasks in order to be able to use the same variable name
+# for the tasks results.
+# Doing the install here directly would always set the latest task to the used register
+# including when the task is skipped.
+- name: Include installer DNF install task
+  include_tasks: pkg-redhat/install-installer-dnf.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "dnf"
 
-- name: Install latest datadog-agent package (yum)
-  yum:
-    name: "datadog-installer"
-    update_cache: true
-    state: latest # noqa package-latest
-  register: datadog_installer_install_result
-  ignore_errors: true
+- name: Include installer YUM install task
+  include_tasks: pkg-redhat/install-installer-yum.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "yum"
 
-- name: Install Datadog installer (apt)
-  apt:
-    name: "datadog-installer"
-    state: latest # noqa package-latest
-    update_cache: true
-    cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
-  register: datadog_installer_install_result
-  ignore_errors: true
+- name: Include installer YUM install task
+  include_tasks: pkg-debian/install-installer.yml
   when: ansible_facts.os_family == "Debian" and not ansible_check_mode
 
 - name: Bootstrap the installer

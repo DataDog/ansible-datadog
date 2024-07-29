@@ -1,0 +1,12 @@
+---
+- name: Install datadog-installer package (dnf)
+  dnf:
+    name: "{{ datadog_installer_flavor }}"
+    update_cache: true
+    state: latest # noqa package-latest
+  register: datadog_installer_install_result
+  # Since we want to send telemetry including when the installation failed,
+  # we need to explicitely ignore failures and skip dependent task when one
+  # of its depedency failed
+  # By default ansible will stop on the first error
+  ignore_errors: true
