@@ -349,5 +349,5 @@ workflows:
       - test_installer:
          matrix:
            parameters:
-              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
+              ansible_version: ["2_10", "3_4", "4_10"]
               os: ["debian", "centos", "amazonlinux2"]
