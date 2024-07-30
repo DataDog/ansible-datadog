@@ -1,5 +1,5 @@
 ---
-- name: Install latest datadog-agent package (yum)
+- name: Install latest datadog-installer package (yum)
   yum:
     name: "{{ datadog_installer_flavor }}"
     update_cache: true
