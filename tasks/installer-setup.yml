@@ -53,6 +53,10 @@
   when: not datadog_installer_bootstrap_result.failed
   changed_when: true
 
+- name: debug
+  debug:
+    msg: "owns agent rc: {{ datadog_installer_owns_agent }}"
+
 - name: Disable agent install if owned by installer
   set_fact:
     agent_datadog_skip_install: true
