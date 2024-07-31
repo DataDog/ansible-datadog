@@ -252,8 +252,20 @@ jobs:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
       - checkout
-      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml" -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>" -e datadog_remote_updates="<<parameters.remote_updates>>"
-      - run: bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then datadog-installer version; elif command -v datadog-installer; then echo datadog-installer should not be installed; exit 2; else echo datadog-installer is not installed as expected; fi'
+      - run: >
+          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
+          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
+          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
+          -e datadog_remote_updates="<<parameters.remote_updates>>"
+      - run: >
+          bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
+              datadog-installer version;
+            elif command -v datadog-installer; then
+              echo datadog-installer should not be installed;
+              exit 2;
+            else
+              echo datadog-installer is not installed as expected;
+            fi'
 
 workflows:
   version: 2
