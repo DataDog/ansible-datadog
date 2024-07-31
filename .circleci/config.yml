@@ -260,11 +260,19 @@ jobs:
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
+              if [ -d /opt/datadog-agent ]; then
+                echo "The agent should NOT have been installed by the distribution";
+                exit 1;
+              fi
             elif command -v datadog-installer; then
               echo datadog-installer should not be installed;
               exit 2;
             else
               echo datadog-installer is not installed as expected;
+              if [ ! -d /opt/datadog-agent ]; then
+                echo "The agent should have been installed by the distribution";
+                exit 1;
+              fi
             fi'
 
 workflows:
