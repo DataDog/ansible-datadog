@@ -211,6 +211,9 @@ datadog_apm_instrumentation_docker_config:
     - stderr
   config_sources: BASIC
 
+# Enable remote updates through datadog-installer
+datadog_remote_updates: false
+
 #
 # Internal variables
 # The following variables are for internal use only, do not modify them.

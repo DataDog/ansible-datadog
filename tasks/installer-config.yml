@@ -2,4 +2,4 @@
 - name: Enable installer
   set_fact:
     datadog_installer_enabled: true
-  when: datadog_apm_instrumentation_enabled | length > 0
+  when: datadog_apm_instrumentation_enabled | length > 0 or datadog_remote_updates | bool
