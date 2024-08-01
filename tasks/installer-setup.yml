@@ -24,10 +24,6 @@
   include_tasks: pkg-debian/install-installer.yml
   when: ansible_facts.os_family == "Debian" and not ansible_check_mode
 
-- name: debug remote updates
-  debug:
-    msg: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates | bool else '' }}"
-
 - name: Bootstrap the installer
   command: /usr/bin/datadog-bootstrap bootstrap
   register: datadog_installer_bootstrap_result
