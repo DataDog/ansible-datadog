@@ -259,7 +259,7 @@ jobs:
       - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
       - run: mkdir -p /etc/systemd/system/
       - run: >
-          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -vv
+          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
           -e datadog_remote_updates="<<parameters.remote_updates>>"
