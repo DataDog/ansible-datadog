@@ -55,7 +55,7 @@
     msg: |
       The provided config is not compatible with APM host injection. The expected config parameters to be included are:
       "{{ agent_dd_apm_host_inject_config | to_nice_yaml }}"
-  when: item.condition
+  when: item.condition and not datadog_installer_enabled
   loop:
     - condition: >-
         {{
@@ -77,6 +77,7 @@
 - name: Update datadog_config including config values needed for APM host injection
   set_fact:
     agent_datadog_config: "{{ agent_datadog_config | combine(agent_dd_apm_host_inject_config, list_merge='keep') }}"
+  when: not datadog_installer_enabled
 
 - name: Alert for deprecated injection variable
   fail:
