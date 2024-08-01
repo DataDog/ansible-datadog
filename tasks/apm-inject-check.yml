@@ -48,6 +48,7 @@
         receiver_socket: /opt/datadog/apm/inject/run/apm.socket
       use_dogstatsd: true
       dogstatsd_socket: /opt/datadog/apm/inject/run/dsd.socket
+  when: not datadog_installer_enabled
 
 - name: Fail if provided config is not compatible with APM host injection
   fail:
