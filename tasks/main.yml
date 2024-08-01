@@ -26,12 +26,12 @@
 - name: Set Facts for Datadog Agent Major Version
   include_tasks: set-parse-version.yml
 
+- name: Configure Datadog Installer
+  include_tasks: installer-config.yml
+
 - name: Check and resolve APM injection settings
   include_tasks: apm-inject-check.yml
   when: datadog_apm_instrumentation_enabled | length > 0
-
-- name: Configure Datadog Installer
-  include_tasks: installer-config.yml
 
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
