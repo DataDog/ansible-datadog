@@ -252,6 +252,8 @@ jobs:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
       - checkout
+      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+      - run: mkdir -p /etc/systemd/system/
       - run: >
           ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -vv
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
