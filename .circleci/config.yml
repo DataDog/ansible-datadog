@@ -252,6 +252,10 @@ jobs:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
       - checkout
+        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
+        # create the systemd folder to store its units
+        # Since we're running the tests in a docker container without systemd, we can "help" it
+        # proceed by pretending systemd is there
       - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
       - run: mkdir -p /etc/systemd/system/
       - run: >
