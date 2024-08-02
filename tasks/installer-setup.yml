@@ -39,6 +39,10 @@
   when: not datadog_installer_install_result.failed
   changed_when: true
 
+# Ensure the service exists now
+- name: Populate service facts
+  service_facts:
+
 - name: Check if installer owns datadog-agent package
   command: datadog-installer is-installed "{{ datadog_agent_flavor }}"
   failed_when: datadog_installer_owns_agent.rc != 0 and datadog_installer_owns_agent.rc != 10
