@@ -32,7 +32,7 @@
     DATADOG_PARENT_ID: "{{ datadog_installer_trace_id }}"
     DD_SITE: "{{ datadog_site | default('datadoghq.com') }}"
     DD_API_KEY: "{{ datadog_api_key }}"
-    DD_REMOTE_UPDATES: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates else '' }}"
+    DD_REMOTE_UPDATES: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates | bool else '' }}"
     DD_APM_INSTRUMENTATION_ENABLED: "{{ datadog_apm_instrumentation_enabled }}"
     DD_APM_INSTRUMENTATION_LIBRARIES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
   ignore_errors: true
