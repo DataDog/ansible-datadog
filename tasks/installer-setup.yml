@@ -80,6 +80,10 @@
     - not datadog_installer_bootstrap_result.failed
   loop: "{{ datadog_installer_owned_apm_packages.results }}"
 
+- name: debug APM libs
+  debug:
+    msg: "{{ datadog_apm_instrumentation_libraries }}"
+
 - name: Stop duration measurements
   command: "date +%s%N"
   register: datadog_installer_stop_time
