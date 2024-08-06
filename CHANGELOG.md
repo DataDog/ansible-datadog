@@ -1,5 +1,14 @@
 CHANGELOG
 =========
+# 4.25.0 / 2024-08-06
+* [BUGFIX] Correctly install datadog-installer on RHEL derivatives [#587]
+* [BUGFIX] Enable datadog-installer when remote_updates is true [#588]
+* [BUGFIX] Fix security-agent.yaml generation [#591]
+* [BUGFIX] Don't install datadog-agent when owned by datadog-installer [#589]
+* [BUGFIX] Fix APM config when owned by datadog-installer [#590]
+* [IMPROVEMENT] Speed up conf.d checks [#584]
+* [IMPROVEMENT] Don't sort configuration keys [#577]
+
 # 4.24.0 / 2024-07-18
 * [FEATURE] creating install.json file related to apm single step instrumation [#572]
 * [FEATURE] add support for datadog-installer [#573]
@@ -23,7 +32,7 @@ CHANGELOG
 * [BUGFIX] Remove `warn` argument that is not supported in newer Ansible versions [#566]
 * [DOCS] Fix inter-readme links for integrations [#546], thanks [@valscion]
 * [DOCS] Clarify that role variables are set in the `vars` section of the playbook [#550]
-* [DOCS] [DOCS-7475] Replace install command for Windows [#559] 
+* [DOCS] [DOCS-7475] Replace install command for Windows [#559]
 
 # 4.22.0 / 2024-01-25
 * [IMPROVEMENT] Use Get-ItemProperty to retrieve Windows Agent version [#536]
