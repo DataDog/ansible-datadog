@@ -284,6 +284,37 @@ jobs:
               fi
             fi'
 
+  test_installer_suse:
+    parameters:
+      ansible_version:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+      inventory:
+        type: string
+        default: "ci.ini"
+    docker:
+      - image: datadog/docker-library:ansible_suse_<<parameters.ansible_version>>
+    steps:
+      - checkout
+        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
+        # create the systemd folder to store its units
+        # Since we're running the tests in a docker container without systemd, we can "help" it
+        # proceed by pretending systemd is there
+      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+      - run: mkdir -p /etc/systemd/system/
+      - run: >
+          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
+          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
+          -e datadog_remote_updates="true"
+      - run: >
+          bash -c 'datadog-installer version;
+              if [ -d /opt/datadog-agent ]; then
+                echo "The agent should NOT have been installed by the distribution";
+                exit 1;
+              fi'
+
 workflows:
   version: 2
   test_datadog_role:
@@ -386,3 +417,8 @@ workflows:
               os: ["debian", "centos", "amazonlinux2", "suse"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
+
+      - test_installer_suse:
+         matrix:
+           parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
