@@ -7,7 +7,9 @@
 - name: Fail if APM Host injection is not supported on this host
   fail:
     msg: APM Host Injection is not supported in this platform.
-  when: ansible_facts.os_family not in ["Debian", "RedHat", "Rocky", "AlmaLinux"]
+  when: >
+    ansible_facts.os_family not in ["Debian", "RedHat", "Rocky", "AlmaLinux"] and
+      (ansible_facts.os_family == "Suse" and not datadog_installer_enabled)
 
 - name: Fail if APM Host injection type does not contain a supported value
   fail:
