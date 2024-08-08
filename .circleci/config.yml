@@ -383,6 +383,6 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["debian", "centos", "amazonlinux2"]
+              os: ["debian", "centos", "amazonlinux2", "suse"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
