@@ -310,7 +310,7 @@ jobs:
           -e datadog_remote_updates="true"
       - run: >
           bash -c 'datadog-installer version;
-              if [ ! -d /opt/datadog-packages/agent ]; then
+              if [ ! -d /opt/datadog-packages/datadog-agent ]; then
                 echo "The agent should have been installed by the installer";
                 exit 1;
               fi
