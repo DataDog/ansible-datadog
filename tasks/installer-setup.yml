@@ -20,9 +20,13 @@
   include_tasks: pkg-redhat/install-installer-yum.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "yum"
 
-- name: Include installer YUM install task
+- name: Include installer DEB install task
   include_tasks: pkg-debian/install-installer.yml
   when: ansible_facts.os_family == "Debian" and not ansible_check_mode
+
+- name: Include installer Zypper install task
+  include_tasks: pkg-suse/install-installer-zypper.yml
+  when: ansible_facts.os_family == "Suse" and not ansible_check_mode
 
 - name: Bootstrap the installer
   command: /usr/bin/datadog-bootstrap bootstrap
