@@ -3,3 +3,22 @@
   set_fact:
     datadog_installer_enabled: true
   when: datadog_apm_instrumentation_enabled | length > 0 or datadog_remote_updates | bool
+
+- name: Set internal values for installer registry
+  set_fact:
+    installer_registry_config:
+      installer:
+        registry: "{{ datadog_installer_registry }}"
+  when: datadog_installer_registry
+
+- name: Set internal values for installer registry authentication
+  set_fact:
+    installer_registry_config:
+      installer:
+        auth: "{{ datadog_installer_auth }}"
+  when: datadog_installer_auth
+
+- name: Update datadog_config including installer registry
+  set_fact:
+    agent_datadog_config: "{{ agent_datadog_config | combine(installer_registry_config, list_merge='keep') }}"
+  when: installer_registry_config
