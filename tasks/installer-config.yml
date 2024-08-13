@@ -9,14 +9,8 @@
     installer_registry_config:
       installer:
         registry: "{{ datadog_installer_registry }}"
-  when: datadog_installer_registry
-
-- name: Set internal values for installer registry authentication
-  set_fact:
-    installer_registry_config:
-      installer:
         auth: "{{ datadog_installer_auth }}"
-  when: datadog_installer_auth
+  when: datadog_installer_registry or datadog_installer_auth
 
 - name: Update datadog_config including installer registry
   set_fact:
