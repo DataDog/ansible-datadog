@@ -214,6 +214,11 @@ datadog_apm_instrumentation_docker_config:
 # Enable remote updates through datadog-installer
 datadog_remote_updates: false
 
+# Registry & auth for the datadog installer
+datadog_installer_registry: ""
+datadog_installer_auth: ""
+installer_registry_config: {}
+
 #
 # Internal variables
 # The following variables are for internal use only, do not modify them.
