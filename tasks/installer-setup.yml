@@ -39,6 +39,8 @@
     DD_REMOTE_UPDATES: "{{ 'true' if datadog_remote_updates is defined and datadog_remote_updates | bool else '' }}"
     DD_APM_INSTRUMENTATION_ENABLED: "{{ datadog_apm_instrumentation_enabled }}"
     DD_APM_INSTRUMENTATION_LIBRARIES: "{{ datadog_apm_instrumentation_libraries | join(',') }}"
+    DD_INSTALLER_REGISTRY_AUTH_INSTALLER_PACKAGE: "{{ datadog_installer_auth }}"
+    DD_INSTALLER_REGISTRY_URL_INSTALLER_PACKAGE: "{{ datadog_installer_registry }}"
   ignore_errors: true
   when: not datadog_installer_install_result.failed
   changed_when: true
