@@ -217,6 +217,7 @@ datadog_remote_updates: false
 # Registry & auth for the datadog installer
 datadog_installer_registry: ""
 datadog_installer_auth: ""
+installer_registry_config: {}
 
 #
 # Internal variables
