@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+# 4.26.0 / 2024-08-19
+* [IMPROVEMENT] datadog-installer registry support [#596]
+* [BUGFIX] Fix the datadog-installer on openSUSE [#594]
+
 # 4.25.0 / 2024-08-06
 * [BUGFIX] Correctly install datadog-installer on RHEL derivatives [#587]
 * [BUGFIX] Enable datadog-installer when remote_updates is true [#588]
