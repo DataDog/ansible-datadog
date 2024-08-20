@@ -228,7 +228,7 @@ jobs:
       - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
       - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
-      - run: curl localhost:5985
+      - run: curl --retry 5 --retry-max-time 30 localhost:5985
       # verify that the emitted trace is in trace-agent log
       - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
 
