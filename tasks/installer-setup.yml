@@ -89,14 +89,6 @@
     - not datadog_installer_bootstrap_result.failed
   loop: "{{ datadog_installer_owned_apm_packages.results }}"
 
-# - name: Filter pre processed APM packages owned by the installer
-#   set_fact:
-#     pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | difference([item.item]) }}"
-#   when:
-#     - item.rc == 0
-#     - not datadog_installer_bootstrap_result.failed
-#   loop: "{{ datadog_installer_owned_apm_packages.results }}"
-
 - name: Stop duration measurements
   command: "date +%s%N"
   register: datadog_installer_stop_time
