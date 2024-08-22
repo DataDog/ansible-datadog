@@ -4,7 +4,7 @@
     pre_processed_datadog_apm_libraries: "{{ (pre_processed_datadog_apm_libraries | default([], true))
     + [(item | regex_replace('[:]latest', ''))
     + ('-1' if (item.split(':') | length > 1 and item.split(':')[1] != 'latest') else '')] }}"
-  loop: "{{ datadog_apm_instrumentation_libraries }}"
+  loop: "{{ datadog_apm_instrumentation_libraries if datadog_apm_instrumentation_libraries else [] }}"
   when: not ansible_check_mode
 
 - name: Include APM host injection Debian install tasks
