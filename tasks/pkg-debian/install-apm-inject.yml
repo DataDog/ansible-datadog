@@ -3,15 +3,16 @@
   set_fact:
     agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
       default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '='))] }}"
-  loop: "{{ pre_processed_datadog_apm_libraries }}"
+  loop: "{{ pre_processed_datadog_apm_libraries | default([], true) }}"
   when: not ansible_check_mode
 
 - name: Unpin tracer libraries for install
   dpkg_selections:
     name: "{{ item }}"
     selection: install
-  loop: "{{ agent_dd_apm_install_pkgs | reject('match', '^.*=.*$') | list }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) | reject('match', '^.*=.*$') | list }}"
   failed_when: false
+  when: not ansible_check_mode
 
 - name: Install APM Inject Library
   apt:
@@ -25,15 +26,15 @@
   apt:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
-  loop: "{{ agent_dd_apm_install_pkgs }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) }}"
   when: not ansible_check_mode
 
 - name: Show installed tracers
   debug:
-    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
+    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs | default([], true) }}"
 
 - name: Prevent libraries from being upgraded
   dpkg_selections:
     name: "{{ item.split('=')[0] }}"
     selection: hold
-  loop: "{{ agent_dd_apm_install_pkgs | select('match', '^.*=.*$') | list }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) | select('match', '^.*=.*$') | list }}"

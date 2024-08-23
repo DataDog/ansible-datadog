@@ -14,7 +14,7 @@
       "{{ telemetry_payload | default({}) |
           combine({telemetry_library_key[item.split(':')[0]]:
             item.split(':')[1] | default('default')}) }}"
-  loop: "{{ pre_processed_datadog_apm_libraries }}"
+  loop: "{{ pre_processed_datadog_apm_libraries | default([], true) }}"
 
 - name: Build telemetry request
   set_fact:
@@ -27,7 +27,7 @@
         event_name: 'agent.injection.success'
         tags: "{{ {'install_time': ansible_date_time.epoch | int,
                    'install_type': 'ansible'} |
-                   combine(telemetry_payload) }}"
+                   combine(telemetry_payload | default({})) }}"
 
 - name: Send installation telemetry to Datadog
   uri:

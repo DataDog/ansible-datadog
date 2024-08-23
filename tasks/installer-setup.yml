@@ -86,6 +86,15 @@
     - not datadog_installer_bootstrap_result.failed
   loop: "{{ datadog_installer_owned_apm_packages.results }}"
 
+- name: Update version number for APM libraries not owned by the installer
+  set_fact:
+    pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | default([], true) |
+       difference([(item.item | regex_replace('[:]latest', ''))]) }}"
+  loop: "{{ datadog_installer_owned_apm_packages.results }}"
+  when:
+    - item.rc == 0
+    - not datadog_installer_bootstrap_result.failed
+
 - name: Stop duration measurements
   command: "date +%s%N"
   register: datadog_installer_stop_time
