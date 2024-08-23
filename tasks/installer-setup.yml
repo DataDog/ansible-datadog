@@ -88,10 +88,11 @@
 
 - name: Update version number for APM libraries not owned by the installer
   set_fact:
-    pre_processed_datadog_apm_libraries: "{{ [(item.item | regex_replace('[:]latest', ''))
-    + ('-1' if (item.item.split(':') | length > 1 and item.item.split(':')[1] != 'latest') else '')] }}"
-  loop: "{{ datadog_apm_instrumentation_libraries | default([], true) }}"
-  when: not ansible_check_mode
+    pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | difference([item.item]) }}"
+  loop: "{{ datadog_installer_owned_apm_packages.results }}"
+  when:
+    - item.rc == 0
+    - not datadog_installer_bootstrap_result.failed
 
 - name: Stop duration measurements
   command: "date +%s%N"
