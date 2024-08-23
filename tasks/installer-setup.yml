@@ -91,7 +91,7 @@
     pre_processed_datadog_apm_libraries: "{{ [(item.item | regex_replace('[:]latest', ''))
     + ('-1' if (item.item.split(':') | length > 1 and item.item.split(':')[1] != 'latest') else '')] }}"
   loop: "{{ datadog_apm_instrumentation_libraries | default([], true) }}"
-  when: not ansible_check_mode 
+  when: not ansible_check_mode
 
 - name: Stop duration measurements
   command: "date +%s%N"
