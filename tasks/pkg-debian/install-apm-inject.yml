@@ -26,7 +26,7 @@
   apt:
     name: "{{ (item | default([], true)) }}"
     state: "{{ 'present' if '=' in item else 'latest' }}" # noqa package-latest
-  loop: "{{ agent_dd_apm_install_pkgs }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) }}"
   when: not ansible_check_mode
 
 - name: Show installed tracers
@@ -37,4 +37,4 @@
   dpkg_selections:
     name: "{{ item.split('=')[0] }}"
     selection: hold
-  loop: "{{ agent_dd_apm_install_pkgs | select('match', '^.*=.*$') | list }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) | select('match', '^.*=.*$') | list }}"
