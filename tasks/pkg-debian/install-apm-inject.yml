@@ -31,7 +31,7 @@
 
 - name: Show installed tracers
   debug:
-    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs }}"
+    msg: "Installed tracers: {{ agent_dd_apm_install_pkgs | default([], true) }}"
 
 - name: Prevent libraries from being upgraded
   dpkg_selections:
