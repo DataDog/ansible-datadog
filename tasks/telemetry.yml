@@ -14,7 +14,7 @@
       "{{ telemetry_payload | default({}) |
           combine({telemetry_library_key[item.split(':')[0]]:
             item.split(':')[1] | default('default')}) }}"
-  loop: "{{ pre_processed_datadog_apm_libraries }}"
+  loop: "{{ pre_processed_datadog_apm_libraries | default([], true) }}"
 
 - name: Build telemetry request
   set_fact:
