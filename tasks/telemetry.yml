@@ -27,7 +27,7 @@
         event_name: 'agent.injection.success'
         tags: "{{ {'install_time': ansible_date_time.epoch | int,
                    'install_type': 'ansible'} |
-                   combine(telemetry_payload) }}"
+                   combine(telemetry_payload) | default({}) }}"
 
 - name: Send installation telemetry to Datadog
   uri:
