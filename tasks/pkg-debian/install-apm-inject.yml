@@ -10,7 +10,7 @@
   dpkg_selections:
     name: "{{ item }}"
     selection: install
-  loop: "{{ agent_dd_apm_install_pkgs | reject('match', '^.*=.*$') | list }}"
+  loop: "{{ agent_dd_apm_install_pkgs | default([], true) | reject('match', '^.*=.*$') | list }}"
   failed_when: false
   when: not ansible_check_mode
 
