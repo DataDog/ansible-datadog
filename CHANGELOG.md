@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 # 4.27.0 / 2024-08-26
-* [IMPROVEMENT] Process apm list again [#600]
+* [BUGFIX] Process apm list again [#600]
 
 # 4.26.0 / 2024-08-19
 * [IMPROVEMENT] datadog-installer registry support [#596]
