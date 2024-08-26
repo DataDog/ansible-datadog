@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+# 4.27.0 / 2024-08-26
+* [BUGFIX] Process apm list again [#600]
+
 # 4.26.0 / 2024-08-19
 * [IMPROVEMENT] datadog-installer registry support [#596]
 * [BUGFIX] Fix the datadog-installer on openSUSE [#594]
