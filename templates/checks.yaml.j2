@@ -1,1 +1,3 @@
+# {{ ansible_managed }}
+
 {{ agent_datadog_checks[item] | to_nice_yaml(indent=2, width=160, sort_keys=False) }}
