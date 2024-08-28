@@ -32,7 +32,6 @@
   set_fact:
     datadog_agent_major_version: "{{ datadog_agent_version.split('.', 1).0 }}"
     datadog_agent_minor_version: "{{ datadog_agent_version.split('.', 1).1 }}"
-  ignore_errors: true
   when: datadog_agent_version
 
 - name: Bootstrap the installer
