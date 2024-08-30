@@ -252,6 +252,7 @@ jobs:
           name: "Check tracers are installed with the installer"
           command: |
             for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
+              print "Checking $tracer";
               sudo datadog-installer is-installed datadog-apm-library-$tracer;
             done
 
