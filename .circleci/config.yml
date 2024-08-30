@@ -248,13 +248,11 @@ jobs:
       - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_all.yaml"
       - run: sudo datadog-agent status || true
       - run: ps aux | grep -v grep | grep datadog-agent
-      - run:
-          name: "Check tracers are installed with the installer"
-          command: |
-            for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
-              print "Checking $tracer";
-              sudo datadog-installer is-installed datadog-apm-library-$tracer;
-            done
+      - run: >
+          bash -c 'for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
+            print "Checking $tracer";
+            sudo datadog-installer is-installed datadog-apm-library-$tracer;
+          done'
 
   test_installer:
     parameters:
