@@ -101,8 +101,9 @@
 
 - name: Update version number for APM libraries not owned by the installer
   set_fact:
-    pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | default([], true) |
-       difference([(item.item | regex_replace('[:]latest', ''))]) }}"
+    pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | default([], true) | difference(
+      [(item.item | regex_replace('$', '-1') | regex_replace('^datadog-apm-library-', '') )]
+      + [(item.item | regex_replace('[:]latest', '')  | regex_replace('^datadog-apm-library-', '') )]) }}"
   loop: "{{ datadog_installer_owned_apm_packages.results }}"
   when:
     - item.rc == 0
