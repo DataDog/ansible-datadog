@@ -232,6 +232,29 @@ jobs:
       # verify that the emitted trace is in trace-agent log
       - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
 
+  test_apm_injection_all:
+    parameters:
+      ansible_version:
+        type: string
+    
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_all.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - run:
+          name: "Check tracers are installed with the installer"
+          command: |
+            for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
+              sudo datadog-installer is-installed datadog-apm-library-$tracer;
+            done
+
   test_installer:
     parameters:
       ansible_version:
@@ -410,6 +433,11 @@ workflows:
               python: ["python3"]
 
       - test_apm_injection:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0"]
+
+      - test_apm_injection_all:
           matrix:
             parameters:
               ansible_version: ["6.7.0"]
