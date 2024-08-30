@@ -197,7 +197,7 @@ datadog_apm_instrumentation_enabled: ""
 # Example: `["java:1.23.0", "python:2.0.9"]`
 # You can see the available values in our official docs:
 # https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
-datadog_apm_instrumentation_libraries: ["java", "js", "dotnet", "python", "ruby"]
+datadog_apm_instrumentation_libraries: []
 
 # Used to send telemetry data to datadog on installation
 datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
