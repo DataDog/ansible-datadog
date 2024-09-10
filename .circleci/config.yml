@@ -352,7 +352,7 @@ jobs:
         # proceed by pretending systemd is there
       - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
       - run: mkdir -p /etc/systemd/system/
-      - run: DD_API_KEY=woof DD_SITE="datadoghq.com" DD_INSTALL_ONLY=true DD_MINOR_VERSION=53 bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
+      - run: DD_API_KEY=woof DD_SITE="datadoghq.com" DD_INSTALL_ONLY=true DD_AGENT_MINOR_VERSION=53 bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
       - run: >
           ansible-playbook -v -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_over_pinned.yaml"
 
