@@ -236,7 +236,7 @@ jobs:
     parameters:
       ansible_version:
         type: string
-    
+
     machine:
       image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
 
@@ -270,6 +270,9 @@ jobs:
         type: string
       remote_updates:
         type: string
+      existing_install:
+        type: string
+        default: "false"
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -280,6 +283,10 @@ jobs:
         # proceed by pretending systemd is there
       - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
       - run: mkdir -p /etc/systemd/system/
+      - when:
+          condition: <<parameters.existing_install>> is "true"
+          steps:
+            - run: DD_API_KEY=woof DD_SITE="datadoghq.com" bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
       - run: >
           ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
@@ -448,6 +455,7 @@ workflows:
               os: ["debian", "centos", "amazonlinux2"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
+              existing_install: ["true", "false"]
 
       - test_installer_suse:
          matrix:
