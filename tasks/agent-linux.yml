@@ -73,7 +73,7 @@
     mode: "0640"
     owner: root
     group: "{{ datadog_group }}"
-  when: datadog_manage_config and agent_datadog_sysprobe_enabled
+  when: datadog_manage_config and not datadog_skip_running_check and agent_datadog_sysprobe_enabled
   notify: "{% if agent_datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
 
 
