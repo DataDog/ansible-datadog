@@ -133,6 +133,6 @@
   apt:
     name: datadog-signing-keys
     state: latest # noqa package-latest
-    # we don't use update_cache: yes, as that was just done by the install-pinned/install-latest
+    # we don't use update_cache: yes, as that was just done by the "Ensure Datadog repository is up-to-date" task above
   register: agent_datadog_signing_keys_install
   when: not ansible_check_mode

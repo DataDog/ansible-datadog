@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  roles:
+    - { role: '/root/project/'}
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_enabled: false
+    datadog_skip_running_check: true
+    datadog_agent_version: 7.53.0
+    datadog_apm_instrumentation_enabled: host
+    datadog_apm_instrumentation_libraries: [ "java" ]

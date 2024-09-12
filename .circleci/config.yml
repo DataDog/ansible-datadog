@@ -236,7 +236,7 @@ jobs:
     parameters:
       ansible_version:
         type: string
-    
+
     machine:
       image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
 
@@ -340,6 +340,22 @@ jobs:
                 echo "The agent should NOT have been installed by the distribution";
                 exit 1;
               fi'
+
+  test_installer_over_pinned:
+    docker:
+      - image: datadog/docker-library:ansible_centos_2_10
+    steps:
+      - checkout
+        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
+        # create the systemd folder to store its units
+        # Since we're running the tests in a docker container without systemd, we can "help" it
+        # proceed by pretending systemd is there
+      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+      - run: mkdir -p /etc/systemd/system/
+      - run: DD_API_KEY=woof DD_SITE="datadoghq.com" DD_INSTALL_ONLY=true DD_AGENT_MINOR_VERSION=53 bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
+      - run: >
+          ansible-playbook -v -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_over_pinned.yaml"
+
 
 workflows:
   version: 2
@@ -453,3 +469,6 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
+
+      - test_installer_over_pinned
+
