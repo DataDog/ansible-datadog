@@ -32,16 +32,6 @@
     agent_dd_group: "{{ datadog_group }}"
     agent_dd_notify_agent: [restart datadog-agent, restart datadog-installer]
 
-- name: Create system-probe configuration file
-  template:
-    src: system-probe.yaml.j2
-    dest: /etc/datadog-agent/system-probe.yaml
-    mode: "0640"
-    owner: root
-    group: "{{ datadog_group }}"
-  when: datadog_manage_config
-  notify: "{% if agent_datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
-
 - name: Set system probe installed
   set_fact:
     agent_datadog_sysprobe_installed: "{{ ansible_facts.services['datadog-agent-sysprobe'] is defined or
@@ -75,6 +65,16 @@
       network_config['enabled']) or (service_monitoring_config is defined and
       'enabled' in (service_monitoring_config | default({}, true)) and service_monitoring_config['enabled'])) and agent_datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check and (not agent_datadog_before_7400)
+
+- name: Create system-probe configuration file
+  template:
+    src: system-probe.yaml.j2
+    dest: /etc/datadog-agent/system-probe.yaml
+    mode: "0640"
+    owner: root
+    group: "{{ datadog_group }}"
+  when: datadog_manage_config and not datadog_skip_running_check and agent_datadog_sysprobe_enabled
+  notify: "{% if agent_datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
 
 - name: Ensure datadog-agent is running
   service:
