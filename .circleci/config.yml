@@ -366,9 +366,9 @@ jobs:
         default: "false"
       os:
         type: string
-      python:
-        type: string
       ansible_version:
+        type: string
+      python:
         type: string
     steps:
       - checkout
@@ -493,6 +493,6 @@ workflows:
       - test_incorrect_rhel6_detect:
          matrix:
            parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["4_10"]
               os: [ "amazonlinux2023"]
-              python: ["python2"]
+              python: ["python3"]
