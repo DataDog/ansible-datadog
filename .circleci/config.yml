@@ -366,11 +366,13 @@ jobs:
         default: "false"
       os:
         type: string
+      python:
+        type: string
       ansible_version:
         type: string
     steps:
       - checkout
-      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_pinned.yaml
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_pinned.yaml -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: datadog-agent version
 
 workflows:
@@ -493,3 +495,4 @@ workflows:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
               os: [ "amazonlinux2023"]
+              python: ["python2"]
