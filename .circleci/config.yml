@@ -356,6 +356,22 @@ jobs:
       - run: >
           ansible-playbook -v -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_over_pinned.yaml"
 
+  test_incorrect_rhel6_detect:
+    # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    parameters:
+      jinja2_native:
+        type: string
+        default: "false"
+      os:
+        type: string
+      ansible_version:
+        type: string
+    steps:
+      - checkout
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_pinned.yaml
+      - run: datadog-agent version
 
 workflows:
   version: 2
@@ -472,3 +488,8 @@ workflows:
 
       - test_installer_over_pinned
 
+      - test_incorrect_rhel6_detect:
+         matrix:
+           parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
+              os: [ "amazonlinux2023"]

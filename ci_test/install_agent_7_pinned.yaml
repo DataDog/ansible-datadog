@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  roles:
+    - { role: '/root/project/'}
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_enabled: false
+    # Target a version above 7.51 which is the last version supported on RHEL6 and similar
+    # This is to ensure we don't incorrectly detect some configurations as RHEL6
+    datadog_agent_version: '7.53.0'
+    # avoid checking that the agent is stopped for centos
+    datadog_skip_running_check: true
