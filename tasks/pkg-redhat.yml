@@ -21,9 +21,12 @@
     msg: "Agent versions {{ agent_datadog_major }}.{{ datadog_agent_max_minor_version + 1 }} and above not supported by current OS (RHEL < 7 equivalent)."
   when: datadog_agent_max_minor_version is defined and agent_datadog_minor is defined and agent_datadog_minor | int > datadog_agent_max_minor_version
 
-- name: debug amazon facts
-  debug:
-    msg: '{{ ansible_facts }}'
+  # Some ansible versions appear to detect yum as the wanted package manager on AL2023.
+  # This can't work since AL2023 only ships python3 and the yum module needs python2
+- name: Ensure dnf is used on Amazon Linux 2023
+  set_fact:
+    ansible_pkg_mgr: dnf
+  when: ansible_facts.distribution == "Amazon" and ansible_facts.distribution_major_version | int >= 2023 and ansible_pkg_mgr == "yum"
 
 - name: Fail early if Python 3 is used on CentOS / RHEL < 8 with old Ansible
   fail:
