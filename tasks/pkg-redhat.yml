@@ -21,6 +21,10 @@
     msg: "Agent versions {{ agent_datadog_major }}.{{ datadog_agent_max_minor_version + 1 }} and above not supported by current OS (RHEL < 7 equivalent)."
   when: datadog_agent_max_minor_version is defined and agent_datadog_minor is defined and agent_datadog_minor | int > datadog_agent_max_minor_version
 
+- name: debug amazon facts
+  debug:
+    msg: '{{ ansible_facts }}'
+
 - name: Fail early if Python 3 is used on CentOS / RHEL < 8 with old Ansible
   fail:
     msg: "The installation of the Agent on RedHat family systems using yum is not compatible with Python 3 with older Ansible versions.
