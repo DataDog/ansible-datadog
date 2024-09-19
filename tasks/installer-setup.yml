@@ -75,7 +75,7 @@
 - name: Disable agent install if owned by installer
   set_fact:
     agent_datadog_skip_install: true
-  when: datadog_installer_owns_agent.rc == 0
+  when: not datadog_installer_bootstrap_result.failed and datadog_installer_owns_agent.rc == 0
 
 - name: Query APM packages owned by installer
   command: datadog-installer is-installed "datadog-apm-library-{{ item }}"
