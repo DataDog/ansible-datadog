@@ -1,5 +1,15 @@
 CHANGELOG
 =========
+# 4.28.0 / 2024-09-24
+* [IMPROVEMENT] Add ansible managed comment to checks.yaml [#602]
+* [BUGFIX] Fix default APM setup [#608]
+* [BUGFIX] Fix APM injector ownership logic [#604]
+* [IMPROVEMENT] Allow pinned version of the agent with the installer [#605]
+* [BUGFIX] Fix updated list of APM packages to install [#607]
+* [BUGFIX] Fix role crash when pinning the agent version with the installer enabled [#609]
+* [BUGFIX] Don't create system-probe config when it is disabled [#611]
+* [BUGFIX] Fix distribution version detection on Amazon Linux 2023 [#612]
+
 # 4.27.0 / 2024-08-26
 * [BUGFIX] Process apm list again [#600]
 
@@ -538,8 +548,25 @@ Initial release, compatible with Ansible v1 & v2
 [#573]: https://github.com/DataDog/ansible-datadog/pull/573
 [#575]: https://github.com/DataDog/ansible-datadog/pull/575
 [#576]: https://github.com/DataDog/ansible-datadog/pull/576
+[#577]: https://github.com/DataDog/ansible-datadog/pull/577
 [#578]: https://github.com/DataDog/ansible-datadog/pull/578
-[#580]: https://github.com/DataDog/ansible-datadog/pull/580
+[#584]: https://github.com/DataDog/ansible-datadog/pull/584
+[#587]: https://github.com/DataDog/ansible-datadog/pull/587
+[#588]: https://github.com/DataDog/ansible-datadog/pull/588
+[#589]: https://github.com/DataDog/ansible-datadog/pull/589
+[#590]: https://github.com/DataDog/ansible-datadog/pull/590
+[#591]: https://github.com/DataDog/ansible-datadog/pull/591
+[#594]: https://github.com/DataDog/ansible-datadog/pull/594
+[#596]: https://github.com/DataDog/ansible-datadog/pull/596
+[#600]: https://github.com/DataDog/ansible-datadog/pull/600
+[#602]: https://github.com/DataDog/ansible-datadog/pull/602
+[#604]: https://github.com/DataDog/ansible-datadog/pull/604
+[#605]: https://github.com/DataDog/ansible-datadog/pull/605
+[#607]: https://github.com/DataDog/ansible-datadog/pull/607
+[#608]: https://github.com/DataDog/ansible-datadog/pull/608
+[#609]: https://github.com/DataDog/ansible-datadog/pull/609
+[#611]: https://github.com/DataDog/ansible-datadog/pull/611
+[#612]: https://github.com/DataDog/ansible-datadog/pull/612
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
