@@ -1,4 +1,4 @@
-*             @DataDog/container-ecosystems
+*             @DataDog/container-ecosystems @DataDog/agent-delivery
 
 # Docs
-*README.md    @DataDog/container-ecosystems @DataDog/documentation
+*README.md    @DataDog/container-ecosystems @DataDog/agent-delivery @DataDog/documentation
