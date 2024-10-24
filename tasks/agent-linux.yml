@@ -95,7 +95,7 @@
     name: "{{ item }}"
     state: stopped
     enabled: false
-  when: not datadog_skip_running_check and not datadog_enabled
+  when: not datadog_skip_running_check and not datadog_enabled and not ansible_check_mode
   with_list:
     - datadog-agent
     - datadog-agent-process
