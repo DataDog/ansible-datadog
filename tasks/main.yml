@@ -29,10 +29,6 @@
 - name: Configure Datadog Installer
   include_tasks: installer-config.yml
 
-- name: Check and resolve APM injection settings
-  include_tasks: apm-inject-check.yml
-  when: datadog_apm_instrumentation_enabled | length > 0
-
 - name: Debian Install Tasks
   include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian"
@@ -85,11 +81,3 @@
 - name: Integrations Tasks
   include_tasks: integration.yml
   when: datadog_integration is defined
-
-- name: APM Host injection tasks
-  include_tasks: apm-inject-install.yml
-  when: datadog_apm_instrumentation_enabled | length > 0
-
-- name: Send telemetry
-  include_tasks: telemetry.yml
-  when: datadog_apm_instrumentation_enabled | length > 0
