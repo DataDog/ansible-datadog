@@ -88,8 +88,6 @@
           stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),\n
           start_time=datadog_installer_start_time.stdout | int,
           stop_time=datadog_installer_stop_time.stdout | int,
-          packages_to_install=datadog_apm_instrumentation_libraries_unfiltered,
-          packages_to_install_filtered=datadog_apm_instrumentation_libraries,
       )) }}"
   when: not ansible_check_mode
 
