@@ -60,56 +60,10 @@
   when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed
   changed_when: true
 
-- name: Check if installer owns apm injector package
-  command: datadog-installer is-installed "{{ datadog_inject_apm_flavor }}"
-  failed_when: datadog_installer_owns_injector_result.rc != 0 and datadog_installer_owns_injector_result.rc != 10
-  register: datadog_installer_owns_injector_result
-  when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed
-  changed_when: true
-
-- name: Register if the installer owns apm injector package
-  set_fact:
-    datadog_installer_owns_injector: "{{ datadog_installer_owns_injector_result.rc == 0 }}"
-  when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed
-
 - name: Disable agent install if owned by installer
   set_fact:
     agent_datadog_skip_install: true
   when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed and datadog_installer_owns_agent.rc == 0
-
-- name: Query APM packages owned by installer
-  command: datadog-installer is-installed "datadog-apm-library-{{ item }}"
-  register: datadog_installer_owned_apm_packages
-  loop: "{{ datadog_apm_instrumentation_libraries }}"
-  when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed
-  failed_when: datadog_installer_owned_apm_packages.rc != 0 and datadog_installer_owned_apm_packages.rc != 10
-  changed_when: true
-  environment:
-    DD_API_KEY: "{{ datadog_api_key }}"
-
-- name: Save APM packages before filtering
-  set_fact:
-    datadog_apm_instrumentation_libraries_unfiltered: "{{ datadog_apm_instrumentation_libraries }}"
-
-- name: Filter APM packages owned by the installer
-  set_fact:
-    datadog_apm_instrumentation_libraries: "{{ datadog_apm_instrumentation_libraries | difference([item.item]) }}"
-  when:
-    - not ansible_check_mode
-    - item.rc == 0
-    - not datadog_installer_bootstrap_result.failed
-  loop: "{{ datadog_installer_owned_apm_packages.results }}"
-
-- name: Update version number for APM libraries not owned by the installer
-  set_fact:
-    pre_processed_datadog_apm_libraries: "{{ pre_processed_datadog_apm_libraries | default([], true) | difference(
-      [(item.item | regex_replace('$', '-1') | regex_replace('^datadog-apm-library-', '') )]
-      + [(item.item | regex_replace('[:]latest', '')  | regex_replace('^datadog-apm-library-', '') )]) }}"
-  loop: "{{ datadog_installer_owned_apm_packages.results }}"
-  when:
-    - not ansible_check_mode
-    - item.rc == 0
-    - not datadog_installer_bootstrap_result.failed
 
 - name: Stop duration measurements
   command: "date +%s%N"
@@ -134,8 +88,6 @@
           stderr=datadog_installer_install_result.stderr | default('') + datadog_installer_bootstrap_result.stderr | default(''),\n
           start_time=datadog_installer_start_time.stdout | int,
           stop_time=datadog_installer_stop_time.stdout | int,
-          packages_to_install=datadog_apm_instrumentation_libraries_unfiltered,
-          packages_to_install_filtered=datadog_apm_instrumentation_libraries,
       )) }}"
   when: not ansible_check_mode
 

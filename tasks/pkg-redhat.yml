@@ -122,24 +122,16 @@
         state: present
       when: not ansible_check_mode
 
-    - name: Set APM injection languages and versions for Redhat
-      set_fact:
-        agent_dd_apm_install_pkgs: "{{ (agent_dd_apm_install_pkgs |
-          default([], true)) + ['datadog-apm-library-' + (item | regex_replace('[:]', '-'))] }}"
-      loop: "{{ pre_processed_datadog_apm_libraries | default([], true) }}"
-      when: not ansible_check_mode and datadog_apm_instrumentation_enabled | length > 0
-
     - name: Set versioned includepkgs variable
       set_fact:
         agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version
         | regex_replace('^\\d+:', '') }}
-        {{ datadog_inject_apm_flavor }}
-        {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
+        {{ datadog_inject_apm_flavor }}"
       when: agent_datadog_agent_redhat_version is defined
 
     - name: Set plain includepkgs variable
       set_fact:
-        agent_datadog_includepkgs: "{{ datadog_agent_flavor }} {{ datadog_inject_apm_flavor }}
+        agent_datadog_includepkgs: "{{ datadog_agent_flavor }}
          {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       when: agent_datadog_agent_redhat_version is not defined
 
