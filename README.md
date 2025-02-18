@@ -50,6 +50,25 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a placeholder key and substitute the key at a later point.
 
+### Air-gapped environments
+
+To install Datadog in an air-gapped environment using a specific registry and images, use the Datadog Ansible collection along with the `datadog_installer_registry`, `datadog_installer_auth`, and `agent_datadog_config` variables. 
+
+**Note**: `agent_datadog_config` overrides the `installer_registry_config` setting.
+
+For example:
+
+```yaml
+name: Datadog Agent Install
+  include_role:
+    name: datadog.dd.agent
+  vars:
+    datadog_installer_registry: "my.local.registry"
+    datagog_yum_repo: "my.local.repo"
+    datadog_api_key: "MY_DATADOG_API_KEY"
+    datadog_site: "MY_DATADOG_SITE"
+```
+
 ## Role variables
 
 These variables provide additional configuration during the installation of the Datadog Agent. They should be specified in the `vars` section of your playbook.
