@@ -202,15 +202,6 @@ datadog_apm_instrumentation_libraries: []
 # Used to send telemetry data to datadog on installation
 datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
 
-# Configure Docker APM injection.
-# See: https://docs.datadoghq.com/tracing/trace_collection/library_injection_local/?tab=agentandappinseparatecontainers#configure-docker-injection
-datadog_apm_instrumentation_docker_config:
-  library_inject: true
-  log_level: info
-  output_paths:
-    - stderr
-  config_sources: BASIC
-
 # Enable remote updates through datadog-installer
 datadog_remote_updates: false
 
