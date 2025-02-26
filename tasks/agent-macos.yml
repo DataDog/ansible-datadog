@@ -48,7 +48,7 @@
     osascript -e 'tell application "System Events" to delete login item "Datadog Agent"' || true
   when: agent_user_service_created.rc == 0
   changed_when: false
-  ignore_errors: true 
+  # ignore_errors: true
 
 - name: Remove user LaunchAgent plist file
   file:
