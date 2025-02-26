@@ -42,11 +42,13 @@
   when: agent_user_service_created.rc == 0
   changed_when: false
 
-- name: Remove user login item
-  command: |-
-    osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
+- name: Remove user login item (only if it exists)
+  shell: |-
+    osascript -e 'tell application "System Events" to get login item "Datadog Agent"' && \
+    osascript -e 'tell application "System Events" to delete login item "Datadog Agent"' || true
   when: agent_user_service_created.rc == 0
   changed_when: false
+  ignore_errors: true 
 
 - name: Remove user LaunchAgent plist file
   file:
