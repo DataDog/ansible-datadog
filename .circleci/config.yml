@@ -34,7 +34,7 @@ commands:
         type: string
         default: "ci.ini"
     steps:
-      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=<<parameters.python>>'
       - run: datadog-agent version
 
   test_install_no_manage_config:
@@ -192,7 +192,7 @@ jobs:
         type: string
         default: "false"
     macos:
-      xcode: 13.4.1
+      xcode: 16.2.0
     steps:
       - checkout
       - run:
@@ -203,10 +203,10 @@ jobs:
           command: brew install python@3.11
       - run:
           name: Install Ansible
-          command: pip3 install ansible~=<<parameters.ansible_version>>
+          command: /opt/homebrew/bin/pip3.11 install ansible~=<<parameters.ansible_version>>
       - test_agent_install_macos:
           version: "<<parameters.agent_version>>"
-          python: "<<parameters.python>>"
+          python: "/opt/homebrew/bin/python3.11"
           jinja2_native: "<<parameters.jinja2_native>>"
 
   test_apm_injection:
