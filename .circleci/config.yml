@@ -103,7 +103,6 @@ commands:
         type: string
       python:
         type: string
-        default: "/opt/homebrew/bin/python3.11"
       jinja2_native:
         type: string
         default: "false"
@@ -207,7 +206,7 @@ jobs:
           command: /opt/homebrew/bin/pip3.11 install ansible~=<<parameters.ansible_version>>
       - test_agent_install_macos:
           version: "<<parameters.agent_version>>"
-          python: "<<parameters.python>>"
+          python: "/opt/homebrew/bin/python3.11"
           jinja2_native: "<<parameters.jinja2_native>>"
 
   test_apm_injection:
