@@ -1,5 +1,13 @@
 CHANGELOG
 =========
+# 4.29.0 / 2024-03-03
+* [IMPROVEMENT] Remove deprecated APM deb/rpms [#624]
+* [IMPROVEMENT] [CI] Fix MacOS CI [#630]
+* [BUGFIX] Fix Ansible check mode when installer/apm injection is enabled [#619]
+* [DOCS] Add information for air-gapped installation [#622]
+* [CHORE] Transfer ownership to container-ecosystems [#618]
+* [CHORE] Remove agent-delivery as CODEOWNER [#629]
+
 # 4.28.0 / 2024-09-24
 * [IMPROVEMENT] Add ansible managed comment to checks.yaml [#602]
 * [BUGFIX] Fix default APM setup [#608]
@@ -567,6 +575,12 @@ Initial release, compatible with Ansible v1 & v2
 [#609]: https://github.com/DataDog/ansible-datadog/pull/609
 [#611]: https://github.com/DataDog/ansible-datadog/pull/611
 [#612]: https://github.com/DataDog/ansible-datadog/pull/612
+[#618]: https://github.com/DataDog/ansible-datadog/pull/619
+[#619]: https://github.com/DataDog/ansible-datadog/pull/619
+[#622]: https://github.com/DataDog/ansible-datadog/pull/622
+[#624]: https://github.com/DataDog/ansible-datadog/pull/624
+[#629]: https://github.com/DataDog/ansible-datadog/pull/629
+[#630]: https://github.com/DataDog/ansible-datadog/pull/630
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
