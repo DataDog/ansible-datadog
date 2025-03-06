@@ -26,6 +26,9 @@
       enabled: true
     runtime_security_config:
       enabled: true
+    system_probe_other_config:
+      traceroute:
+        enabled: true
     datadog_checks:
       process:
         init_config:
