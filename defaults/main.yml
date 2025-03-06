@@ -14,6 +14,7 @@ datadog_config: {}
 system_probe_config: {}
 network_config: {}
 service_monitoring_config: {}
+system_probe_other_config: {}
 
 # default checks enabled
 datadog_checks: {}

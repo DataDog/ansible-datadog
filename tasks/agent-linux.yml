@@ -6,6 +6,12 @@
     agent_datadog_before_7400: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major
       | int < 8 and agent_datadog_minor | int < 40 }}"
 
+- name: Set before 6/7.61.0 flag
+  set_fact:
+    datadog_before_7610: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined
+      and datadog_major | int < 8
+      and (datadog_minor | int < 61) }}"
+
 - name: Set before 6/7.24.1 flag
   set_fact:
     agent_datadog_before_7241: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_bugfix is defined
@@ -65,6 +71,16 @@
       network_config['enabled']) or (service_monitoring_config is defined and
       'enabled' in (service_monitoring_config | default({}, true)) and service_monitoring_config['enabled'])) and agent_datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check and (not agent_datadog_before_7400)
+
+# Since 6/7.61.0, setting system_probe_other_config is enough to start the system-probe service:
+- name: Set system probe enabled (since 6/7.61.0)
+  set_fact:
+    agent_datadog_sysprobe_enabled: "{{ ((system_probe_config is defined and 'enabled' in (system_probe_config | default({}, true)) and
+      system_probe_config['enabled']) or (network_config is defined and 'enabled' in (network_config | default({}, true)) and
+      network_config['enabled']) or (service_monitoring_config is defined and
+      'enabled' in (service_monitoring_config | default({}, true)) and service_monitoring_config['enabled'])) or
+      (system_probe_other_config is defined and (system_probe_other_config is mapping | default({}, true)) and system_probe_other_config | length > 0) and agent_datadog_sysprobe_installed }}"
+  when: not datadog_skip_running_check and (not agent_datadog_before_7610)
 
 - name: Create system-probe configuration file
   template:
