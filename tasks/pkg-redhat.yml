@@ -146,7 +146,7 @@
         description: Datadog, Inc.
         baseurl: "{{ datadog_agent5_yum_repo }}"
         enabled: true
-        includepkgs: "{{ agent_datadog_includepkgs }}"
+        includepkgs: "{{ agent_datadog_includepkgs | trim }}"
         repo_gpgcheck: false # we don't sign Agent 5 repodata
         gpgcheck: "{{ datadog_yum_gpgcheck }}"
         gpgkey: [
@@ -167,7 +167,7 @@
         description: Datadog, Inc.
         baseurl: "{{ datadog_agent6_yum_repo }}"
         enabled: true
-        includepkgs: "{{ agent_datadog_includepkgs }}"
+        includepkgs: "{{ agent_datadog_includepkgs | trim }}"
         repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
         gpgcheck: "{{ datadog_yum_gpgcheck }}"
         gpgkey: [
@@ -188,7 +188,7 @@
         description: Datadog, Inc.
         baseurl: "{{ datadog_agent7_yum_repo }}"
         enabled: true
-        includepkgs: "{{ agent_datadog_includepkgs }}"
+        includepkgs: "{{ agent_datadog_includepkgs | trim }}"
         repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
         gpgcheck: "{{ datadog_yum_gpgcheck }}"
         gpgkey: [
@@ -209,7 +209,7 @@
         description: Datadog, Inc.
         baseurl: "{{ datadog_yum_repo }}"
         enabled: true
-        includepkgs: "{{ agent_datadog_includepkgs }}"
+        includepkgs: "{{ agent_datadog_includepkgs | trim }}"
         repo_gpgcheck: "{{ agent_do_yum_repo_gpgcheck }}"
         gpgcheck: "{{ datadog_yum_gpgcheck }}"
         gpgkey: [
