@@ -64,7 +64,7 @@ name: Datadog Agent Install
     name: datadog.dd.agent
   vars:
     datadog_installer_registry: "my.local.registry"
-    datagog_yum_repo: "my.local.repo"
+    datadog_yum_repo: "my.local.repo"
     datadog_api_key: "MY_DATADOG_API_KEY"
     datadog_site: "MY_DATADOG_SITE"
 ```
