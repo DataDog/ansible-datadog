@@ -250,7 +250,7 @@ The system probe is configured under the `system_probe_config` variable. Any var
 
 [Compliance][18] is configured under the `compliance_config` variable. Any variables nested underneath are written to the `security-agent.yaml`, in the `compliance_config` section.
 
-All other configuration for the system-probe that does not live under any of the above keys should be configured under the `system_probe_other_config` variable. Any variables nested underneath are written to the top level
+All other configuration for the system probe that does not live under any of the above keys should be configured under the `system_probe_other_config` variable. Any variables nested underneath are written to the top level
 of `system-probe.yaml`.
 
 **Note for Windows users**: NPM is supported on Windows with Agent v6.27+ and v7.27+. It ships as an optional component that is only installed if `network_config.enabled` is set to true when the Agent is installed or upgraded. Because of this, existing installations might need to do an uninstall and reinstall of the Agent once to install the NPM component, unless the Agent is upgraded at the same time.
