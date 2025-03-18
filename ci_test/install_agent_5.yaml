@@ -4,7 +4,7 @@
   roles:
     - { role: '/root/project/'}
   vars:
-    ansible_python_interpreter: /usr/bin/python2
+    # ansible_python_interpreter: /usr/bin/python2
     datadog_api_key: "11111111111111111111111111111111"
     datadog_agent_major_version: 5
     # avoid checking that the agent is stopped for centos

@@ -448,7 +448,7 @@ workflows:
               ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2"]
-              python: ["python2"]
+              python: ["python3"]
 
       - test_install:
           matrix:
