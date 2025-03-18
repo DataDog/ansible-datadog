@@ -17,7 +17,7 @@ commands:
       python:
         type: string
     steps:
-      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" -e 'ansible_python_interpreter=<<parameters.python>>'
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
 
