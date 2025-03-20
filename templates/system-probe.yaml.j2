@@ -49,7 +49,5 @@ runtime_security_config:
   while the old equivalent option "indentfirst" is removed in jinja 3.
   Using non-keyword argument in indent() to be backward compatible.
 #}
-{% filter indent(0, True) %}
 {{ system_probe_other_config | to_nice_yaml }}
-{% endfilter %}
 {% endif %}
