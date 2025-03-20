@@ -8,7 +8,7 @@
 
 - name: Set before 6/7.61.0 flag
   set_fact:
-    datadog_before_7610: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined
+    agent_datadog_before_7610: "{{ datadog_major is defined and datadog_minor is defined and datadog_bugfix is defined
       and datadog_major | int < 8
       and (datadog_minor | int < 61) }}"
 
@@ -79,7 +79,8 @@
       system_probe_config['enabled']) or (network_config is defined and 'enabled' in (network_config | default({}, true)) and
       network_config['enabled']) or (service_monitoring_config is defined and
       'enabled' in (service_monitoring_config | default({}, true)) and service_monitoring_config['enabled'])) or
-      (system_probe_other_config is defined and (system_probe_other_config is mapping | default({}, true)) and system_probe_other_config | length > 0) and agent_datadog_sysprobe_installed }}"
+      (system_probe_other_config is defined and (system_probe_other_config is mapping | default({}, true)) and 
+      system_probe_other_config | length > 0) and agent_datadog_sysprobe_installed }}"
   when: not datadog_skip_running_check and (not agent_datadog_before_7610)
 
 - name: Create system-probe configuration file
