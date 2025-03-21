@@ -43,3 +43,7 @@ runtime_security_config:
 {{ runtime_security_config | to_nice_yaml }}
 {% endfilter %}
 {% endif %}
+
+{% if system_probe_other_config is defined and system_probe_other_config | default({}, true) | length > 0 -%}
+{{ system_probe_other_config | to_nice_yaml }}
+{% endif %}

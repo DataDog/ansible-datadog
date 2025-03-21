@@ -24,6 +24,9 @@
       enabled: true
     service_monitoring_config:
       enabled: true
+    system_probe_other_config:
+      traceroute:
+        enabled: true
     datadog_checks:
       process:
         init_config:
