@@ -17,7 +17,12 @@ commands:
       python:
         type: string
     steps:
-      - run: rm -rf /root/.ansible/tmp/*
+      - run:
+          name: Wipe Ansible cache/temp
+          command: |
+            rm -rf ~/.ansible/tmp/*
+            rm -rf ~/.ansible/cache/*
+            sudo find /tmp -name 'ansible-*' -type d -exec rm -rf {} + || true
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' -vvv
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
