@@ -53,6 +53,7 @@ commands:
       python:
         type: string
     steps:
+      # - run: rm -rf /root/.ansible/tmp/*
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
