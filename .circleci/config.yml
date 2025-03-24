@@ -20,14 +20,32 @@ commands:
       - run:
           name: Reset environment
           command: |
-            sudo pip uninstall -y ansible || true
-            sudo apt-get remove -y ansible || true
-            sudo yum remove -y ansible || true
-            sudo rm -rf /usr/local/lib/python*/dist-packages/ansible
-            sudo rm -rf /usr/lib/python*/site-packages/ansible
-            sudo rm -rf ~/.ansible
-            python<<parameters.python>> -m pip install --upgrade pip
-            python<<parameters.python>> -m pip install --no-cache-dir ansible
+            # Determine platform
+            OS_FAMILY=$(uname -s)
+
+            # Uninstall any existing Ansible
+            if command -v pip &>/dev/null; then
+              sudo pip uninstall -y ansible || true
+            fi
+
+            # OS-specific cleanup
+            if [ "$OS_FAMILY" = "Linux" ]; then
+              if command -v apt-get &>/dev/null; then
+                sudo apt-get remove -y ansible || true
+              fi
+              if command -v yum &>/dev/null; then
+                sudo yum remove -y ansible || true
+              fi
+            fi
+
+            # Remove Ansible directories from Python site-packages
+            find /usr/local/lib -type d -name ansible -exec sudo rm -rf {} + || true
+            find /usr/lib -type d -name ansible -exec sudo rm -rf {} + || true
+            rm -rf ~/.ansible
+
+            # Reinstall Ansible using the given Python interpreter
+            /usr/bin/<<parameters.python>> -m pip install --upgrade pip
+            /usr/bin/<<parameters.python>> -m pip install --no-cache-dir ansible
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' -vvv
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
