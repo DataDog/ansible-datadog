@@ -81,8 +81,3 @@
 - name: Integrations Tasks
   include_tasks: integration.yml
   when: datadog_integration is defined
-
-- name: restart ssh
-  service:
-    name: ssh
-    state: restarted
