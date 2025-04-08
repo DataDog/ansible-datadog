@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+# 4.30.0 / 2024-04-08
+* [IMPROVEMENT] Add system_probe_other_config as catch all [#634]
+* [DOCS] Fix typo [#635]
+
 # 4.29.0 / 2024-03-03
 * [IMPROVEMENT] Remove deprecated APM deb/rpms [#624]
 * [IMPROVEMENT] [CI] Fix MacOS CI [#630]
@@ -581,6 +585,8 @@ Initial release, compatible with Ansible v1 & v2
 [#624]: https://github.com/DataDog/ansible-datadog/pull/624
 [#629]: https://github.com/DataDog/ansible-datadog/pull/629
 [#630]: https://github.com/DataDog/ansible-datadog/pull/630
+[#634]: https://github.com/DataDog/ansible-datadog/pull/634
+[#635]: https://github.com/DataDog/ansible-datadog/pull/635
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
