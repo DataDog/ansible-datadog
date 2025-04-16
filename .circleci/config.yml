@@ -432,7 +432,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["4_10"]
+              ansible_version: ["2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2023"]
               python: ["python3"]
