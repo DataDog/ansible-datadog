@@ -343,7 +343,7 @@ jobs:
 
   test_installer_over_pinned:
     docker:
-      - image: datadog/docker-library:ansible_centos_2_10
+      - image: datadog/docker-library:ansible_debian_2_10
     steps:
       - checkout
         # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
@@ -409,16 +409,6 @@ workflows:
               os: ["debian"]
               python: ["python3"]
 
-      # centos = CentOS 7. CentOS <= 7 + Python3 is not supported,
-      # as the yum module is Python2-only.
-      - test_install_downgrade:
-          matrix:
-            parameters:
-              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10", "3_4", "4_10"]
-              agent_version: ["5", "6", "7"]
-              os: ["centos"]
-              python: ["python2"]
-
       # We want to check that the dnf path works with CentOS 8
       # Newer CentOS images only have Pythpn 3 installed
       - test_install:
@@ -439,23 +429,12 @@ workflows:
               os: ["suse"]
               python: ["python3"]
 
-      # Amazon Linux 2 has yum only by default => we only use Python 3 with Ansible >= 4.10
-      # because of the respawn_module functionality added to the yum module in
-      # https://github.com/ansible/ansible/commit/4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6
-      - test_install:
-          matrix:
-            parameters:
-              ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
-              agent_version: ["6", "7"]
-              os: ["amazonlinux2"]
-              python: ["python2"]
-
       - test_install:
           matrix:
             parameters:
               ansible_version: ["4_10"]
               agent_version: ["6", "7"]
-              os: ["amazonlinux2"]
+              os: ["amazonlinux2023"]
               python: ["python3"]
 
       - test_install_macos:
@@ -479,7 +458,7 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["debian", "centos", "amazonlinux2"]
+              os: ["debian", "rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
 
