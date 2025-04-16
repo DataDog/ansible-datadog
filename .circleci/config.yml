@@ -386,16 +386,16 @@ workflows:
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_6", "2_7", "2_8"]
+              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10", "3_4", "4_10"]
               agent_version: ["5", "6", "7"]
-              os: ["debian"]
-              python: ["python2", "python3"]
-
+              os: ["rocky8"]
+              python: ["python3"]
+  
       # Newer debian images only have Pythpn 3 installed
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
+              ansible_version: ["2_6", "2_7", "2_8", "2_10", "3_4", "4_10", "5_3", "9_4"]
               agent_version: ["5", "6", "7"]
               os: ["debian"]
               python: ["python3"]
