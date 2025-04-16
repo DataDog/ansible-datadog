@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  roles:
+    - { role: '/root/project/'}
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_enabled: false
+    datadog_agent_major_version: 6
+    datadog_agent_version: "6.28.1"
+    datadog_agent_allow_downgrade: true
+    datadog_yum_repo_config_enabled: true
+    # avoid checking that the agent is stopped for centos
+    datadog_skip_running_check: true
+    datadog_config:
+      tags: "mytag0, mytag1"
+      log_level: INFO
+      apm_enabled: "true"  # has to be set as a string
+    datadog_config_ex:
+      trace.config:
+        env: dev
+      trace.concentrator:
+        extra_aggregators: version
+    system_probe_config:
+      sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+    network_config:
+      enabled: true
+    service_monitoring_config:
+      enabled: true
+    system_probe_other_config:
+      traceroute:
+        enabled: true
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: agent
+            search_string: ['agent', 'sshd' ]

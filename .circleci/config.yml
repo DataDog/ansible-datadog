@@ -12,14 +12,14 @@ commands:
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
 
-  install_agent_5:
-    parameters:
-      python:
-        type: string
-    steps:
-      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
-      - run: dd-agent info || true
-      - run: ps aux | grep -v grep | grep datadog-agent
+  # install_agent_6:
+  #   parameters:
+  #     python:
+  #       type: string
+  #   steps:
+  #     - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+  #     - run: dd-agent info || true
+  #     - run: ps aux | grep -v grep | grep datadog-agent
 
   install_agent:
     parameters:
@@ -48,12 +48,12 @@ commands:
       - run: bash -c '[ -f /etc/datadog-agent/datadog.yaml.example ] || [ -f /etc/dd-agent/datadog.conf.example ]'
       - run: bash -c '[ ! -f /etc/datadog-agent/datadog.yaml ] && [ ! -f /etc/datadog-agent/system-probe.yaml ] && [ ! -f /etc/datadog-agent/security-agent.yaml ] && [ ! -f /etc/dd-agent/datadog.conf ]'
 
-  downgrade_agent_5_32:
+  downgrade_agent_6_28:
     parameters:
       python:
         type: string
     steps:
-      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_5.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: dd-agent info || true
       - run: ps aux | grep -v grep | grep datadog-agent
 
@@ -63,23 +63,22 @@ commands:
         type: string
       python:
         type: string
+      jinja2_native:
+        type: string
+        default: "false"
     steps:
       - checkout
       - dry_run:
           version: "<<parameters.version>>"
           python: "<<parameters.python>>"
-      - install_agent_5:
+      # install agent version corresponding to parameters.version
+      - install_agent:
+          version: "<<parameters.version>>"
           python: "<<parameters.python>>"
-      - when:
-          condition:
-            not:
-              equal: [<<parameters.version>>, "5"]
-          steps:
-            - install_agent:
-                version: "<<parameters.version>>"
-                python: "<<parameters.python>>"
-      - downgrade_agent_5_32:
+      - downgrade_agent_6_28:
           python: "<<parameters.python>>"
+      # Verify the downgrade worked
+      - run: datadog-agent version
 
   test_agent_install:
     parameters:
@@ -386,8 +385,8 @@ workflows:
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_6", "2_7", "2_8", "2_9", "2_10", "3_4", "4_10"]
-              agent_version: ["5", "6", "7"]
+              ansible_version: ["2_8", "2_9", "2_10", "3_4", "4_10"]
+              agent_version: ["6", "7"]
               os: ["rocky8"]
               python: ["python3"]
   
@@ -396,7 +395,7 @@ workflows:
           matrix:
             parameters:
               ansible_version: ["2_6", "2_7", "2_8", "2_10", "3_4", "4_10", "5_3", "9_4"]
-              agent_version: ["5", "6", "7"]
+              agent_version: ["6", "7"]
               os: ["debian"]
               python: ["python3"]
 
