@@ -9,7 +9,7 @@
 - name: Validate agent version is supported
   fail:
     msg: "Agent versions below 6 are not supported. Requested version: {{ agent_datadog_major }}"
-  when: agent_datadog_major | int < 6
+  when: datadog_agent_major | int < 6
 
 - name: Set version vars
   set_fact:
