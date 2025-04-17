@@ -12,15 +12,6 @@ commands:
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
 
-  # install_agent_6:
-  #   parameters:
-  #     python:
-  #       type: string
-  #   steps:
-  #     - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
-  #     - run: dd-agent info || true
-  #     - run: ps aux | grep -v grep | grep datadog-agent
-
   install_agent:
     parameters:
       version:

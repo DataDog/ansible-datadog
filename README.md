@@ -11,6 +11,8 @@ The Datadog Agent Ansible role is available through 2 different channels:
 
 Version `4` of the role and version `5` of the collection install the Datadog Agent v7 by default.
 
+Version `5` of the role and version `6` of the collection no longer support Python 2 and Agent 5. It also no longer supports older versions of Amazon Linux 2 and CentOS. 
+
 ## Setup
 
 Note that the install instructions in this document describe installation of the standalone Datadog role. For installation instructions of the Datadog collection, please refer to [the collection README file](https://github.com/ansible-collections/Datadog/blob/main/README.md). The configuration variables are the same for both the standalone role as well as the role accessed through the collection.
@@ -129,7 +131,6 @@ To install or remove an integration, refer to the `datadog_integration` [paragra
 To define two instances for the `process` check use the configuration below. This creates the corresponding configuration files:
 
 * Agent v6 & v7: `/etc/datadog-agent/conf.d/process.d/conf.yaml`
-* Agent v5: `/etc/dd-agent/conf.d/process.yaml`
 
 ```yml
     datadog_checks:
@@ -150,7 +151,6 @@ To define two instances for the `process` check use the configuration below. Thi
 To configure a custom check use the configuration below. This creates the corresponding configuration files:
 
 - Agent v6 & v7: `/etc/datadog-agent/conf.d/my_custom_check.d/conf.yaml`
-- Agent v5: `/etc/dd-agent/conf.d/my_custom_check.yaml`
 
 ```yml
     datadog_checks:
@@ -165,8 +165,6 @@ To configure a custom check use the configuration below. This creates the corres
 To pass a Python check to the playbook, use the configuration below.
 
 This configuration requires the Datadog [play and role][12] to be a part of the larger playbook where the value passed in is the relative file path to the actual task for [Linux][13] or [Windows][14].
-
-This is only available for Agent v6 or later.
 
 The key should be the name of the file created in the checks directory `checks.d/{{ item }}.py`:
 
@@ -210,13 +208,6 @@ To enable trace collection with Agent v6 or v7 use the following configuration:
 datadog_config:
   apm_config:
     enabled: true
-```
-
-To enable trace collection with Agent v5 use the following configuration:
-
-```yaml
-datadog_config:
-  apm_enabled: "true" # has to be a string
 ```
 
 ### Live processes
@@ -286,19 +277,6 @@ On Linux, once this modification is complete, follow the steps below if you inst
 
 For manual setup, see the [NPM][9] documentation.
 
-#### Agent v5
-
-To enable [live process][6] collection with Agent v5, use the following configuration:
-
-```yml
-datadog_config:
-  process_agent_enabled: true
-datadog_config_ex:
-  process.config:
-    scrub_args: true
-    custom_sensitive_words: "<FIRST_WORD>,<SECOND_WORD>"
-```
-
 ## Versions
 
 By default, the current major version of the Datadog Ansible role installs Agent v7. The variables `datadog_agent_version` and `datadog_agent_major_version` are available to control the Agent version installed.
@@ -323,10 +301,6 @@ This makes it possible to target hosts running different operating systems in th
 | `datadog_agent_version: 1:7.16.0-1` | `7.16.0`     | Windows               |
 
 **Note**: If the version is not provided, the role uses `1` as the epoch and `1` as the release number.
-
-**Agent v5 (older version)**:
-
-The Datadog Ansible role includes support for Datadog Agent v5 for Linux only. To install Agent v5, use `datadog_agent_major_version: 5` to install the latest version of Agent v5 or set `datadog_agent_version` to a specific version of Agent v5. **Note**: The `datadog_agent5` variable is obsolete and has been removed.
 
 ### Repositories
 
