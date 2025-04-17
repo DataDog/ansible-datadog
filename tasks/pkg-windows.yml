@@ -1,9 +1,4 @@
 ---
-- name: Fail if Agent 5
-  fail:
-    msg: "The Datadog ansible role does not currently support Agent 5"
-  when: agent_datadog_agent_major_version|int == 5
-
 ## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
 - name: Set windows NPM installed
   set_fact:

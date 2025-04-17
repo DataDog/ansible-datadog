@@ -6,6 +6,11 @@
   vars:
     agent_regexp: (?:(?P<epoch>[0-9]+):)?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)(?P<suffix>(?:~|-)[^0-9\s-]+[^-\s]*)?(?:-(?P<release>[0-9]+))?
 
+- name: Validate agent version is supported
+  fail:
+    msg: "Agent versions below 6 are not supported. Requested version: {{ agent_datadog_major }}"
+  when: agent_datadog_major | int < 6
+
 - name: Set version vars
   set_fact:
     agent_datadog_epoch: "{{ agent_version.0 | default('', true) | string }}"
