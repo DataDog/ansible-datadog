@@ -7,6 +7,7 @@
     datadog_api_key: "11111111111111111111111111111111"
     datadog_enabled: false
     datadog_agent_major_version: 6
+    datadog_yum_repo_config_enabled: true
     # avoid checking that the agent is stopped for centos
     datadog_skip_running_check: true
     datadog_config:

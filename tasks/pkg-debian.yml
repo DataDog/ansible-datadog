@@ -77,7 +77,6 @@
     update_cache: true
   when: (not ansible_check_mode)
   with_dict:
-    5: "{{ datadog_agent5_apt_repo }}"
     6: "{{ datadog_agent6_apt_repo }}"
     7: "{{ datadog_agent7_apt_repo }}"
 

@@ -231,17 +231,14 @@ datadog_apt_default_keys:
     value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_06462314.public
 
 # The default apt repository for each major Agent version is specified in the following variables.
-datadog_agent5_apt_repo: "deb [signed-by={{ datadog_apt_usr_share_keyring }}] https://apt.datadoghq.com/ stable main"
 datadog_agent6_apt_repo: "deb [signed-by={{ datadog_apt_usr_share_keyring }}] https://apt.datadoghq.com/ stable 6"
 datadog_agent7_apt_repo: "deb [signed-by={{ datadog_apt_usr_share_keyring }}] https://apt.datadoghq.com/ stable 7"
 
 # The default yum repository for each major Agent version is specified in the following variables.
-datadog_agent5_yum_repo: "https://yum.datadoghq.com/rpm/{{ ansible_facts.architecture }}"
 datadog_agent6_yum_repo: "https://yum.datadoghq.com/stable/6/{{ ansible_facts.architecture }}"
 datadog_agent7_yum_repo: "https://yum.datadoghq.com/stable/7/{{ ansible_facts.architecture }}"
 
 # The default zypper repository for each major Agent version is specified in the following variables.
-datadog_agent5_zypper_repo: "https://yum.datadoghq.com/suse/rpm/{{ ansible_facts.architecture }}"
 datadog_agent6_zypper_repo: "https://yum.datadoghq.com/suse/stable/6/{{ ansible_facts.architecture }}"
 datadog_agent7_zypper_repo: "https://yum.datadoghq.com/suse/stable/7/{{ ansible_facts.architecture }}"
 

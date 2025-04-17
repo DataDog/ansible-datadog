@@ -1,7 +1,5 @@
 {% if datadog_zypper_repo | length > 0 %}
   {% set baseurl = datadog_zypper_repo %}
-{% elif agent_datadog_agent_major_version|int == 5 %}
-  {% set baseurl = datadog_agent5_zypper_repo %}
 {% elif agent_datadog_agent_major_version|int == 6 %}
   {% set baseurl = datadog_agent6_zypper_repo %}
 {% elif agent_datadog_agent_major_version|int == 7 %}
