@@ -98,6 +98,7 @@
     name: datadog-agent
     state: started
     enabled: true
+    use: service
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent-sysprobe is running if enabled and installed
@@ -105,6 +106,7 @@
     name: datadog-agent-sysprobe
     state: started
     enabled: true
+    use: service
   when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and agent_datadog_sysprobe_enabled
 
 - name: Ensure datadog-agent, datadog-agent-process and datadog-agent-trace are not running
@@ -112,6 +114,7 @@
     name: "{{ item }}"
     state: stopped
     enabled: false
+    use: service
   when: not datadog_skip_running_check and not datadog_enabled and not ansible_check_mode
   with_list:
     - datadog-agent
@@ -125,6 +128,7 @@
     name: datadog-agent-sysprobe
     state: stopped
     enabled: false
+    use: service
   when: not datadog_skip_running_check and (not datadog_enabled or not agent_datadog_sysprobe_enabled)
     and agent_datadog_before_7180 and agent_datadog_sysprobe_installed
 
@@ -133,6 +137,7 @@
     name: datadog-agent-security
     state: stopped
     enabled: false
+    use: service
   when: not datadog_skip_running_check and not datadog_enabled
   failed_when: false # Since older versions of the Agent don't include the security agent
 

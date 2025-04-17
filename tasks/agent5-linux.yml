@@ -29,6 +29,7 @@
     name: datadog-agent
     state: stopped
     enabled: false
+    use: service
   when: not datadog_skip_running_check and not datadog_enabled
 
 - name: Register all checks files present in datadog
