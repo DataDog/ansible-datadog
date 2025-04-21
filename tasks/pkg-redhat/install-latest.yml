@@ -14,14 +14,5 @@
     update_cache: true
     state: latest # noqa package-latest
   register: agent_datadog_agent_install
-  when: not ansible_check_mode and ansible_pkg_mgr == "dnf"
-  notify: restart datadog-agent
-
-- name: Install latest datadog-agent package (yum)
-  yum:
-    name: "{{ datadog_agent_target }}"
-    update_cache: true
-    state: latest # noqa package-latest
-  register: agent_datadog_agent_install
-  when: not ansible_check_mode and ansible_pkg_mgr == "yum"
+  when: not ansible_check_mode
   notify: restart datadog-agent

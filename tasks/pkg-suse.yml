@@ -3,7 +3,7 @@
   set_fact:
     agent_do_zypper_repo_gpgcheck: >-
       {{ datadog_zypper_repo_gpgcheck if datadog_zypper_repo_gpgcheck != '' else (
-        'yes' if datadog_zypper_repo == '' and agent_datadog_agent_major_version|int != 5 else 'no'
+        'yes' if datadog_zypper_repo == '' else 'no'
       ) }}
 
 - name: Check and download RPM Key(SLES11) # Work around due to SNI check for SLES11
