@@ -2,7 +2,7 @@ CHANGELOG
 =========
 # 5.0.0 / 2025-04-21
 
-**This role removes support for Python 2 and Agent 5.** Additionally, it no longer supports older versions of Amazon Linux 2 and CentOS. While version 4 of the role will continue to receive backport updates, Ansible collections corresponding to version 4 of this role (Datadog Ansible Collection v5) will not be updated. We recommend upgrading to the latest version for better support and improvements. 
+**This role removes support for Python 2 and Agent 5, and bumps the minimum Ansible version for this role to 2.8** Additionally, it no longer supports older versions of Amazon Linux 2 and CentOS. While version 4 of the role will continue to receive backport updates, Ansible collections corresponding to version 4 of this role (Datadog Ansible Collection v5) will not be updated. We recommend upgrading to the latest version for better support and improvements. 
 
 * [MAJOR] Remove support for Python 2 and Agent 5. [#639]
 * [IMPROVEMENT] [CI] Explicitly set use: service to ensure compatibility in CI [#640]
