@@ -1,10 +1,18 @@
 CHANGELOG
 =========
-# 4.30.0 / 2024-04-08
+# 5.0.0 / 2025-04-21
+
+**This role removes support for Python 2 and Agent 5, and bumps the minimum Ansible version for this role to 2.8** Additionally, it no longer supports older versions of Amazon Linux 2 and CentOS. While version 4 of the role will continue to receive backport updates, Ansible collections corresponding to version 4 of this role (Datadog Ansible Collection v5) will not be updated. We recommend upgrading to the latest version for better support and improvements. 
+
+* [MAJOR] Remove support for Python 2 and Agent 5. [#639]
+* [IMPROVEMENT] [CI] Explicitly set use: service to ensure compatibility in CI [#640]
+* [IMPROVEMENT] [CI] Fix test_install_downgrade ci failures [#638]
+ 
+# 4.30.0 / 2025-04-08
 * [IMPROVEMENT] Add system_probe_other_config as catch all [#634]
 * [DOCS] Fix typo [#635]
 
-# 4.29.0 / 2024-03-03
+# 4.29.0 / 2025-03-03
 * [IMPROVEMENT] Remove deprecated APM deb/rpms [#624]
 * [IMPROVEMENT] [CI] Fix MacOS CI [#630]
 * [BUGFIX] Fix Ansible check mode when installer/apm injection is enabled [#619]
@@ -587,6 +595,9 @@ Initial release, compatible with Ansible v1 & v2
 [#630]: https://github.com/DataDog/ansible-datadog/pull/630
 [#634]: https://github.com/DataDog/ansible-datadog/pull/634
 [#635]: https://github.com/DataDog/ansible-datadog/pull/635
+[#638]: https://github.com/DataDog/ansible-datadog/pull/638
+[#639]: https://github.com/DataDog/ansible-datadog/pull/639
+[#640]: https://github.com/DataDog/ansible-datadog/pull/640
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
