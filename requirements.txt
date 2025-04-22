@@ -1,1 +1,1 @@
-galaxy-importer==0.4.25
+galaxy-importer==0.4.29
