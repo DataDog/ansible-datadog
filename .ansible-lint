@@ -5,3 +5,7 @@ skip_list:
 
 enable_list:
   - empty-string-compare
+
+warn_list:
+  - var_naming
+  - idiom
