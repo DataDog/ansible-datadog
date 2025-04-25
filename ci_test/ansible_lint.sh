@@ -1,11 +1,31 @@
 #!/bin/bash -e
+
+# Install Python 3.10 if not already installed
+if ! command -v python3.10 &> /dev/null; then
+    echo "Installing Python 3.10..."
+    brew install python@3.10
+fi
+
+# Check Python version
+python_version=$(python3.10 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+if (( $(echo "$python_version < 3.10" | bc -l) )); then
+    echo "Error: Python 3.10 or higher is required. Found version $python_version"
+    exit 1
+fi
+
+# Create and activate virtual environment
+python3.10 -m venv .venv
+source .venv/bin/activate
+
 # galaxy-importer requires ansible-lint https://github.com/ansible/galaxy-importer/blob/master/setup.cfg#L22
-pip install -r requirements.txt
+python3.10 -m pip install -r requirements.txt
 
 # Dry-run of galaxy-importer on legacy-role.
 repo_dir=$(pwd) # use of importer must be done from parent repository
 pushd ..
-python3 -m galaxy_importer.main --legacy-role "$repo_dir" --namespace datadog 2>&1 | tee tmp_importer.log
+echo "Using Python version: $(python3.10 --version)"
+echo "Python path: $(which python3.10)"
+python3.10 -m galaxy_importer.main --legacy-role "$repo_dir" --namespace datadog 2>&1 | tee tmp_importer.log
 # Filter out warnings for roles not found because location differs for macos or manual tests
 grep -vq "^WARNING:.*the role '.*' was not found in .*" tmp_importer.log > importer.log
 if grep -Eqi "(error|warning)" importer.log; then
