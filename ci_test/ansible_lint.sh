@@ -3,11 +3,11 @@
 # Install Python 3.10 if not already installed
 if ! command -v python3.10 &> /dev/null; then
     echo "Installing Python 3.10..."
-    sudo apt update
-    sudo apt install -y software-properties-common
-    sudo add-apt-repository -y ppa:deadsnakes/ppa
-    sudo apt update
-    sudo apt install -y python3.10 python3.10-venv python3.10-dev
+    apt update
+    apt install -y software-properties-common
+    add-apt-repository -y ppa:deadsnakes/ppa
+    apt update
+    apt install -y python3.10 python3.10-venv python3.10-dev
 fi
 
 # Check Python version
