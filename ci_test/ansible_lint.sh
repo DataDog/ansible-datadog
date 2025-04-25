@@ -4,10 +4,15 @@
 if ! command -v python3.10 &> /dev/null; then
     echo "Installing Python 3.10..."
     apt update
-    apt install -y software-properties-common
-    add-apt-repository -y ppa:deadsnakes/ppa
-    apt update
-    apt install -y python3.10 python3.10-venv python3.10-dev
+    apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+    wget https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tgz
+    tar -xf Python-3.10.13.tgz
+    cd Python-3.10.13
+    ./configure --enable-optimizations
+    make -j $(nproc)
+    make altinstall
+    cd ..
+    rm -rf Python-3.10.13 Python-3.10.13.tgz
 fi
 
 # Check Python version
