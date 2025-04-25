@@ -72,8 +72,8 @@ popd
 pip install -r requirements-ansible-lint.txt
 
 # lint the ansible-role alone
-ansible-lint -v --exclude=galaxy.yml --exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/ --exclude=ansible_collections/
+ansible-lint -v --exclude=galaxy.yml -- exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/ --exclude=ansible_collections/ --exclude=roles/agent/.venv/
 
 cd ansible_collections/datadog/ || exit
 ls -la roles/agent/
-ansible-lint -v --exclude=galaxy.yml --exclude=meta/
+ansible-lint -v --exclude=galaxy.yml --exclude=meta/ --exclude=roles/agent/.venv/
