@@ -1,6 +1,6 @@
 ---
 - name: Validate integrations actions
-  fail:
+  ansible.builtin.fail:
     msg: "Unkown action '{{ item.value.action }}' for integration command ({{ item.key }}). Valid actions are 'install' and 'remove'"
   when: item.value.action != "install" and item.value.action != "remove"
   loop: "{{ datadog_integration | dict2items }}"
@@ -9,13 +9,13 @@
 # installed, parsing the task would fail even if the host is not Windows. By hiding the task
 # inside a conditionally included file, we can prevent this.
 - name: Include Windows Integration Tasks
-  include_tasks: integration/windows.yml
+  ansible.builtin.include_tasks: integration/windows.yml
   when: ansible_facts.os_family == "Windows"
 
 - name: Include macOS Integration Tasks
-  include_tasks: integration/macos.yml
+  ansible.builtin.include_tasks: integration/macos.yml
   when: ansible_facts.os_family == "Darwin"
 
 - name: Include Linux Integration Tasks
-  include_tasks: integration/linux.yml
+  ansible.builtin.include_tasks: integration/linux.yml
   when: ansible_facts.os_family != "Darwin" and ansible_facts.os_family != "Windows"

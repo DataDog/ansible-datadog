@@ -1,6 +1,6 @@
 ---
 - name: Create Datadog agent config directory
-  file:
+  ansible.builtin.file:
     dest: "{{ agent_dd_config_dir }}"
     state: directory
     mode: "0755"
@@ -9,7 +9,7 @@
   when: datadog_manage_config
 
 - name: Create main Datadog agent configuration file
-  template:
+  ansible.builtin.template:
     src: datadog.yaml.j2
     dest: "{{ agent_dd_config_dir }}/datadog.yaml"
     mode: "0640"
@@ -19,7 +19,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Register all check configs present in datadog
-  find:
+  ansible.builtin.find:
     paths: "{{ agent_dd_config_dir }}/conf.d/"
     patterns:
       - "conf.yaml*"
@@ -30,7 +30,7 @@
   when: datadog_manage_config and (datadog_disable_untracked_checks or datadog_disable_default_checks)
 
 - name: Delete checks not present in agent_datadog_tracked_checks
-  file:
+  ansible.builtin.file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
     state: absent
   loop: >-
@@ -42,7 +42,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Delete all default checks
-  file:
+  ansible.builtin.file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.default"
     state: absent
   loop: >-
@@ -54,7 +54,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Delete all example checks
-  file:
+  ansible.builtin.file:
     path: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml.example"
     state: absent
   loop: >-
@@ -66,7 +66,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Ensure configuration directories are present for each Datadog check
-  file:
+  ansible.builtin.file:
     dest: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d"
     state: directory
     owner: "{{ agent_dd_user }}"
@@ -87,7 +87,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Remove old configuration file for each Datadog check
-  file:
+  ansible.builtin.file:
     dest: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.yaml"
     state: absent
   with_items: "{{ agent_datadog_checks | list }}"
@@ -95,7 +95,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Create custom check file for each custom check
-  copy:
+  ansible.builtin.copy:
     src: "{{ datadog_custom_checks[item] }}"
     dest: "{{ agent_dd_config_dir }}/checks.d/{{ item }}.py"
     mode: "0755"
@@ -113,23 +113,23 @@
     mode: "0644"
 
 - name: Check if install.json exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ agent_dd_config_dir }}/install.json"
   register: install_file
 
 - name: Read remote install.json
   register: install_json_value
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ agent_dd_config_dir }}/install.json"
   when: install_file.stat.exists
 
 - name: Debug print install.json content
-  debug:
+  ansible.builtin.debug:
     msg: "install.json content : {{ install_json_value.content }}"
   when: install_file.stat.exists
 
 - name: Parse install.json file if it exists
-  set_fact:
+  ansible.builtin.set_fact:
     install_info: "{{ install_json_value.content | b64decode | from_json }}"
   when: install_file.stat.exists
 
@@ -138,32 +138,32 @@
   check_mode: false
   block:
     - name: Generate uuid based on /proc/sys/kernel/random/uuid
-      command: cat /proc/sys/kernel/random/uuid
+      ansible.builtin.command: cat /proc/sys/kernel/random/uuid
       register: uuid_cmd
       changed_when: false
 
   rescue:
     - name: Generate uuid using uuidgen
-      command: uuidgen
+      ansible.builtin.command: uuidgen
       register: uuid_cmd
       changed_when: false
 
 - name: Set install signature from file if it exists
-  set_fact:
+  ansible.builtin.set_fact:
     install_signature:
       install_id: "{{ install_info.install_id }}"
       install_time: "{{ install_info.install_time }}"
   when: install_file.stat.exists
 
 - name: Generate install signature
-  set_fact:
+  ansible.builtin.set_fact:
     install_signature:
       install_id: "{{ uuid_cmd.stdout }}"
       install_time: "{{ ansible_date_time.epoch }}"
   when: not install_file.stat.exists
 
 - name: Create installation json file
-  template:
+  ansible.builtin.template:
     src: install.json.j2
     dest: "{{ agent_dd_config_dir }}/install.json"
     owner: "{{ agent_dd_user }}"

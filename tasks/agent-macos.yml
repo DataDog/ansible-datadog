@@ -2,7 +2,7 @@
 # NOTE: the DMG gets installed as ansible_user, but we then configure it to run
 # under datadog_macos_user and remove the user-specific config for ansible_user
 - name: Load user data
-  shell:
+  ansible.builtin.shell:
     cmd: "set -o pipefail && dscacheutil -q user -a name {{ datadog_macos_user }} |
       awk 'BEGIN { RS=\"\\n\"; ORS=\" \" } /uid:/ { print \"{ \\\"uid\\\": \" $2\",\" } /gid:/ { print
       \"\\\"gid\\\": \" $2 \" }\"}'"
@@ -16,11 +16,11 @@
 # a string it will automatically convert it to the corresponding object. This enables us to get multiple values
 # out of the ABOVE task preventing us from having to run 2 similar commands.
 - name: Extract JSON user data as variable object
-  set_fact:
+  ansible.builtin.set_fact:
     agent_macos_user_data: "{{ agent_macos_user_output.stdout }}"
 
 - name: Load user group data
-  shell:
+  ansible.builtin.shell:
     cmd: "set -o pipefail && dscacheutil -q group -a gid {{ agent_macos_user_data.gid }} | grep '^name: ' | awk '{ print $2 }'"
     executable: /bin/bash
   register: agent_macos_user_group
@@ -30,26 +30,26 @@
 # created launchctl service for the user and also a login item
 
 - name: Find out if user LaunchAgent is running
-  shell:
+  ansible.builtin.shell:
     cmd: "launchctl print gui/$(id -u)/{{ datadog_macos_service_name }}"
   register: agent_user_service_created
   changed_when: false
   failed_when: false
 
 - name: Unload and stop user LaunchAgent
-  shell:
+  ansible.builtin.shell:
     cmd: "launchctl bootout gui/$(id -u)/{{ datadog_macos_service_name }}"
   when: agent_user_service_created.rc == 0
   changed_when: false
 
 - name: Remove user login item
-  command: |-
+  ansible.builtin.command: |-
     osascript -e 'tell application "System Events" to if login item "Datadog Agent" exists then delete login item "Datadog Agent"'
   when: agent_user_service_created.rc == 0
   changed_when: false
 
 - name: Remove user LaunchAgent plist file
-  file:
+  ansible.builtin.file:
     path: /Users/{{ ansible_user }}/{{ datadog_macos_user_plist_file_path }}
     state: absent
 

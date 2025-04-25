@@ -1,6 +1,6 @@
 ---
 - name: Install pinned datadog-agent package
-  apt:
+  ansible.builtin.apt:
     name: "{{ datadog_agent_flavor }}={{ agent_datadog_agent_debian_version }}"
     state: present
     force: "{{ datadog_agent_allow_downgrade }}"

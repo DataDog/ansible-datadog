@@ -1,7 +1,7 @@
 # Check current state of the integrations
 
 - name: Check integration state, integration={{ item.key }}
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration show -q {{ item.key }}"
+  ansible.windows.win_command: "\"{{ datadog_agent_binary_path }}\" integration show -q {{ item.key }}"
   register: integration_version
   failed_when: false # This task is supposed to fail when the integration is not installed
   changed_when: false
@@ -9,7 +9,7 @@
 # Remove integration
 
 - name: Removing integration, integration={{ item.key }}
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
+  ansible.windows.win_command: "\"{{ datadog_agent_binary_path }}\" integration remove {{ item.key }}"
   become: true
   become_user: "{{ integration_command_user }}"
   when:
@@ -20,7 +20,7 @@
 # Install integration
 
 - name: Installing pinned version of integration, integration={{ item.key }}
-  win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
+  ansible.windows.win_command: "\"{{ datadog_agent_binary_path }}\" integration install {{ third_party }} {{ item.key }}=={{ item.value.version }}"
   become: true
   vars:
     third_party: "{% if 'third_party' in item.value and item.value.third_party | bool %}--third-party{% endif %}"
