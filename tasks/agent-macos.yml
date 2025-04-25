@@ -61,7 +61,7 @@
 # file in the .dmg, we would also have to update this. Fortunately this seems
 # to basically never happen, so I think it's an acceptable downside.
 - name: Add system LaunchDaemon plist file
-  template:
+  ansible.builtin.template:
     src: com.datadoghq.agent.plist.j2
     dest: "{{ datadog_macos_system_plist_file_path }}"
     owner: 0
@@ -76,7 +76,7 @@
     agent_groupname: "{{ agent_macos_user_group.stdout }}"
 
 - name: Include configuration setup tasks
-  import_tasks: _agent-linux-macos-shared.yml
+  ansible.builtin.import_tasks: _agent-linux-macos-shared.yml
   vars:
     agent_dd_config_dir: "{{ datadog_macos_etc_dir }}"
     agent_dd_user: "{{ agent_macos_user_data.uid }}"
@@ -85,7 +85,7 @@
   become: true
 
 - name: Set permissions for DataDog Directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     owner: "{{ agent_macos_user_data.uid }}"
     group: "{{ agent_macos_user_data.gid }}"

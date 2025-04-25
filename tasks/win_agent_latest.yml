@@ -1,11 +1,11 @@
 ---
 - name: (Custom) Set agent download filename to latest
-  set_fact:
+  ansible.builtin.set_fact:
     agent_dd_download_url: "{{ datadog_windows_download_url }}"
   when: datadog_windows_download_url | default('', true) | length > 0
 
 - name: Set agent download filename to latest
-  set_fact:
+  ansible.builtin.set_fact:
     agent_dd_download_url: "{% if agent_datadog_agent_major_version
       | int == 7 %}{{ datadog_windows_agent7_latest_url }} {% else %}{{ datadog_windows_agent6_latest_url }}{% endif %}"
   when: datadog_windows_download_url | default('', true) | length == 0

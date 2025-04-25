@@ -70,7 +70,7 @@
       Darwin: "{{ agent_datadog_agent_macos_version }}"
 
 - name: Get Linux Agent version
-  shell: "{{ agent_datadog_version_finding_cmds[ansible_facts.os_family] }}" # noqa command-instead-of-shell - We need shell because of pipes
+  ansible.builtin.shell: "{{ agent_datadog_version_finding_cmds[ansible_facts.os_family] }}" # noqa command-instead-of-shell - We need shell because of pipes
   register: agent_datadog_version_check_linux
   changed_when: false
   failed_when: false
@@ -81,11 +81,11 @@
 # parsing the task would fail even if the host is not Windows. By hiding the task inside
 # a conditionally included file, we can prevent this.
 - name: Include Windows Agent version tasks
-  include_tasks: parse-version-windows.yml
+  ansible.builtin.include_tasks: parse-version-windows.yml
   when: ansible_facts.os_family == "Windows"
 
 - name: Include macOS Agent version tasks
-  include_tasks: parse-version-macos.yml
+  ansible.builtin.include_tasks: parse-version-macos.yml
   when: ansible_facts.os_family == "Darwin"
 
 - name: Set skip install flag if version already installed (Linux)

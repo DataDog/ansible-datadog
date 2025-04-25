@@ -48,7 +48,7 @@
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
 
 - name: Detach agent dmg if already mounted
-  shell: hdiutil detach "/Volumes/datadog_agent" >/dev/null 2>&1 || true
+  ansible.builtin.shell: hdiutil detach "/Volumes/datadog_agent" >/dev/null 2>&1 || true
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
   changed_when: true
 

@@ -1,10 +1,10 @@
 ---
 - name: Ensure datadog_yum_gpgkey is not used
-  fail:
+  ansible.builtin.fail:
     msg: datadog_yum_gpgkey configuration value was removed.
   when: datadog_yum_gpgkey is defined and datadog_yum_gpgkey|length > 0
 
 - name: Ensure datadog_zypper_gpgkey is not used
-  fail:
+  ansible.builtin.fail:
     msg: datadog_zypper_gpgkey configuration value was removed.
   when: datadog_zypper_gpgkey is defined and datadog_zypper_gpgkey|length > 0

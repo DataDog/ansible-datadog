@@ -76,7 +76,7 @@
   when: datadog_manage_config
 
 - name: Create a configuration file for each Datadog check
-  template:
+  ansible.builtin.template:
     src: checks.yaml.j2
     dest: "{{ agent_dd_config_dir }}/conf.d/{{ item }}.d/conf.yaml"
     mode: "0640"
@@ -105,7 +105,7 @@
   notify: "{{ agent_dd_notify_agent }}"
 
 - name: Create installation information file
-  template:
+  ansible.builtin.template:
     src: install_info.j2
     dest: "{{ agent_dd_config_dir }}/install_info"
     owner: "{{ agent_dd_user }}"

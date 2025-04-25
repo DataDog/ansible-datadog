@@ -31,7 +31,7 @@
 # The include_tasks loads the handlers/main-win.yml file, which contains the real service restart task
 # (which depends on ansible.windows), and runs it, triggering the Windows Agent restart.
 - name: restart datadog-agent-win # noqa name[casing]
-  include_tasks: handlers/main-win.yml
+  ansible.builtin.include_tasks: handlers/main-win.yml
 
 # When needed, our macOS tasks call this handler to require a
 # macOS Agent restart (through notify: restart datadog-agent-macos).
@@ -39,4 +39,4 @@
 # The include_tasks loads the handlers/main-macos.yml file, which contains the real service restart task
 # and runs it, triggering the macOS Agent restart.
 - name: restart datadog-agent-macos # noqa name[casing]
-  include_tasks: handlers/main-macos.yml
+  ansible.builtin.include_tasks: handlers/main-macos.yml
