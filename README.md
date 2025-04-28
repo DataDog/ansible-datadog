@@ -11,7 +11,7 @@ The Datadog Agent Ansible role is available through 2 different channels:
 
 Version `4` of the role and version `5` of the collection install the Datadog Agent v7 by default.
 
-Version `5` of the role and version `6` of the collection no longer support Python 2 and Agent 5. It also no longer supports older versions of Amazon Linux 2 and CentOS. 
+Version `5` of the role and version `6` of the collection no longer support Python 2, Agent 5, or Ansible versions below 2.10. It also no longer supports older versions of Amazon Linux 2 and CentOS. 
 
 ## Setup
 
@@ -19,14 +19,14 @@ Note that the install instructions in this document describe installation of the
 
 ### Requirements
 
-- Requires Ansible v2.6+.
+- Requires Ansible v2.10+.
 - Supports most Debian and RHEL-based Linux distributions, macOS, and Windows.
-- When using with Ansible 2.10+ to manage Windows hosts, requires the `ansible.windows` collection to be installed:
+- Requires the `ansible.windows` collection to be installed:
 
   ```shell
   ansible-galaxy collection install ansible.windows
   ```
-- When using with Ansible 2.10+ to manage openSUSE/SLES hosts, requires the `community.general` collection to be installed:
+- Requires the `community.general` collection to be installed:
 
   ```shell
   ansible-galaxy collection install community.general
