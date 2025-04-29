@@ -1,3 +1,0 @@
----
-- name: Gather Ansible Facts
-  ansible.builtin.setup: # If the full prefix isn't specified in Ansible 2.10+, we might end up running `ansible.windows.setup` instead.

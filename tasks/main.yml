@@ -1,6 +1,6 @@
 ---
-- name: Include Gather Ansible Facts task
-  ansible.builtin.include_tasks: facts-ansible10.yml
+- name: Gather Ansible Facts
+  ansible.builtin.setup: # If the full prefix isn't specified in Ansible 2.10+, we might end up running `ansible.windows.setup` instead.
 
 - name: Initialize internal datadog_config variable
   ansible.builtin.set_fact:
