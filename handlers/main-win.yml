@@ -4,7 +4,7 @@
 # However, this is here because this is a "handler-like" task that is dynamically
 # included by a handler task in handlers/main.yml.
 - name: Restart Windows datadogagent service
-  ansible.builtin.win_service:
+  ansible.windows.win_service:
     name: datadogagent
     state: restarted
     force_dependent_services: true
