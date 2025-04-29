@@ -1,6 +1,6 @@
 ---
 - name: Install latest datadog-agent package
-  apt:
+  ansible.builtin.apt:
     name: "{{ datadog_agent_flavor }}"
     state: latest # noqa package-latest
     update_cache: true

@@ -1,47 +1,47 @@
 ---
 ## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
 - name: Set windows NPM installed
-  set_fact:
+  ansible.builtin.set_fact:
     agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
 
 ## Might override agent_datadog_skip_install
 - name: Include Windows opts tasks
-  include_tasks: pkg-windows-opts.yml
+  ansible.builtin.include_tasks: pkg-windows-opts.yml
 
 - name: Download windows datadog agent 614 fix script
-  win_get_url:
+  ansible.windows.win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
     dest: '%TEMP%\fix_6_14.ps1'
     proxy_url: "{{ http_proxy | default(omit) }}"
   when: not agent_datadog_skip_install and datadog_apply_windows_614_fix
 
 - name: Run 6.14.0/1 PowerShell fix
-  win_shell: |
+  ansible.windows.win_shell: |
     Set-ExecutionPolicy Bypass -Scope Process -Force
     &$env:temp\fix_6_14.ps1
   when: not agent_datadog_skip_install and datadog_apply_windows_614_fix
 
 - name: Include Windows agent latest version install tasks
-  include_tasks: win_agent_latest.yml
+  ansible.builtin.include_tasks: win_agent_latest.yml
   when: (not agent_datadog_skip_install) and (agent_datadog_agent_windows_version is not defined)
 
 - name: Include Windows agent pinned version install tasks
-  include_tasks: win_agent_version.yml
+  ansible.builtin.include_tasks: win_agent_version.yml
   when: (not agent_datadog_skip_install) and (agent_datadog_agent_windows_version is defined)
 
 - name: Show URL var
-  debug:
+  ansible.builtin.debug:
     var: agent_dd_download_url
   when: not agent_datadog_skip_install
 
 - name: Pre-Delete temporary msi
-  win_file:
+  ansible.windows.win_file:
     path: '%TEMP%\ddagent.msi'
     state: absent
   when: not agent_datadog_skip_install
 
 - name: Download windows datadog agent
-  win_get_url:
+  ansible.windows.win_get_url:
     url: "{{ agent_dd_download_url }}"
     dest: '%TEMP%\ddagent.msi'
     proxy_url: "{{ http_proxy | default(omit) }}"
@@ -49,13 +49,13 @@
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
 
 - name: Create Binary directory root (if not default)
-  win_file:
+  ansible.windows.win_file:
     path: "{{ datadog_windows_program_files_dir }}"
     state: directory
   when: datadog_windows_program_files_dir | length > 0
 
 - name: Set default permissions on binary directory root (if not default)
-  win_acl:
+  ansible.windows.win_acl:
     path: "{{ datadog_windows_program_files_dir }}"
     inherit: ContainerInherit,ObjectInherit
     user: "BUILTIN\\USERS"
@@ -66,31 +66,31 @@
   when: datadog_windows_program_files_dir | length > 0
 
 - name: Show installation flags
-  debug:
+  ansible.builtin.debug:
     msg: "{{ agent_win_install_args }}{% if datadog_windows_ddagentuser_password | default('', true) | length > 0 %} DDAGENTUSER_PASSWORD=<REDACTED>{% endif %}"
 
 # We set DD Password Arg here to prevent it from being printed in any kind of debug logs/messages prior usage
 - name: Set DD Password Arg
-  set_fact:
+  ansible.builtin.set_fact:
     agent_win_install_args: "{{ agent_win_install_args }} DDAGENTUSER_PASSWORD={{ datadog_windows_ddagentuser_password }}"
   when: datadog_windows_ddagentuser_password | default('', true) | length > 0
   no_log: true
 
 - name: Uninstall agent to update optional features
-  win_package:
+  ansible.windows.win_package:
     path: "{{ agent_download_msi_result.dest }}"
     state: absent
   when: not agent_datadog_skip_install and agent_datadog_force_reinstall
 
 - name: Install downloaded agent
-  win_package:
+  ansible.windows.win_package:
     path: "{{ agent_download_msi_result.dest }}"
     arguments: "{{ agent_win_install_args }}"
   register: agent_datadog_agent_install
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
 
 - name: Delete temporary msi
-  win_file:
+  ansible.windows.win_file:
     path: "{{ agent_download_msi_result.dest }}"
     state: absent
   when: (not agent_datadog_skip_install) and (not ansible_check_mode) and (agent_download_msi_result.status_code == 200)

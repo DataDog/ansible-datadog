@@ -1,13 +1,13 @@
 ---
 - name: Defend against defined but null datadog_checks variable
-  set_fact:
+  ansible.builtin.set_fact:
     agent_datadog_checks: "{{ datadog_checks | default({}, true) }}"
 
 - name: Resolve agent_datadog_tracked_checks
-  set_fact:
+  ansible.builtin.set_fact:
     agent_datadog_tracked_checks: "{{ agent_datadog_checks | list + datadog_additional_checks | default([], true) }}"
 
 - name: Check that agent_datadog_checks is a mapping
-  assert:
+  ansible.builtin.assert:
     that:
       - agent_datadog_checks is mapping

@@ -1,6 +1,6 @@
 ---
 - name: Find out whether to set repo_gpgcheck or not
-  set_fact:
+  ansible.builtin.set_fact:
     agent_do_zypper_repo_gpgcheck: >-
       {{ datadog_zypper_repo_gpgcheck if datadog_zypper_repo_gpgcheck != '' else (
         'yes' if datadog_zypper_repo == '' else 'no'
@@ -10,11 +10,11 @@
   when: ansible_distribution_version|int == 11
   block:
     - name: Stat if current RPM key already exists
-      stat:
+      ansible.builtin.stat:
         path: /tmp/DATADOG_RPM_KEY_CURRENT.public
       register: agent_ddkeycurrent
     - name: Download current RPM key (SLES11)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_zypper_gpgkey_current }}"
         dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
         mode: '600'
@@ -22,7 +22,7 @@
       when: not agent_ddkeycurrent.stat.exists
 
 - name: Download current RPM key
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ datadog_zypper_gpgkey_current }}"
     dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
     force: true
@@ -30,7 +30,7 @@
   when: ansible_distribution_version|int >= 12
 
 - name: Import current RPM key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: /tmp/DATADOG_RPM_KEY_CURRENT.public
     state: present
   when: not ansible_check_mode
@@ -39,18 +39,18 @@
   when: ansible_distribution_version|int == 11
   block:
     - name: Stat if E09422B3 key (Expires 2022) RPM key already exists
-      stat:
+      ansible.builtin.stat:
         path: /tmp/DATADOG_RPM_KEY_E09422B3.public
       register: agent_ddnewkey
     - name: Download E09422B3 key (Expires 2022) RPM key (SLES11)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
         dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
         mode: '600'
       when: not agent_ddnewkey.stat.exists and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
 - name: Download E09422B3 key (Expires 2022) RPM key
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ datadog_zypper_gpgkey_e09422b3 }}"
     dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
     checksum: sha256:{{ datadog_zypper_gpgkey_e09422b3_sha256sum }}
@@ -58,7 +58,7 @@
   when: ansible_distribution_version|int >= 12 and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
 - name: Import E09422B3 key (Expires 2022) RPM key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: /tmp/DATADOG_RPM_KEY_E09422B3.public
     state: present
   when: not ansible_check_mode and agent_datadog_minor is defined and agent_datadog_minor | int < 36
@@ -67,18 +67,18 @@
   when: ansible_distribution_version|int == 11
   block:
     - name: Stat if 20200908 key (Expires 2024) RPM key already exists
-      stat:
+      ansible.builtin.stat:
         path: /tmp/DATADOG_RPM_KEY_20200908.public
       register: agent_ddnewkey_20200908
     - name: Download 20200908 key (Expires 2024) RPM key (SLES11)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_zypper_gpgkey_20200908 }}"
         dest: /tmp/DATADOG_RPM_KEY_20200908.public
         mode: '600'
       when: not  agent_ddnewkey_20200908.stat.exists
 
 - name: Download 20200908 key (Expires 2024) RPM key
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ datadog_zypper_gpgkey_20200908 }}"
     dest: /tmp/DATADOG_RPM_KEY_20200908.public
     checksum: sha256:{{ datadog_zypper_gpgkey_20200908_sha256sum }}
@@ -86,7 +86,7 @@
   when: ansible_distribution_version|int >= 12
 
 - name: Import 20200908 key (Expires 2024) RPM key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: /tmp/DATADOG_RPM_KEY_20200908.public
     state: present
   when: not ansible_check_mode
@@ -95,18 +95,18 @@
   when: ansible_distribution_version|int == 11
   block:
     - name: Stat if 20280418 key (Expires 2028) RPM key already exists
-      stat:
+      ansible.builtin.stat:
         path: /tmp/DATADOG_RPM_KEY_20280418.public
       register: agent_ddnewkey_20280418
     - name: Download 20280418 key (Expires 2028) RPM key (SLES11)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_zypper_gpgkey_20280418 }}"
         dest: /tmp/DATADOG_RPM_KEY_20280418.public
         mode: '600'
       when: not agent_ddnewkey_20280418.stat.exists
 
 - name: Download 20280418 key (Expires 2028) RPM key
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ datadog_zypper_gpgkey_20280418 }}"
     dest: /tmp/DATADOG_RPM_KEY_20280418.public
     checksum: "sha256:{{ datadog_zypper_gpgkey_20280418_sha256sum }}"
@@ -114,14 +114,14 @@
   when: ansible_distribution_version|int >= 12
 
 - name: Import 20280418 key (Expires 2028) RPM key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: /tmp/DATADOG_RPM_KEY_20280418.public
     state: present
   when: not ansible_check_mode
 
 # ansible don't allow repo_gpgcheck to be set, we have to create the repo file manually
 - name: Install DataDog zypper repo
-  template:
+  ansible.builtin.template:
     src: zypper.repo.j2
     dest: /etc/zypp/repos.d/datadog.repo
     owner: root
@@ -131,19 +131,19 @@
   when: datadog_manage_zypper_repofile
 
 - name: Include installer setup
-  include_tasks: installer-setup.yml
+  ansible.builtin.include_tasks: installer-setup.yml
   when: datadog_installer_enabled
 
 # refresh zypper repos only if the template changed
 - name: Refresh Datadog zypper_repos # noqa: command-instead-of-module
-  command: zypper refresh datadog
+  ansible.builtin.command: zypper refresh datadog
   when: not agent_datadog_skip_install and agent_datadog_zypper_repo_template.changed and not ansible_check_mode
   changed_when: true
 
 - name: Include Suse agent pinned version install task
-  include_tasks: pkg-suse/install-pinned.yml
+  ansible.builtin.include_tasks: pkg-suse/install-pinned.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_suse_version is defined
 
 - name: Include Suse agent latest version install task
-  include_tasks: pkg-suse/install-latest.yml
+  ansible.builtin.include_tasks: pkg-suse/install-latest.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_suse_version is not defined

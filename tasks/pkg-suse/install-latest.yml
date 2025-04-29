@@ -1,6 +1,6 @@
 ---
 - name: Ensure Datadog agent is installed
-  zypper:
+  community.general.zypper:
     name: datadog-agent
     state: latest # noqa package-latest
   register: agent_datadog_agent_install

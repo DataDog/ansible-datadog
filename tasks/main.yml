@@ -1,79 +1,74 @@
 ---
-- name: Include Gather Ansible Facts task on Ansible >= 2.10
-  include_tasks: facts-ansible10.yml
-  when: ansible_version.major >= 2 and ansible_version.minor >= 10
-
-- name: Include Gather Ansible Facts task on Ansible < 2.10
-  include_tasks: facts-ansible9.yml
-  when: ansible_version.major == 2 and ansible_version.minor < 10
+- name: Gather Ansible Facts
+  ansible.builtin.setup: # If the full prefix isn't specified in Ansible 2.10+, we might end up running `ansible.windows.setup` instead.
 
 - name: Initialize internal datadog_config variable
-  set_fact:
+  ansible.builtin.set_fact:
     agent_datadog_config: "{{ datadog_config }}"
 
 - name: Check if OS is supported
-  include_tasks: os-check.yml
+  ansible.builtin.include_tasks: os-check.yml
 
 - name: Fail if API key is missing
-  fail:
+  ansible.builtin.fail:
     msg: "datadog_api_key is mandatory when using managed config"
   when: datadog_api_key is not defined and datadog_manage_config
 
 - name: Resolve datadog_tracked_checks later to defend against variable presidence issues arising from dynamically included null datadog_checks
-  include_tasks: sanitize-checks.yml
+  ansible.builtin.include_tasks: sanitize-checks.yml
 
 # Also sets agent_datadog_skip_install
 - name: Set Facts for Datadog Agent Major Version
-  include_tasks: set-parse-version.yml
+  ansible.builtin.include_tasks: set-parse-version.yml
 
 - name: Configure Datadog Installer
-  include_tasks: installer-config.yml
+  ansible.builtin.include_tasks: installer-config.yml
 
 - name: Debian Install Tasks
-  include_tasks: pkg-debian.yml
+  ansible.builtin.include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian"
 
 - name: Include tasks to remove old GPG keys
-  include_tasks: _remove_rpm_keys.yml
+  ansible.builtin.include_tasks: _remove_rpm_keys.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux", "Suse"]
   loop: "{{ datadog_rpm_remove_keys }}"
 
 - name: Include tasks to check removed configuration value usage
-  include_tasks: check-removed-config.yml
+  ansible.builtin.include_tasks: check-removed-config.yml
 
 # Only Ansible >= 3.0 knows that AlmaLinux belongs to "RedHat" family
 # (and latest bugfix releases of some 2.X)
 # For Rocky it is some 4.X and >= 5.0
 - name: RedHat Install Tasks
-  include_tasks: pkg-redhat.yml
+  ansible.builtin.include_tasks: pkg-redhat.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"]
 
 - name: Suse Install Tasks
-  include_tasks: pkg-suse.yml
+  ansible.builtin.include_tasks: pkg-suse.yml
   when: ansible_facts.os_family == "Suse"
 
 # Note we don't check agent_datadog_skip_install variable value for windows here,
 # because some tasks in pkg-windows.yml are carried out regardless of its value.
 - name: Windows Install Tasks
-  include_tasks: pkg-windows.yml
+  ansible.builtin.include_tasks: pkg-windows.yml
   when: ansible_facts.os_family == "Windows"
 
 - name: MacOS Install Tasks
-  include_tasks: pkg-macos.yml
+  ansible.builtin.include_tasks: pkg-macos.yml
   when: ansible_facts.os_family == "Darwin" and not agent_datadog_skip_install
 
 - name: Linux Configuration Tasks
-  include_tasks: agent-linux.yml
+  ansible.builtin.include_tasks: agent-linux.yml
   when: ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
 
 - name: Windows Configuration Tasks
-  include_tasks: agent-win.yml
+  ansible.builtin.include_tasks: agent-win.yml
   when: ansible_facts.os_family == "Windows"
 
 - name: MacOS Configuration Tasks
-  include_tasks: agent-macos.yml
+  ansible.builtin.include_tasks: agent-macos.yml
   when: ansible_facts.os_family == "Darwin"
 
 - name: Integrations Tasks
-  include_tasks: integration.yml
+  ansible.builtin.include_tasks: integration.yml
   when: datadog_integration is defined

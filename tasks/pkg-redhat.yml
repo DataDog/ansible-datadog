@@ -1,6 +1,6 @@
 ---
 - name: Ensure dnf is used as package manager
-  set_fact:
+  ansible.builtin.set_fact:
     ansible_pkg_mgr: dnf
 
 - name: If yum repo configuration is enabled
@@ -9,7 +9,7 @@
     - name: Find out whether to set repo_gpgcheck or not
       # We turn off repo_gpgcheck on custom repos and on RHEL/CentOS 8.1 because
       # of https://bugzilla.redhat.com/show_bug.cgi?id=1792506
-      set_fact:
+      ansible.builtin.set_fact:
         agent_do_yum_repo_gpgcheck: >-
           {{ datadog_yum_repo_gpgcheck if datadog_yum_repo_gpgcheck != '' else (
             'no' if (
@@ -19,20 +19,20 @@
           ) }}
 
     - name: Download current RPM key
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_yum_gpgkey_current }}"
         dest: /tmp/DATADOG_RPM_KEY_CURRENT.public
         mode: '600'
         force: true
 
     - name: Import current RPM key
-      rpm_key:
+      ansible.builtin.rpm_key:
         key: /tmp/DATADOG_RPM_KEY_CURRENT.public
         state: present
       when: not ansible_check_mode
 
     - name: Download old RPM key (Expires in 2022)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_yum_gpgkey_e09422b3 }}"
         dest: /tmp/DATADOG_RPM_KEY_E09422B3.public
         mode: '600'
@@ -40,69 +40,69 @@
       when: agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
     - name: Import old RPM key (Expires in 2022)
-      rpm_key:
+      ansible.builtin.rpm_key:
         key: /tmp/DATADOG_RPM_KEY_E09422B3.public
         state: present
       when: not ansible_check_mode and agent_datadog_minor is defined and agent_datadog_minor | int < 36
 
     - name: Download new RPM key (Expires in 2024)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_yum_gpgkey_20200908 }}"
         dest: /tmp/DATADOG_RPM_KEY_20200908.public
         mode: '600'
         checksum: "sha256:{{ datadog_yum_gpgkey_20200908_sha256sum }}"
 
     - name: Import new RPM key (Expires in 2024)
-      rpm_key:
+      ansible.builtin.rpm_key:
         key: /tmp/DATADOG_RPM_KEY_20200908.public
         state: present
       when: not ansible_check_mode
 
     - name: Download new RPM key (Expires in 2028)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_yum_gpgkey_20280418 }}"
         dest: /tmp/DATADOG_RPM_KEY_20280418.public
         mode: '600'
         checksum: "sha256:{{ datadog_yum_gpgkey_20280418_sha256sum }}"
 
     - name: Import new RPM key (Expires in 2028)
-      rpm_key:
+      ansible.builtin.rpm_key:
         key: /tmp/DATADOG_RPM_KEY_20280418.public
         state: present
       when: not ansible_check_mode
 
     - name: Download future RPM key (Expires in 2033)
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ datadog_yum_gpgkey_4f09d16b }}"
         dest: /tmp/DATADOG_RPM_KEY_4FA09D16B.public
         mode: '600'
         checksum: "sha256:{{ datadog_yum_gpgkey_4f09d16b_sha256sum }}"
 
     - name: Import future RPM key (Expires in 2033)
-      rpm_key:
+      ansible.builtin.rpm_key:
         key: /tmp/DATADOG_RPM_KEY_4FA09D16B.public
         state: present
       when: not ansible_check_mode
 
     - name: Set versioned includepkgs variable
-      set_fact:
+      ansible.builtin.set_fact:
         agent_datadog_includepkgs: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version | regex_replace('^\\d+:', '') }}"
       when: agent_datadog_agent_redhat_version is defined
 
     - name: Set plain includepkgs variable
-      set_fact:
+      ansible.builtin.set_fact:
         agent_datadog_includepkgs: "{{ datadog_agent_flavor }}
          {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
       when: agent_datadog_agent_redhat_version is not defined
 
     - name: Include datadog-installer to includepgks
-      set_fact:
+      ansible.builtin.set_fact:
         agent_datadog_includepkgs:
           "{{ agent_datadog_includepkgs }} {{ datadog_installer_flavor }}"
       when: datadog_installer_enabled
 
     - name: Install Datadog Agent 6 yum repo
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: datadog
         description: Datadog, Inc.
         baseurl: "{{ datadog_agent6_yum_repo }}"
@@ -123,7 +123,7 @@
       when: (agent_datadog_agent_major_version | int == 6) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
     - name: Install Datadog Agent 7 yum repo
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: datadog
         description: Datadog, Inc.
         baseurl: "{{ datadog_agent7_yum_repo }}"
@@ -144,7 +144,7 @@
       when: (agent_datadog_agent_major_version | int == 7) and (datadog_yum_repo | length == 0) and (not ansible_check_mode)
 
     - name: Install Datadog Custom yum repo
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: datadog
         description: Datadog, Inc.
         baseurl: "{{ datadog_yum_repo }}"
@@ -165,7 +165,7 @@
       when: (datadog_yum_repo | length > 0) and (not ansible_check_mode)
 
     - name: Clean repo metadata if repo changed # noqa: command-instead-of-module no-handler
-      command: dnf clean metadata --disablerepo="*" --enablerepo=datadog
+      ansible.builtin.command: dnf clean metadata --disablerepo="*" --enablerepo=datadog
       failed_when: false # Cleaning the metadata is only needed when downgrading a major version of the Agent, don't fail because of this
       when: agent_repofile6.changed or agent_repofile7.changed or agent_repofilecustom.changed
       changed_when: true
@@ -174,25 +174,25 @@
     # This rule assures that they are correctly imported into the local db and users won't have to manually accept
     # them if running dnf commands on the hosts.
     - name: Refresh Datadog repository cache # noqa: command-instead-of-module no-handler
-      command: dnf -y makecache --disablerepo="*" --enablerepo=datadog
+      ansible.builtin.command: dnf -y makecache --disablerepo="*" --enablerepo=datadog
       failed_when: false
       when: agent_repofile6.changed or agent_repofile7.changed or agent_repofilecustom.changed
       changed_when: true
 
     - name: Remove old yum repo files
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: ansible_datadog_{{ item }}
         state: absent
       with_items: [6, 7, custom]
 
 - name: Include installer setup
-  include_tasks: installer-setup.yml
+  ansible.builtin.include_tasks: installer-setup.yml
   when: datadog_installer_enabled
 
 - name: Include redhat agent pinned version install task
-  include_tasks: pkg-redhat/install-pinned.yml
+  ansible.builtin.include_tasks: pkg-redhat/install-pinned.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_redhat_version is defined
 
 - name: Include redhat agent latest version install task
-  include_tasks: pkg-redhat/install-latest.yml
+  ansible.builtin.include_tasks: pkg-redhat/install-latest.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_redhat_version is not defined

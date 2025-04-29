@@ -1,10 +1,10 @@
 ---
 - name: Generate installer trace ID
-  set_fact:
+  ansible.builtin.set_fact:
     datadog_installer_trace_id: "{{ 9999999999999999999 | random }}"
 
 - name: Start duration measurements
-  command: "date +%s%N"
+  ansible.builtin.command: "date +%s%N"
   register: datadog_installer_start_time
   changed_when: true
 
@@ -13,25 +13,25 @@
 # Doing the install here directly would always set the latest task to the used register
 # including when the task is skipped.
 - name: Include installer DNF install task
-  include_tasks: pkg-redhat/install-installer-dnf.yml
+  ansible.builtin.include_tasks: pkg-redhat/install-installer-dnf.yml
   when: ansible_facts.os_family in ["RedHat", "Rocky", "AlmaLinux"] and not ansible_check_mode and ansible_pkg_mgr == "dnf"
 
 - name: Include installer DEB install task
-  include_tasks: pkg-debian/install-installer.yml
+  ansible.builtin.include_tasks: pkg-debian/install-installer.yml
   when: ansible_facts.os_family == "Debian" and not ansible_check_mode
 
 - name: Include installer Zypper install task
-  include_tasks: pkg-suse/install-installer-zypper.yml
+  ansible.builtin.include_tasks: pkg-suse/install-installer-zypper.yml
   when: ansible_facts.os_family == "Suse" and not ansible_check_mode
 
 - name: Set the datadog agent version
-  set_fact:
+  ansible.builtin.set_fact:
     datadog_agent_major_version: "{{ datadog_agent_version.split('.', 1).0 }}"
     datadog_agent_minor_version: "{{ datadog_agent_version.split('.', 1).1 }}"
   when: datadog_agent_version
 
 - name: Bootstrap the installer
-  command: /usr/bin/datadog-bootstrap bootstrap
+  ansible.builtin.command: /usr/bin/datadog-bootstrap bootstrap
   register: datadog_installer_bootstrap_result
   environment:
     DATADOG_TRACE_ID: "{{ datadog_installer_trace_id }}"
@@ -50,24 +50,24 @@
   changed_when: true
 
 - name: Check if installer owns datadog-agent package
-  command: datadog-installer is-installed "{{ datadog_agent_flavor }}"
+  ansible.builtin.command: datadog-installer is-installed "{{ datadog_agent_flavor }}"
   failed_when: datadog_installer_owns_agent.rc != 0 and datadog_installer_owns_agent.rc != 10
   register: datadog_installer_owns_agent
   when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed
   changed_when: true
 
 - name: Disable agent install if owned by installer
-  set_fact:
+  ansible.builtin.set_fact:
     agent_datadog_skip_install: true
   when: not ansible_check_mode and not datadog_installer_bootstrap_result.failed and datadog_installer_owns_agent.rc == 0
 
 - name: Stop duration measurements
-  command: "date +%s%N"
+  ansible.builtin.command: "date +%s%N"
   register: datadog_installer_stop_time
   changed_when: true
 
 - name: Setup telemetry body
-  set_fact:
+  ansible.builtin.set_fact:
     telemetry_body: "{{ lookup(
       'template',
       'templates/installer-telemetry.j2',
@@ -88,7 +88,7 @@
   when: not ansible_check_mode
 
 - name: Send Installer telemetry traces
-  uri:
+  ansible.builtin.uri:
     url: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
     body: "{{ telemetry_body }}"
     method: POST
@@ -100,7 +100,7 @@
   failed_when: false
 
 - name: Setup logs body
-  set_fact:
+  ansible.builtin.set_fact:
     logs_body: "{{ lookup(
       'template',
       'templates/installer-logs.j2',
@@ -121,7 +121,7 @@
   when: not ansible_check_mode
 
 - name: Send Installer telemetry logs
-  uri:
+  ansible.builtin.uri:
     url: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
     body: "{{ logs_body }}"
     method: POST
@@ -133,6 +133,6 @@
   failed_when: false
 
 - name: Propagate failures after telemetry
-  fail:
+  ansible.builtin.fail:
     msg: "Installer bootstrap failed: {{ datadog_installer_bootstrap_result.stderr }}"
   when: not ansible_check_mode and datadog_installer_bootstrap_result.failed
