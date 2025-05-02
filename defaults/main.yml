@@ -116,13 +116,6 @@ datadog_yum_gpgkey_20280418_sha256sum: "d309232f05bcfb5df7fce1a22b09204762541350
 datadog_yum_gpgkey_4f09d16b: "https://s3.amazonaws.com/public-signing-keys/DATADOG_RPM_KEY_4F09D16B.public"
 datadog_yum_gpgkey_4f09d16b_sha256sum: "a4dc0e09751cf0e01da7b4095e432f6330c11b1fef41cacd1f2c8981596eaf2b"
 
-# By default, we fail early & print a helpful message if an older Ansible version and Python 3
-# interpreter is used on CentOS < 8. The 'yum' module is only available on Python 2, and the 'python3-dnf'
-# package is not available before CentOS 8.
-# If set to true, this option removes this check and allows the install to proceed. Useful in specific setups
-# where an old CentOS host using a Python 3 interpreter does have 'dnf' (eg. through backports).
-datadog_ignore_old_centos_python3_error: false
-
 # By default, the role uses the official zypper Datadog repository for the chosen major version
 # Use the datadog_zypper_repo variable to override the repository used.
 datadog_zypper_repo: ""
