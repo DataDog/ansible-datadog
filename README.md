@@ -599,6 +599,8 @@ On Debian Stretch, the `apt_key` module used by the role requires an additional 
 
 ### CentOS 6/7 with Python 3 interpreter and Ansible 2.10.x or below
 
+**DEPRECATED: This section only applies to Ansible role versions 4 or below. Starting with version 5, this role no longer supports CentOS 6/7 and requires Ansible Core 2.10 or higher.**
+
 The `yum` Python module, which is used in this role to install the Agent on CentOS-based hosts, is only available on Python 2 if Ansible 2.10.x or below is used. In such cases, the `dnf` package manager would have to be used instead.
 
 However, `dnf` and the `dnf` Python module are not installed by default on CentOS-based hosts before CentOS 8. In this case, it is not possible to install the Agent when a Python 3 interpreter is used.
