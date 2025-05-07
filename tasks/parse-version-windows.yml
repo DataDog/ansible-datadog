@@ -1,7 +1,7 @@
 ---
 # NOTE: This won't work with rc / beta builds.
 - name: Get Windows Agent version
-  amazon.windows.win_shell: |
+  ansible.windows.win_shell: |
     $product_name = "Datadog Agent"
     $version=Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
     Select-Object DisplayName,DisplayVersion,PSChildName -unique |
