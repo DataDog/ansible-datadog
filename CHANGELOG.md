@@ -3,6 +3,7 @@ CHANGELOG
 # 5.1.1 / 2025-05-07
 * [DOCS] Remove centos 6/7 from readme [#647]
 * [BUGFIX] Fix typo in fix-parse-version-windows.yml [#648] Thanks [@jacob9423]
+* [IMPROVEMENT] [CI] Add FQCN checks to ansible-lint [#650]
 
 # 5.1.0 / 2025-04-30
 **This role removes support for Ansible Core versions below 2.10.**
@@ -612,6 +613,7 @@ Initial release, compatible with Ansible v1 & v2
 [#645]: https://github.com/DataDog/ansible-datadog/pull/645
 [#647]: https://github.com/DataDog/ansible-datadog/pull/647
 [#648]: https://github.com/DataDog/ansible-datadog/pull/648
+[#650]: https://github.com/DataDog/ansible-datadog/pull/650
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
