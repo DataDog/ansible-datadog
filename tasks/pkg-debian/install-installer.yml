@@ -2,7 +2,7 @@
 - name: Install Datadog installer (apt)
   ansible.builtin.apt:
     name: "{{ datadog_installer_flavor }}"
-    state: latest # noqa package-latest
+    state: "{% if datadog_installer_default_pkg_version %}present{% else %}latest{% endif %}"
     update_cache: true
     cache_valid_time: "{{ datadog_apt_cache_valid_time }}"
   register: datadog_installer_install_result
