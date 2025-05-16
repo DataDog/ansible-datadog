@@ -199,6 +199,10 @@ datadog_remote_updates: false
 # Registry & auth for the datadog installer
 datadog_installer_registry: ""
 datadog_installer_auth: ""
+
+# Default package version for the datadog installer
+datadog_installer_default_pkg_version: ""
+
 installer_registry_config: {}
 
 #

@@ -347,6 +347,28 @@ jobs:
       - run: >
           ansible-playbook -v -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_over_pinned.yaml"
 
+  test_installer_versioned:
+    docker:
+      - image: datadog/docker-library:ansible_debian_2_10
+    steps:
+      - checkout
+      # Mock systemctl and systemd directory
+      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+      - run: mkdir -p /etc/systemd/system/
+      # Run the test playbook with the actual version
+      - run: >
+          ANSIBLE_JINJA2_NATIVE="false" ansible-playbook
+          -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_versioned.yaml"
+      # Verify the installer is installed and running
+      - run: >
+          bash -c 'datadog-installer version &&
+            if [ -d /opt/datadog-packages/datadog-agent ]; then
+              echo "Agent installed by installer successfully"
+            else
+              echo "Agent not installed by installer"
+              exit 1
+            fi'
+  
   test_incorrect_rhel6_detect:
     # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
     docker:

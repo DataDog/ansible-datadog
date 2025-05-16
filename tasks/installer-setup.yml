@@ -45,6 +45,7 @@
     DD_INSTALLER_REGISTRY_URL_INSTALLER_PACKAGE: "{{ datadog_installer_registry }}"
     DD_AGENT_MAJOR_VERSION: "{{ datadog_agent_major_version | default('') }}"
     DD_AGENT_MINOR_VERSION: "{{ datadog_agent_minor_version | default('') }}"
+    DD_INSTALLER_DEFAULT_PKG_VERSION: "{{ datadog_installer_default_pkg_version }}"
   ignore_errors: true
   when: not ansible_check_mode and not datadog_installer_install_result.failed
   changed_when: true
