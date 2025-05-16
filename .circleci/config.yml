@@ -482,6 +482,8 @@ workflows:
 
       - test_installer_over_pinned
 
+      - test_installer_versioned
+
       - test_incorrect_rhel6_detect:
          matrix:
            parameters:
