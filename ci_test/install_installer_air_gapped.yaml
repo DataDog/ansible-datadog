@@ -9,7 +9,6 @@
     datadog_yum_repo_config_enabled: true
     datadog_enabled: false
     datadog_skip_running_check: true
-    datadog_agent_version: 7.64.3
     datadog_installer_registry: "install.datadoghq.com"
     datadog_installer_version: 7.63
     datadog_apm_instrumentation_enabled: host

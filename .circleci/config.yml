@@ -332,7 +332,7 @@ jobs:
                 exit 1;
               fi'
   
-  test_installer_air_gapped:
+  test_installer_air_gapped_rhel:
     parameters:
       ansible_version:
         type: string
@@ -350,6 +350,14 @@ jobs:
         type: string
       installer_version:
         type: string
+      dd_site:
+        type: string
+      installer_registry:
+        type: string
+      yum_repo:
+        type: string
+      yum_repo_config_enabled:
+        type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -361,11 +369,15 @@ jobs:
       - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
       - run: mkdir -p /etc/systemd/system/
       - run: >
-          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
+          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -v
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
           -e datadog_remote_updates="<<parameters.remote_updates>>"
           -e datadog_installer_version="<<parameters.installer_version>>"
+          -e datadog_site="<<parameters.dd_site>>"
+          -e datadog_installer_registry="<<parameters.installer_registry>>"
+          -e datadog_yum_repo="<<parameters.yum_repo>>"
+          -e datadog_yum_repo_config_enabled="<<parameters.yum_repo_config_enabled>>"
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
@@ -513,14 +525,18 @@ workflows:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
 
-      - test_installer_air_gapped:
+      - test_installer_air_gapped_rhel:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["debian", "rocky8", "amazonlinux2023"]
+              os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
-              installer_version: ["7.62", "7.63", "latest"]
+              installer_version: ["7.63", "latest"]
+              dd_site: ["datadoghq.com", "ddog-gov.com"]
+              installer_registry: ["install.datadoghq.com", "gcr.io/datadoghq"]
+              yum_repo: ["https://yum.datadoghq.com/"]
+              yum_repo_config_enabled: ["true", "false"]
 
       - test_installer_over_pinned
 
