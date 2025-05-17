@@ -535,7 +535,7 @@ workflows:
               installer_version: ["7.63"]
               dd_site: ["datadoghq.com", "ddog-gov.com"]
               installer_registry: ["install.datadoghq.com"]
-              yum_repo: ["https://yum.datadoghq.com/"]
+              yum_repo: ["https://yum.datadoghq.com/stable/7/x86_64"]
               yum_repo_config_enabled: ["true", "false"]
 
       - test_installer_over_pinned
