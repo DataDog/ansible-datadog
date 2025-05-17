@@ -10,7 +10,8 @@
       installer:
         registry: "{{ datadog_installer_registry }}"
         auth: "{{ datadog_installer_auth }}"
-  when: datadog_installer_registry or datadog_installer_auth
+        version: "{{ datadog_installer_version }}"
+  when: datadog_installer_registry or datadog_installer_auth or datadog_installer_version
 
 - name: Update datadog_config including installer registry
   ansible.builtin.set_fact:
