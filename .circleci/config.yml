@@ -517,7 +517,7 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["rocky8", "amazonlinux2023"]
+              os: ["debian", "suse"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
               dd_site: ["datadoghq.com", "ddog-gov.com"]
