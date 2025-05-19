@@ -348,7 +348,7 @@ jobs:
         type: string
       remote_updates:
         type: string
-      dd-site:
+      dd_site:
         type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
