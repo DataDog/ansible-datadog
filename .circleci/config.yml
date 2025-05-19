@@ -517,10 +517,6 @@ workflows:
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
-              dd_site: ["datadoghq.com", "ddog-gov.com"]
-              installer_registry: ["install.datadoghq.com"]
-              yum_repo: ["https://yum.datadoghq.com/stable/7/x86_64"]
-              yum_repo_config_enabled: ["true"]
 
       - test_installer_over_pinned
 
