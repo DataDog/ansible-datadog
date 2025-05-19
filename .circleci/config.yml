@@ -348,6 +348,8 @@ jobs:
         type: string
       remote_updates:
         type: string
+      dd-site:
+        type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -363,6 +365,7 @@ jobs:
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
           -e datadog_remote_updates="<<parameters.remote_updates>>"
+          -e datadog_site="<<parameters.dd_site>>"
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
@@ -517,6 +520,7 @@ workflows:
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
+              dd_site: ["datadoghq.com", "ddog-gov.com"]
 
       - test_installer_over_pinned
 
