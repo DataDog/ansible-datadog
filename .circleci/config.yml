@@ -332,6 +332,73 @@ jobs:
                 exit 1;
               fi'
 
+  test_installer_air_gapped_rhel:
+    parameters:
+      ansible_version:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+      os:
+        type: string
+      inventory:
+        type: string
+        default: "ci.ini"
+      apm_enabled:
+        type: string
+      remote_updates:
+        type: string
+      installer_version:
+        type: string
+      dd_site:
+        type: string
+      installer_registry:
+        type: string
+      yum_repo:
+        type: string
+      yum_repo_config_enabled:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
+        # create the systemd folder to store its units
+        # Since we're running the tests in a docker container without systemd, we can "help" it
+        # proceed by pretending systemd is there
+      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
+      - run: mkdir -p /etc/systemd/system/
+      - run: >
+          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -v
+          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
+          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
+          -e datadog_remote_updates="<<parameters.remote_updates>>"
+          -e datadog_installer_version="<<parameters.installer_version>>"
+          -e datadog_site="<<parameters.dd_site>>"
+          -e datadog_installer_registry="<<parameters.installer_registry>>"
+          -e datadog_yum_repo="<<parameters.yum_repo>>"
+          -e datadog_yum_repo_config_enabled="<<parameters.yum_repo_config_enabled>>"
+      - run: >
+          bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
+              datadog-installer version;
+            elif command -v datadog-installer; then
+              echo datadog-installer should not be installed;
+              exit 2;
+            else
+              echo datadog-installer is not installed as expected;
+            fi
+            if [ "<<parameters.remote_updates>>" = "true" ]; then
+              if [ -d /opt/datadog-agent ]; then
+                echo "The agent should NOT have been installed by the distribution";
+                exit 1;
+              fi
+            else
+              if [ ! -d /opt/datadog-agent ]; then
+                echo "The agent should have been installed by the distribution";
+                exit 1;
+              fi
+            fi'
+
   test_installer_over_pinned:
     docker:
       - image: datadog/docker-library:ansible_debian_2_10
@@ -457,6 +524,19 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
+              
+      - test_installer_air_gapped_rhel:
+         matrix:
+           parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
+              os: ["rocky8", "amazonlinux2023"]
+              apm_enabled: ["host", ""]
+              remote_updates: ["true", "false"]
+              installer_version: ["7.63"]
+              dd_site: ["datadoghq.com", "ddog-gov.com"]
+              installer_registry: ["install.datadoghq.com"]
+              yum_repo: ["https://yum.datadoghq.com/stable/7/x86_64"]
+              yum_repo_config_enabled: ["true"]
 
       - test_installer_over_pinned
 
