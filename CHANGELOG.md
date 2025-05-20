@@ -1,5 +1,8 @@
 CHANGELOG
 =========
+# 5.2.0 / 2025-05-21
+* [IMPROVEMENT] Add feature to override the Datadog installer default package version [#652] Thanks [@snowman11784]
+
 # 5.1.1 / 2025-05-07
 * [DOCS] Remove centos 6/7 from readme [#647]
 * [BUGFIX] Fix typo in fix-parse-version-windows.yml [#648] Thanks [@jacob9423]
@@ -614,6 +617,7 @@ Initial release, compatible with Ansible v1 & v2
 [#647]: https://github.com/DataDog/ansible-datadog/pull/647
 [#648]: https://github.com/DataDog/ansible-datadog/pull/648
 [#650]: https://github.com/DataDog/ansible-datadog/pull/650
+[#652]: https://github.com/DataDog/ansible-datadog/pull/652
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -663,3 +667,4 @@ Initial release, compatible with Ansible v1 & v2
 [@a-rhodes]: https://github.com/a-rhodes
 [@kaveet]: https://github.com/kaveet
 [@jacob9423]: https://github.com/jacob9423
+[@snowman11784]: https://github.com/snowman11784
