@@ -54,7 +54,7 @@ The API key is required and its absence causes the role to fail. If you want to 
 
 ### Air-gapped environments
 
-To install Datadog in an air-gapped environment using a specific registry and images, use the Datadog Ansible collection along with the `datadog_installer_registry`, `datadog_installer_auth`, and `agent_datadog_config` variables. 
+To install Datadog in an air-gapped environment using a specific registry and images, use the Datadog Ansible collection along with the `datadog_installer_registry`, `datadog_installer_auth`, `datadog_installer_version`, and `agent_datadog_config` variables.
 
 **Note**: `agent_datadog_config` overrides the `installer_registry_config` setting.
 
@@ -66,6 +66,7 @@ name: Datadog Agent Install
     name: datadog.dd.agent
   vars:
     datadog_installer_registry: "my.local.registry"
+    datadog_installer_version: 7.63
     datadog_yum_repo: "my.local.repo"
     datadog_api_key: "MY_DATADOG_API_KEY"
     datadog_site: "MY_DATADOG_SITE"
