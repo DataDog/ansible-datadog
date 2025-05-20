@@ -348,16 +348,6 @@ jobs:
         type: string
       remote_updates:
         type: string
-      installer_version:
-        type: string
-      dd_site:
-        type: string
-      installer_registry:
-        type: string
-      yum_repo:
-        type: string
-      yum_repo_config_enabled:
-        type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -373,11 +363,6 @@ jobs:
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
           -e datadog_remote_updates="<<parameters.remote_updates>>"
-          -e datadog_installer_version="<<parameters.installer_version>>"
-          -e datadog_site="<<parameters.dd_site>>"
-          -e datadog_installer_registry="<<parameters.installer_registry>>"
-          -e datadog_yum_repo="<<parameters.yum_repo>>"
-          -e datadog_yum_repo_config_enabled="<<parameters.yum_repo_config_enabled>>"
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
@@ -532,11 +517,6 @@ workflows:
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
               remote_updates: ["true", "false"]
-              installer_version: ["7.63"]
-              dd_site: ["datadoghq.com", "ddog-gov.com"]
-              installer_registry: ["install.datadoghq.com"]
-              yum_repo: ["https://yum.datadoghq.com/stable/7/x86_64"]
-              yum_repo_config_enabled: ["true"]
 
       - test_installer_over_pinned
 
