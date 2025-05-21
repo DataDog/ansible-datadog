@@ -375,7 +375,7 @@ jobs:
 
             if [ -n "<<parameters.apm_enabled>>" ]; then
               echo "Checking if datadog-apm-inject is installed...";
-              if ! sudo datadog-installer is-installed datadog-apm-inject; then
+              if ! datadog-installer is-installed datadog-apm-inject; then
                 echo "datadog-apm-inject is NOT installed as expected";
                 exit 3;
               else
