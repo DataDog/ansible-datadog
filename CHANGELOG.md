@@ -2,6 +2,7 @@ CHANGELOG
 =========
 # 5.2.0 / 2025-05-21
 * [IMPROVEMENT] Add feature to override the Datadog installer default package version [#652] Thanks [@snowman11784]
+* [IMPROVEMENT] Add spport to override datadog-apm-inject version [#654]
 
 # 5.1.1 / 2025-05-07
 * [DOCS] Remove centos 6/7 from readme [#647]
@@ -618,6 +619,7 @@ Initial release, compatible with Ansible v1 & v2
 [#648]: https://github.com/DataDog/ansible-datadog/pull/648
 [#650]: https://github.com/DataDog/ansible-datadog/pull/650
 [#652]: https://github.com/DataDog/ansible-datadog/pull/652
+[#654]: https://github.com/DataDog/ansible-datadog/pull/654
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
