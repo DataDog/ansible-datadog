@@ -44,6 +44,7 @@
     DD_INSTALLER_REGISTRY_AUTH_INSTALLER_PACKAGE: "{{ datadog_installer_auth }}"
     DD_INSTALLER_REGISTRY_URL_INSTALLER_PACKAGE: "{{ datadog_installer_registry }}"
     DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_INSTALLER: "{{ datadog_installer_version | default('latest') }}"
+    DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_APM_INJECT: "{{ datadog_apm_inject_version | default('latest') }}"
     DD_AGENT_MAJOR_VERSION: "{{ datadog_agent_major_version | default('') }}"
     DD_AGENT_MINOR_VERSION: "{{ datadog_agent_minor_version | default('') }}"
   ignore_errors: true
