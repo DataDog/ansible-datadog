@@ -202,6 +202,9 @@ datadog_installer_auth: ""
 datadog_installer_version: ""
 installer_registry_config: {}
 
+# Version for the datadog apm inject package
+datadog_apm_inject_version: ""
+
 #
 # Internal variables
 # The following variables are for internal use only, do not modify them.
