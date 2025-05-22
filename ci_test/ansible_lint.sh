@@ -72,7 +72,7 @@ popd
 pip install -r requirements-ansible-lint.txt
 
 # Install required collections for linting
-ansible-galaxy collection install ansible.windows community.general
+ansible-galaxy collection install ansible.windows
 
 # lint the ansible-role alone
 ansible-lint -v --exclude=galaxy.yml --exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/ --exclude=ansible_collections/ --exclude=.ansible/ --exclude=.venv/
