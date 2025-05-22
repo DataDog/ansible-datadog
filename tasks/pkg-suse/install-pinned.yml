@@ -1,6 +1,6 @@
 ---
 - name: Install pinned datadog-agent package
-  community.general.zypper:
+  ansible.builtin.package:
     name: datadog-agent={{ agent_datadog_agent_suse_version }}
     state: present
     oldpackage: "{{ datadog_agent_allow_downgrade }}"
