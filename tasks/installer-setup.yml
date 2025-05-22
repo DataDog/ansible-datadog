@@ -30,7 +30,7 @@
     datadog_agent_minor_version: "{{ datadog_agent_version.split('.', 1).1 }}"
   when: datadog_agent_version
 
-# We use this step to not render DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_INSTALLER and DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_APM_INJECT if they are not set
+# We use this step to not render "empty" environment variables when not set.
 - name: Build Datadog installer environment variables
   ansible.builtin.set_fact:
     datadog_installer_bootstrap_environment: >
@@ -54,20 +54,6 @@
         | rejectattr('value', 'equalto', '')
         | items2dict
       }}
-
-- name: Dump Datadog installer environment to temp file
-  ansible.builtin.copy:
-    content: "{{ datadog_installer_bootstrap_environment | to_nice_json }}"
-    dest: "/tmp/datadog_installer_env.json"
-
-- name: Print Datadog installer environment from file
-  ansible.builtin.command: cat /tmp/datadog_installer_env.json
-  register: datadog_env_cat_result
-  changed_when: false
-
-- name: Show cat output
-  ansible.builtin.debug:
-    msg: "{{ datadog_env_cat_result.stdout }}"
 
 - name: Bootstrap the installer
   ansible.builtin.command: /usr/bin/datadog-bootstrap bootstrap
