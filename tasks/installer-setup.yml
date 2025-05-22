@@ -62,6 +62,12 @@
 
 - name: Print Datadog installer environment from file
   ansible.builtin.command: cat /tmp/datadog_installer_env.json
+  register: datadog_env_cat_result
+  changed_when: false
+
+- name: Show cat output
+  ansible.builtin.debug:
+    msg: "{{ datadog_env_cat_result.stdout }}"
 
 - name: Bootstrap the installer
   ansible.builtin.command: /usr/bin/datadog-bootstrap bootstrap
