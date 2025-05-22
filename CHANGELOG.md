@@ -2,6 +2,7 @@ CHANGELOG
 =========
 # 5.2.1 / 2025-05-22
 * [IMPROVEMENT] Provide bootstrap environment variables to installer only if not empty strings [#655]
+* [BUGFIX] [CI] Fix installer tests after 7.66.0 release [#657]
 
 # 5.2.0 / 2025-05-21
 * [IMPROVEMENT] Add feature to override the Datadog installer default package version [#652] Thanks [@snowman11784]
@@ -624,6 +625,7 @@ Initial release, compatible with Ansible v1 & v2
 [#652]: https://github.com/DataDog/ansible-datadog/pull/652
 [#654]: https://github.com/DataDog/ansible-datadog/pull/654
 [#655]: https://github.com/DataDog/ansible-datadog/pull/655
+[#657]: https://github.com/DataDog/ansible-datadog/pull/657
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
