@@ -279,7 +279,7 @@ jobs:
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
-            elif command -v datadog-installer; then
+            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
               echo datadog-installer should not be installed;
               exit 2;
             else
@@ -366,7 +366,7 @@ jobs:
       - run: >
           bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
               datadog-installer version;
-            elif command -v datadog-installer; then
+            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
               echo datadog-installer should not be installed;
               exit 2;
             else
