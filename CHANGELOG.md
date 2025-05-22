@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 # 5.2.1 / 2025-05-22
-* [IMPROVEMENT] [installer] Provide bootstrap environment variables only if not empty strings [#655]
+* [IMPROVEMENT] Provide bootstrap environment variables to installer only if not empty strings [#655]
 
 # 5.2.0 / 2025-05-21
 * [IMPROVEMENT] Add feature to override the Datadog installer default package version [#652] Thanks [@snowman11784]
