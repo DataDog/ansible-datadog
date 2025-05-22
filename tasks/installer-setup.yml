@@ -54,10 +54,13 @@
         }
       }}
 
-- name: (TEMP) Log the Datadog installer environment
-  ansible.builtin.shell: |
-    echo "Datadog installer environment:"
-    echo '{{ datadog_installer_bootstrap_environment | to_nice_json | replace("'", "'\\''") }}'
+- name: Dump Datadog installer environment to temp file
+  ansible.builtin.copy:
+    content: "{{ datadog_installer_bootstrap_environment | to_nice_json }}"
+    dest: "/tmp/datadog_installer_env.json"
+
+- name: Print Datadog installer environment from file
+  ansible.builtin.command: cat /tmp/datadog_installer_env.json
 
 - name: Bootstrap the installer
   ansible.builtin.command: /usr/bin/datadog-bootstrap bootstrap
