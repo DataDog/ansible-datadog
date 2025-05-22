@@ -26,12 +26,6 @@ Note that the install instructions in this document describe installation of the
   ```shell
   ansible-galaxy collection install ansible.windows
   ```
-- Requires the `community.general` collection to be installed:
-
-  ```shell
-  ansible-galaxy collection install community.general
-  ```
-
 ### Installation
 
 Install the [Datadog role][1] from Ansible Galaxy on your Ansible server:
