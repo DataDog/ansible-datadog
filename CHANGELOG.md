@@ -2,6 +2,7 @@ CHANGELOG
 =========
 # 5.2.1 / 2025-05-22
 * [IMPROVEMENT] Provide bootstrap environment variables to installer only if not empty strings [#655]
+* [IMPROVEMENT] Remove community.general.zypper reference [#658]
 * [BUGFIX] [CI] Fix installer tests after 7.66.0 release [#657]
 
 # 5.2.0 / 2025-05-21
@@ -626,6 +627,7 @@ Initial release, compatible with Ansible v1 & v2
 [#654]: https://github.com/DataDog/ansible-datadog/pull/654
 [#655]: https://github.com/DataDog/ansible-datadog/pull/655
 [#657]: https://github.com/DataDog/ansible-datadog/pull/657
+[#658]: https://github.com/DataDog/ansible-datadog/pull/658
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
