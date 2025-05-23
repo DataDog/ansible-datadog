@@ -1,4 +1,6 @@
 ---
+# ansible-lint: skip: var-naming[no-role-prefix]
+
 role_version: 5.2.0
 
 # define if the datadog-agent services should be enabled

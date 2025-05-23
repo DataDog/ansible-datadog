@@ -1,6 +1,4 @@
 ---
-var_naming_pattern: '^(datadog_|agent_|role_)[a-z0-9_]*$'
-
 enable_list:
   - empty-string-compare
   - fqcn-builtins
