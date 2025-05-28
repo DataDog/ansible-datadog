@@ -7,3 +7,8 @@ enable_list:
 warn_list:
   - var_naming
   - idiom
+  
+var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+
+skip_list:
+  - var-naming[no-role-prefix]
