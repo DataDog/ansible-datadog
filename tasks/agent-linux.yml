@@ -1,6 +1,9 @@
 ---
 - name: Populate service facts
   ansible.builtin.service_facts:
+  when:
+    - ansible_facts.services is undefined
+
 - name: Set before 6/7.40.0 flag
   ansible.builtin.set_fact:
     agent_datadog_before_7400: "{{ agent_datadog_major is defined and agent_datadog_minor is defined and agent_datadog_major
