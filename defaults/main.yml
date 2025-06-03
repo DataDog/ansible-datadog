@@ -263,3 +263,9 @@ datadog_macos_logs_dir: "/opt/datadog-agent/logs"
 datadog_macos_run_dir: "/opt/datadog-agent/run"
 
 datadog_installer_enabled: false
+
+datadog_ansible_facts_subset:
+  - '!all'
+  - '!any'
+  - min
+  - env

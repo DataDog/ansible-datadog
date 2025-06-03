@@ -7,3 +7,6 @@ enable_list:
 warn_list:
   - var_naming
   - idiom
+
+skip_list:
+  - var-naming[no-role-prefix]
