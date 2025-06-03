@@ -1,6 +1,11 @@
 ---
 - name: Gather Ansible Facts
-  ansible.builtin.setup: # If the full prefix isn't specified in Ansible 2.10+, we might end up running `ansible.windows.setup` instead.
+  ansible.builtin.setup:
+    gather_subset: "{{ datadog_ansible_facts_subset }}"
+    # If the full prefix isn't specified in Ansible 2.10+, we might end up running `ansible.windows.setup` instead.
+  when:
+    - ansible_facts is undefined
+    - ansible_facts.system is undefined
 
 - name: Initialize internal datadog_config variable
   ansible.builtin.set_fact:
