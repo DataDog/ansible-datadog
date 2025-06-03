@@ -1,5 +1,12 @@
 CHANGELOG
 =========
+# 5.2.1 / 2025-05-22
+* [IMPROVEMENT] Provide bootstrap environment variables to installer only if not empty strings [#655]
+* [IMPROVEMENT] Remove community.general.zypper reference [#658]
+* [IMPROVEMENT] Only gather facts and services if notd done already [#659] [Thanks @POIFischbacher]
+* [IMROVEMENT] [CI] Remove role prefix lint warnings [#660]
+* [BUGFIX] [CI] Fix installer tests after 7.66.0 release [#657]
+
 # 5.2.0 / 2025-05-21
 * [IMPROVEMENT] Add feature to override the Datadog installer default package version [#652] Thanks [@snowman11784]
 * [IMPROVEMENT] Add support to override datadog-apm-inject version [#654]
@@ -620,6 +627,11 @@ Initial release, compatible with Ansible v1 & v2
 [#650]: https://github.com/DataDog/ansible-datadog/pull/650
 [#652]: https://github.com/DataDog/ansible-datadog/pull/652
 [#654]: https://github.com/DataDog/ansible-datadog/pull/654
+[#655]: https://github.com/DataDog/ansible-datadog/pull/655
+[#657]: https://github.com/DataDog/ansible-datadog/pull/657
+[#658]: https://github.com/DataDog/ansible-datadog/pull/658
+[#659]: https://github.com/DataDog/ansible-datadog/pull/659
+[#660]: https://github.com/DataDog/ansible-datadog/pull/660
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
@@ -670,3 +682,4 @@ Initial release, compatible with Ansible v1 & v2
 [@kaveet]: https://github.com/kaveet
 [@jacob9423]: https://github.com/jacob9423
 [@snowman11784]: https://github.com/snowman11784
+[@POIFischbacher]: https://github.com/POIFischbacher
