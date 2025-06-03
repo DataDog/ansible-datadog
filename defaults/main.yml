@@ -268,3 +268,4 @@ datadog_ansible_facts_subset:
   - '!all'
   - '!any'
   - min
+  - env
