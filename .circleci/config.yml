@@ -186,6 +186,7 @@ jobs:
       xcode: 16.2.0
     steps:
       - checkout
+      #TODO(regis): remove Rosetta 2 translation for Agent v7.70+
       - run:
           name: Install Rosetta 2
           command: printf 'A\n' | sudo softwareupdate --install-rosetta

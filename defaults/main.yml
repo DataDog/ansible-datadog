@@ -249,6 +249,7 @@ datadog_macos_download_url: ""
 # These variables are for internal use only, do not modify them.
 datadog_macos_agent6_latest_url: "https://install.datadoghq.com/datadog-agent-6-latest.dmg"
 datadog_macos_agent7_latest_url: "https://install.datadoghq.com/datadog-agent-7-latest.dmg"
+datadog_macos_agent7_latest_arch_url: "https://install.datadoghq.com/datadog-agent-7-latest.{{ ansible_facts.architecture }}.dmg"
 
 # If datadog_agent_version is set, the role will use the following url prefix instead, and append the version number to it
 # in order to get the full url to the dmg package.
