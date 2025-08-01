@@ -41,7 +41,6 @@ if grep -Eqi "(error|warning)" importer.log; then
     exit 1
 fi
 popd || exit
-
 rm -rf ansible_collections
 mkdir -p ansible_collections/datadog/dd/roles/agent/
 
