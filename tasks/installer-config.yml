@@ -2,7 +2,7 @@
 - name: Enable installer
   ansible.builtin.set_fact:
     datadog_installer_enabled: true
-  when: datadog_apm_instrumentation_enabled | length > 0 or datadog_remote_updates | bool
+  when: datadog_apm_instrumentation_enabled | length > 0
 
 - name: Set internal values for installer registry
   ansible.builtin.set_fact:
