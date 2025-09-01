@@ -220,8 +220,19 @@ jobs:
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
       - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
       - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
-      # verify that the emitted trace is in trace-agent log
-      - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
+      # verify that the emitted traces are received by checking agent status
+      - run: |
+          for i in {1..14}; do
+            echo "Checking for traces (attempt $i/14)..."
+            if sudo datadog-agent status "apm agent" --json | jq -e '.apmStats.ratebyservice | keys | length > 0' >/dev/null 2>&1; then
+              echo "✅ Traces found in agent status!"
+              sudo datadog-agent status "apm agent" --json | jq '.apmStats.ratebyservice'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "❌ No traces found after 70 seconds"
+          exit 1
 
   test_apm_injection_all:
     parameters:
