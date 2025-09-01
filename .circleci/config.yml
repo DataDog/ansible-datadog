@@ -499,7 +499,6 @@ workflows:
               ansible_version: ["2_10", "3_4", "4_10"]
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
-              remote_updates: ["true", "false"]
 
       - test_installer_over_pinned
 
