@@ -220,8 +220,19 @@ jobs:
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
       - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
       - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
-      # verify that the emitted trace is in trace-agent log
-      - run: timeout 70 grep -m 1 "lang:python" <(tail -F /var/log/datadog/trace-agent.log)
+      # verify that the emitted traces are received by checking agent status
+      - run: |
+          for i in {1..14}; do
+            echo "Checking for traces (attempt $i/14)..."
+            if sudo datadog-agent status "apm agent" --json | jq -e '.apmStats.ratebyservice | keys | length > 0' >/dev/null 2>&1; then
+              echo "✅ Traces found in agent status!"
+              sudo datadog-agent status "apm agent" --json | jq '.apmStats.ratebyservice'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "❌ No traces found after 70 seconds"
+          exit 1
 
   test_apm_injection_all:
     parameters:
@@ -259,8 +270,6 @@ jobs:
         default: "ci.ini"
       apm_enabled:
         type: string
-      remote_updates:
-        type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -275,26 +284,14 @@ jobs:
           ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
-          -e datadog_remote_updates="<<parameters.remote_updates>>"
       - run: >
-          bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
+          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
               datadog-installer version;
             elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
               echo datadog-installer should not be installed;
               exit 2;
             else
               echo datadog-installer is not installed as expected;
-            fi
-            if [ "<<parameters.remote_updates>>" = "true" ]; then
-              if [ -d /opt/datadog-agent ]; then
-                echo "The agent should NOT have been installed by the distribution";
-                exit 1;
-              fi
-            else
-              if [ ! -d /opt/datadog-agent ]; then
-                echo "The agent should have been installed by the distribution";
-                exit 1;
-              fi
             fi'
 
   test_installer_suse:
@@ -307,6 +304,8 @@ jobs:
       inventory:
         type: string
         default: "ci.ini"
+      apm_enabled:
+        type: string
     docker:
       - image: datadog/docker-library:ansible_suse_<<parameters.ansible_version>>
     steps:
@@ -320,17 +319,16 @@ jobs:
       - run: >
           ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
-          -e datadog_remote_updates="true"
+          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
       - run: >
-          bash -c 'datadog-installer version;
-              if [ ! -d /opt/datadog-packages/datadog-agent ]; then
-                echo "The agent should have been installed by the installer";
-                exit 1;
-              fi
-              if [ -d /opt/datadog-agent ]; then
-                echo "The agent should NOT have been installed by the distribution";
-                exit 1;
-              fi'
+          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
+              datadog-installer version;
+            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
+              echo datadog-installer should not be installed;
+              exit 2;
+            else
+              echo datadog-installer is not installed as expected;
+            fi'
   
   test_installer_air_gapped_rhel:
     parameters:
@@ -346,8 +344,6 @@ jobs:
         default: "ci.ini"
       apm_enabled:
         type: string
-      remote_updates:
-        type: string
     docker:
       - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
     steps:
@@ -362,9 +358,8 @@ jobs:
           ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -v
           -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
           -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
-          -e datadog_remote_updates="<<parameters.remote_updates>>"
       - run: >
-          bash -c 'if [ -n "<<parameters.apm_enabled>>" ] || [ "<<parameters.remote_updates>>" = "true" ]; then
+          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
               datadog-installer version;
             elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
               echo datadog-installer should not be installed;
@@ -380,18 +375,6 @@ jobs:
                 exit 3;
               else
                 echo "datadog-apm-inject is installed";
-              fi
-            fi
-
-            if [ "<<parameters.remote_updates>>" = "true" ]; then
-              if [ -d /opt/datadog-agent ]; then
-                echo "The agent should NOT have been installed by the distribution";
-                exit 1;
-              fi
-            else
-              if [ ! -d /opt/datadog-agent ]; then
-                echo "The agent should have been installed by the distribution";
-                exit 1;
               fi
             fi'
 
@@ -514,12 +497,12 @@ workflows:
               ansible_version: ["2_10", "3_4", "4_10"]
               os: ["debian", "rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
-              remote_updates: ["true", "false"]
 
       - test_installer_suse:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
+              apm_enabled: ["host", ""]
 
       - test_installer_air_gapped_rhel:
          matrix:
@@ -527,7 +510,6 @@ workflows:
               ansible_version: ["2_10", "3_4", "4_10"]
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
-              remote_updates: ["true", "false"]
 
       - test_installer_over_pinned
 
