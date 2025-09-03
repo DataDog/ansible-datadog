@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+
+# 5.3.0 / 2025-09-03
+* [IMPROVEMENT] Support Remote Agent updates through the embedded Datadog Installer (7.69.0+) [#665]
+
 # 5.2.1 / 2025-05-22
 * [IMPROVEMENT] Provide bootstrap environment variables to installer only if not empty strings [#655]
 * [IMPROVEMENT] Remove community.general.zypper reference [#658]
@@ -632,6 +636,7 @@ Initial release, compatible with Ansible v1 & v2
 [#658]: https://github.com/DataDog/ansible-datadog/pull/658
 [#659]: https://github.com/DataDog/ansible-datadog/pull/659
 [#660]: https://github.com/DataDog/ansible-datadog/pull/660
+[#665]: https://github.com/DataDog/ansible-datadog/pull/665
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
