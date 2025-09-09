@@ -423,7 +423,7 @@ workflows:
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               agent_version: ["6", "7"]
               os: ["rocky8"]
               python: ["python3"]
@@ -432,7 +432,7 @@ workflows:
       - test_install_downgrade:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
+              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4", "12_0"]
               agent_version: ["6", "7"]
               os: ["debian"]
               python: ["python3"]
@@ -441,7 +441,7 @@ workflows:
       - test_install_no_manage_config:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               agent_version: ["6", "7"]
               os: ["debian"]
               python: ["python3"]
@@ -451,7 +451,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10", "9_4"]
+              ansible_version: ["2_10", "3_4", "4_10", "9_4", "12_0"]
               agent_version: ["6", "7"]
               jinja2_native: ["true", "false"]
               os: ["rocky8"]
@@ -461,7 +461,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10", "9_4"]
+              ansible_version: ["2_10", "3_4", "4_10", "9_4", "12_0"]
               agent_version: ["6", "7"]
               os: ["suse"]
               python: ["python3"]
@@ -469,7 +469,7 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2023"]
               python: ["python3"]
@@ -477,37 +477,37 @@ workflows:
       - test_install_macos:
           matrix:
             parameters:
-              ansible_version: ["2.10", "3.4", "4.10"]
+              ansible_version: ["2.10", "3.4", "4.10", "12_0"]
               agent_version: ["6_macos", "7_macos"]
               python: ["python3"]
 
       - test_apm_injection:
           matrix:
             parameters:
-              ansible_version: ["6.7.0"]
+              ansible_version: ["6.7.0", "12_0"]
 
       - test_apm_injection_all:
           matrix:
             parameters:
-              ansible_version: ["6.7.0"]
+              ansible_version: ["6.7.0", "12_0"]
 
       - test_installer:
          matrix:
            parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               os: ["debian", "rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
       - test_installer_suse:
          matrix:
            parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               apm_enabled: ["host", ""]
 
       - test_installer_air_gapped_rhel:
          matrix:
            parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
+              ansible_version: ["2_10", "3_4", "4_10", "12_0"]
               os: ["rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
@@ -516,6 +516,6 @@ workflows:
       - test_incorrect_rhel6_detect:
          matrix:
            parameters:
-              ansible_version: ["4_10"]
+              ansible_version: ["4_10", "12_0"]
               os: [ "amazonlinux2023"]
               python: ["python3"]
