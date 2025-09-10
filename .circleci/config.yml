@@ -484,12 +484,12 @@ workflows:
       - test_apm_injection:
           matrix:
             parameters:
-              ansible_version: ["6.7.0", "12_0"]
+              ansible_version: ["6.7.0", "12.0."]
 
       - test_apm_injection_all:
           matrix:
             parameters:
-              ansible_version: ["6.7.0", "12_0"]
+              ansible_version: ["6.7.0", "12.0.0"]
 
       - test_installer:
          matrix:
