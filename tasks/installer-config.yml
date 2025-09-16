@@ -21,4 +21,6 @@
 - name: Update datadog_config including installer registry
   ansible.builtin.set_fact:
     agent_datadog_config: "{{ agent_datadog_config | combine(installer_registry_config, list_merge='keep') }}"
-  when: installer_registry_config and datadog_installer_enabled
+  when: >
+    installer_registry_config is defined and
+    datadog_installer_enabled
