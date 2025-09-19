@@ -17,7 +17,7 @@
 # out of the ABOVE task preventing us from having to run 2 similar commands.
 - name: Extract JSON user data as variable object
   ansible.builtin.set_fact:
-    agent_macos_user_data: "{{ agent_macos_user_output.stdout }}"
+    agent_macos_user_data: "{{ agent_macos_user_output.stdout | from_json }}"
 
 - name: Load user group data
   ansible.builtin.shell:
