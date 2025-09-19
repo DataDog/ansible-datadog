@@ -38,12 +38,12 @@
 
 - name: Set local helper variable for determining key import (when not {{ datadog_apt_key_current_name }})
   ansible.builtin.set_fact:
-    agent_key_needs_import: "{{ 'false' if agent_key_exists_result.rc == 0 else 'true' }}"
+    agent_key_needs_import: "{{ false if agent_key_exists_result.rc == 0 else true }}"
   when: agent_key_fingerprint != datadog_apt_key_current_name
 
 - name: Set local helper variable for determining key import (when {{ datadog_apt_key_current_name }})
   ansible.builtin.set_fact:
-    agent_key_needs_import: "true"
+    agent_key_needs_import: true
   when: agent_key_fingerprint == datadog_apt_key_current_name
 
 - name: Create temporary directory for key manipulation
@@ -86,8 +86,9 @@
   changed_when: false
 
 - name: Import key to keyring, key,keyring={{ agent_key_fingerprint, datadog_apt_usr_share_keyring }}
-  ansible.builtin.shell: cat {{ agent_tempdir.path }}/single.gpg |
-    gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch # noqa risky-shell-pipe
+  ansible.builtin.shell: >
+    cat {{ agent_tempdir.path }}/single.gpg |
+    gpg --no-default-keyring --keyring {{ datadog_apt_usr_share_keyring }} --import --batch
   when: agent_key_needs_import
   register: agent_key_import_result
   changed_when: '"imported: 1" in agent_key_import_result.stderr'
