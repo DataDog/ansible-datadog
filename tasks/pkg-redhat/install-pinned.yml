@@ -1,6 +1,6 @@
 ---
 - name: Install pinned datadog-agent package (dnf)
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: "{{ datadog_agent_flavor }}-{{ agent_datadog_agent_redhat_version }}"
     update_cache: true
     state: present

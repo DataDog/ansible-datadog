@@ -433,7 +433,7 @@ workflows:
             parameters:
               ansible_version: ["12_0"]
               agent_version: ["6", "7"]
-              os: ["rocky8"]
+              os: ["rocky9, debian"]
               python: ["python3.11"]
   
       # Newer debian images only have Pythpn 3 installed
@@ -444,14 +444,6 @@ workflows:
               agent_version: ["6", "7"]
               os: ["debian"]
               python: ["python3"]
-
-      - test_install_downgrade:
-          matrix:
-            parameters:
-              ansible_version: ["12_0"]
-              agent_version: ["6", "7"]
-              os: ["debian"]
-              python: ["python3.11"]
 
       # Newer debian images only have Pythpn 3 installed
       - test_install_no_manage_config:
@@ -485,7 +477,7 @@ workflows:
               ansible_version: ["12_0"]
               agent_version: ["6", "7"]
               jinja2_native: ["true", "false"]
-              os: ["rocky8"]
+              os: ["rocky9, suse, amazonlinux2023"]
               python: ["python3.11"]
 
       # Newer suse images only have Python 3 installed
@@ -500,26 +492,10 @@ workflows:
       - test_install:
           matrix:
             parameters:
-              ansible_version: ["12_0"]
-              agent_version: ["6", "7"]
-              os: ["suse"]
-              python: ["python3.11"]
-
-      - test_install:
-          matrix:
-            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
               agent_version: ["6", "7"]
               os: ["amazonlinux2023"]
               python: ["python3"]
-
-      - test_install:
-          matrix:
-            parameters:
-              ansible_version: ["12_0"]
-              agent_version: ["6", "7"]
-              os: ["amazonlinux2023"]
-              python: ["python3.11"]
 
       - test_install_macos:
           matrix:
@@ -549,7 +525,7 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["12_0"]
-              os: ["debian", "rocky8", "amazonlinux2023"]
+              os: ["debian", "rocky9", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
       - test_installer_suse:
@@ -575,7 +551,7 @@ workflows:
          matrix:
            parameters:
               ansible_version: ["12_0"]
-              os: ["rocky8", "amazonlinux2023"]
+              os: ["rocky9", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
       - test_installer_over_pinned
