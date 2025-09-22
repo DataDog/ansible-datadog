@@ -433,7 +433,7 @@ workflows:
             parameters:
               ansible_version: ["12_0"]
               agent_version: ["6", "7"]
-              os: ["rocky9, debian"]
+              os: ["rocky9", "debian"]
               python: ["python3.11"]
   
       # Newer debian images only have Pythpn 3 installed
@@ -477,7 +477,7 @@ workflows:
               ansible_version: ["12_0"]
               agent_version: ["6", "7"]
               jinja2_native: ["true", "false"]
-              os: ["rocky9, suse, amazonlinux2023"]
+              os: ["rocky9", "suse", "amazonlinux2023"]
               python: ["python3.11"]
 
       # Newer suse images only have Python 3 installed
