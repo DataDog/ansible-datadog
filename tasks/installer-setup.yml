@@ -28,7 +28,7 @@
   ansible.builtin.set_fact:
     datadog_agent_major_version: "{{ datadog_agent_version.split('.', 1).0 }}"
     datadog_agent_minor_version: "{{ datadog_agent_version.split('.', 1).1 }}"
-  when: datadog_agent_version
+  when: datadog_agent_version | length > 0
 
 # We use this step to not render "empty" environment variables when not set.
 - name: Build Datadog installer environment variables

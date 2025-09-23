@@ -427,7 +427,15 @@ workflows:
               agent_version: ["6", "7"]
               os: ["rocky8"]
               python: ["python3"]
-  
+
+      - test_install_downgrade:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              os: ["rocky9", "debian"]
+              python: ["python3.11"]
+
       # Newer debian images only have Pythpn 3 installed
       - test_install_downgrade:
           matrix:
@@ -446,8 +454,14 @@ workflows:
               os: ["debian"]
               python: ["python3"]
 
-      # We want to check that the dnf path works with CentOS 8
-      # Newer CentOS images only have Pythpn 3 installed
+      - test_install_no_manage_config:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              os: ["debian"]
+              python: ["python3.11"]
+
       - test_install:
           matrix:
             parameters:
@@ -456,6 +470,15 @@ workflows:
               jinja2_native: ["true", "false"]
               os: ["rocky8"]
               python: ["python3"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              jinja2_native: ["true", "false"]
+              os: ["rocky9", "suse", "amazonlinux2023"]
+              python: ["python3.11"]
 
       # Newer suse images only have Python 3 installed
       - test_install:
@@ -477,19 +500,19 @@ workflows:
       - test_install_macos:
           matrix:
             parameters:
-              ansible_version: ["2.10", "3.4", "4.10"]
+              ansible_version: ["2.10", "3.4", "4.10", "12.0"]
               agent_version: ["6_macos", "7_macos"]
               python: ["python3"]
 
       - test_apm_injection:
           matrix:
             parameters:
-              ansible_version: ["6.7.0"]
+              ansible_version: ["6.7.0", "12.0.0 "]
 
       - test_apm_injection_all:
           matrix:
             parameters:
-              ansible_version: ["6.7.0"]
+              ansible_version: ["6.7.0", "12.0.0"]
 
       - test_installer:
          matrix:
@@ -498,10 +521,23 @@ workflows:
               os: ["debian", "rocky8", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
+      - test_installer:
+         matrix:
+           parameters:
+              ansible_version: ["12_0"]
+              os: ["debian", "rocky9", "amazonlinux2023"]
+              apm_enabled: ["host", ""]
+
       - test_installer_suse:
          matrix:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
+              apm_enabled: ["host", ""]
+
+      - test_installer_suse:
+         matrix:
+           parameters:
+              ansible_version: ["12_0"]
               apm_enabled: ["host", ""]
 
       - test_installer_air_gapped_rhel:
@@ -509,6 +545,13 @@ workflows:
            parameters:
               ansible_version: ["2_10", "3_4", "4_10"]
               os: ["rocky8", "amazonlinux2023"]
+              apm_enabled: ["host", ""]
+
+      - test_installer_air_gapped_rhel:
+         matrix:
+           parameters:
+              ansible_version: ["12_0"]
+              os: ["rocky9", "amazonlinux2023"]
               apm_enabled: ["host", ""]
 
       - test_installer_over_pinned
@@ -519,3 +562,10 @@ workflows:
               ansible_version: ["4_10"]
               os: [ "amazonlinux2023"]
               python: ["python3"]
+
+      - test_incorrect_rhel6_detect:
+         matrix:
+           parameters:
+              ansible_version: ["12_0"]
+              os: [ "amazonlinux2023"]
+              python: ["python3.11"]
