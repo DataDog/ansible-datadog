@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+# 5.4.0 / 2025-09-23
+* [IMPROVEMENT] Fix broken conditionals for compatibility with Ansible 2.19 / Ansible 12.0 [#666]
+
 # 5.3.0 / 2025-09-03
 * [IMPROVEMENT] Support Remote Agent updates through the embedded Datadog Installer (7.69.0+) [#665]
 
@@ -637,6 +640,7 @@ Initial release, compatible with Ansible v1 & v2
 [#659]: https://github.com/DataDog/ansible-datadog/pull/659
 [#660]: https://github.com/DataDog/ansible-datadog/pull/660
 [#665]: https://github.com/DataDog/ansible-datadog/pull/665
+[#666]: https://github.com/DataDog/ansible-datadog/pull/670
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
