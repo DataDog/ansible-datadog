@@ -116,6 +116,12 @@
     update_cache: true
   when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
+- name: Remove /opt/datadog-agent/python-scripts/__pycache__
+  ansible.builtin.file:
+    path: /opt/datadog-agent/python-scripts/__pycache__
+    state: absent
+  when: not agent_datadog_skip_install
+
 - name: Include installer setup
   ansible.builtin.include_tasks: installer-setup.yml
   when: datadog_installer_enabled
