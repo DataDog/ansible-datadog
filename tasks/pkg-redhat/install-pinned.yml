@@ -5,6 +5,7 @@
     update_cache: true
     state: present
     allow_downgrade: "{{ datadog_agent_allow_downgrade }}"
+    disablerepo: "appstream"
   register: agent_datadog_agent_install
   when: not ansible_check_mode
   notify: restart datadog-agent
