@@ -11,10 +11,9 @@
 - name: Install latest datadog-agent package (dnf)
   ansible.builtin.dnf:
     name: "{{ datadog_agent_target }}"
-    update_cache: true
+    update_cache: false
     state: latest # noqa package-latest
-    disablerepo: "*"
-    enablerepo: "datadog"
+    disablerepo: "appstream"
   register: agent_datadog_agent_install
   when: not ansible_check_mode
   notify: restart datadog-agent
