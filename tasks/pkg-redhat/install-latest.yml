@@ -13,6 +13,8 @@
     name: "{{ datadog_agent_target }}"
     update_cache: true
     state: latest # noqa package-latest
+    disablerepo: "*"
+    enablerepo: "datadog"
   register: agent_datadog_agent_install
   when: not ansible_check_mode
   notify: restart datadog-agent
