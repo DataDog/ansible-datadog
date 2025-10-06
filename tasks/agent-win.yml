@@ -3,6 +3,7 @@
   ansible.builtin.template:
     src: datadog.yaml.j2
     dest: "/tmp/datadog.yaml"
+    mode: "0600"
   delegate_to: localhost
   become: false
   when: datadog_manage_config
@@ -72,6 +73,7 @@
   ansible.builtin.template:
     src: checks.yaml.j2
     dest: "/tmp/{{ item }}_conf.yaml"
+    mode: "0600"
   with_items: "{{ agent_datadog_checks | list }}"
   delegate_to: localhost
   become: false
@@ -113,6 +115,7 @@
   ansible.builtin.template:
     src: system-probe.yaml.j2
     dest: "/tmp/system-probe.yaml"
+    mode: "0600"
   delegate_to: localhost
   become: false
   when: datadog_manage_config
@@ -162,6 +165,7 @@
   ansible.builtin.template:
     src: install_info.j2
     dest: "/tmp/install_info"
+    mode: "0600"
   delegate_to: localhost
   become: false
 
