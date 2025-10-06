@@ -1,8 +1,15 @@
 ---
-- name: Create main Datadog agent configuration file
-  ansible.windows.win_template:
-    # FIXME: should have permissions set to only be readable by ddagentuser
+- name: Generate Datadog config locally
+  ansible.builtin.template:
     src: datadog.yaml.j2
+    dest: "/tmp/datadog.yaml"
+  delegate_to: localhost
+  become: false
+  when: datadog_manage_config
+
+- name: Copy generated config to Windows
+  ansible.windows.win_copy:
+    src: "/tmp/datadog.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\datadog.yaml"
   when: datadog_manage_config
   notify: restart datadog-agent-win
@@ -61,9 +68,18 @@
   with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
 
-- name: Create a configuration file for each Datadog check
-  ansible.windows.win_template:
+- name: Generate check configuration files locally
+  ansible.builtin.template:
     src: checks.yaml.j2
+    dest: "/tmp/{{ item }}_conf.yaml"
+  with_items: "{{ agent_datadog_checks | list }}"
+  delegate_to: localhost
+  become: false
+  when: datadog_manage_config
+
+- name: Copy check configuration files to Windows
+  ansible.windows.win_copy:
+    src: "/tmp/{{ item }}_conf.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\conf.d\\{{ item }}.d\\conf.yaml"
   with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
@@ -93,19 +109,43 @@
     - datadog-trace-agent
     - datadog-process-agent
 
-- name: Create system-probe configuration file
-  ansible.windows.win_template:
+- name: Generate system-probe config locally
+  ansible.builtin.template:
     src: system-probe.yaml.j2
+    dest: "/tmp/system-probe.yaml"
+  delegate_to: localhost
+  become: false
+  when: datadog_manage_config
+
+- name: Copy system-probe config to Windows
+  ansible.windows.win_copy:
+    src: "/tmp/system-probe.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\system-probe.yaml"
   when: datadog_manage_config
   notify: restart datadog-agent-win
+
+- name: Check if datadog-agent service exists
+  ansible.windows.win_service:
+    name: datadogagent
+  register: datadog_service_info
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent is running
   ansible.windows.win_service:
     name: datadogagent
     state: started
     start_mode: delayed
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists
+  failed_when: false
+  register: datadog_start_result
+
+- name: Wait and retry if service failed to start
+  ansible.windows.win_service:
+    name: datadogagent
+    state: started
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists and datadog_start_result.failed
+  delay: 10
+  retries: 3
 
 - name: Ensure datadog-agent is disabled
   ansible.windows.win_service:
@@ -118,8 +158,35 @@
     - datadog-process-agent
     - datadogagent
 
-- name: Create installation information file
+- name: Generate installation information file locally
   ansible.builtin.template:
     src: install_info.j2
+    dest: "/tmp/install_info"
+  delegate_to: localhost
+  become: false
+
+- name: Copy installation information file to Windows
+  ansible.windows.win_copy:
+    src: "/tmp/install_info"
     dest: "{{ agent_datadog_windows_config_root }}\\install_info"
-    mode: "0644"
+
+- name: Clean up temporary config files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  delegate_to: localhost
+  become: false
+  with_items:
+    - "/tmp/datadog.yaml"
+    - "/tmp/system-probe.yaml"
+    - "/tmp/install_info"
+  failed_when: false
+
+- name: Clean up temporary check config files
+  ansible.builtin.file:
+    path: "/tmp/{{ item }}_conf.yaml"
+    state: absent
+  delegate_to: localhost
+  become: false
+  with_items: "{{ agent_datadog_checks | list }}"
+  failed_when: false

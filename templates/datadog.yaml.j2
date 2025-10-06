@@ -1,16 +1,16 @@
 # {{ ansible_managed }}
 
 {% if datadog_site is defined
-   and agent_datadog_config["site"] is not defined -%}
+   and (agent_datadog_config is not defined or agent_datadog_config["site"] is not defined) -%}
 site: {{ datadog_site }}
 {% endif %}
 
-{% if agent_datadog_config["dd_url"] is not defined
+{% if (agent_datadog_config is not defined or agent_datadog_config["dd_url"] is not defined)
    and datadog_url is defined -%}
 dd_url: {{ datadog_url }}
 {% endif %}
 
-{% if agent_datadog_config["api_key"] is not defined -%}
+{% if agent_datadog_config is not defined or agent_datadog_config["api_key"] is not defined -%}
 api_key: {{ datadog_api_key }}
 {% endif %}
 
