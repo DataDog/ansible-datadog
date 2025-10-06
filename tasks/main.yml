@@ -29,6 +29,14 @@
 - name: Configure Datadog Installer
   ansible.builtin.include_tasks: installer-config.yml
 
+- name: Remove /opt/datadog-agent/python-scripts/__pycache__
+  ansible.builtin.file:
+    path: /opt/datadog-agent/python-scripts/__pycache__
+    state: absent
+  when: not agent_datadog_skip_install and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
+  failed_when: false
+  changed_when: false
+
 - name: Debian Install Tasks
   ansible.builtin.include_tasks: pkg-debian.yml
   when: ansible_facts.os_family == "Debian"
