@@ -4,48 +4,9 @@
 # However, this is here because this is a "handler-like" task that is dynamically
 # included by a handler task in handlers/main.yml.
 
-- name: Stop dependent Datadog services
-  ansible.windows.win_service:
-    name: "{{ item }}"
-    state: stopped
-  loop:
-    - datadog-process-agent
-    - datadog-trace-agent
-    - datadog-system-probe
-    - datadog-security-agent
-  failed_when: false
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
-
-- name: Stop main Datadog agent service
+- name: Restart Windows datadogagent service
   ansible.windows.win_service:
     name: datadogagent
-    state: stopped
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
-
-- name: Wait for services to stop
-  ansible.builtin.pause:
-    seconds: 3
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
-
-- name: Start main Datadog agent service
-  ansible.windows.win_service:
-    name: datadogagent
-    state: started
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
-
-- name: Wait for main service to be ready
-  ansible.builtin.pause:
-    seconds: 5
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
-
-- name: Start dependent Datadog services
-  ansible.windows.win_service:
-    name: "{{ item }}"
-    state: started
-  loop:
-    - datadog-process-agent
-    - datadog-trace-agent
-    - datadog-system-probe
-    - datadog-security-agent
-  failed_when: false
+    state: restarted
+    force_dependent_services: true
   when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
