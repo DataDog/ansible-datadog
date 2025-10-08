@@ -1,16 +1,7 @@
 ---
-- name: Generate Datadog config locally
+- name: Create main Datadog agent configuration file
   ansible.builtin.template:
     src: datadog.yaml.j2
-    dest: "/tmp/datadog.yaml"
-    mode: "0600"
-  delegate_to: localhost
-  become: false
-  when: datadog_manage_config
-
-- name: Copy generated config to Windows
-  ansible.windows.win_copy:
-    src: "/tmp/datadog.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\datadog.yaml"
   when: datadog_manage_config
   notify: restart datadog-agent-win
@@ -69,19 +60,9 @@
   with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
 
-- name: Generate check configuration files locally
+- name: Create a configuration file for each Datadog check
   ansible.builtin.template:
     src: checks.yaml.j2
-    dest: "/tmp/{{ item }}_conf.yaml"
-    mode: "0600"
-  with_items: "{{ agent_datadog_checks | list }}"
-  delegate_to: localhost
-  become: false
-  when: datadog_manage_config
-
-- name: Copy check configuration files to Windows
-  ansible.windows.win_copy:
-    src: "/tmp/{{ item }}_conf.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\conf.d\\{{ item }}.d\\conf.yaml"
   with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
@@ -111,18 +92,9 @@
     - datadog-trace-agent
     - datadog-process-agent
 
-- name: Generate system-probe config locally
+- name: Create system-probe configuration file
   ansible.builtin.template:
     src: system-probe.yaml.j2
-    dest: "/tmp/system-probe.yaml"
-    mode: "0600"
-  delegate_to: localhost
-  become: false
-  when: datadog_manage_config
-
-- name: Copy system-probe config to Windows
-  ansible.windows.win_copy:
-    src: "/tmp/system-probe.yaml"
     dest: "{{ agent_datadog_windows_config_root }}\\system-probe.yaml"
   when: datadog_manage_config
   notify: restart datadog-agent-win
@@ -161,36 +133,7 @@
     - datadog-process-agent
     - datadogagent
 
-- name: Generate installation information file locally
+- name: Create installation information file
   ansible.builtin.template:
     src: install_info.j2
-    dest: "/tmp/install_info"
-    mode: "0600"
-  delegate_to: localhost
-  become: false
-
-- name: Copy installation information file to Windows
-  ansible.windows.win_copy:
-    src: "/tmp/install_info"
     dest: "{{ agent_datadog_windows_config_root }}\\install_info"
-
-- name: Clean up temporary config files
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  delegate_to: localhost
-  become: false
-  with_items:
-    - "/tmp/datadog.yaml"
-    - "/tmp/system-probe.yaml"
-    - "/tmp/install_info"
-  failed_when: false
-
-- name: Clean up temporary check config files
-  ansible.builtin.file:
-    path: "/tmp/{{ item }}_conf.yaml"
-    state: absent
-  delegate_to: localhost
-  become: false
-  with_items: "{{ agent_datadog_checks | list }}"
-  failed_when: false
