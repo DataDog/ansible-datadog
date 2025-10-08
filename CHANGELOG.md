@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+# 5.4.1 / 2025-10-08
+* [IMPROVEMENT] Disable appstream install as its not used [#674]
+* [IMPROVEMENT] Remove pycache directory during upgrades [#673]
+* [IMPROVEMENT] Prepare deployment of Agent v7.70+ for macOS (arm64/x86_64) [664]
+* [DOCUMENTATION] Adjust misleading macOS Agent version documentation [#676] 
+* [IMPROVEMENT] Simplify MacOS version architecture [#677]
+* [IMPROVEMENT] Update Windows tasks [#675]
+
 # 5.4.0 / 2025-09-23
 * [IMPROVEMENT] Fix broken conditionals for compatibility with Ansible 2.19 / Ansible 12.0 [#666]
 
@@ -639,8 +647,14 @@ Initial release, compatible with Ansible v1 & v2
 [#658]: https://github.com/DataDog/ansible-datadog/pull/658
 [#659]: https://github.com/DataDog/ansible-datadog/pull/659
 [#660]: https://github.com/DataDog/ansible-datadog/pull/660
+[#664]: https://github.com/DataDog/ansible-datadog/pull/664
 [#665]: https://github.com/DataDog/ansible-datadog/pull/665
-[#666]: https://github.com/DataDog/ansible-datadog/pull/670
+[#666]: https://github.com/DataDog/ansible-datadog/pull/666
+[#673]: https://github.com/DataDog/ansible-datadog/pull/673
+[#674]: https://github.com/DataDog/ansible-datadog/pull/674
+[#675]: https://github.com/DataDog/ansible-datadog/pull/675
+[#676]: https://github.com/DataDog/ansible-datadog/pull/676
+[#677]: https://github.com/DataDog/ansible-datadog/pull/677
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
