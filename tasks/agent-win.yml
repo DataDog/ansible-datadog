@@ -1,9 +1,9 @@
 ---
 - name: Create main Datadog agent configuration file
-  ansible.windows.win_template:
-    # FIXME: should have permissions set to only be readable by ddagentuser
+  ansible.builtin.template:
     src: datadog.yaml.j2
     dest: "{{ agent_datadog_windows_config_root }}\\datadog.yaml"
+    mode: '0644'
   when: datadog_manage_config
   notify: restart datadog-agent-win
 
@@ -62,9 +62,10 @@
   when: datadog_manage_config
 
 - name: Create a configuration file for each Datadog check
-  ansible.windows.win_template:
+  ansible.builtin.template:
     src: checks.yaml.j2
     dest: "{{ agent_datadog_windows_config_root }}\\conf.d\\{{ item }}.d\\conf.yaml"
+    mode: '0644'
   with_items: "{{ agent_datadog_checks | list }}"
   when: datadog_manage_config
   notify: restart datadog-agent-win
@@ -94,18 +95,35 @@
     - datadog-process-agent
 
 - name: Create system-probe configuration file
-  ansible.windows.win_template:
+  ansible.builtin.template:
     src: system-probe.yaml.j2
     dest: "{{ agent_datadog_windows_config_root }}\\system-probe.yaml"
+    mode: '0644'
   when: datadog_manage_config
   notify: restart datadog-agent-win
+
+- name: Check if datadog-agent service exists
+  ansible.windows.win_service:
+    name: datadogagent
+  register: datadog_service_info
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
 
 - name: Ensure datadog-agent is running
   ansible.windows.win_service:
     name: datadogagent
     state: started
     start_mode: delayed
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists
+  failed_when: false
+  register: datadog_start_result
+
+- name: Wait and retry if service failed to start
+  ansible.windows.win_service:
+    name: datadogagent
+    state: started
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists and datadog_start_result.failed
+  delay: 10
+  retries: 3
 
 - name: Ensure datadog-agent is disabled
   ansible.windows.win_service:
@@ -122,4 +140,4 @@
   ansible.builtin.template:
     src: install_info.j2
     dest: "{{ agent_datadog_windows_config_root }}\\install_info"
-    mode: "0644"
+    mode: '0644'
