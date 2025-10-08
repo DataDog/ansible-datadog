@@ -328,12 +328,12 @@ To override the default behavior, set this variable to something other than an e
 
 When the variable `datadog_macos_download_url` is not set, the official macOS DMG package corresponding to the `datadog_agent_major_version` is used:
 
-| Agent version         | Default macOS DMG package URL                                   |
-|-----------------------|-----------------------------------------------------------------|
-| 6                     | https://install.datadoghq.com/datadog-agent-6-latest.dmg        |
-| 7.69-                 | https://install.datadoghq.com/datadog-agent-7-latest.dmg        |
-| 7.70+ (Intel Mac)     | https://install.datadoghq.com/datadog-agent-7-latest.x86_64.dmg |
-| 7.70+ (Apple Silicon) | https://install.datadoghq.com/datadog-agent-7-latest.arm64.dmg  |
+| Agent version | Default macOS DMG package URL                                                         |
+|---------------|---------------------------------------------------------------------------------------|
+| 6             | https://install.datadoghq.com/datadog-agent-6-latest.dmg                              |
+| 7             | https://install.datadoghq.com/datadog-agent-7-latest.dmg (7.69-)                      |
+|               | https://install.datadoghq.com/datadog-agent-7-latest.x86_64.dmg (7.70+, Intel Mac)    |
+|               | https://install.datadoghq.com/datadog-agent-7-latest.arm64.dmg (7.70+, Apple Silicon) |
 
 To override the default behavior, set this variable to something other than an empty string.
 
