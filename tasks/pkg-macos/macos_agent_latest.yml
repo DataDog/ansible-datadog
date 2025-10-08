@@ -4,8 +4,27 @@
     agent_dd_download_url: "{{ datadog_macos_download_url }}"
   when: datadog_macos_download_url | default('', true) | length > 0
 
+- name: Check architecture-specific URL for latest Agent 7
+  ansible.builtin.uri:
+    url: "{{ datadog_macos_agent7_latest_arch_url }}"
+    method: GET
+    follow_redirects: all
+    return_content: false
+    status_code: 200
+  register: datadog_macos_agent7_latest_arch_check
+  failed_when: false
+  retries: 2
+  when:
+    - datadog_macos_download_url | default('', true) | length == 0
+    - agent_datadog_agent_major_version | int >= 7
+
 - name: Set agent download filename to latest
   ansible.builtin.set_fact:
-    agent_dd_download_url: "{% if agent_datadog_agent_major_version | int == 7 %}
-      {{ datadog_macos_agent7_latest_url }} {% else %}{{ datadog_macos_agent6_latest_url }}{% endif %}"
+    agent_dd_download_url: >-
+      {%- if agent_datadog_agent_major_version | int < 7 -%}
+      {{ datadog_macos_agent6_latest_url }}{%- else -%}
+      {%- if datadog_macos_agent7_latest_arch_check is defined and datadog_macos_agent7_latest_arch_check.status == 200 -%}
+      {{ datadog_macos_agent7_latest_arch_url }}{%- else -%}
+      {{ datadog_macos_agent7_latest_url }}{%- endif -%}
+      {%- endif -%}
   when: datadog_macos_download_url | default('', true) | length == 0
