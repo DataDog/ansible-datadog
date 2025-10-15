@@ -115,6 +115,7 @@ These variables provide additional configuration during the installation of the 
 | `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
 | `datadog_apm_instrumentation_libraries`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["java", "js", "dotnet", "python", "ruby"]`). You can find the available values in [Inject Libraries Locally][21].|
 | `datadog_remote_updates`                    | Enable remote installation and updates through the datadog-installer.|
+| `datadog_infrastructure_mode`               | Override the default `infrastructure_mode`.|
 
 ### Integrations
 
