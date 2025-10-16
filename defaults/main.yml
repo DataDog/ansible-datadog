@@ -196,6 +196,9 @@ datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ dat
 # Enable remote updates through datadog-installer
 datadog_remote_updates: false
 
+# Set infrastructure monitoring mode (optional)
+# datadog_infrastructure_mode: ""
+
 # Registry, auth, and version for the datadog installer
 datadog_installer_registry: ""
 datadog_installer_auth: ""
