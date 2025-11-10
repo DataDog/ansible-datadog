@@ -1,13 +1,10 @@
 ---
 # This task removes the legacy installer package and systemd services
-# It is non-blocking as it is only useful for customers that have not upgraded to the new installer yet.
 - name: Remove legacy installer package
   ansible.builtin.package:
     name: datadog-installer
     state: absent
   when: not ansible_check_mode
-  failed_when: false
-  changed_when: false
 
 - name: Stop legacy systemd services
   ansible.builtin.systemd:
@@ -34,7 +31,7 @@
     - /usr/lib/systemd/system/datadog-installer-exp.service
     - /usr/lib/systemd/system/datadog-installer.service
 
-- name: Reload systemd
+- name: Reload systemd units
   ansible.builtin.systemd:
     daemon_reload: true
   when: not ansible_check_mode
