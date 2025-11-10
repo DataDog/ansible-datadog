@@ -4,14 +4,12 @@
   ansible.builtin.package:
     name: datadog-installer
     state: absent
-  when: not ansible_check_mode
 
 - name: Stop legacy systemd services
   ansible.builtin.systemd:
     name: "{{ item }}"
     state: stopped
     enabled: false
-  when: not ansible_check_mode
   failed_when: false
   loop:
     - datadog-installer-exp.service
@@ -21,7 +19,6 @@
   ansible.builtin.file:
     name: "{{ item }}"
     state: absent
-  when: not ansible_check_mode
   failed_when: false
   loop:
     - /etc/systemd/system/datadog-installer-exp.service
@@ -34,4 +31,4 @@
 - name: Reload systemd units
   ansible.builtin.systemd:
     daemon_reload: true
-  when: not ansible_check_mode
+  failed_when: false
