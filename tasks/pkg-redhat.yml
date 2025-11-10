@@ -185,10 +185,6 @@
         state: absent
       with_items: [6, 7, custom]
 
-- name: Include installer setup
-  ansible.builtin.include_tasks: installer-setup.yml
-  when: datadog_installer_enabled
-
 - name: Include redhat agent pinned version install task
   ansible.builtin.include_tasks: pkg-redhat/install-pinned.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_redhat_version is defined

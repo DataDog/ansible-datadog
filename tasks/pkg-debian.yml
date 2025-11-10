@@ -116,10 +116,6 @@
     update_cache: true
   when: (datadog_apt_repo | length > 0) and (not ansible_check_mode)
 
-- name: Include installer setup
-  ansible.builtin.include_tasks: installer-setup.yml
-  when: datadog_installer_enabled
-
 - name: Include debian pinned version install task
   ansible.builtin.include_tasks: pkg-debian/install-pinned.yml
   when: not agent_datadog_skip_install and agent_datadog_agent_debian_version is defined

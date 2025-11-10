@@ -3,7 +3,7 @@
 # It is non-blocking as it is only useful for customers that have not upgraded to the new installer yet.
 - name: Remove legacy installer package
   ansible.builtin.package:
-    name: "{{ datadog_installer_flavor }}"
+    name: datadog-installer
     state: absent
   when: not ansible_check_mode
   failed_when: false

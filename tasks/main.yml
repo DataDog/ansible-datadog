@@ -26,9 +26,6 @@
 - name: Set Facts for Datadog Agent Major Version
   ansible.builtin.include_tasks: set-parse-version.yml
 
-- name: Configure Datadog Installer
-  ansible.builtin.include_tasks: installer-config.yml
-
 - name: Remove /opt/datadog-agent/python-scripts/__pycache__
   ansible.builtin.file:
     path: /opt/datadog-agent/python-scripts/__pycache__
@@ -37,7 +34,7 @@
   failed_when: false
   changed_when: false
 
-- name: Remove legacy package-based datadog-installer 
+- name: Remove legacy package-based datadog-installer
   ansible.builtin.include_tasks: remove-legacy-installer.yml
   when: ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
   failed_when: false

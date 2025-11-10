@@ -130,10 +130,6 @@
   register: agent_datadog_zypper_repo_template
   when: datadog_manage_zypper_repofile
 
-- name: Include installer setup
-  ansible.builtin.include_tasks: installer-setup.yml
-  when: datadog_installer_enabled
-
 # refresh zypper repos only if the template changed
 - name: Refresh Datadog zypper_repos # noqa: command-instead-of-module
   ansible.builtin.command: zypper refresh datadog
