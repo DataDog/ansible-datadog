@@ -40,5 +40,6 @@
 - name: Run datadog-installer install-ssi.sh script
   ansible.builtin.command:
     cmd: /tmp/datadog-installer/install-ssi.sh
-    environment: {{ datadog_apm_single_step_instrumentation_environment }}
+  environment: "{{ datadog_apm_single_step_instrumentation_environment }}"
   when: install_ssi_script_result.status_code == 200
+  changed_when: true
