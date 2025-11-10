@@ -91,15 +91,8 @@
 
     - name: Set plain includepkgs variable
       ansible.builtin.set_fact:
-        agent_datadog_includepkgs: "{{ datadog_agent_flavor }}
-         {{ agent_dd_apm_install_pkgs | default([], true) | join(' ') }}"
+        agent_datadog_includepkgs: "{{ datadog_agent_flavor }}"
       when: agent_datadog_agent_redhat_version is not defined
-
-    - name: Include datadog-installer to includepgks
-      ansible.builtin.set_fact:
-        agent_datadog_includepkgs:
-          "{{ agent_datadog_includepkgs }} {{ datadog_installer_flavor }}"
-      when: datadog_installer_enabled
 
     - name: Install Datadog Agent 6 yum repo
       ansible.builtin.yum_repository:
