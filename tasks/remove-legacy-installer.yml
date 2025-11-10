@@ -1,32 +1,11 @@
 ---
 # This task removes the legacy installer package and systemd services
-# Note: We use specific package manager modules instead of ansible.builtin.package
-# because the package module has issues with Python 3 on Amazon Linux 2023 and other distributions
-- name: Remove legacy installer package (dnf)
-  ansible.builtin.dnf:
+- name: Remove legacy installer package
+  ansible.builtin.package:
     name: datadog-installer
     state: absent
-  when: ansible_pkg_mgr == 'dnf'
-
-- name: Remove legacy installer package (yum)
-  ansible.builtin.yum:
-    name: datadog-installer
-    state: absent
-  when: ansible_pkg_mgr == 'yum'
-
-- name: Remove legacy installer package (apt)
-  ansible.builtin.apt:
-    name: datadog-installer
-    state: absent
-  when: ansible_pkg_mgr == 'apt'
-
-- name: Remove legacy installer package (zypper)
-  ansible.builtin.command:
-    cmd: zypper remove -y datadog-installer
-  when: ansible_pkg_mgr == 'zypper'
-  register: zypper_result
-  changed_when: "'datadog-installer' in zypper_result.stdout"
-  failed_when: zypper_result.rc != 0 and 'not installed' not in zypper_result.stderr
+  # Best effort removal - ignore failures to remove the package (e.g. on AL2023 when not being able to use the correct package manager with Python 3)
+  failed_when: false
 
 - name: Stop legacy systemd services
   ansible.builtin.systemd:
