@@ -12,3 +12,8 @@ post_tasks/
 # OSX github datastore
 **/.DS_Store
 
+# IDEs
+.vscode/
+.idea/
+.cursor/
+.zed/
