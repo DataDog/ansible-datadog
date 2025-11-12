@@ -27,6 +27,13 @@
         else 'https://install.datadoghq.com/scripts/install-ssi.sh'
       }}
 
+# Create the directory for the datadog-installer script
+- name: Create /tmp/datadog-installer directory
+  ansible.builtin.file:
+    path: /tmp/datadog-installer
+    state: directory
+    mode: "0755"
+
 # We download the datadog-installer install-ssi.sh script.
 - name: Download datadog-installer install-ssi.sh script
   ansible.builtin.get_url:

@@ -90,18 +90,24 @@
   ansible.builtin.include_tasks: integration.yml
   when: datadog_integration is defined
 
-- name: Validate APM Single Step Instrumentation configuration
+# Determine if APM Single Step Instrumentation should be installed
+- name: Determine and validate APM Single Step Instrumentation configuration
+  ansible.builtin.set_fact:
+    apm_single_step_instrumentation_should_install: >-
+      {{
+        datadog_apm_instrumentation_enabled is defined
+        and datadog_apm_instrumentation_enabled in ["host", "docker", "all"]
+      }}
+
+- name: Fail explicitly if APM Single Step Instrumentation is desired but misconfigured
   ansible.builtin.fail:
     msg: "datadog_apm_instrumentation_enabled must be set to 'host', 'docker', or 'all' when enabling APM Single Step Instrumentation"
   when:
     - datadog_apm_instrumentation_enabled is defined
     - datadog_apm_instrumentation_enabled not in ["host", "docker", "all"]
-  register: apm_single_step_instrumentation_validation_result
 
-# Only run if previous step was not skipped (datadog_apm_instrumentation_enabled is defined and validation succeeded)
 - name: APM Single Step Instrumentation Install Tasks
   ansible.builtin.include_tasks: apm-single-step-instrumentation.yml
   when:
-    - not apm_single_step_instrumentation_validation_result.skipped
-    - not apm_single_step_instrumentation_validation_result.failed
+    - apm_single_step_instrumentation_should_install
     - not ansible_check_mode
