@@ -1,6 +1,7 @@
 .idea/
 *.retry
 .venv
+.ansible
 
 # Vagrant
 .vagrant

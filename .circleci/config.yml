@@ -223,6 +223,18 @@ jobs:
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
       - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
       - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
+      # Verify the instrumentation status from datadog-installer
+      - run: |
+            status_json=$(sudo datadog-installer status --json | jq .apm_injection_status)
+            for key in $(echo "$status_json" | jq -r 'keys[]'); do
+              value=$(echo "$status_json" | jq -r --arg k "$key" '.[$k]')
+              if [ "$value" != "true" ]; then
+                echo "❌ Check failed: $key is not true (value: $value)"
+                exit 1
+              fi
+              echo "✅ $key is true"
+            done
+            echo "🎉 All APM injection checks passed!"
       # verify that the emitted traces are received by checking agent status
       - run: |
           for i in {1..14}; do
@@ -255,7 +267,6 @@ jobs:
       - run: ps aux | grep -v grep | grep datadog-agent
       - run: >
           bash -c 'for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
-            print "Checking $tracer";
             sudo datadog-installer is-installed datadog-apm-library-$tracer;
           done'
 
