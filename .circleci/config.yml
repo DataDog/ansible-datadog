@@ -48,7 +48,6 @@ commands:
       - run: datadog-agent version
       - run: datadog-agent status || true
 
-
   test_agent_install_downgrade:
     parameters:
       version:
@@ -188,7 +187,7 @@ jobs:
       - checkout
       - when:
           condition:
-            equal: [ "6_macos", << parameters.agent_version >> ]
+            equal: ["6_macos", << parameters.agent_version >>]
           steps:
             - run:
                 name: Install Rosetta 2
@@ -224,6 +223,18 @@ jobs:
       - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
       - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
       - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
+      # Verify the instrumentation status from datadog-installer
+      - run: |
+            status_json=$(sudo datadog-installer status --json | jq .apm_injection_status)
+            for key in $(echo "$status_json" | jq -r 'keys[]'); do
+              value=$(echo "$status_json" | jq -r --arg k "$key" '.[$k]')
+              if [ "$value" != "true" ]; then
+                echo "❌ Check failed: $key is not true (value: $value)"
+                exit 1
+              fi
+              echo "✅ $key is true"
+            done
+            echo "🎉 All APM injection checks passed!"
       # verify that the emitted traces are received by checking agent status
       - run: |
           for i in {1..14}; do
@@ -256,146 +267,8 @@ jobs:
       - run: ps aux | grep -v grep | grep datadog-agent
       - run: >
           bash -c 'for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
-            print "Checking $tracer";
             sudo datadog-installer is-installed datadog-apm-library-$tracer;
           done'
-
-  test_installer:
-    parameters:
-      ansible_version:
-        type: string
-      jinja2_native:
-        type: string
-        default: "false"
-      os:
-        type: string
-      inventory:
-        type: string
-        default: "ci.ini"
-      apm_enabled:
-        type: string
-    docker:
-      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
-    steps:
-      - checkout
-        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
-        # create the systemd folder to store its units
-        # Since we're running the tests in a docker container without systemd, we can "help" it
-        # proceed by pretending systemd is there
-      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
-      - run: mkdir -p /etc/systemd/system/
-      - run: >
-          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
-          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
-          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
-      - run: >
-          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
-              datadog-installer version;
-            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
-              echo datadog-installer should not be installed;
-              exit 2;
-            else
-              echo datadog-installer is not installed as expected;
-            fi'
-
-  test_installer_suse:
-    parameters:
-      ansible_version:
-        type: string
-      jinja2_native:
-        type: string
-        default: "false"
-      inventory:
-        type: string
-        default: "ci.ini"
-      apm_enabled:
-        type: string
-    docker:
-      - image: datadog/docker-library:ansible_suse_<<parameters.ansible_version>>
-    steps:
-      - checkout
-        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
-        # create the systemd folder to store its units
-        # Since we're running the tests in a docker container without systemd, we can "help" it
-        # proceed by pretending systemd is there
-      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
-      - run: mkdir -p /etc/systemd/system/
-      - run: >
-          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook
-          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer.yaml"
-          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
-      - run: >
-          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
-              datadog-installer version;
-            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
-              echo datadog-installer should not be installed;
-              exit 2;
-            else
-              echo datadog-installer is not installed as expected;
-            fi'
-  
-  test_installer_air_gapped_rhel:
-    parameters:
-      ansible_version:
-        type: string
-      jinja2_native:
-        type: string
-        default: "false"
-      os:
-        type: string
-      inventory:
-        type: string
-        default: "ci.ini"
-      apm_enabled:
-        type: string
-    docker:
-      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
-    steps:
-      - checkout
-        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
-        # create the systemd folder to store its units
-        # Since we're running the tests in a docker container without systemd, we can "help" it
-        # proceed by pretending systemd is there
-      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
-      - run: mkdir -p /etc/systemd/system/
-      - run: >
-          ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -v
-          -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_installer_air_gapped.yaml"
-          -e datadog_apm_instrumentation_enabled="<<parameters.apm_enabled>>"
-      - run: >
-          bash -c 'if [ -n "<<parameters.apm_enabled>>" ]; then
-              datadog-installer version;
-            elif [ -x "/opt/datadog-packages/datadog-installer" ]; then
-              echo datadog-installer should not be installed;
-              exit 2;
-            else
-              echo datadog-installer is not installed as expected;
-            fi
-
-            if [ -n "<<parameters.apm_enabled>>" ]; then
-              echo "Checking if datadog-apm-inject is installed...";
-              if ! datadog-installer is-installed datadog-apm-inject; then
-                echo "datadog-apm-inject is NOT installed as expected";
-                exit 3;
-              else
-                echo "datadog-apm-inject is installed";
-              fi
-            fi'
-
-  test_installer_over_pinned:
-    docker:
-      - image: datadog/docker-library:ansible_debian_2_10
-    steps:
-      - checkout
-        # datadog-installer will bailout if there's no systemctl binary, and won't attempt to
-        # create the systemd folder to store its units
-        # Since we're running the tests in a docker container without systemd, we can "help" it
-        # proceed by pretending systemd is there
-      - run: printf "#!/bin/bash\n\nexit 0" > /usr/bin/systemctl && chmod +x /usr/bin/systemctl
-      - run: mkdir -p /etc/systemd/system/
-      - run: DD_API_KEY=woof DD_SITE="datadoghq.com" DD_INSTALL_ONLY=true DD_AGENT_MINOR_VERSION=53 bash -c "$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)"
-      - run: >
-          ansible-playbook -v -i ./ci_test/inventory/ci.ini "./ci_test/install_installer_over_pinned.yaml"
 
   test_incorrect_rhel6_detect:
     # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
@@ -518,58 +391,16 @@ workflows:
             parameters:
               ansible_version: ["6.7.0", "12.0.0"]
 
-      - test_installer:
-         matrix:
-           parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["debian", "rocky8", "amazonlinux2023"]
-              apm_enabled: ["host", ""]
-
-      - test_installer:
-         matrix:
-           parameters:
-              ansible_version: ["12_0"]
-              os: ["debian", "rocky9", "amazonlinux2023"]
-              apm_enabled: ["host", ""]
-
-      - test_installer_suse:
-         matrix:
-           parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
-              apm_enabled: ["host", ""]
-
-      - test_installer_suse:
-         matrix:
-           parameters:
-              ansible_version: ["12_0"]
-              apm_enabled: ["host", ""]
-
-      - test_installer_air_gapped_rhel:
-         matrix:
-           parameters:
-              ansible_version: ["2_10", "3_4", "4_10"]
-              os: ["rocky8", "amazonlinux2023"]
-              apm_enabled: ["host", ""]
-
-      - test_installer_air_gapped_rhel:
-         matrix:
-           parameters:
-              ansible_version: ["12_0"]
-              os: ["rocky9", "amazonlinux2023"]
-              apm_enabled: ["host", ""]
-
-      - test_installer_over_pinned
-
       - test_incorrect_rhel6_detect:
-         matrix:
-           parameters:
+          matrix:
+            parameters:
               ansible_version: ["4_10"]
-              os: [ "amazonlinux2023"]
+              os: ["amazonlinux2023"]
               python: ["python3"]
 
       - test_incorrect_rhel6_detect:
-         matrix:
-           parameters:
+          matrix:
+            parameters:
               ansible_version: ["12_0"]
-              os: [ "amazonlinux2023"]
+              os: ["amazonlinux2023"]
               python: ["python3.11"]

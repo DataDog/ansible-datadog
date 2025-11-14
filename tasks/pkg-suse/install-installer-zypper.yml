@@ -1,7 +1,0 @@
----
-- name: Install latest datadog-installer package (zypper)
-  ansible.builtin.package:
-    name: "{{ datadog_installer_flavor }}"
-    state: latest # noqa package-latest
-  register: datadog_installer_install_result
-  ignore_errors: true

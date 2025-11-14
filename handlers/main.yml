@@ -19,15 +19,6 @@
   when: datadog_enabled and not ansible_check_mode and not ansible_facts.os_family == "Windows" and not ansible_facts.os_family == "Darwin"
     and (ansible_facts.services['datadog-agent-exp.service'] is not defined or ansible_facts.services['datadog-agent-exp.service'].state != "running")
 
-- name: restart datadog-installer  # noqa name[casing]
-  ansible.builtin.service:
-    name: datadog-installer
-    state: restarted
-    use: service
-  # The installer currently only setup its systemd unit when APM instrumentation is enabled
-  when: datadog_enabled and datadog_installer_enabled and
-    not ansible_check_mode and not ansible_facts.os_family == "Windows" and not ansible_facts.os_family == "Darwin"
-
 # We can't add the Windows Agent service restart handler directly here because that makes the role require
 # the ansible.windows collection on all platforms. We only want it to be needed on Windows.
 # Therefore, what we do is the following: when needed, our Windows tasks call this handler to require a

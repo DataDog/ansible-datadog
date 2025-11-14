@@ -1,0 +1,52 @@
+---
+# We use this step to not render empty environment variables when not explicitly set
+- name: Build Datadog installer environment variables
+  ansible.builtin.set_fact:
+    datadog_apm_single_step_instrumentation_environment: >
+      {{
+        {
+          'DD_APM_INSTRUMENTATION_ENABLED': datadog_apm_instrumentation_enabled,
+          'DD_APM_INSTRUMENTATION_LIBRARIES': datadog_apm_instrumentation_libraries | join(','),
+          'DD_INSTALLER_REGISTRY_AUTH_INSTALLER_PACKAGE': datadog_installer_auth,
+          'DD_INSTALLER_REGISTRY_URL_INSTALLER_PACKAGE': datadog_installer_registry,
+          'DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_INSTALLER': datadog_installer_version,
+          'DD_INSTALLER_DEFAULT_PKG_VERSION_DATADOG_APM_INJECT': datadog_apm_inject_version,
+        }
+        | dict2items
+        | rejectattr('value', 'equalto', '')
+        | items2dict
+      }}
+
+# Build the installer-domain url if datadog_installer_registry is set, else default to install.datadoghq.com for the domain.
+- name: Build installer script url
+  ansible.builtin.set_fact:
+    datadog_installer_install_ssi_script_url: >-
+      {{
+        'https://' + datadog_installer_registry + '/scripts/install-ssi.sh'
+        if datadog_installer_registry != ''
+        else 'https://install.datadoghq.com/scripts/install-ssi.sh'
+      }}
+
+# Create the directory for the datadog-installer script
+- name: Create /tmp/datadog-installer directory
+  ansible.builtin.file:
+    path: /tmp/datadog-installer
+    state: directory
+    mode: "0755"
+
+# We download the datadog-installer install-ssi.sh script.
+- name: Download datadog-installer install-ssi.sh script
+  ansible.builtin.get_url:
+    url: "{{ datadog_installer_install_ssi_script_url }}"
+    dest: /tmp/datadog-installer/install-ssi.sh
+    mode: "0750"
+    # Always overwrite the file to ensure we have the latest version.
+    force: true
+  register: install_ssi_script_result
+
+- name: Run datadog-installer install-ssi.sh script
+  ansible.builtin.command:
+    cmd: /tmp/datadog-installer/install-ssi.sh
+  environment: "{{ datadog_apm_single_step_instrumentation_environment }}"
+  when: install_ssi_script_result.status_code == 200
+  changed_when: true

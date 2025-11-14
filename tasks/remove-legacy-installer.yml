@@ -1,0 +1,36 @@
+---
+# This task removes the legacy installer package and systemd services
+- name: Remove legacy installer package
+  ansible.builtin.package:
+    name: datadog-installer
+    state: absent
+  # Best effort removal - ignore failures to remove the package (e.g. on AL2023 when not being able to use the correct package manager with Python 3)
+  failed_when: false
+
+- name: Stop legacy systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  failed_when: false
+  loop:
+    - datadog-installer-exp.service
+    - datadog-installer.service
+
+- name: Remove legacy systemd services
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: absent
+  failed_when: false
+  loop:
+    - /etc/systemd/system/datadog-installer-exp.service
+    - /etc/systemd/system/datadog-installer.service
+    - /lib/systemd/system/datadog-installer-exp.service
+    - /lib/systemd/system/datadog-installer.service
+    - /usr/lib/systemd/system/datadog-installer-exp.service
+    - /usr/lib/systemd/system/datadog-installer.service
+
+- name: Reload systemd units
+  ansible.builtin.systemd:
+    daemon_reload: true
+  failed_when: false

@@ -26,9 +26,6 @@
 - name: Set Facts for Datadog Agent Major Version
   ansible.builtin.include_tasks: set-parse-version.yml
 
-- name: Configure Datadog Installer
-  ansible.builtin.include_tasks: installer-config.yml
-
 - name: Remove /opt/datadog-agent/python-scripts/__pycache__
   ansible.builtin.file:
     path: /opt/datadog-agent/python-scripts/__pycache__
@@ -36,6 +33,13 @@
   when: not agent_datadog_skip_install and ansible_facts.os_family != "Windows" and ansible_facts.os_family != "Darwin"
   failed_when: false
   changed_when: false
+
+- name: Remove legacy package-based datadog-installer
+  ansible.builtin.include_tasks: remove-legacy-installer.yml
+  when:
+    - ansible_facts.os_family != "Windows"
+    - ansible_facts.os_family != "Darwin"
+    - not ansible_check_mode
 
 - name: Debian Install Tasks
   ansible.builtin.include_tasks: pkg-debian.yml
@@ -85,3 +89,25 @@
 - name: Integrations Tasks
   ansible.builtin.include_tasks: integration.yml
   when: datadog_integration is defined
+
+# Determine if APM Single Step Instrumentation should be installed
+- name: Determine and validate APM Single Step Instrumentation configuration
+  ansible.builtin.set_fact:
+    apm_single_step_instrumentation_should_install: >-
+      {{
+        datadog_apm_instrumentation_enabled is defined
+        and datadog_apm_instrumentation_enabled in ["host", "docker", "all"]
+      }}
+
+- name: Fail explicitly if APM Single Step Instrumentation is desired but misconfigured
+  ansible.builtin.fail:
+    msg: "datadog_apm_instrumentation_enabled must be set to 'host', 'docker', or 'all' when enabling APM Single Step Instrumentation"
+  when:
+    - datadog_apm_instrumentation_enabled is defined
+    - datadog_apm_instrumentation_enabled not in ["host", "docker", "all"]
+
+- name: APM Single Step Instrumentation Install Tasks
+  ansible.builtin.include_tasks: apm-single-step-instrumentation.yml
+  when:
+    - apm_single_step_instrumentation_should_install
+    - not ansible_check_mode

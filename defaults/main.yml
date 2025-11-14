@@ -64,8 +64,6 @@ datadog_agent_version: ""
 # Default Package name for APT and RPM installs - can override in playbook for IOT Agent
 datadog_agent_flavor: "datadog-agent"
 
-datadog_installer_flavor: "datadog-installer"
-
 # Default apt repo and keyserver
 
 # By default, the role uses the official apt Datadog repository for the chosen major version
@@ -181,8 +179,14 @@ datadog_windows_config_root: "{{ ansible_facts.env['ProgramData'] }}\\Datadog"
 # arguments to supply to the windows installer.
 win_install_args: " "
 
+# Advanced users - Configure datadog-installer to support advanced scenarios
+datadog_installer_registry: ""
+datadog_installer_auth: ""
+datadog_installer_version: ""
+datadog_apm_inject_version: ""
+
 # Configure APM host injection. Possible values are: "all", "host" or "docker".
-datadog_apm_instrumentation_enabled: ""
+# datadog_apm_instrumentation_enabled: ""
 
 # List of APM libraries with pinned versions to install if host or Docker injection is enabled.
 # Example: `["java:1.23.0", "python:2.0.9"]`
@@ -190,23 +194,11 @@ datadog_apm_instrumentation_enabled: ""
 # https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
 datadog_apm_instrumentation_libraries: []
 
-# Used to send telemetry data to datadog on installation
-datadog_apm_telemetry_endpoint: "https://instrumentation-telemetry-intake.{{ datadog_site | default('datadoghq.com') }}/api/v2/apmtelemetry"
-
 # Enable remote updates through datadog-installer
 datadog_remote_updates: false
 
 # Set infrastructure monitoring mode (optional)
 # datadog_infrastructure_mode: ""
-
-# Registry, auth, and version for the datadog installer
-datadog_installer_registry: ""
-datadog_installer_auth: ""
-datadog_installer_version: ""
-installer_registry_config: {}
-
-# Version for the datadog apm inject package
-datadog_apm_inject_version: ""
 
 #
 # Internal variables
@@ -265,8 +257,6 @@ datadog_macos_system_plist_file_path: "/Library/LaunchDaemons/{{ datadog_macos_s
 datadog_macos_etc_dir: "/opt/datadog-agent/etc"
 datadog_macos_logs_dir: "/opt/datadog-agent/logs"
 datadog_macos_run_dir: "/opt/datadog-agent/run"
-
-datadog_installer_enabled: false
 
 datadog_ansible_facts_subset:
   - '!all'

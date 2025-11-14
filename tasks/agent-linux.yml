@@ -39,7 +39,7 @@
     agent_dd_config_dir: /etc/datadog-agent
     agent_dd_user: "{{ datadog_user }}"
     agent_dd_group: "{{ datadog_group }}"
-    agent_dd_notify_agent: [restart datadog-agent, restart datadog-installer]
+    agent_dd_notify_agent: restart datadog-agent
 
 - name: Set system probe installed
   ansible.builtin.set_fact:
