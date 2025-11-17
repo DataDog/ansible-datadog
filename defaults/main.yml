@@ -161,6 +161,14 @@ datadog_windows_614_fix_script_url: "https://s3.amazonaws.com/ddagent-windows-st
 # whether or not to download and apply the above fix
 datadog_apply_windows_614_fix: true
 
+# Force the role to skip reinstall steps on Windows, even if the Agent
+# isn't detected yet.
+datadog_windows_skip_install: false
+
+# Force the role to reinstall the Agent on Windows regardless of the
+# automatic feature checks. This can be used to downgrade the Agent on Windows.
+datadog_windows_force_reinstall: false
+
 # Override to change the name of the windows user to create
 datadog_windows_ddagentuser_name: ""
 # Override to change the password of the created windows user.

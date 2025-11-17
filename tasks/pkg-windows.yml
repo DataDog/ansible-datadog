@@ -8,6 +8,16 @@
 - name: Include Windows opts tasks
   ansible.builtin.include_tasks: pkg-windows-opts.yml
 
+- name: Force skip install when requested
+  ansible.builtin.set_fact:
+    agent_datadog_skip_install: true
+  when: datadog_windows_skip_install | bool
+
+- name: Force Agent reinstall when requested
+  ansible.builtin.set_fact:
+    agent_datadog_force_reinstall: true
+  when: datadog_windows_force_reinstall | bool
+
 - name: Download windows datadog agent 614 fix script
   ansible.windows.win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
