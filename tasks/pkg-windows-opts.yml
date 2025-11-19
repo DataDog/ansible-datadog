@@ -125,3 +125,39 @@
   when: >-
     (agent_datadog_skip_install and (agent_datadog_major | int <= 7) and (agent_datadog_minor | int < 45)) and
     (("NPM" in agent_windows_active_features.stdout_lines) != agent_datadog_sysprobe_enabled)
+
+# Check if downgrade is requested (installed version is higher than requested version)
+- name: Initialize downgrade detection flag
+  ansible.builtin.set_fact:
+    agent_datadog_downgrade_detected: false
+
+- name: Detect if downgrade is requested
+  ansible.builtin.set_fact:
+    agent_datadog_downgrade_detected: true
+  when: >-
+    agent_datadog_installed_major is defined and
+    agent_datadog_installed_minor is defined and
+    agent_datadog_installed_bugfix is defined and
+    (
+      (agent_datadog_installed_major | int > agent_datadog_major | int) or
+      (agent_datadog_installed_major | int == agent_datadog_major | int and
+       agent_datadog_installed_minor | int > agent_datadog_minor | int) or
+      (agent_datadog_installed_major | int == agent_datadog_major | int and
+       agent_datadog_installed_minor | int == agent_datadog_minor | int and
+       agent_datadog_installed_bugfix | int > agent_datadog_bugfix | int)
+    )
+
+- name: Warn about downgrade
+  ansible.builtin.debug:
+    msg: >-
+      datadog_agent_version {{ agent_datadog_major }}.{{ agent_datadog_minor }}.{{ agent_datadog_bugfix }}
+      is lower than installed version
+      {{ agent_datadog_installed_major }}.{{ agent_datadog_installed_minor }}.{{ agent_datadog_installed_bugfix }},
+      proceeding to downgrade by uninstalling current version first
+  when: agent_datadog_downgrade_detected
+
+- name: Force reinstall for downgrade
+  ansible.builtin.set_fact:
+    agent_datadog_skip_install: false
+    agent_datadog_force_reinstall: true
+  when: agent_datadog_downgrade_detected

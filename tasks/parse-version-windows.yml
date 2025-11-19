@@ -19,3 +19,20 @@
   failed_when: false
   check_mode: false
   when: ansible_facts.os_family == "Windows"
+
+- name: Parse installed Windows Agent version into components
+  ansible.builtin.set_fact:
+    agent_datadog_installed_version: "{{ agent_datadog_version_check_win.stdout | trim |
+      regex_search(installed_agent_regexp, '\\g<major>', '\\g<minor>', '\\g<bugfix>') }}"
+  vars:
+    installed_agent_regexp: (?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<bugfix>[0-9]+)
+  when: >-
+    ansible_facts.os_family == "Windows" and
+    agent_datadog_version_check_win.stdout | trim | length > 0
+
+- name: Set installed version component vars
+  ansible.builtin.set_fact:
+    agent_datadog_installed_major: "{{ agent_datadog_installed_version.0 | default('', true) | string }}"
+    agent_datadog_installed_minor: "{{ agent_datadog_installed_version.1 | default('', true) | string }}"
+    agent_datadog_installed_bugfix: "{{ agent_datadog_installed_version.2 | default('', true) | string }}"
+  when: ansible_facts.os_family == "Windows" and agent_datadog_version_check_win.stdout | trim | length > 0
