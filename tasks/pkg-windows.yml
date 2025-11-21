@@ -1,12 +1,5 @@
 ---
-## must be prior to `pkg-windows-opts.yml`, because the variable is used inside
-- name: Set windows NPM installed
-  ansible.builtin.set_fact:
-    agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
-
-## Might override agent_datadog_skip_install
-- name: Include Windows opts tasks
-  ansible.builtin.include_tasks: pkg-windows-opts.yml
+# Note: Windows opts tasks and NPM setup are now included in main.yml to ensure variables are set even during remote updates
 
 - name: Force skip install when requested
   ansible.builtin.set_fact:
