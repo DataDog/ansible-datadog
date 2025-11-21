@@ -83,7 +83,7 @@
 # because some tasks in pkg-windows.yml are carried out regardless of its value.
 - name: Windows Install Tasks
   ansible.builtin.include_tasks: pkg-windows.yml
-  when: ansible_facts.os_family == "Windows" and not (datadog_remote_update_in_progress | default(false))
+  when: ansible_facts.os_family == "Windows" and not datadog_remote_update_in_progress
 
 - name: MacOS Install Tasks
   ansible.builtin.include_tasks: pkg-macos.yml
