@@ -8,6 +8,17 @@
 - name: Include Windows opts tasks
   ansible.builtin.include_tasks: pkg-windows-opts.yml
 
+- name: Force skip install when requested
+  ansible.builtin.set_fact:
+    agent_datadog_skip_install: true
+  when: datadog_windows_skip_install | bool
+
+- name: Force Agent reinstall when requested
+  ansible.builtin.set_fact:
+    agent_datadog_force_reinstall: true
+    agent_datadog_skip_install: false
+  when: datadog_windows_force_reinstall | bool
+
 - name: Download windows datadog agent 614 fix script
   ansible.windows.win_get_url:
     url: "{{ datadog_windows_614_fix_script_url }}"
@@ -48,6 +59,37 @@
   register: agent_download_msi_result
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
 
+- name: Look up installed Datadog Agent product ids when forcing reinstall
+  ansible.windows.win_shell: |
+    $productName = "Datadog Agent"
+    $uninstallRoots = @(
+      "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+      "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    $productIds = foreach ($root in $uninstallRoots) {
+      if (-not (Test-Path $root)) {
+        continue
+      }
+      Get-ItemProperty "$root\*" -ErrorAction SilentlyContinue |
+        Where-Object { $_.DisplayName -clike $productName } |
+        Select-Object -ExpandProperty PSChildName
+    }
+    $productIds | Sort-Object -Unique
+  register: agent_datadog_installed_product_ids_result
+  changed_when: false
+  check_mode: false
+  when:
+    - not agent_datadog_skip_install
+    - agent_datadog_force_reinstall
+
+- name: Cache installed product ids when available
+  ansible.builtin.set_fact:
+    agent_datadog_windows_installed_product_ids: "{{ agent_datadog_installed_product_ids_result.stdout_lines | select('match', '.+') | list }}"
+  when:
+    - not agent_datadog_skip_install
+    - agent_datadog_force_reinstall
+    - agent_datadog_installed_product_ids_result.stdout_lines | length > 0
+
 - name: Create Binary directory root (if not default)
   ansible.windows.win_file:
     path: "{{ datadog_windows_program_files_dir }}"
@@ -76,11 +118,16 @@
   when: datadog_windows_ddagentuser_password | default('', true) | length > 0
   no_log: true
 
-- name: Uninstall agent to update optional features
+- name: Uninstall installed Datadog Agent to update optional features or downgrade or because requested
   ansible.windows.win_package:
-    path: "{{ agent_download_msi_result.dest }}"
+    product_id: "{{ item }}"
     state: absent
-  when: not agent_datadog_skip_install and agent_datadog_force_reinstall
+  loop: "{{ agent_datadog_windows_installed_product_ids }}"
+  when:
+    - not agent_datadog_skip_install
+    - agent_datadog_force_reinstall
+    - agent_datadog_windows_installed_product_ids is defined
+    - agent_datadog_windows_installed_product_ids | length > 0
 
 - name: Install downloaded agent
   ansible.windows.win_package:

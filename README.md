@@ -89,6 +89,8 @@ These variables provide additional configuration during the installation of the 
 | `datadog_windows_ddagentuser_name`          | The name of Windows user to create/use, in the format `<domain>\<user>` (Windows only).|
 | `datadog_windows_ddagentuser_password`      | The password used to create the user and/or register the service (Windows only).|
 | `datadog_apply_windows_614_fix`             | Whether or not to download and apply file referenced by `datadog_windows_614_fix_script_url` (Windows only). See https://dtdg.co/win-614-fix for more details. You can set this to `false` assuming your hosts aren't running Datadog Agent 6.14.\*.|
+| `datadog_windows_skip_install`              | Set to `true` to force the role to skip Windows Agent installation even if the role detects that installation is required (Windows only).|
+| `datadog_windows_force_reinstall`           | Set to `true` to force the role to reinstall the Windows Agent. This option takes precedence over `datadog_windows_skip_install` (Windows only).|
 | `datadog_macos_user`                        | The name of the user to run Agent under. The user has to exist, it won't be created automatically. Defaults to `ansible_user` (macOS only).|
 | `datadog_macos_download_url`                | Override the URL to download the DMG installer from (macOS only).|
 | `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
