@@ -8,4 +8,4 @@
     name: datadogagent
     state: restarted
     force_dependent_services: true
-  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows"
+  when: datadog_enabled and not ansible_check_mode and ansible_facts.os_family == "Windows" and not datadog_remote_update_in_progress

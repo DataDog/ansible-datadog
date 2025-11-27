@@ -1,0 +1,27 @@
+---
+- name: Initialize remote update flag
+  ansible.builtin.set_fact:
+    datadog_remote_update_in_progress: false
+
+- name: Check if remote update is in progress
+  ansible.windows.win_shell: |
+    Get-CimInstance Win32_Process | Where-Object {
+        $_.Name -eq "datadog-installer.exe" -and
+        $_.CommandLine -match "postStartExperimentBackground"
+    }
+  register: remote_update_check
+
+- name: Update remote update flag if installer is running
+  ansible.builtin.set_fact:
+    datadog_remote_update_in_progress: true
+  when:
+    - remote_update_check.stdout is defined
+    - remote_update_check.stdout | trim | length > 0
+
+- name: Inform about remote update in progress
+  ansible.builtin.debug:
+    msg: >-
+      Remote update is in progress. Skipping installation and restart of the Agent.
+      Any changes to the configuration will only take effect at the next Agent restart,
+      either manually or through a future role execution.
+  when: datadog_remote_update_in_progress

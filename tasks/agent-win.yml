@@ -89,7 +89,7 @@
   ansible.windows.win_service:
     name: "{{ item }}"
     start_mode: manual
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and not datadog_remote_update_in_progress
   with_list:
     - datadog-trace-agent
     - datadog-process-agent
@@ -106,14 +106,19 @@
   ansible.windows.win_service:
     name: datadogagent
   register: datadog_service_info
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode
+  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and not datadog_remote_update_in_progress
 
 - name: Ensure datadog-agent is running
   ansible.windows.win_service:
     name: datadogagent
     state: started
     start_mode: delayed
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists
+  when:
+    - not datadog_skip_running_check
+    - datadog_enabled
+    - not ansible_check_mode
+    - (datadog_service_info.exists | default(false))
+    - not datadog_remote_update_in_progress
   failed_when: false
   register: datadog_start_result
 
@@ -121,7 +126,13 @@
   ansible.windows.win_service:
     name: datadogagent
     state: started
-  when: not datadog_skip_running_check and datadog_enabled and not ansible_check_mode and datadog_service_info.exists and datadog_start_result.failed
+  when:
+    - not datadog_skip_running_check
+    - datadog_enabled
+    - not ansible_check_mode
+    - (datadog_service_info.exists | default(false))
+    - (datadog_start_result.failed | default(false))
+    - not datadog_remote_update_in_progress
   delay: 10
   retries: 3
 
@@ -130,7 +141,7 @@
     name: "{{ item }}"
     state: stopped
     start_mode: disabled
-  when: not datadog_skip_running_check and not datadog_enabled
+  when: not datadog_skip_running_check and not datadog_enabled and not datadog_remote_update_in_progress
   with_list:
     - datadog-trace-agent
     - datadog-process-agent

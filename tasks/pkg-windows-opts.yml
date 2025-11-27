@@ -147,6 +147,7 @@
        agent_datadog_installed_bugfix | int > agent_datadog_bugfix | int)
     )
 
+# Skip downgrade warning if remote update is in progress
 - name: Warn about downgrade
   ansible.builtin.debug:
     msg: >-
@@ -154,8 +155,9 @@
       is lower than installed version
       {{ agent_datadog_installed_major }}.{{ agent_datadog_installed_minor }}.{{ agent_datadog_installed_bugfix }},
       proceeding to downgrade by uninstalling current version first
-  when: agent_datadog_downgrade_detected
+  when: agent_datadog_downgrade_detected and not datadog_remote_update_in_progress
 
+# We do not need to check for remote update in progress here because installation is skipped if remote update is in progress anyway
 - name: Force reinstall for downgrade
   ansible.builtin.set_fact:
     agent_datadog_skip_install: false

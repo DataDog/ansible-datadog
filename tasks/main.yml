@@ -14,6 +14,11 @@
 - name: Check if OS is supported
   ansible.builtin.include_tasks: os-check.yml
 
+# Check for Windows remote updates before proceeding with installation
+- name: Windows remote update check
+  ansible.builtin.include_tasks: windows_remote_update_check.yml
+  when: ansible_facts.os_family == "Windows"
+
 - name: Fail if API key is missing
   ansible.builtin.fail:
     msg: "datadog_api_key is mandatory when using managed config"
@@ -64,11 +69,21 @@
   ansible.builtin.include_tasks: pkg-suse.yml
   when: ansible_facts.os_family == "Suse"
 
+# Windows variable initialization - always needed for configuration
+- name: Set windows NPM installed
+  ansible.builtin.set_fact:
+    agent_datadog_sysprobe_enabled: "{{ network_config is defined and 'enabled' in (network_config | default({}, true)) and network_config['enabled'] }}"
+  when: ansible_facts.os_family == "Windows"
+
+- name: Include Windows opts tasks
+  ansible.builtin.include_tasks: pkg-windows-opts.yml
+  when: ansible_facts.os_family == "Windows"
+
 # Note we don't check agent_datadog_skip_install variable value for windows here,
 # because some tasks in pkg-windows.yml are carried out regardless of its value.
 - name: Windows Install Tasks
   ansible.builtin.include_tasks: pkg-windows.yml
-  when: ansible_facts.os_family == "Windows"
+  when: ansible_facts.os_family == "Windows" and not datadog_remote_update_in_progress
 
 - name: MacOS Install Tasks
   ansible.builtin.include_tasks: pkg-macos.yml
