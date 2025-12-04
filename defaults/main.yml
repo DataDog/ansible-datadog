@@ -1,5 +1,5 @@
 ---
-role_version: 5.4.1
+role_version: 5.5.0
 
 # define if the datadog-agent services should be enabled
 datadog_enabled: true
