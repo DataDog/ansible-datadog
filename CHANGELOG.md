@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+# 5.5.0 / 2025-12-04
+* [FEATURE] Support Remote updates on Windows [#686]
+* [IMPROVEMENT] Add infrastructure_mode variable [#679]
+* [IMPROVEMENT] macOS: lift Rosetta 2 translation for Agent 7 in CI [#680]
+* [IMPROVEMENT] Remove deprecated deb/rpm installer and support SSI using install-ssi.sh script [#682]
+* [IMPROVEMENT] Add IDEs settings to gitignore [#681]
+* [IMPROVEMENT] [Windows] Provide users a way to skip and force reinstall of Datadog Agent [#683]
+* [IMPROVEMENT] Allow Agent downgrades on Windows [#685]
+
 # 5.4.1 / 2025-10-08
 * [IMPROVEMENT] Disable appstream install as its not used [#674]
 * [IMPROVEMENT] Remove pycache directory during upgrades [#673]
@@ -655,6 +664,13 @@ Initial release, compatible with Ansible v1 & v2
 [#675]: https://github.com/DataDog/ansible-datadog/pull/675
 [#676]: https://github.com/DataDog/ansible-datadog/pull/676
 [#677]: https://github.com/DataDog/ansible-datadog/pull/677
+[#677]: https://github.com/DataDog/ansible-datadog/pull/679
+[#680]: https://github.com/DataDog/ansible-datadog/pull/680
+[#681]: https://github.com/DataDog/ansible-datadog/pull/681
+[#682]: https://github.com/DataDog/ansible-datadog/pull/682
+[#683]: https://github.com/DataDog/ansible-datadog/pull/683
+[#685]: https://github.com/DataDog/ansible-datadog/pull/685
+[#686]: https://github.com/DataDog/ansible-datadog/pull/686
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
