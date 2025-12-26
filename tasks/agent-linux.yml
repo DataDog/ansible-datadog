@@ -93,7 +93,19 @@
     mode: "0640"
     owner: root
     group: "{{ datadog_group }}"
-  when: datadog_manage_config and not datadog_skip_running_check and agent_datadog_sysprobe_enabled
+  when: datadog_manage_config and not datadog_skip_running_check and (system_probe_config is defined or network_config is defined or
+    service_monitoring_config is defined or runtime_security_config is defined or system_probe_other_config is defined)
+  notify: "{% if agent_datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
+
+# Templates don't support the "state: absent" argument, so if the file was created in a previous run
+# and then all system-probe configs were completely removed, this is the only way to ensure
+# we remove the leftover config file.
+- name: Remove system-probe configuration file if system-probe is no longer configured
+  ansible.builtin.file:
+    path: /etc/datadog-agent/system-probe.yaml
+    state: absent
+  when: datadog_manage_config and not datadog_skip_running_check and system_probe_config is not defined and network_config is not defined and
+    service_monitoring_config is not defined and runtime_security_config is not defined and system_probe_other_config is not defined
   notify: "{% if agent_datadog_before_7180 %}restart datadog-agent-sysprobe{% else %}restart datadog-agent{% endif %}"
 
 - name: Ensure datadog-agent is running
