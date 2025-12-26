@@ -126,6 +126,7 @@
   ansible.windows.win_package:
     path: "{{ agent_download_msi_result.dest }}"
     arguments: "{{ agent_win_install_args }}"
+  environment: "{{ agent_win_install_environment | default({}) }}"
   register: agent_datadog_agent_install
   when: (not agent_datadog_skip_install) and (not ansible_check_mode)
 
