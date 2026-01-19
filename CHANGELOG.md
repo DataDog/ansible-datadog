@@ -19,7 +19,7 @@ CHANGELOG
 * [IMPROVEMENT] Update Windows tasks [#675]
 
 # 5.4.0 / 2025-09-23
-* [IMPROVEMENT] Fix broken conditionals for compatibility with Ansible 2.19 / Ansible 12.0 [#666]
+* [IMPROVEMENT] Fix broken conditionals for compatibility with Ansible 2.19 / Ansible 12.0 [#670]
 
 # 5.3.0 / 2025-09-03
 * [IMPROVEMENT] Support Remote Agent updates through the embedded Datadog Installer (7.69.0+) [#665]
@@ -658,7 +658,7 @@ Initial release, compatible with Ansible v1 & v2
 [#660]: https://github.com/DataDog/ansible-datadog/pull/660
 [#664]: https://github.com/DataDog/ansible-datadog/pull/664
 [#665]: https://github.com/DataDog/ansible-datadog/pull/665
-[#666]: https://github.com/DataDog/ansible-datadog/pull/666
+[#670]: https://github.com/DataDog/ansible-datadog/pull/670
 [#673]: https://github.com/DataDog/ansible-datadog/pull/673
 [#674]: https://github.com/DataDog/ansible-datadog/pull/674
 [#675]: https://github.com/DataDog/ansible-datadog/pull/675
