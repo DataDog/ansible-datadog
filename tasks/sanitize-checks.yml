@@ -2,6 +2,7 @@
 - name: Defend against defined but null datadog_checks variable
   ansible.builtin.set_fact:
     agent_datadog_checks: "{{ datadog_checks | default({}, true) }}"
+  no_log: true
 
 - name: Resolve agent_datadog_tracked_checks
   ansible.builtin.set_fact:
