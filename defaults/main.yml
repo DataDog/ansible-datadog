@@ -42,7 +42,7 @@ datadog_group: dd-agent
 integration_command_user_linux: "dd-agent"
 integration_command_user_windows: "administrator"
 integration_command_user_macos: "dd-agent"
-datadog_agent_binary_path_linux: /opt/datadog-agent/bin/agent/agent
+datadog_agent_binary_path_linux: /bin/datadog-agent
 datadog_agent_binary_path_windows: "C:\\Program Files\\Datadog\\Datadog Agent\\bin\\agent.exe"
 datadog_agent_binary_path_macos: "/opt/datadog-agent/bin/agent/agent"
 
