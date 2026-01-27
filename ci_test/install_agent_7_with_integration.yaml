@@ -1,0 +1,14 @@
+---
+- hosts: all
+  roles:
+    - { role: '/root/project/' }
+  vars:
+    datadog_agent_major_version: 7
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_enabled: false
+    datadog_skip_running_check: true
+    datadog_integration:
+      datadog-postgres:
+        action: install
+        version: 1.18.0
+
