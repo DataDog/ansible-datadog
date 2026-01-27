@@ -182,7 +182,7 @@ jobs:
         type: string
         default: "false"
     macos:
-      xcode: 16.2.0
+      xcode: 26.2.0
     steps:
       - checkout
       - when:
