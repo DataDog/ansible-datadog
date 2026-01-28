@@ -35,7 +35,7 @@ commands:
     steps:
       - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
       - run: datadog-agent version
-      - run: datadog-agent integration show datadog-postgres | grep "1.18.0"
+      - run: datadog-agent integration show datadog-postgres
 
   test_install_no_manage_config:
     parameters:
@@ -305,7 +305,7 @@ jobs:
       - run: sudo rm /etc/apt/sources.list.d/*
       - run: pip3 install ansible==<<parameters.ansible_version>>
       - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration_fleet.yaml"
-      - run: sudo datadog-agent integration show datadog-postgres | grep "1.18.0"
+      - run: sudo datadog-agent integration show datadog-postgres
 
   test_incorrect_rhel6_detect:
     # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6

@@ -10,4 +10,3 @@
     datadog_integration:
       datadog-postgres:
         action: install
-        version: 1.18.0
