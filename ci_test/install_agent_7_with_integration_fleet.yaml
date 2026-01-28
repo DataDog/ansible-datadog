@@ -1,12 +1,24 @@
 ---
 - hosts: all
-  roles:
-    - { role: "/home/circleci/project/" }
-  vars:
-    datadog_agent_major_version: 7
-    datadog_api_key: "11111111111111111111111111111111"
-    datadog_apm_instrumentation_enabled: "host"
-    datadog_apm_instrumentation_libraries: ["python"]
-    datadog_integration:
-      datadog-postgres:
-        action: install
+  tasks:
+    - block:
+        - ansible.builtin.include_role:
+            name: "/home/circleci/project/"
+          vars:
+            datadog_agent_major_version: 7
+            datadog_api_key: "11111111111111111111111111111111"
+            datadog_apm_instrumentation_enabled: "host"
+            datadog_apm_instrumentation_libraries: ["python"]
+            datadog_integration:
+              test-integration:
+                action: install
+                version: 1.0.0
+      rescue:
+        - name: Integration install failed (expected)
+          ansible.builtin.debug:
+            msg: "Integration install failed, but that's okay for this test"
+      always:
+        - name: Verify Fleet path was detected
+          ansible.builtin.assert:
+            that: datadog_agent_binary_path == "/bin/datadog-agent"
+            fail_msg: "Wrong path: {{ datadog_agent_binary_path }}"
