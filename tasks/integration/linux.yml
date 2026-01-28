@@ -7,7 +7,7 @@
 
 - name: Set Agent binary path
   ansible.builtin.set_fact:
-    datadog_agent_binary_path: "{{ '/bin/datadog-agent' if bin_agent.stat.exists else '/opt/datadog-agent/bin/agent/agent' }}"
+    datadog_agent_binary_path: "{{ '/bin/datadog-agent' if bin_agent.stat.exists else datadog_agent_binary_path_linux }}"
   when: datadog_agent_binary_path is not defined
 
 - name: Set Agent user for integration commmand
