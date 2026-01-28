@@ -182,7 +182,7 @@ jobs:
         type: string
         default: "false"
     macos:
-      xcode: 16.2.0
+      xcode: 26.2.0
     steps:
       - checkout
       - when:
@@ -269,6 +269,32 @@ jobs:
           bash -c 'for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
             sudo datadog-installer is-installed datadog-apm-library-$tracer;
           done'
+
+  test_integration_traditional:
+    parameters:
+      ansible_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+
+  test_integration_fleet:
+    parameters:
+      ansible_version:
+        type: string
+    machine:
+      image: ubuntu-2204:2023.10.1
+    steps:
+      - checkout
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration_fleet.yaml"
 
   test_incorrect_rhel6_detect:
     # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
@@ -390,6 +416,18 @@ workflows:
           matrix:
             parameters:
               ansible_version: ["6.7.0", "12.0.0"]
+
+      - test_integration_traditional:
+          matrix:
+            parameters:
+              ansible_version: ["4_10"]
+              os: ["debian"]
+              python: ["python3"]
+
+      - test_integration_fleet:
+          matrix:
+            parameters:
+              ansible_version: ["12.0.0"]
 
       - test_incorrect_rhel6_detect:
           matrix:
