@@ -93,8 +93,8 @@ These variables provide additional configuration during the installation of the 
 | `datadog_windows_force_reinstall`           | Set to `true` to force the role to reinstall the Windows Agent. This option takes precedence over `datadog_windows_skip_install` (Windows only).|
 | `datadog_macos_user`                        | The name of the user to run Agent under. The user has to exist, it won't be created automatically. Defaults to `ansible_user` (macOS only).|
 | `datadog_macos_download_url`                | Override the URL to download the DMG installer from (macOS only).|
-| `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.|
-| `datadog_apm_instrumentation_libraries`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["java", "js", "dotnet", "python", "ruby"]`). You can find the available values in [Inject Libraries Locally][21].|
+| `datadog_apm_instrumentation_enabled`       | Configure APM instrumentation. Possible values are: <br/> - `host`: Both the Agent and your services are running on a host. <br/> - `docker`: The Agent and your services are running in separate Docker containers on the same host.<br/>- `all`: Supports all the previous scenarios for `host` and `docker` at the same time.<br/>- For Windows: Use `iis` to enable APM instrumentation for IIS applications.|
+| `datadog_apm_instrumentation_libraries`     | List of APM libraries to install if `host` or `docker` injection is enabled (defaults to `["java", "js", "dotnet", "python", "ruby"]`). For Windows with IIS, use `["dotnet:version"]` (e.g., `["dotnet:3"]`). You can find the available values in [Inject Libraries Locally][21].|
 | `datadog_remote_updates`                    | Enable remote installation and updates through the datadog-installer.|
 | `datadog_infrastructure_mode`               | Override the default `infrastructure_mode`.|
 
@@ -534,6 +534,34 @@ Alternatively, if your playbook **only runs on Windows hosts**, use the followin
 ```
 
 **Note**: This configuration fails on Linux hosts. Only use it if the playbook is specific to Windows hosts. Otherwise, use the [inventory file method](#inventory-file).
+
+#### Windows with APM Instrumentation for IIS
+
+To enable APM instrumentation for IIS applications on Windows, use the following configuration:
+
+```yml
+- hosts: windows
+  roles:
+    - { role: datadog.datadog }
+  vars:
+    datadog_api_key: "<YOUR_DD_API_KEY>"
+    datadog_agent_version: "7.50.0"
+    datadog_apm_instrumentation_enabled: "iis"
+    datadog_apm_instrumentation_libraries:
+      - "dotnet:3"
+    datadog_config:
+      apm_config:
+        enabled: true
+```
+
+This configuration will:
+
+* Install the Datadog Agent on Windows
+* Enable APM instrumentation for IIS applications
+* Install the .NET tracer (version 3 in this example)
+* Configure the Agent to accept APM traces
+
+After installation, the Agent will automatically instrument your IIS applications. You may need to restart IIS for the changes to take effect.
 
 ### Uninstallation
 

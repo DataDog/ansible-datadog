@@ -163,3 +163,17 @@
     agent_datadog_skip_install: false
     agent_datadog_force_reinstall: true
   when: agent_datadog_downgrade_detected
+
+# We use this step to not render "empty" environment variables when not set.
+- name: Build Datadog APM environment variables for Windows
+  ansible.builtin.set_fact:
+    agent_win_install_environment: >
+      {{
+        {
+          'DD_APM_INSTRUMENTATION_ENABLED': datadog_apm_instrumentation_enabled,
+          'DD_APM_INSTRUMENTATION_LIBRARIES': datadog_apm_instrumentation_libraries | join(','),
+        }
+        | dict2items
+        | rejectattr('value', 'equalto', '')
+        | items2dict
+      }}
