@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  roles:
+    - { role: "/home/circleci/project/" }
+  vars:
+    datadog_api_key: "11111111111111111111111111111111"
+    datadog_agent_major_version: 7
+    datadog_apm_instrumentation_enabled: "host"
+    datadog_apm_instrumentation_libraries: ["python", "java"]
+    # Test custom SSI script directory
+    datadog_ssi_script_dir: "/opt/datadog-ssi-scripts"
