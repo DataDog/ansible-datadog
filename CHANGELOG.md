@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+# 5.6.0 / 2026-02-10
+* [IMPROVEMENT] Write system probe config whenever config is defined [#690]
+* [IMPROVEMENT] Update Linux Agent CLI path [#693]
+* [IMPROVEMENT] Allow configuring the SSI install script download location to ensure it can be executed [#694]
+
 # 5.5.0 / 2025-12-04
 * [FEATURE] Support Remote updates on Windows [#686]
 * [IMPROVEMENT] Add infrastructure_mode variable [#679]
@@ -671,6 +676,9 @@ Initial release, compatible with Ansible v1 & v2
 [#683]: https://github.com/DataDog/ansible-datadog/pull/683
 [#685]: https://github.com/DataDog/ansible-datadog/pull/685
 [#686]: https://github.com/DataDog/ansible-datadog/pull/686
+[#690]: https://github.com/DataDog/ansible-datadog/pull/690
+[#693]: https://github.com/DataDog/ansible-datadog/pull/693
+[#694]: https://github.com/DataDog/ansible-datadog/pull/694
 [@DevKyleS]: https://github.com/DevKyleS
 [@Jno21]: https://github.com/Jno21
 [@alsmola]: https://github.com/alsmola
