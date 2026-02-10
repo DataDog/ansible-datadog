@@ -270,6 +270,45 @@ jobs:
             sudo datadog-installer is-installed datadog-apm-library-$tracer;
           done'
 
+  test_apm_injection_custom_dir:
+    parameters:
+      ansible_version:
+        type: string
+
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_custom_dir.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      # Verify that SSI was installed with custom directory
+      - run: >
+          bash -c '
+          # Check that datadog-installer is present
+          sudo datadog-installer --version || exit 1
+          # Check that APM libraries were installed
+          sudo datadog-installer is-installed datadog-apm-library-python || exit 1
+          sudo datadog-installer is-installed datadog-apm-library-java || exit 1
+          '
+      # Verify the custom directory was used and cleaned up
+      - run: |
+          if [ -d /opt/datadog-ssi-scripts ]; then
+            echo "Custom SSI script directory exists"
+            if [ -f /opt/datadog-ssi-scripts/install-ssi.sh ]; then
+              echo "ERROR: SSI script was not cleaned up"
+              exit 1
+            fi
+            echo "SSI script was properly cleaned up"
+          else
+            echo "Custom SSI script directory was not created"
+            exit 1
+          fi
+
   test_incorrect_rhel6_detect:
     # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
     docker:
@@ -387,6 +426,11 @@ workflows:
               ansible_version: ["6.7.0", "12.0.0 "]
 
       - test_apm_injection_all:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0", "12.0.0"]
+
+      - test_apm_injection_custom_dir:
           matrix:
             parameters:
               ansible_version: ["6.7.0", "12.0.0"]

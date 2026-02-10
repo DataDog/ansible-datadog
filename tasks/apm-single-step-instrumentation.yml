@@ -28,9 +28,9 @@
       }}
 
 # Create the directory for the datadog-installer script
-- name: Create /tmp/datadog-installer directory
+- name: Create directory for SSI script
   ansible.builtin.file:
-    path: /tmp/datadog-installer
+    path: "{{ datadog_ssi_script_dir }}"
     state: directory
     mode: "0755"
 
@@ -38,7 +38,7 @@
 - name: Download datadog-installer install-ssi.sh script
   ansible.builtin.get_url:
     url: "{{ datadog_installer_install_ssi_script_url }}"
-    dest: /tmp/datadog-installer/install-ssi.sh
+    dest: "{{ datadog_ssi_script_dir }}/install-ssi.sh"
     mode: "0750"
     # Always overwrite the file to ensure we have the latest version.
     force: true
@@ -46,7 +46,14 @@
 
 - name: Run datadog-installer install-ssi.sh script
   ansible.builtin.command:
-    cmd: /tmp/datadog-installer/install-ssi.sh
+    cmd: "{{ datadog_ssi_script_dir }}/install-ssi.sh"
   environment: "{{ datadog_apm_single_step_instrumentation_environment }}"
   when: install_ssi_script_result.status_code == 200
   changed_when: true
+
+# Clean up the script after execution for security
+- name: Clean up SSI script after execution
+  ansible.builtin.file:
+    path: "{{ datadog_ssi_script_dir }}/install-ssi.sh"
+    state: absent
+  when: install_ssi_script_result.status_code == 200

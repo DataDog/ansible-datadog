@@ -202,6 +202,11 @@ datadog_apm_inject_version: ""
 # https://docs.datadoghq.com/tracing/trace_collection/library_injection_local
 datadog_apm_instrumentation_libraries: []
 
+# Directory where the Single Step Instrumentation (SSI) script will be downloaded and executed.
+# Default uses /var/run which is typically writable and allows execution.
+# Override this if /var/run is not suitable in your environment.
+datadog_ssi_script_dir: "/var/run/datadog-ssi"
+
 # Enable remote updates through datadog-installer
 datadog_remote_updates: false
 
