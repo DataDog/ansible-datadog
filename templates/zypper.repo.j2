@@ -16,7 +16,7 @@ type=rpm-md
 gpgcheck={{ datadog_zypper_gpgcheck|int }}
 repo_gpgcheck={{ agent_do_zypper_repo_gpgcheck|int }}
 {# zypper in SUSE < 15 will not parse (SUSE 11) or respect (SUSE 12 - 14) mutliple entries in gpgkey #}
-{% if ansible_distribution_version|int < 15 %}
+{% if ansible_facts['distribution_version']|int < 15 %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
 {% else %}
 gpgkey={{ datadog_zypper_gpgkey_current }}
