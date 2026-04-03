@@ -19,9 +19,7 @@ api_key: {{ datadog_api_key }}
 infrastructure_mode: {{ datadog_infrastructure_mode }}
 {% endif %}
 
-{% if datadog_remote_updates is defined -%}
-remote_updates: {{ datadog_remote_updates }}
-{% endif -%}
+remote_updates: {{ datadog_remote_updates | default(true) }}
 
 {% if agent_datadog_config | default({}, true) | length > 0 -%}
 {{ agent_datadog_config | to_nice_yaml }}
