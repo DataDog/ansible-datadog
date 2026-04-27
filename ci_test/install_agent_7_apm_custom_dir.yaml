@@ -10,3 +10,4 @@
     datadog_apm_instrumentation_libraries: ["python", "java"]
     # Test custom SSI script directory
     datadog_ssi_script_dir: "/opt/datadog-ssi-scripts"
+    datadog_remote_updates: false
