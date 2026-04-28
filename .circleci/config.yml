@@ -228,6 +228,10 @@ jobs:
             status_json=$(sudo datadog-installer status --json | jq .apm_injection_status)
             for key in $(echo "$status_json" | jq -r 'keys[]'); do
               value=$(echo "$status_json" | jq -r --arg k "$key" '.[$k]')
+              if [ "$key" = "iis_instrumented" ]; then
+                echo "⏭️ Skipping $key (Windows-only check)"
+                continue
+              fi
               if [ "$value" != "true" ]; then
                 echo "❌ Check failed: $key is not true (value: $value)"
                 exit 1
