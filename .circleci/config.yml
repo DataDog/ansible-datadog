@@ -1,0 +1,492 @@
+---
+version: 2.1
+
+commands:
+  dry_run:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>' --check
+
+  install_agent:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+      inventory:
+        type: string
+        default: "ci.ini"
+    steps:
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/<<parameters.inventory>> "./ci_test/install_agent_<<parameters.version>>.yaml" -e 'ansible_python_interpreter=<<parameters.python>>'
+      - run: datadog-agent version
+
+  test_install_no_manage_config:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_<<parameters.version>>.yaml" -e '{"ansible_python_interpreter":"/usr/bin/<<parameters.python>>","datadog_manage_config":false}'
+      - run: bash -c '[ -f /etc/datadog-agent/datadog.yaml.example ] || [ -f /etc/dd-agent/datadog.conf.example ]'
+      - run: bash -c '[ ! -f /etc/datadog-agent/datadog.yaml ] && [ ! -f /etc/datadog-agent/system-probe.yaml ] && [ ! -f /etc/datadog-agent/security-agent.yaml ] && [ ! -f /etc/dd-agent/datadog.conf ]'
+
+  downgrade_agent_6_28:
+    parameters:
+      python:
+        type: string
+    steps:
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/downgrade_to_6.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: datadog-agent version
+      - run: datadog-agent status || true
+
+  test_agent_install_downgrade:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    steps:
+      - checkout
+      - dry_run:
+          version: "<<parameters.version>>"
+          python: "<<parameters.python>>"
+      # install agent version corresponding to parameters.version
+      - install_agent:
+          version: "<<parameters.version>>"
+          python: "<<parameters.python>>"
+      - downgrade_agent_6_28:
+          python: "<<parameters.python>>"
+      # Verify the downgrade worked
+      - run: datadog-agent version
+
+  test_agent_install:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    steps:
+      - checkout
+      - install_agent:
+          version: "<<parameters.version>>"
+          python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
+
+  test_agent_install_macos:
+    parameters:
+      version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    steps:
+      - checkout
+      - install_agent:
+          version: "<<parameters.version>>"
+          python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
+          inventory: "ci_macos.ini"
+
+jobs:
+  ansible_lint:
+    docker:
+      - image: datadog/docker-library:ansible_debian_2_10
+    steps:
+      - checkout
+      - run: ci_test/ansible_lint.sh
+
+  test_install_downgrade:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_agent_install_downgrade:
+          version: "<<parameters.agent_version>>"
+          python: "<<parameters.python>>"
+
+  test_install:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_agent_install:
+          version: "<<parameters.agent_version>>"
+          python: "<<parameters.python>>"
+          jinja2_native: "<<parameters.jinja2_native>>"
+
+  test_install_no_manage_config:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - test_install_no_manage_config:
+          version: "<<parameters.agent_version>>"
+          python: "<<parameters.python>>"
+
+  test_install_macos:
+    parameters:
+      ansible_version:
+        type: string
+      agent_version:
+        type: string
+      python:
+        type: string
+      jinja2_native:
+        type: string
+        default: "false"
+    macos:
+      xcode: 26.2.0
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: ["6_macos", << parameters.agent_version >>]
+          steps:
+            - run:
+                name: Install Rosetta 2
+                command: printf 'A\n' | sudo softwareupdate --install-rosetta
+      - run:
+          name: Install Python3
+          command: brew install python@3.11
+      - run:
+          name: Install Ansible
+          command: /opt/homebrew/bin/pip3.11 install ansible~=<<parameters.ansible_version>>
+      - test_agent_install_macos:
+          version: "<<parameters.agent_version>>"
+          python: "/opt/homebrew/bin/python3.11"
+          jinja2_native: "<<parameters.jinja2_native>>"
+
+  test_apm_injection:
+    parameters:
+      ansible_version:
+        type: string
+
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_python.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
+      - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
+      - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
+      - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
+      # Verify the instrumentation status from datadog-installer
+      - run: |
+            status_json=$(sudo datadog-installer status --json | jq .apm_injection_status)
+            for key in $(echo "$status_json" | jq -r 'keys[]'); do
+              value=$(echo "$status_json" | jq -r --arg k "$key" '.[$k]')
+              if [ "$key" = "iis_instrumented" ]; then
+                echo "⏭️ Skipping $key (Windows-only check)"
+                continue
+              fi
+              if [ "$value" != "true" ]; then
+                echo "❌ Check failed: $key is not true (value: $value)"
+                exit 1
+              fi
+              echo "✅ $key is true"
+            done
+            echo "🎉 All APM injection checks passed!"
+      # verify that the emitted traces are received by checking agent status
+      - run: |
+          for i in {1..14}; do
+            echo "Checking for traces (attempt $i/14)..."
+            if sudo datadog-agent status "apm agent" --json | jq -e '.apmStats.ratebyservice | keys | length > 0' >/dev/null 2>&1; then
+              echo "✅ Traces found in agent status!"
+              sudo datadog-agent status "apm agent" --json | jq '.apmStats.ratebyservice'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "❌ No traces found after 70 seconds"
+          exit 1
+
+  test_apm_injection_all:
+    parameters:
+      ansible_version:
+        type: string
+
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_all.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - run: >
+          bash -c 'for tracer in ["java", "js", "dotnet", "python", "ruby"]; do
+            sudo datadog-installer is-installed datadog-apm-library-$tracer;
+          done'
+
+  test_integration_traditional:
+    parameters:
+      ansible_version:
+        type: string
+      os:
+        type: string
+      python:
+        type: string
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    steps:
+      - checkout
+      - run: ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration.yaml" -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+
+  test_integration_fleet:
+    parameters:
+      ansible_version:
+        type: string
+    machine:
+      image: ubuntu-2204:2023.10.1
+    steps:
+      - checkout
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_with_integration_fleet.yaml"
+
+  test_apm_injection_custom_dir:
+    parameters:
+      ansible_version:
+        type: string
+
+    machine:
+      image: ubuntu-2204:2023.10.1 # includes docker and docker-compose
+
+    steps:
+      - checkout
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm /etc/apt/sources.list.d/*
+      - run: pip3 install ansible==<<parameters.ansible_version>>
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_7_apm_custom_dir.yaml"
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      # Verify that SSI was installed with custom directory
+      - run: >
+          bash -c '
+          # Check that datadog-installer is present
+          sudo datadog-installer --version || exit 1
+          # Check that APM libraries were installed
+          sudo datadog-installer is-installed datadog-apm-library-python || exit 1
+          sudo datadog-installer is-installed datadog-apm-library-java || exit 1
+          '
+      # Verify the custom directory was used and cleaned up
+      - run: |
+          if [ -d /opt/datadog-ssi-scripts ]; then
+            echo "Custom SSI script directory exists"
+            if [ -f /opt/datadog-ssi-scripts/install-ssi.sh ]; then
+              echo "ERROR: SSI script was not cleaned up"
+              exit 1
+            fi
+            echo "SSI script was properly cleaned up"
+          else
+            echo "Custom SSI script directory was not created"
+            exit 1
+          fi
+
+  test_incorrect_rhel6_detect:
+    # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
+    docker:
+      - image: datadog/docker-library:ansible_<<parameters.os>>_<<parameters.ansible_version>>
+    parameters:
+      jinja2_native:
+        type: string
+        default: "false"
+      os:
+        type: string
+      ansible_version:
+        type: string
+      python:
+        type: string
+    steps:
+      - checkout
+      - run: ANSIBLE_JINJA2_NATIVE="<<parameters.jinja2_native>>" ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_pinned.yaml -e 'ansible_python_interpreter=/usr/bin/<<parameters.python>>'
+      - run: datadog-agent version
+
+workflows:
+  version: 2
+  test_datadog_role:
+    # Note: Ansible 5.* requires Python >= 3.8, which for now we only have on Debian.
+    # Whenever newer major versions of RHEL and SUSE get released, they should have
+    # a new enough Python, so we will test on them as well
+    jobs:
+      - ansible_lint
+      - test_install_downgrade:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
+              agent_version: ["6", "7"]
+              os: ["rocky8"]
+              python: ["python3"]
+
+      - test_install_downgrade:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              os: ["rocky9", "debian"]
+              python: ["python3.11"]
+
+      # Newer debian images only have Pythpn 3 installed
+      - test_install_downgrade:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10", "5_3", "9_4"]
+              agent_version: ["6", "7"]
+              os: ["debian"]
+              python: ["python3"]
+
+      # Newer debian images only have Pythpn 3 installed
+      - test_install_no_manage_config:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
+              agent_version: ["6", "7"]
+              os: ["debian"]
+              python: ["python3"]
+
+      - test_install_no_manage_config:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              os: ["debian"]
+              python: ["python3.11"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10", "9_4"]
+              agent_version: ["6", "7"]
+              jinja2_native: ["true", "false"]
+              os: ["rocky8"]
+              python: ["python3"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              agent_version: ["6", "7"]
+              jinja2_native: ["true", "false"]
+              os: ["rocky9", "suse", "amazonlinux2023"]
+              python: ["python3.11"]
+
+      # Newer suse images only have Python 3 installed
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10", "9_4"]
+              agent_version: ["6", "7"]
+              os: ["suse"]
+              python: ["python3"]
+
+      - test_install:
+          matrix:
+            parameters:
+              ansible_version: ["2_10", "3_4", "4_10"]
+              agent_version: ["6", "7"]
+              os: ["amazonlinux2023"]
+              python: ["python3"]
+
+      - test_install_macos:
+          matrix:
+            parameters:
+              ansible_version: ["2.10", "3.4", "4.10", "12.0"]
+              agent_version: ["6_macos", "7_macos"]
+              python: ["python3"]
+
+      - test_apm_injection:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0", "12.0.0 "]
+
+      - test_apm_injection_all:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0", "12.0.0"]
+
+      - test_integration_traditional:
+          matrix:
+            parameters:
+              ansible_version: ["4_10"]
+              os: ["debian"]
+              python: ["python3"]
+
+      - test_integration_fleet:
+          matrix:
+            parameters:
+              ansible_version: ["12.0.0"]
+
+      - test_apm_injection_custom_dir:
+          matrix:
+            parameters:
+              ansible_version: ["6.7.0", "12.0.0"]
+
+      - test_incorrect_rhel6_detect:
+          matrix:
+            parameters:
+              ansible_version: ["4_10"]
+              os: ["amazonlinux2023"]
+              python: ["python3"]
+
+      - test_incorrect_rhel6_detect:
+          matrix:
+            parameters:
+              ansible_version: ["12_0"]
+              os: ["amazonlinux2023"]
+              python: ["python3.11"]
