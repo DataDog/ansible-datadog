@@ -2,7 +2,7 @@
 
 - hosts: all
   roles:
-    - { role: "/home/circleci/project/" }
+    - { role: "{{ playbook_dir }}/.." }
   vars:
     datadog_api_key: "11111111111111111111111111111111"
     datadog_agent_major_version: 7

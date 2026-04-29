@@ -75,7 +75,7 @@ pip install -r requirements-ansible-lint.txt
 ansible-galaxy collection install ansible.windows
 
 # lint the ansible-role alone
-ansible-lint -v --exclude=galaxy.yml --exclude=ci_test/ --exclude=manual_tests/ --exclude=.circleci/ --exclude=ansible_collections/ --exclude=.ansible/ --exclude=.venv/
+ansible-lint -v --exclude=galaxy.yml --exclude=ci_test/ --exclude=manual_tests/ --exclude=.github/ --exclude=ansible_collections/ --exclude=.ansible/ --exclude=.venv/
 
 cd ansible_collections/datadog/ || exit
 ls -la roles/agent/

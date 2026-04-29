@@ -1,0 +1,366 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# The datadog/docker-library:ansible_* images ship a glibc older than 2.28,
+# which is the minimum the GHA runner's Node 20 needs to launch JS-based
+# actions like actions/checkout. So we never run jobs *inside* those images
+# via `container:` — instead we check out on the host and shell into the
+# image with `docker run` / `docker exec`. The host workspace is mounted at
+# /workspace, and `playbook_dir` resolves the role path correctly from there.
+
+jobs:
+  ansible_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Lint
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_debian_2_10 \
+            ci_test/ansible_lint.sh
+
+  test_install_downgrade:
+    name: install+downgrade (${{ matrix.os }}, ansible ${{ matrix.ansible_version }}, agent ${{ matrix.agent_version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # rocky8 × (2_10, 3_4, 4_10) × (6, 7)
+          - { os: rocky8, ansible_version: "2_10", agent_version: "6", python: python3 }
+          - { os: rocky8, ansible_version: "2_10", agent_version: "7", python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "6", python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "7", python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "6", python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "7", python: python3 }
+          # 12_0 × (rocky9, debian) × (6, 7)
+          - { os: rocky9, ansible_version: "12_0", agent_version: "6", python: python3.11 }
+          - { os: rocky9, ansible_version: "12_0", agent_version: "7", python: python3.11 }
+          - { os: debian, ansible_version: "12_0", agent_version: "6", python: python3.11 }
+          - { os: debian, ansible_version: "12_0", agent_version: "7", python: python3.11 }
+          # debian × (2_10, 3_4, 4_10, 5_3, 9_4) × (6, 7)
+          - { os: debian, ansible_version: "2_10", agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "2_10", agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "3_4",  agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "3_4",  agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "4_10", agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "4_10", agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "5_3",  agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "5_3",  agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "9_4",  agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "9_4",  agent_version: "7", python: python3 }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Start container
+        run: |
+          docker run -d --name testenv \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_${{ matrix.os }}_${{ matrix.ansible_version }} \
+            sleep infinity
+      - name: Dry-run install
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}" --check
+      - name: Dry-run downgrade
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/downgrade_to_6.yaml -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}" --check
+      - name: Install agent
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}"
+      - name: Check installed agent version
+        run: docker exec testenv datadog-agent version
+      - name: Downgrade to 6.28
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/downgrade_to_6.yaml -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}"
+      - name: Check downgraded agent version
+        run: docker exec testenv datadog-agent version
+      - name: Agent status (best effort)
+        run: docker exec testenv sh -c 'datadog-agent status || true'
+      - name: Verify downgrade
+        run: docker exec testenv datadog-agent version
+
+  test_install_no_manage_config:
+    name: no_manage_config (${{ matrix.os }}, ansible ${{ matrix.ansible_version }}, agent ${{ matrix.agent_version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: debian, ansible_version: "2_10", agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "2_10", agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "3_4",  agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "3_4",  agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "4_10", agent_version: "6", python: python3 }
+          - { os: debian, ansible_version: "4_10", agent_version: "7", python: python3 }
+          - { os: debian, ansible_version: "12_0", agent_version: "6", python: python3.11 }
+          - { os: debian, ansible_version: "12_0", agent_version: "7", python: python3.11 }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Start container
+        run: |
+          docker run -d --name testenv \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_${{ matrix.os }}_${{ matrix.ansible_version }} \
+            sleep infinity
+      - name: Install agent (datadog_manage_config=false)
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e '{"ansible_python_interpreter":"/usr/bin/${{ matrix.python }}","datadog_manage_config":false}'
+      - name: Verify example config exists
+        run: docker exec testenv sh -c '[ -f /etc/datadog-agent/datadog.yaml.example ] || [ -f /etc/dd-agent/datadog.conf.example ]'
+      - name: Verify managed config not written
+        run: docker exec testenv sh -c '[ ! -f /etc/datadog-agent/datadog.yaml ] && [ ! -f /etc/datadog-agent/system-probe.yaml ] && [ ! -f /etc/datadog-agent/security-agent.yaml ] && [ ! -f /etc/dd-agent/datadog.conf ]'
+
+  test_install:
+    name: install (${{ matrix.os }}, ansible ${{ matrix.ansible_version }}, agent ${{ matrix.agent_version }}, jinja2_native=${{ matrix.jinja2_native }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # rocky8 × (2_10, 3_4, 4_10, 9_4) × (6, 7) × jinja2_native (true|false)
+          - { os: rocky8, ansible_version: "2_10", agent_version: "6", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "2_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "2_10", agent_version: "7", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "2_10", agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "6", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "7", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "3_4",  agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "6", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "7", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "4_10", agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "9_4",  agent_version: "6", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "9_4",  agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: rocky8, ansible_version: "9_4",  agent_version: "7", jinja2_native: "true",  python: python3 }
+          - { os: rocky8, ansible_version: "9_4",  agent_version: "7", jinja2_native: "false", python: python3 }
+          # 12_0 × (rocky9, suse, amazonlinux2023) × (6, 7) × jinja2_native (true|false)
+          - { os: rocky9,          ansible_version: "12_0", agent_version: "6", jinja2_native: "true",  python: python3.11 }
+          - { os: rocky9,          ansible_version: "12_0", agent_version: "6", jinja2_native: "false", python: python3.11 }
+          - { os: rocky9,          ansible_version: "12_0", agent_version: "7", jinja2_native: "true",  python: python3.11 }
+          - { os: rocky9,          ansible_version: "12_0", agent_version: "7", jinja2_native: "false", python: python3.11 }
+          - { os: suse,            ansible_version: "12_0", agent_version: "6", jinja2_native: "true",  python: python3.11 }
+          - { os: suse,            ansible_version: "12_0", agent_version: "6", jinja2_native: "false", python: python3.11 }
+          - { os: suse,            ansible_version: "12_0", agent_version: "7", jinja2_native: "true",  python: python3.11 }
+          - { os: suse,            ansible_version: "12_0", agent_version: "7", jinja2_native: "false", python: python3.11 }
+          - { os: amazonlinux2023, ansible_version: "12_0", agent_version: "6", jinja2_native: "true",  python: python3.11 }
+          - { os: amazonlinux2023, ansible_version: "12_0", agent_version: "6", jinja2_native: "false", python: python3.11 }
+          - { os: amazonlinux2023, ansible_version: "12_0", agent_version: "7", jinja2_native: "true",  python: python3.11 }
+          - { os: amazonlinux2023, ansible_version: "12_0", agent_version: "7", jinja2_native: "false", python: python3.11 }
+          # suse × (2_10, 3_4, 4_10, 9_4) × (6, 7) — jinja2_native defaults to "false"
+          - { os: suse, ansible_version: "2_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "2_10", agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "3_4",  agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "3_4",  agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "4_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "4_10", agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "9_4",  agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: suse, ansible_version: "9_4",  agent_version: "7", jinja2_native: "false", python: python3 }
+          # amazonlinux2023 × (2_10, 3_4, 4_10) × (6, 7) — jinja2_native defaults to "false"
+          - { os: amazonlinux2023, ansible_version: "2_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "2_10", agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "3_4",  agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "3_4",  agent_version: "7", jinja2_native: "false", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "4_10", agent_version: "6", jinja2_native: "false", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "4_10", agent_version: "7", jinja2_native: "false", python: python3 }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Start container
+        run: |
+          docker run -d --name testenv \
+            -e ANSIBLE_JINJA2_NATIVE=${{ matrix.jinja2_native }} \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_${{ matrix.os }}_${{ matrix.ansible_version }} \
+            sleep infinity
+      - name: Install agent
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}"
+      - name: Check agent version
+        run: docker exec testenv datadog-agent version
+
+  test_install_macos:
+    name: install_macos (ansible ${{ matrix.ansible_version }}, agent ${{ matrix.agent_version }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible_version: ["2.10", "3.4", "4.10", "12.0"]
+        agent_version: ["6_macos", "7_macos"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Rosetta 2
+        if: matrix.agent_version == '6_macos'
+        run: printf 'A\n' | sudo softwareupdate --install-rosetta
+      - name: Install Python 3.11
+        run: brew install python@3.11
+      - name: Install Ansible
+        run: /opt/homebrew/bin/pip3.11 install "ansible~=${{ matrix.ansible_version }}"
+      - name: Install agent
+        run: /opt/homebrew/bin/ansible-playbook -i ./ci_test/inventory/ci_macos.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e "ansible_python_interpreter=/opt/homebrew/bin/python3.11"
+      - run: datadog-agent version
+
+  test_apm_injection:
+    name: apm_injection (ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible_version: ["6.7.0", "12.0.0"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      # these repos have expired GPG keys and make APT fail (and we don't need them)
+      - run: sudo rm -f /etc/apt/sources.list.d/*
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+      - run: python -m pip install "ansible==${{ matrix.ansible_version }}"
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_apm_python.yaml
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - run: git -C /tmp clone https://github.com/DataDog/system-tests.git
+      - run: cd /tmp/system-tests/lib-injection/build/docker/python/dd-lib-python-init-test-django && sudo docker build -t system-tests/local .
+      - run: sudo docker run -d --name test-app-python -p 5985:18080 system-tests/local:latest
+      - run: curl --retry 10 --retry-max-time 30 --retry-all-errors localhost:5985
+      - name: Verify APM injection status
+        run: |
+          # iis_instrumented is Windows-IIS-only; skip on Linux runners.
+          status_json=$(sudo datadog-installer status --json | jq '.apm_injection_status | del(.iis_instrumented)')
+          for key in $(echo "$status_json" | jq -r 'keys[]'); do
+            value=$(echo "$status_json" | jq -r --arg k "$key" '.[$k]')
+            if [ "$value" != "true" ]; then
+              echo "Check failed: $key is not true (value: $value)"
+              exit 1
+            fi
+            echo "$key is true"
+          done
+          echo "All APM injection checks passed"
+      - name: Wait for traces to appear in agent status
+        run: |
+          for i in {1..14}; do
+            echo "Checking for traces (attempt $i/14)..."
+            if sudo datadog-agent status "apm agent" --json | jq -e '.apmStats.ratebyservice | keys | length > 0' >/dev/null 2>&1; then
+              echo "Traces found"
+              sudo datadog-agent status "apm agent" --json | jq '.apmStats.ratebyservice'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "No traces found after 70 seconds"
+          exit 1
+
+  test_apm_injection_all:
+    name: apm_injection_all (ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible_version: ["6.7.0", "12.0.0"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: sudo rm -f /etc/apt/sources.list.d/*
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+      - run: python -m pip install "ansible==${{ matrix.ansible_version }}"
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_apm_all.yaml
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - name: Verify all APM libraries installed
+        run: |
+          for tracer in java js dotnet python ruby; do
+            sudo datadog-installer is-installed "datadog-apm-library-$tracer"
+          done
+
+  test_apm_injection_custom_dir:
+    name: apm_injection_custom_dir (ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible_version: ["6.7.0", "12.0.0"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: sudo rm -f /etc/apt/sources.list.d/*
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+      - run: python -m pip install "ansible==${{ matrix.ansible_version }}"
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_apm_custom_dir.yaml
+      - run: sudo datadog-agent status || true
+      - run: ps aux | grep -v grep | grep datadog-agent
+      - name: Verify SSI installation
+        run: |
+          sudo datadog-installer is-installed datadog-apm-library-python
+          sudo datadog-installer is-installed datadog-apm-library-java
+      - name: Verify custom SSI script directory was used and cleaned up
+        run: |
+          if [ ! -d /opt/datadog-ssi-scripts ]; then
+            echo "Custom SSI script directory was not created"
+            exit 1
+          fi
+          if [ -f /opt/datadog-ssi-scripts/install-ssi.sh ]; then
+            echo "ERROR: SSI script was not cleaned up"
+            exit 1
+          fi
+          echo "SSI script was properly cleaned up"
+
+  test_integration_traditional:
+    name: integration_traditional (${{ matrix.os }}, ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: debian, ansible_version: "4_10", python: python3 }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Run integration playbook
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_${{ matrix.os }}_${{ matrix.ansible_version }} \
+            ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_with_integration.yaml -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}"
+
+  test_integration_fleet:
+    name: integration_fleet (ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible_version: ["12.0.0"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: sudo rm -f /etc/apt/sources.list.d/*
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+      - run: python -m pip install "ansible==${{ matrix.ansible_version }}"
+      - run: ansible-playbook --become -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_with_integration_fleet.yaml
+
+  # Ensure some RHEL derivatives aren't incorrectly detected as RHEL 6
+  test_incorrect_rhel6_detect:
+    name: incorrect_rhel6_detect (${{ matrix.os }}, ansible ${{ matrix.ansible_version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: amazonlinux2023, ansible_version: "4_10", python: python3 }
+          - { os: amazonlinux2023, ansible_version: "12_0", python: python3.11 }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Start container
+        run: |
+          docker run -d --name testenv \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace \
+            datadog/docker-library:ansible_${{ matrix.os }}_${{ matrix.ansible_version }} \
+            sleep infinity
+      - name: Install agent (pinned version)
+        run: docker exec testenv ansible-playbook -i ./ci_test/inventory/ci.ini ./ci_test/install_agent_7_pinned.yaml -e "ansible_python_interpreter=/usr/bin/${{ matrix.python }}"
+      - name: Check agent version
+        run: docker exec testenv datadog-agent version
