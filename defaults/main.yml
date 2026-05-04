@@ -207,9 +207,6 @@ datadog_apm_instrumentation_libraries: []
 # Override this if /tmp/datadog-installer is not suitable in your environment.
 datadog_ssi_script_dir: "/tmp/datadog-installer"
 
-# Enable remote updates through datadog-installer
-datadog_remote_updates: false
-
 # Set infrastructure monitoring mode (optional)
 # datadog_infrastructure_mode: ""
 
