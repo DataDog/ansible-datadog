@@ -141,6 +141,7 @@
     name: "{{ item }}"
     state: stopped
     start_mode: disabled
+    force_dependent_services: "{{ datadog_windows_force_dependent_services | default(false) | bool }}"
   when: not datadog_skip_running_check and not datadog_enabled and not datadog_remote_update_in_progress
   with_list:
     - datadog-trace-agent
