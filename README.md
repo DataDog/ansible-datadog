@@ -46,6 +46,13 @@ To deploy the Datadog Agent on hosts, add the Datadog role and your API key to y
 
 The API key is required and its absence causes the role to fail. If you want to provide it through another way, outside of Ansible's control, specify a placeholder key and substitute the key at a later point.
 
+## Verifying your deployment
+
+Ansible's `changed` and `ok` task statuses report whether the role wrote the configuration files. They do not validate the rendered configuration against the Agent's schema, so a run can report success while an integration fails to load. After each playbook run, verify the deployment on a target host:
+
+* Run `datadog-agent configcheck` to surface YAML rendering issues in the generated `conf.d/*.d/conf.yaml` files that do not trigger Ansible-level errors.
+* Run `datadog-agent status` to confirm that each configured integration appears in the **Running Checks** section.
+
 ## Role variables
 
 These variables provide additional configuration during the installation of the Datadog Agent. They should be specified in the `vars` section of your playbook.
@@ -104,6 +111,8 @@ These variables provide additional configuration during the installation of the 
 To configure a Datadog integration (check), add an entry to the `datadog_checks` section. The first level key is the name of the check, and the value is the YAML payload to write the configuration file. Examples are provided below.
 
 To install or remove an integration, refer to the `datadog_integration` [paragraph](#integration-installation)
+
+The first-level key under `datadog_checks` is the integration's directory name in `conf.d/`. To find the available `init_config` and `instances` options for an integration, see that integration's `conf.yaml.example` in the [integrations-core repository](https://github.com/DataDog/integrations-core) (for example, [`win32_event_log/datadog_checks/win32_event_log/data/conf.yaml.example`](https://github.com/DataDog/integrations-core/blob/master/win32_event_log/datadog_checks/win32_event_log/data/conf.yaml.example)). The integration's `README.md` in the same directory documents OS-level prerequisites that the role does not handle automatically. For example, the Windows Event Log integration's [Security channel requires the Datadog Agent service user to be a member of the `Event Log Readers` group](https://github.com/DataDog/integrations-core/blob/master/win32_event_log/README.md).
 
 #### Process check
 
@@ -178,6 +187,12 @@ The example below configures the PostgreSQL check through **Autodiscovery**:
 ```
 
 Learn more about [Autodiscovery][3] in the Datadog documentation.
+
+#### Removing checks from a previous configuration
+
+By default, `datadog_disable_untracked_checks` is `false`, so the role does not remove existing `conf.d/<integration>.d/conf.yaml` files. When you restructure `datadog_checks` between runs, configuration files from the previous structure remain on disk. These orphaned files can surface as `init_config` or `instances` errors in `datadog-agent status`, even though the playbook run reports no errors.
+
+To reconcile the on-disk `conf.d` against your current `datadog_checks` and `datadog_additional_checks` variables on each run, set `datadog_disable_untracked_checks: true`. Use `datadog_additional_checks` to preserve checks that are managed outside of the role.
 
 ### Tracing
 
@@ -490,6 +505,28 @@ This example sends data to the EU site:
     datadog_site: "datadoghq.eu"
     datadog_api_key: "<YOUR_DD_API_KEY>"
 ```
+
+### Enabling APM instrumentation
+
+To enable [Single Step Instrumentation](https://docs.datadoghq.com/tracing/trace_collection/single-step-apm/) (SSI) on Linux hosts, set `datadog_apm_instrumentation_enabled` as a top-level play variable, alongside `datadog_config` rather than nested inside it. This is a role variable, not a `datadog.yaml` setting. Nesting it under `datadog_config` writes to `datadog.yaml` without running the SSI installer, so no traces are produced.
+
+The value must be one of the quoted strings `"host"`, `"docker"`, or `"all"`:
+
+```yml
+- hosts: linux_servers
+  roles:
+    - { role: datadog.datadog, become: yes }
+  vars:
+    datadog_api_key: "<YOUR_DD_API_KEY>"
+    datadog_apm_instrumentation_enabled: "host"
+    datadog_apm_instrumentation_libraries:
+      - java
+      - dotnet
+```
+
+Use `datadog_apm_instrumentation_libraries` to limit which libraries are installed. If you omit it, the role installs all supported libraries.
+
+**Note**: Host SSI instruments only processes that start after installation. Restart your services after the playbook run so that they are instrumented.
 
 ### Windows
 
