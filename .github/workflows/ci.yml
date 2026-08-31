@@ -185,7 +185,7 @@ jobs:
 
   test_install_macos:
     name: install_macos (ansible ${{ matrix.ansible_version }}, agent ${{ matrix.agent_version }})
-    runs-on: macos-latest
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
