@@ -201,7 +201,41 @@ jobs:
       - name: Install Ansible
         run: /opt/homebrew/bin/pip3.11 install "ansible~=${{ matrix.ansible_version }}"
       - name: Install agent
-        run: /opt/homebrew/bin/ansible-playbook -i ./ci_test/inventory/ci_macos.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" -e "ansible_python_interpreter=/opt/homebrew/bin/python3.11"
+        run: |
+          extra_vars=(-e "ansible_python_interpreter=/opt/homebrew/bin/python3.11")
+
+          if [[ "${{ matrix.ansible_version }}" != "12.0" ]]; then
+            if [[ "${{ matrix.agent_version }}" == "7_macos" && "$(uname -m)" == "arm64" ]]; then
+              download_url="https://install.datadoghq.com/datadog-agent-7-latest.arm64.dmg"
+            elif [[ "${{ matrix.agent_version }}" == "7_macos" ]]; then
+              download_url="https://install.datadoghq.com/datadog-agent-7-latest.dmg"
+            else
+              download_url="https://install.datadoghq.com/datadog-agent-6-latest.dmg"
+            fi
+
+            curl --fail --location --show-error --silent "$download_url" --output /tmp/datadog-agent-ci.dmg
+            /opt/homebrew/bin/python3.11 -m http.server 8765 --directory /tmp > /tmp/datadog-agent-http.log 2>&1 &
+            server_pid=$!
+            trap 'kill "$server_pid"' EXIT
+
+            server_ready=false
+            for _ in {1..20}; do
+              if curl --fail --silent --head http://127.0.0.1:8765/datadog-agent-ci.dmg >/dev/null; then
+                server_ready=true
+                break
+              fi
+              sleep 1
+            done
+
+            if [[ "$server_ready" != "true" ]]; then
+              cat /tmp/datadog-agent-http.log
+              exit 1
+            fi
+
+            extra_vars+=(-e "datadog_macos_download_url=http://127.0.0.1:8765/datadog-agent-ci.dmg")
+          fi
+
+          /opt/homebrew/bin/ansible-playbook -i ./ci_test/inventory/ci_macos.ini "./ci_test/install_agent_${{ matrix.agent_version }}.yaml" "${extra_vars[@]}"
       - run: datadog-agent version
 
   test_apm_injection:
