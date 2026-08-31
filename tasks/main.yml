@@ -125,4 +125,6 @@
   ansible.builtin.include_tasks: apm-single-step-instrumentation.yml
   when:
     - apm_single_step_instrumentation_should_install
+    - ansible_facts.os_family != "Windows"
+    - ansible_facts.os_family != "Darwin"
     - not ansible_check_mode
